@@ -80,6 +80,8 @@ function paint_row_hearder()
  var cells_td_1 = document.querySelectorAll('td:nth-child(4)'); //ACTIF td amort
  var cells_td_2 = document.querySelectorAll('td:nth-child(5)'); //ACTIF td net
 
+ //var cells_td_30 = document.querySelectorAll('td:nth-child(4)','tr:nth-child(32)'); //PASSIF td brut
+
  var cells_0 = document.querySelectorAll('tr:nth-child(2)'); //ACTIF
  var cells_1 = document.querySelectorAll('tr:nth-child(3)'); // Immobilisations incorporelles
  var cells_6 = document.querySelectorAll('tr:nth-child(8)'); // Immobilisations corporelles
@@ -120,6 +122,9 @@ function paint_row_hearder()
     cells_td_0[i].classList.add('my_header_td_fff');
     cells_td_1[i].classList.add('my_header_td_fff');
     cells_td_2[i].classList.add('my_header_td_fff');
+
+    //cells_td_30[i].classList.add('my_header_td_fff');
+
   }
  }
 

@@ -12,6 +12,11 @@ from .models import Author, Book, jdatesterBalanceSheetModel, jdatesterCompanyMo
 from django.forms import modelformset_factory, inlineformset_factory
 from django.db import IntegrityError
 from jdafinancialsapp.utils import jdatester_publication_date, jdafinancialsapp_migrate_bal_link_data
+from tablib import Dataset
+
+from .resources import EmployeeResource
+from .models import Employee
+
 
 def jdatester_home(request):
     form = CourseForm()
@@ -280,7 +285,7 @@ def jdatester_bal(request, company, entry_date):
                 bal_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = jdatesterLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                jdafinancialsapp_migrate_link_data(lines, link_data, jdatesterBalanceSheetModel)
+                jdafinancialsapp_migrate_bal_link_data(lines, link_data, jdatesterBalanceSheetModel)
                 #jdatesterBalanceSheetModel.objects.create(company_id=link_data.company.id, lbl_id=6, entry_date=link_data.entry_date, brut=link_data.brut_1)
                 #jdatesterBalanceSheetModel.objects.create(company_id=link_data.company.id, lbl_id=7, entry_date=link_data.entry_date, brut=link_data.brut_2)
 
@@ -288,7 +293,7 @@ def jdatester_bal(request, company, entry_date):
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = jdatesterLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                jdafinancialsapp_migrate_link_data(lines, link_data, jdatesterBalanceSheetModel)
+                jdafinancialsapp_migrate_bal_link_data(lines, link_data, jdatesterBalanceSheetModel)
                 #jdatesterBalanceSheetModel.objects.create(company_id=link_data.company.id, lbl_id=6, entry_date=link_data.entry_date, brut=link_data.brut_1)
                 #jdatesterBalanceSheetModel.objects.create(company_id=link_data.company.id, lbl_id=7, entry_date=link_data.entry_date, brut=link_data.brut_2)
 
@@ -315,7 +320,26 @@ def jdatester_bal(request, company, entry_date):
     return render(request, 'jdatester/jdatester_bal.html', context)
 
 
+#/////////////////////////////// export_data ///////////////////////////////////
+def export_data(request):
+    if request.method == 'POST':
+        # Get selected option from form
+        file_format = request.POST['file-format']
+        employee_resource = EmployeeResource()
+        dataset = employee_resource.export()
+        if file_format == 'CSV':
+            response = HttpResponse(dataset.csv, content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
+            return response
+        elif file_format == 'JSON':
+            response = HttpResponse(dataset.json, content_type='application/json')
+            response['Content-Disposition'] = 'attachment; filename="exported_data.json"'
+            return response
+        elif file_format == 'XLS (Excel)':
+            response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename="exported_data.xls"'
+            return response
 
-
+    return render(request, 'jdatester/export.html')
 # a = Album(title="Divide", artist="Ed Sheeran", genre="Pop")
 # a.save()
