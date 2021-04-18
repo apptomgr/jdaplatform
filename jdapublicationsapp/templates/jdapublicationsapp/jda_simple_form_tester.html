@@ -1,0 +1,13 @@
+{% extends 'jdamainapp/jdamainapp_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<h1>SimpleForm</h1>
+<form class="hero-form" method="post"  novalidate>
+     {% csrf_token %}
+    {{simple_form}}
+    <button class="btn btn-sm btn-info" type="submit">Submit</button>
+</form>
+{% endblock %}

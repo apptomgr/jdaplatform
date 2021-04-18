@@ -1,0 +1,10 @@
+db.sqlite3
+*.pyc
+.idea*
+.idea/
+.DS_Store
+notes.txt
+db.sqlite3.sqbpro
+scratch.txt
+snippets.txt
+test.sqbpro

@@ -1,0 +1,40 @@
+{% extends 'jdamainapp/jdamainapp_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h4>Ajax Test btn</h4>
+<button type="button" class="btn btn-primary btn-sm" onclick="return jda_ajax('ajax_tester_btn', 'waiter_test');">Ajax
+</button>
+<div id="waiter_test">Test Result from Ajax</div>
+
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+        Dropdown button
+    </button>
+    <div class="dropdown-menu" onselect="tes();" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" onclick="return jda_ajax('ajax_selected', 'waiter_selected','res');">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+    </div>
+</div>
+
+
+<div id="waiter_selected">Test Result from Ajax</div>
+<hr>
+<h1>Form 1</h1>
+<form class="hero-form" method="post"  novalidate>
+     {% csrf_token %}
+    <div>{{country_form}}</div>
+
+    <div>{{empty_form}}</div>
+    <button class="btn btn-sm btn-info" type="submit">Submit</button>
+</form>
+
+
+<div id="ajax_dropdown_test_waiter">ajax_dropdown_test_waiter</div>
+
+
+{% endblock %}

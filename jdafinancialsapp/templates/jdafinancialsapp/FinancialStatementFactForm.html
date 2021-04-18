@@ -1,0 +1,114 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+
+<tr><th><label for="id_form-0-name">Name:</label></th><td><input id="id_form-0-name" type="text" name="form-0-name" value="Charles Baudelaire" maxlength="100" /><input type="hidden" name="form-0-id" value="1" id="id_form-0-id" /></td></tr>
+<tr><th><label for="id_form-1-name">Name:</label></th><td><input id="id_form-1-name" type="text" name="form-1-name" value="Paul Verlaine" maxlength="100" /><input type="hidden" name="form-1-id" value="3" id="id_form-1-id" /></td></tr>
+<tr><th><label for="id_form-2-name">Name:</label></th><td><input id="id_form-2-name" type="text" name="form-2-name" value="Walt Whitman" maxlength="100" /><input type="hidden" name="form-2-id" value="2" id="id_form-2-id" /></td></tr>
+<tr><th><label for="id_form-3-name">Name:</label></th><td><input id="id_form-3-name" type="text" name="form-3-name" maxlength="100" /><input type="hidden" name="form-3-id" id="id_form-3-id" /></td></tr>
+
+{{ form.financial_statement_line}}
+
+<table class="table table-bordered">
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {title}</h5>
+    </div>
+    <form class="hero-form" method="post" novalidate>
+        <div class="card-body">
+            {% csrf_token %}
+            <!-- bal select -->
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    {form.bal_type | as_crispy_field}
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    {{form.company | as_crispy_field}}
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    {{form.financial_statement_line | as_crispy_field}}
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    <div class="input-group justify-content-left">
+                        <div class="input-group-prepend">
+                            {form.bal_date| as_crispy_field}<i class=" mt-1 far fa-calendar-alt fa-fw fa-2x  text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row container">
+                <table class="table table-sm table-bordered table-hover Xtable-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-4 Xmy_nopad text-left">Balance Sheet items</th>
+                        <th class="col-md-4 Xmy_nopad">Brut</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.0.bal_item_label_1}}</td>
+                        <td class="col-md-4 Xmy_nopad">{form.bal_item_amt_1 | as_crispy_field}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left">{labels.0.bal_item_label_2}</td>
+                        <td class="col-md-4 Xmy_nopad">{form.bal_item_amt_2 | as_crispy_field}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info" role="button" type="submit" value="submit">
+        </div>
+    </form>
+</div>
+
+<style>
+table td {
+  position: relative;
+}
+
+table td input {
+  position: absolute;
+
+  top:0;
+  left:0;
+  margin: 20;
+  height: 100% !important;
+  width: 300px !important;
+  border-radius: 0 !important;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+table th{
+ /*background-color:#f8f9fa;*/
+ min-width: 300px !important;
+}
+
+</style>
+
+{% endblock %}
+
+
+

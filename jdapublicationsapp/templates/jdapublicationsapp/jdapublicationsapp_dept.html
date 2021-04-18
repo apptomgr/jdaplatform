@@ -1,0 +1,119 @@
+{% extends 'jdamainapp/jdamainapp_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light font-weight-bold">Our Department</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light">Our Publications</a></li>
+    </ol>
+</nav>
+
+
+<div class="jumbotron jumbotron bg-cover">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="text-white text-center py-3 px-2 my-3">
+            <div>
+                <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
+                    J&D </strong><strong>Publications</strong></h2>
+                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> Our Department</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow-sm p-2 mb-2 bg-white rounded">
+
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team section-bg">
+      <div class="container">
+
+          <div class="row mb-3">
+              <h6 class="text-secondary">J&D Advisory has a long tradition of research excellence. Our team is comprised of reasearch analysts across West Africa covering financial markets.</h6>
+          </div>
+
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up">
+            <div class="member">
+              <div class="member-img mt-3 text-center">
+                  <img src="{% static 'jdamainapp/assets/img/team/pub/tony.png'%}" class="my_dept_img_size rounded-circle img-fluid" alt="Hermann">
+              </div>
+              <div class="member-info text-center">
+                <h4>Tony Akoi</h4>
+                <span>Chairman</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="member">
+              <div class="member-img mt-3 text-center">
+                <img src="{% static 'jdamainapp/assets/img/team/pub/hermann.png'%}"
+                                     class="my_dept_img_size rounded-circle img-fluid" alt="Hermann">
+              </div>
+              <div class="member-info text-center">
+                <h4>Hermann Boua</h4>
+                <span>Le Grand Chef</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+            <div class="member">
+              <div class="member-img mt-3 text-center">
+               <img src="{% static 'jdamainapp/assets/img/team/pub/diakaridja.png'%}"
+                                     class="my_dept_img_size rounded-circle img-fluid" alt="Hermann">
+              </div>
+              <div class="member-info text-center">
+                <h4>Diakaridja Kone</h4>
+                <span>Head of Research</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
+            <div class="member">
+              <div class="member-img mt-3 text-center">
+               <img src="{% static 'jdamainapp/assets/img/team/pub/denis.png'%}"
+                                     class="my_dept_img_size rounded-circle img-fluid" alt="Hermann">
+              </div>
+              <div class="member-info text-center">
+                <h4>Denis L. Daronnat</h4>
+                <span>Compliance Board Member</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+</div>
+<style type="text/css">
+    .bg-cover {
+        background-image: url({% static 'jdamainapp/assets/img/blog/5.jpg' %});
+    }
+</style>
+
+{% endblock %}
+

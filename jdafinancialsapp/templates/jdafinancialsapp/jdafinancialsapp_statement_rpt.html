@@ -1,0 +1,137 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<!--table class="table table-sm table-bordered table-responsive table-striped">
+    <tr>
+    <th>#</th>
+    <th>ID</th>
+    <th>Company</th>
+        <th>Entry Date</th>
+        <th>Line id</th>
+        <th>Line</th>
+        <th>Value</th>
+    </tr>
+{% for i in bal_data %}
+<tr>
+    <td>{{ forloop.counter0 }}</td>
+    <td> {{i.id}}</td>
+    <td> {{i.company}}</td>
+    <td> {{i.entry_date}}</td>
+    <td> {{i.financial_statement_line_id}}</td>
+    <td> {{i.financial_statement_line}}</td>
+    <td> {{i.value}}</td>
+</tr>
+
+{% endfor %}
+</table-->
+
+<div class="card shadow-sm bg-white rounded">
+    <div class="card-header">
+        <div class="row justify-content-center align-items-center">
+            <i class="fas fa-layer-group fa-2x my_info_txt mr-1"></i>
+            <span class="text-muted my_info_txt_title"><span class="font-weight-bold"> {{bal_data.0.company}}</span> {{stmt}} as of {{bal_data.0.entry_date}}</span>
+        </div>
+
+        <div class="row justify-content-center align-items-center">
+            <div class="col-sm-12">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert"
+                     role="alert">
+                    <a class="close" data-dismiss="alert">x</a>
+                    <i class="text-muted mr-5">{{message|safe}}</i>
+                </div>
+                {%endfor%}
+                {%endif%}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row justify-content-center align-items-center">
+
+            <div class="row">
+                <table id='bal_rpt_tbl' class="table table-sm table-responsive table-striped table-bordered nowrap">
+                    <thead class="my_pub_tbl_header_bg">
+                    <tr>
+                        <th>#</th>
+                        <th>Actif</th>
+                        <th>Brut</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in bal_data %}
+                    {% if i.financial_statement_line_id in bold_list %}
+                    <tr>
+                        <td class="font-weight-bold">{{ forloop.counter0 }}</td>
+                        <td class="font-weight-bold">{{i.financial_statement_line}}</td>
+                        <td class="font-weight-bold">{{i.value}}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td>{{ forloop.counter0 }}</td>
+                        <!--td>{{i.company.sector}}</td>
+                        <td>{{i.entry_date}}</td>
+                        <td>{{i.company.rpt_period}}</td-->
+                        <td>{{i.financial_statement_line}}</td>
+                        <td>{{i.value}}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Passif -->
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <small class="text-muted">Report date {{rpt_date}}</small>
+    </div>
+</div>
+
+<style>
+ .my_badge_font{
+    font-size: 1.1em;
+    }
+
+
+</style>
+
+
+<script>
+function my_bal_add_hearder()
+{
+ var table = document.getElementById("bal_rpt_tbl");
+  var row = table.insertRow(32);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+
+  cell1.innerHTML = "<span class='text-center font-weight-bold'>#</span>";
+  cell2.innerHTML = "<span class='text-center font-weight-bold'>PASSIVE</span>";
+  cell3.innerHTML = "<span class='text-center font-weight-bold'>BRUT</span>";
+}
+window.onload=my_bal_add_hearder();
+</script>
+
+<script>
+
+var cells = document.querySelectorAll('tr:nth-child(32)');
+
+for(var i = 0 ; i < cells.length ; i++) {
+  if(cells[i].textContent.trim() > '') {
+    cells[i].classList.add('my_pub_tbl_header_bg');
+  }
+}
+
+</script>
+
+
+<!--http://localhost:8000/jdafinancialsapp/jdafinancialsapp_statement_rpt/1/Balance%20Sheet-->
+{% endblock %}

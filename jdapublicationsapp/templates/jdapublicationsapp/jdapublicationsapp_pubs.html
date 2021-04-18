@@ -1,0 +1,296 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
+        <!--li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light">Our Department</a></li-->
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light font-weight-bold">Our
+            Publications</a></li>
+    </ol>
+</nav>
+<!--
+{% if filterForm.errors %}
+	<div id="errors">
+		<div class="inner">
+			<p>There were some errors in the information you entered. Please correct the following:</p>
+			{{ filterForm.non_field_errors }}
+			<ul>
+				{% for field in filterForm %}
+					{% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+{% endif %}
+-->
+
+<div class="jumbotron jumbotron bg-cover">
+    <div class="overlay"></div>
+    <div class="containerX">
+        <div class="text-white text-center py-3 px-2 my-3">
+            <div>
+                <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
+                    J&D </strong><strong class="text-white">Publications</strong></h2>
+                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> Our
+                    Publications</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow-sm bg-white rounded">
+    <div class="card-header">
+        <div class="float-left">
+            <i class="fas fa-layer-group  my_info_txt"></i> <span class="text-muted">Publications</span>
+        </div>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-sm-12">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert"
+                     role="alert">
+                    <a class="close" data-dismiss="alert">x</a>
+                    <i class="text-muted mr-5">{{message|safe}}</i>
+                </div>
+                {%endfor%}
+                {%endif%}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row ">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <div class="row mb-4">&nbsp;</div>
+                <form class="hero-form" method="post" action="{% url 'jdapublicationsapp_filter' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered tbl_border_outline_only table-hover dt-responsive nowrap">
+                            <thead class="my_pub_tbl_header_bg">
+                            <tr>
+                                <th class="my_filter_txt text-center">Filters</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="my_nopad2 input-group-prepend">{{filterForm.from_date| as_crispy_field}}<i class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2 input-group-prepend">{{filterForm.to_date| as_crispy_field}}<i class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2"> {{filterForm.author| as_crispy_field}}</td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2"> {{filterForm.research_category| as_crispy_field}}</td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2"> {{filterForm.research_type| as_crispy_field}}</td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2"> {{filterForm.company| as_crispy_field}}</td>
+                            </tr>
+                            <tr>
+                                <td class="my_nopad2 text-center">
+                                <button type="submit" class="btn btn-sm btn-info mb-2">Filter</button>
+                                <button type="reset" class="btn btn-sm btn-secondary  mb-2" onclick="location.href='{% url 'jdapublicationsapp_pubs' %}'">Reset</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 mt-1">
+                <table id="publication_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <thead class="my_pub_tbl_header_bg">
+                    <tr>
+                        <th>Publication Date</th>
+                        <th>Author</th>
+                        <th>Research Category</th>
+                        <th>Research Type</th>
+                        <th>Subject</th>
+                        <th>Company</th>
+                        <!--th>Publication_desc</th>
+                        <th>File Name</th>
+                        <th>Upload Date</th-->
+                        <th class="text-center">Pubs</th>
+                        <th class="text-center">Expand</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in publication_listing %}
+                    <tr>
+                        <!--td>{{i.pk}}</td-->
+                        <td>{{i.publication_date}}</td>
+                        <td>{{i.author}}</td>
+                        <td>{{i.research_category}}</td>
+                        <td>{{i.research_type}}</td>
+                        <td>{{i.subject}}</td>
+                        <td>{{i.company}}</td>
+                        <!--td>{{i.publication_desc}}</td>
+                        <td>{{i.file_name.name}}</td>
+                        <td>{{i.uploaded_at}}</td-->
+                        <td class="text-center"><a href="{{ i.file_name.url }}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+                        <!--td>
+                            <button type="button" class="btn btn-info" aria-label="Left Align" data-toggle="modal" data-target="#pubModal">
+                                <span class="far fa-eye fa-fw fa-lg" aria-hidden="true"></span>
+                            </button>
+                        </td-->
+                        <td class="text-center">
+                            <a href="#" class="my_link" data-val="{{i.subject}}~~{{i.author}}~~{{i.publication_desc}}~~{{i.company}}~~{{i.file_name.name}}~~{{i.uploaded_at}}" data-toggle="modal" data-target="#pub-modal"><i class="fas fa-expand-arrows-alt fa-fw fa-2x text-info"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor%}
+                    </tbody>
+                </table>
+
+
+                <!-- ======= Skills Section ======= -->
+                <div class="our-skill-area fix hidden-sm mt-5">
+                    <div class="test-overly"></div>
+                    <div class="skill-bg area-padding-2">
+                        <div class="containerX">
+                            <!-- section-heading end -->
+                            <div class="row">
+                                <!-- single-skill start -->
+                                <div class="col-xs-12 col-sm-3 col-md-3 text-center">
+                                    <div class="single-skill">
+                                        <div class="progress-circular">
+                                            <input type="text" class="knob" value="0" data-rel="{{per_models|floatformat:'1'}}" data-linecap="round"
+                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
+                                                   data-thickness=".20"
+                                                   data-readonly="true" disabled>
+                                            <h5 class="progress-h4">Models</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- single-skill end -->
+                                <!-- single-skill start -->
+                                <div class="col-xs-12 col-sm-3 col-md-3 text-center">
+                                    <div class="single-skill">
+                                        <div class="progress-circular">
+                                            <input type="text" class="knob" value="0" data-rel="{{per_newsletters}}" data-linecap="round"
+                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
+                                                   data-thickness=".20"
+                                                   data-readonly="true" disabled>
+                                            <h5 class="progress-h4">Newsletters</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- single-skill end -->
+                                <!-- single-skill start -->
+                                <div class="col-xs-12 col-sm-3 col-md-3 text-center">
+                                    <div class="single-skill">
+                                        <div class="progress-circular">
+                                            <input type="text" class="knob" value="0" data-rel="{{per_commentaries|floatformat:'2'}}" data-linecap="round"
+                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
+                                                   data-thickness=".20"
+                                                   data-readonly="true" disabled>
+                                            <h5 class="progress-h4">Commentaries</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- single-skill end -->
+                                <!-- single-skill start -->
+                                <div class="col-xs-12 col-sm-3 col-md-3 text-center">
+                                    <div class="single-skill">
+                                        <div class="progress-circular">
+                                            <input type="text" class="knob" value="0" data-rel="{{per_reports |floatformat:'4'}}" data-linecap="round"
+                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
+                                                   data-thickness=".20"
+                                                   data-readonly="true" disabled>
+                                            <h5 class="progress-h4">Reports</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- single-skill end -->
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Skills Section -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <small class="text-muted">Last updated 3 mins ago</small>
+    </div>
+</div>
+<style type="text/css">
+    .bg-cover {
+        max-width:1750px;
+        background-image: url({% static 'jdamainapp/assets/img/publication/newspaper_3.png' %});
+    }
+
+</style>
+
+
+
+<!--Pub Modals -->
+<div class="modal modal-md fade" id="pub-modal" tabindex="-1" role="dialog" aria-labelledby="pub-modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+          <i class="fab fa-battle-net fa-2x text-info mr-1"></i>
+        <h6 class="modal-title pub-modal-vals" id="exampleModalLabel text-info"></h6>
+          <!--i class="far fa-file-alt fa-2x text-info"></i-->
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                    <i class="far fa-user fa-2x text-info mr-1"></i>
+                    <span class="modal-author pub-modal-vals"></span>
+                    <hr>
+                    <i class="far fa-info-circle fa-2x text-info mr-1"></i>
+                     <span class="modal-desc pub-modal-vals"></span>
+                    <hr>
+                    <i class="far fa-building fa-2x text-info mr-1"></i>
+                     <span class="modal-company pub-modal-vals"></span>
+                    <hr>
+                    <i class="far fa-file-alt fa-2x text-info mr-1"></i>
+                     <span class="modal-file_name pub-modal-vals"></span>
+                    <hr>
+                    <i class="far fa-clock fa-2x text-info mr-1"></i>
+                     <span class="modal-uploaded_at pub-modal-vals"></span>
+
+      </div>
+      <!--div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div-->
+    </div>
+  </div>
+</div>
+<!-- End Pub Modals -->
+
+
+
+<!-- jQuery, Popper and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script>
+ $('#pub-modal').on('show.bs.modal', function (event) {
+  var myVal = $(event.relatedTarget).data('val');
+  vals=myVal.split("~~");
+  $(this).find(".modal-title").text(vals[0]);
+  $(this).find(".modal-author").text(vals[1]);
+  $(this).find(".modal-desc").text(vals[2]);
+  $(this).find(".modal-company").text(vals[3]);
+  $(this).find(".modal-file_name").text(vals[4]);
+  $(this).find(".modal-uploaded_at").text(vals[5]);
+});
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,199 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
+        <!--li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light font-weight-bold">Our Department</a></li-->
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light">Our Publications</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_entry' %}" class="text-light font-weight-bold">Publications Entry</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_listing' %}" class="text-light">Publications Edit</a></li>
+    </ol>
+</nav>
+
+
+<div class="card shadow-sm p-2 mb-3 bg-white rounded">
+    <div class="card-header">
+        <div class="text-center">
+            <h5 class="text-muted"><i class="far fa-newspaper my_info_txt"></i> Publication Entry</h5>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form class="hero-form" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="row mt-2">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="">{{form.author | as_crispy_field}}</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="input-group justify-content-left">
+                        <div class="input-group-prepend">
+                            {{form.publication_date| as_crispy_field}}<i
+                                class=" mt-0 far fa-calendar-alt fa-fw fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="">{{form.research_category | as_crispy_field}}</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="">{{form.research_type | as_crispy_field}}</div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="">{{form.subject | as_crispy_field}}</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="">{{form.company | as_crispy_field}}</div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class=""> {{form.visible_flag| as_crispy_field}}</div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="">{{form.publication_desc | as_crispy_field}}</div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    {% if 'edit' in  request.path %}
+                    <div class=""><span>{{form.file_name | as_crispy_field}}</span><span><small>Current file: {{uploaded_file}}</small></span></div>
+                    {% else %}
+                    <div class="">{{form.file_name | as_crispy_field}}</div>
+                    {% endif%}
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                    &nbsp;
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                    <button class="btn btn btn-info" type="submit">Add Publication</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+        <small>As of {{rpt_date}}</small>
+    </div>
+</div>
+{% endblock %}
+
+<!--form class="hero-form" method="post"  novalidate>
+    {% csrf_token %}
+    <div class="container-fluid my_nopad">
+        <div>
+            <table class="table table-sm table-bordered my_input">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><span class="my_info_txt ml-3">Date Range</span></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="input-group-prepend">
+            {full_search_form.from_date| as_crispy_field}<i
+                class=" mt-0 fa fa-calendar fa-fw fa-2x text-info"></i>
+        </div>
+        <div class="input-group-prepend">
+            {full_search_form.to_date| as_crispy_field}<i
+                class=" mt-0 fa fa-calendar fa-fw fa-2x text-info"></i>
+        </div>
+        <div>
+            <table class="table table-sm table-bordered my_input">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><span class="my_info_txt ml-3">Author</span></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div>
+            {full_search_form.author| as_crispy_field}
+        </div>
+        <div>
+            <table class="table table-sm table-bordered my_input">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><span class="my_info_txt ml-3">category</span></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div>
+            {full_search_form.category| as_crispy_field}
+        </div>
+        <div>
+            <table class="table table-sm table-bordered my_input">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><span class="my_info_txt ml-3">Type</span></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="jdapublicationsapp_ajax_set_type_waiter">
+            {full_search_form.type | as_crispy_field}
+        </div>
+        <div>
+            <table class="table table-sm table-bordered my_input">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="text-center">
+                        <button class="btn btn-sm btn-info" type="submit">Submit</button>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</form-->
+<!--/div-->
+<!--div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+
+    <table class="table table-sm table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Author</th>
+            <th scope="col">Category</th>
+            <th scope="col">Type</th>
+            <th scope="col">Subject</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in search_result %}
+        <tr>
+            <th scope="row" class="text-center">{i.id}</th>
+            <td>{i.publication_date}</td>
+            <td>{i.author}</td>
+            <td>{i.research_category}</td>
+            <td>{i.research_type}</td>
+            <td>{i.subject}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div-->
+

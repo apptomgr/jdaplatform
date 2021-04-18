@@ -1,0 +1,472 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
+                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 mt-2"></i></a>
+            <span class="Xmy_info_txt_title mt-3 text-secondary"><h6>{{title}}</h6></span>
+        </div>
+    </div>
+    <form class="hero-form" method="post" novalidate>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table id='bal_tbl' class="table table-sm table-bordered table-hover">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="input-min-width">Labels</th>
+                        <th class="input-min-width">Exercice</th>
+                        <!--th class="input-min-width">Prev Net</th-->
+                    </tr>
+                    <tr>
+                        <td class="text-center">0</td>
+                        <td class="font-weight-bold">{{lines.0}}</td>
+                        <td>{{form.brut_0}} | as_crispy_field}</td>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td>{{lines.1}}</td>
+                        <td>{{form.brut_1 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td>{{lines.2}}</td>
+                        <td>{{form.brut_2 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>{{lines.3}}</td>
+                        <td>{{form.brut_3 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td class="font-weight-bold">{{lines.4}}</td>
+                        <td>{{form.brut_4 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">5</td>
+                        <td>{{lines.5}}</td>
+                        <td>{{form.brut_5 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">6</td>
+                        <td>{{lines.6}}</td>
+                        <td>{{form.brut_6 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">7</td>
+                        <td>{{lines.7}}</td>
+                        <td>{{form.brut_7 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">8</td>
+                        <td class="font-weight-bold">{{lines.8}}</td>
+                        <td>{{form.brut_8 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">9</td>
+                        <td>{{lines.9}}</td>
+                        <td>{{form.brut_9 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">10</td>
+                        <td>{{lines.10}}</td>
+                        <td>{{form.brut_10 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">11</td>
+                        <td>{{lines.11}}</td>
+                        <td>{{form.brut_11 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">12</td>
+                        <td>{{lines.12}}</td>
+                        <td>{{form.brut_12 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">13</td>
+                        <td>{{lines.13}}</td>
+                        <td>{{form.brut_13 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">14</td>
+                        <td>{{lines.14}}</td>
+                        <td>{{form.brut_14 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">15</td>
+                        <td>{{lines.15}}</td>
+                        <td>{{form.brut_15 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">16</td>
+                        <td>{{lines.16}}</td>
+                        <td>{{form.brut_16 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">17</td>
+                        <td>{{lines.17}}</td>
+                        <td>{{form.brut_17 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">18</td>
+                        <td>{{lines.18}}</td>
+                        <td>{{form.brut_18 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">19</td>
+                        <td>{{lines.19}}</td>
+                        <td>{{form.brut_19 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">20</td>
+                        <td>{{lines.20}}</td>
+                        <td>{{form.brut_20 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">21</td>
+                        <td>{{lines.21}}</td>
+                        <td>{{form.brut_21 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">22</td>
+                        <td class="font-weight-bold">{{lines.22}}</td>
+                        <td>{{form.brut_22 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">23</td>
+                        <td>{{lines.23}}</td>
+                        <td>{{form.brut_23 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">24</td>
+                        <td class="font-weight-bold">{{lines.24}}</td>
+                        <td>{{form.brut_24 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">25</td>
+                        <td>{{lines.25}}</td>
+                        <td>{{form.brut_25 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">26</td>
+                        <td>{{lines.26}}</td>
+                        <td>{{form.brut_26 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">27</td>
+                        <td class="font-weight-bold">{{lines.27}}</td>
+                        <td>{{form.brut_27 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">28</td>
+                        <td>{{lines.28}}</td>
+                        <td>{{form.brut_28 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">29</td>
+                        <td>{{lines.29}}</td>
+                        <td>{{form.brut_29 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">30</td>
+                        <td>{{lines.30}}</td>
+                        <td>{{form.brut_30 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">31</td>
+                        <td>{{lines.31}}</td>
+                        <td>{{form.brut_31 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">32</td>
+                        <td>{{lines.32}}</td>
+                        <td>{{form.brut_32 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">33</td>
+                        <td class="font-weight-bold">{{lines.33}}</td>
+                        <td>{{form.brut_33 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">34</td>
+                        <td class="font-weight-bold">{{lines.34}}</td>
+                        <td>{{form.brut_34 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">35</td>
+                        <td>{{lines.35}}</td>
+                        <td>{{form.brut_35 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">36</td>
+                        <td>{{lines.36}}</td>
+                        <td>{{form.brut_36 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">37</td>
+                        <td>{{lines.37}}</td>
+                        <td>{{form.brut_37 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">38</td>
+                        <td>{{lines.38}}</td>
+                        <td>{{form.brut_38 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">39</td>
+                        <td class="font-weight-bold">{{lines.39}}</td>
+                        <td>{{form.brut_39 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">40</td>
+                        <td>{{lines.40}}</td>
+                        <td>{{form.brut_40 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">41</td>
+                        <td>{{lines.41}}</td>
+                        <td>{{form.brut_41 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">42</td>
+                        <td class="font-weight-bold">{{lines.42}}</td>
+                        <td>{{form.brut_42 | as_crispy_field}}</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info" role="button" type="submit" value="submit">
+        </div>
+    </form>
+</div>
+
+<style>
+
+table td {
+  position: relative;
+}
+
+th {
+  text-align: left;
+  background-color:#EEEEEE;
+  /*min-width:100px;*/
+}
+
+td {
+ text-align:left;
+}
+
+
+table td input {
+  position: absolute;
+  display: block;
+  top:0;
+  left:0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: solid 1px;
+  border-color:#f8f9fa;
+  border-width: 1px;
+  padding: 1px;
+  box-sizing: border-box;
+  min-width:100px;
+}
+
+.asterisk{
+ max-width: 30px;
+ align:center;
+}
+
+.min_width{
+ min-width:80px;
+}
+
+.input-min-width{
+ min-width:100px;
+}
+
+input[id=id_brut_0]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+
+
+/*No input for subtotal vals*/
+input[id=id_brut_4]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_8]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_22]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_24]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_27]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_33]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_34]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_39]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_42]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+
+
+</style>
+
+<script>
+function calc()
+{
+ //set_passive_header(); // Add passive label only once
+ b0=document.getElementById('id_brut_0').value=0.00;
+ b1=document.getElementById('id_brut_1').value;
+ b2=document.getElementById('id_brut_2').value;
+ b3=document.getElementById('id_brut_3').value;
+ b4=document.getElementById('id_brut_4').value;
+ b5=document.getElementById('id_brut_5').value;
+ b6=document.getElementById('id_brut_6').value;
+ b7=document.getElementById('id_brut_7').value;
+ b8=document.getElementById('id_brut_8').value;
+ b9=document.getElementById('id_brut_9').value;
+ b10=document.getElementById('id_brut_10').value;
+ b11=document.getElementById('id_brut_11').value;
+ b12=document.getElementById('id_brut_12').value;
+ b13=document.getElementById('id_brut_13').value;
+ b14=document.getElementById('id_brut_14').value;
+ b15=document.getElementById('id_brut_15').value;
+ b16=document.getElementById('id_brut_16').value;
+ b17=document.getElementById('id_brut_17').value;
+ b18=document.getElementById('id_brut_18').value;
+ b19=document.getElementById('id_brut_19').value;
+ b20=document.getElementById('id_brut_20').value;
+ b21=document.getElementById('id_brut_21').value;
+ b22=document.getElementById('id_brut_22').value;
+ b23=document.getElementById('id_brut_23').value;
+ b24=document.getElementById('id_brut_24').value;
+ b25=document.getElementById('id_brut_25').value;
+ b26=document.getElementById('id_brut_26').value;
+ b27=document.getElementById('id_brut_27').value;
+ b28=document.getElementById('id_brut_28').value;
+ b29=document.getElementById('id_brut_29').value;
+ b30=document.getElementById('id_brut_30').value;
+ b31=document.getElementById('id_brut_31').value;
+ b32=document.getElementById('id_brut_32').value;
+ b33=document.getElementById('id_brut_33').value;
+ b34=document.getElementById('id_brut_34').value;
+ b35=document.getElementById('id_brut_35').value;
+ b36=document.getElementById('id_brut_36').value;
+ b37=document.getElementById('id_brut_37').value;
+ b38=document.getElementById('id_brut_38').value;
+ b39=document.getElementById('id_brut_39').value;
+ b40=document.getElementById('id_brut_40').value;
+ b41=document.getElementById('id_brut_41').value;
+ b42=document.getElementById('id_brut_42').value;
+
+ /* Sub totals */
+ document.getElementById("id_brut_4").value=sum(b1,b2,b3); //MARGE COMMERCIALE (somme TA à RB)
+ document.getElementById("id_brut_8").value=sum(b1,b5,b6,b7); //CHIFFRE D'AFFAIRES (A+B+C+D)
+ document.getElementById("id_brut_22").value=sum(b8, b9,b10,b11,b12,b13,b14,b15,b16,b17,b18,b19,b20,b21); //VALEUR AJOUTEE (XB+RA+RB) + somme (TE à RJ)
+ document.getElementById("id_brut_24").value=sum(b22,b23); //EXCEDENT BRUT D'EXPLOITATION (XC + RK)
+ document.getElementById("id_brut_27").value=sum(b24,b25,b26); //RESULTAT D'EXPLOITATION (XD+TJ+RL)
+ document.getElementById("id_brut_33").value=sum(b28,b29,b30,b31,b32); //RESULTAT FINANCIER (somme de TK à RN)
+ document.getElementById("id_brut_34").value=sum(b27,b33); //RESULTAT DES ACTIVITES ORDINAIRES (XE+XF)
+ document.getElementById("id_brut_39").value=sum(b35,b36,b37,b38); //RESULTAT HORS ACTIVITES ORDINAIRES (somme de TN à RP)
+ document.getElementById("id_brut_42").value=sum(b34,b39,b40,b41); //RESULTAT NET (XG+XH+RQ+RS)
+}
+
+
+function sum()
+{
+ var tot = 0.00;
+ for (i = 0; i < arguments.length; i++)
+ {
+  tot+=parseFloat(arguments[i]);
+ }
+ if (isNaN(tot)) {
+    return '0.00';
+  }
+  else
+  {
+   return tot.toFixed(2);
+ }
+}
+
+/*
+function my_lbl_row()
+{
+ var table = document.getElementById("bal_tbl");
+  var row = table.insertRow(32);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  cell1.innerHTML = '';
+  cell2.innerHTML = "<span class='text-center font-weight-bold'>BALANCE SHEET(PASSIF)</span>";
+}
+
+
+function my_input_row()
+{
+ var table = document.getElementById("bal_table_input");
+  var row = table.insertRow(32);
+  var cell1 = row.insertCell(0);
+
+  cell1.innerHTML = "<span class='text-center font-weight-bold'>BRUT</span>";
+}
+*/
+/*
+function paint_row_hearder()
+{
+ var cells_actif  = document.querySelectorAll('tr:nth-child(6)');
+ var cells_passif = document.querySelectorAll('tr:nth-child(38)');
+
+ for(var i = 0 ; i < cells_actif.length ; i++)
+ {
+  if(cells_actif[i].textContent.trim() > '')
+  {
+    cells_actif[i].classList.add('my_header_bg');
+  }
+ }
+
+ for(var i = 0 ; i < cells_passif.length ; i++)
+ {
+  if(cells_passif[i].textContent.trim() > '')
+  {
+   cells_passif[i].classList.add('my_header_bg');
+  }
+ }
+}
+
+*/
+
+/*
+var set_passive_header = (function() {
+    var executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            // do something only once
+            //paint_row_hearder();
+        }
+    };
+})();
+
+*/
+  window.onload = function(){
+        // All code comes here
+        calc();
+        //paint_row_hearder();
+ }
+
+</script>
+{% endblock %}
+
+
+

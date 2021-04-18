@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>JDA Platform</title>
+    <meta content="" name="descriptison">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'jdamainapp/assets/img/Joseph-&-Daniel-ADVISORY-logo.png' %}" rel="icon">
+    <link href="{% static 'jdamainapp/assets/img/apple-touch-icon.png' %} " rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Raleway:300,400,400i,500,500i,700,800,900" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'jdamainapp/assets/vendor/bootstrap/css/bootstrap.min.css'%} " rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/animate.css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/nivo-slider/css/nivo-slider.css' %}" rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/owl.carousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'jdamainapp/assets/vendor/venobox/venobox.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'jdamainapp/assets/css/style.css' %}" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: eBusiness - v2.1.1
+    * Template URL: https://bootstrapmade.com/ebusiness-bootstrap-corporate-template/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body data-spy="scroll" data-target="#navbar-example">
+
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top">
+    <div class="container-custom d-flex">
+
+        <div class="logo mr-auto">
+            <h1 class="text-light"><a href="index.html"><span>J&D </span>Advisory</a></h1>
+        </div>
+
+        <nav class="nav-menu d-none d-lg-block">
+            <ul>
+                <li class="active"><a href="{% url 'jdamainapp_home' %}">JDA Platform</a></li>
+                <li><a href="{% url 'jdafinancialsapp_home' %}">JDA Financials App</a></li>
+                <li><a href="{% url 'jdapublicationsapp_home' %}">JDA Publications App</a></li>
+                <li><a href="{ url 'jdaanalyticsapp_home' }">JDA Analytics App</a></li>
+                <!--li><a href="#career">Career</a></li>
+                <li><a href="#contact">Contact</a></li-->
+                <li class="login"><a href=""><i class="fa fa-user text-secondary" aria-hidden="true"></i> Members</a></li>
+                <li><a href="index_fr.html"><span class="flag-icon flag-icon-fr"></span> Fr</a></li>
+            </ul>
+        </nav><!-- .nav-menu -->
+    </div>
+</header><!-- End Header -->
+
+<main id="main">
+    <div class="about-area main_container_area-padding" id="about">
+        <div class="container-custom wow">
+                {% block content %}
+
+                {% endblock %}
+        </div>
+    </div>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer>
+    <div class="footer-area">
+        <div class="container-custom">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="footer-content">
+                        <div class="footer-head">
+                            <div class="footer-logo">
+                                <h2><span>J&D </span>Advisory</h2>
+                            </div>
+
+                            <p>The first independent research and investment advisory agency in the BRVM market, Joseph
+                                & Daniel Advisory is located in the Ivorian capital Abidjan, more precisely at the
+                                Riviera II roundabout in the Cocody town.
+                                </p>
+                            <div class="footer-icons">
+                                <ul>
+                                    <li>
+                                        <a href="#"><i class="fab fa-facebook-f"></i></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-twitter"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-google"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end single footer -->
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    <div class="footer-content">
+                        <div class="footer-head">
+                            <h4>information</h4>
+                            <p>
+                                More <span class="font-weight-bold">J&D</span> info
+                            </p>
+                            <div class="footer-contacts">
+                                <p><span>Tel:</span> +225 22 46 78 95</p>
+                                <p><span>Email:</span> info@jda-ci.com</p>
+                                <p><span>Working Hours:</span> 8am-5pm</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end single footer -->
+                <div class="col-md-3 col-sm-3 col-xs-12">
+                    <div class="footer-content">
+                        <div class="footer-head">
+                            <h4>Instagram</h4>
+                            <div class="flicker-img">
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/1.jpg'%}" alt=""></a>
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/2.jpg'%}" alt=""></a>
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/3.jpg'%}" alt=""></a>
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/4.jpg'%}" alt=""></a>
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/5.jpg'%}" alt=""></a>
+                                <a><img src="{% static 'jdamainapp/assets/img/portfolio/6.jpg'%}" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-area-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="copyright text-center">
+                        <p>
+                            <i class="far fa-copyright"></i> Copyright <strong><span>JDA</span></strong>. All Rights Reserved
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</footer><!-- End  Footer -->
+
+<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+<div id="preloaderX"></div>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'jdamainapp/assets/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/php-email-form/validate.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/appear/jquery.appear.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/knob/jquery.knob.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/parallax/parallax.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/wow/wow.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/nivo-slider/js/jquery.nivo.slider.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'jdamainapp/assets/vendor/venobox/venobox.min.js' %}"></script>
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js' %}" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script-->
+
+<!-- Template Main JS File -->
+<script src="{% static 'jdamainapp/assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

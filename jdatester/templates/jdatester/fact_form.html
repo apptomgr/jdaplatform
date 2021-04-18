@@ -1,0 +1,144 @@
+{% extends 'jdatester/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i class="fas fa-layer-group  fa-2x my_info_txt mr-1 mt-2"></i></a>
+            <span class="Xmy_info_txt_title mt-3 text-secondary"><h6>{{title}}</h6></span>
+        </div>
+    </div>
+    <form class="hero-form" method="post" novalidate>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="row">
+                <table id='bal_tbl' class="table table-sm table-bordered table-hover">
+                    <tr>
+                        <th class="min_width">Line</th>
+                        <th>Brut</th>
+
+                    </tr>
+                        <td>ACTIF</td>
+                        <td>{{form.val_1 | as_crispy_field}}</td>
+                    <tr>
+                    <tr>
+                        <td>Immobilisations Incorporelles</td>
+                        <td>{{form.val_2 | as_crispy_field}}</td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info" role="button" type="submit" value="submit">
+        </div>
+    </form>
+
+</div>
+
+<style>
+
+table td {
+  position: relative;
+}
+
+th {
+  text-align: left;
+  background-color:#EEEEEE;
+  /*min-width:150px;*/
+}
+
+td {
+ text-align:left;
+}
+
+
+table td input {
+  position: absolute;
+  display: block;
+  top:0;
+  left:0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: solid 1px;
+  border-color:#f8f9fa;
+  border-width: 1px;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.asterisk{
+ max-width: 30px;
+ align:center;
+}
+
+.min_width{
+ min-width:150px;
+}
+
+/*input[id=id_form-0-value_brut]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+input[id=id_form-0-value_amort]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+input[id=id_form-0-value_net]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+input[id=id_form-0-value_net_prev_yr]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+*/
+input[id=id_form-32-value_brut]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+input[id=id_form-32-value_amort]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+input[id=id_form-32-value_net]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+input[id=id_form-32-value_net_prev_yr]{pointer-events: none; color:#ffffff; background-color:#f8f9f8;}
+
+input[id=id_form-1-value_brut]{pointer-events: none;  border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-6-value_brut]{pointer-events: none;  border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-15-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-18-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-21-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-25-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-29-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-31-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-43-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-47-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-48-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-55-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-58-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+input[id=id_form-60-value_brut]{pointer-events: none; border: solid 1px; border-color:#CED4DA; font-weight:bold; border-radius: 5px;}
+
+
+.my_bold
+{
+ font-weight:bold;
+}
+
+.my_header_bg
+{
+ background-color: #f8f9f8;
+}
+
+.my_bold_total
+{
+ border-bottom-style: hidden;
+ font-weight:bold;
+ margin-left:5px;
+ background-color: #dee2c6;
+}
+</style>
+
+{% endblock %}
+
+

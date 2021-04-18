@@ -1,0 +1,112 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="card text-center mt-3">
+    <!--div class="card-header">
+        <h5>Edit <span class="text-info">{{company}}</span> Balance Sheet {{date}} entry {{bal_pk}}</h5>
+    </div-->
+    <div class="card-header">
+        <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {{title}}</h5>
+    </div>
+    <form class="hero-form" method="POST"  novalidate>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    {{form.bal_type | as_crispy_field}}
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    {{form.bal_company | as_crispy_field}}
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    <div class="input-group justify-content-left">
+                        <div class="input-group-prepend">
+                            {{form.bal_date| as_crispy_field}}<i
+                                class=" mt-0 far fa-calendar-alt fa-fw fa-2x  text-info"></i>
+                        </div>
+                    </div>
+                </div>
+                <!--div class="row invisible col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    <input type="text" name="bal_edit_pk" value="{{bal_edit_pk}}">
+                </div-->
+            </div>
+            <div class="row container table-responsive">
+                <table class="table table-sm table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-md-4 Xmy_nopad text-left bg-light">Balance Sheet items</th>
+                        <th class="col-md-4 Xmy_nopad bg-light" style="min-width:300px">Brut</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.bal_item_label_1}}</td>
+                        <td class="col-md-4 Xmy_nopad">{{form.bal_item_amt_1 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.bal_item_label_2}}</td>
+                        <td class="col-md-4 Xmy_nopad">{{form.bal_item_amt_2 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.bal_item_label_3}}</td>
+                        <td class="col-md-4 Xmy_nopad">{{form.bal_item_amt_3 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.bal_item_label_4}}</td>
+                        <td class="col-md-4 Xmy_nopad">{{form.bal_item_amt_4 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4 Xmy_nopad text-left fw-bold">{{labels.bal_item_label_4}}</td>
+                        <td class="col-md-4 Xmy_nopad">{{form.bal_item_amt_5 | as_crispy_field}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info" role="button" type="submit" value="{{submit_label}}">
+        </div>
+    </form>
+
+</div>
+<style>
+table td {
+  position: relative;
+}
+
+table td input {
+  position: absolute;
+
+  top:0;
+  left:0;
+  margin: 20;
+  height: 100% !important;
+  width: 300px !important;
+  border-radius: 0 !important;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+
+</style>
+{% endblock %}
+
+
+

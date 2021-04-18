@@ -1,0 +1,142 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
+                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
+            <span class="text-secondary Xmt-3"><h6>{{title}} </h6></span>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-sm table-striped table-hover table-bordered">
+            <th>#</th>
+            <th class="text-left">Statement Line Items</th>
+            <th>Brut</th>
+            <th>Amort</th>
+            <th>Net</th>
+            {% for i in bal %}
+            <tr>
+                <td class="font-weight-bold">{{ forloop.counter0 }}</td>
+                <td class="text-left">{{i.financial_statement_line}}</td>
+                <td class="text-right">{{i.brut}}</td>
+                <td class="text-right">{{i.amort}}</td>
+                <td class="text-right">{{i.net}}</td>
+            </tr>
+
+            {% endfor %}
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+        <!--small id="bank_waiter">As of {{rpt_date}}</small-->
+        <a href="{% url 'jdafinancialsapp_bal_edit_form' stmt_params.0 stmt_params.1 stmt_params.2 stmt_params.3 %}">
+        <input class="btn btn-info" role="button" type="submit" value="Edit Statement">
+        </a>
+    </div>
+
+
+</div>
+
+<style>
+.my_header_color_bold
+{
+ font-weight:bold;
+ background-color: #f8f9f8;
+}
+
+.my_header_td_fff
+{
+ /*background-color:yellow;*/
+ color:#ffffff;
+}
+</style>
+
+<script>
+ window.onload = function(){
+  // All code comes here
+  paint_row_hearder();
+ }
+
+function paint_row_hearder()
+{
+ var cells_td_0 = document.querySelectorAll('td:nth-child(3)'); //ACTIF td brut
+ var cells_td_1 = document.querySelectorAll('td:nth-child(4)'); //ACTIF td amort
+ var cells_td_2 = document.querySelectorAll('td:nth-child(5)'); //ACTIF td net
+
+ var cells_0 = document.querySelectorAll('tr:nth-child(2)'); //ACTIF
+ var cells_1 = document.querySelectorAll('tr:nth-child(3)'); // Immobilisations incorporelles
+ var cells_6 = document.querySelectorAll('tr:nth-child(8)'); // Immobilisations corporelles
+ var cells_13 = document.querySelectorAll('tr:nth-child(15)'); // Immobilisations Fianancieres
+ var cells_16 = document.querySelectorAll('tr:nth-child(18)'); // TOTAL ACTIF IMMOBILISE
+ var cells_17 = document.querySelectorAll('tr:nth-child(19)'); // Actif circulant H.A.O.
+ var cells_19 = document.querySelectorAll('tr:nth-child(21)'); // Créances et emplois assimilés
+ var cells_23 = document.querySelectorAll('tr:nth-child(25)'); //TOTAL ACTIF CIRCULANT
+ var cells_27 = document.querySelectorAll('tr:nth-child(29)'); //TOTAL TRESORERIE ACTIF
+ var cells_29 = document.querySelectorAll('tr:nth-child(31)'); //TOTAL GENERAL
+ var cells_30 = document.querySelectorAll('tr:nth-child(32)'); //PASSIF
+ var cells_41 = document.querySelectorAll('tr:nth-child(43)'); //TOTAL CAPITAUX PROPRES ET RESSOURCES ASSIMILEES
+ var cells_45 = document.querySelectorAll('tr:nth-child(47)'); //TOTAL DETTES FINANCIERES ET RESSOURCES ASSIMILEES
+ var cells_53 = document.querySelectorAll('tr:nth-child(55)'); //OTAL PASSIF CIRCULANT
+ var cells_56 = document.querySelectorAll('tr:nth-child(58)'); //TOTAL TRESORERIE PASSIF
+
+
+ for(var i = 0 ; i < cells_0.length ; i++)
+ {
+  if(cells_0[i].textContent.trim() > '')
+  {
+    cells_0[i].classList.add('my_header_color_bold');
+    cells_1[i].classList.add('my_header_color_bold');
+    cells_6[i].classList.add('my_header_color_bold');
+    cells_13[i].classList.add('my_header_color_bold');
+    cells_16[i].classList.add('my_header_color_bold');
+    cells_17[i].classList.add('my_header_color_bold');
+    cells_19[i].classList.add('my_header_color_bold');
+    cells_23[i].classList.add('my_header_color_bold');
+    cells_27[i].classList.add('my_header_color_bold');
+    cells_29[i].classList.add('my_header_color_bold');
+    cells_30[i].classList.add('my_header_color_bold');
+    cells_41[i].classList.add('my_header_color_bold');
+    cells_45[i].classList.add('my_header_color_bold');
+    cells_53[i].classList.add('my_header_color_bold');
+    cells_56[i].classList.add('my_header_color_bold');
+
+    cells_td_0[i].classList.add('my_header_td_fff');
+    cells_td_1[i].classList.add('my_header_td_fff');
+    cells_td_2[i].classList.add('my_header_td_fff');
+  }
+ }
+
+ /*for(var i = 0 ; i < cells_30.length ; i++)
+ {
+  if(cells_30[i].textContent.trim() > '')
+  {
+   cells_30[i].classList.add('my_header_td_fff');
+   cells_31[i].classList.add('my_header_td_fff');
+   cells_32[i].classList.add('my_header_td_fff');
+  }
+ }*/
+}
+
+
+
+</script>
+
+{% endblock %}
+

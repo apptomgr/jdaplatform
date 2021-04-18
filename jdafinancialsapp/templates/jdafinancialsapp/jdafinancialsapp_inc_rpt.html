@@ -1,0 +1,135 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
+                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
+            <span class="text-secondary Xmt-3"><h6>{{title}} </h6></span>
+        </div>
+    </div>
+
+    <div>
+        <table id="inc_tbl" class="table table-sm table-striped table-hover table-bordered">
+            <th>#</th>
+            <th class="text-left">Statement Line Items</th>
+            <th class="text-right">Exercice {{curr_yr}}</th>
+            <th class="text-right">Exercice {{prev_yr}}</th>
+            {% if iterate_type == 'zip' %}
+            {% for i, j in inc_res %}
+            <tr>
+                <td class="font-weight-bold">{{ forloop.counter0 }}</td>
+                <td class="text-left">{{i.financial_statement_line}}</td>
+                <td class="text-right">{{i.brut}}</td>
+                <td class="text-right">{{j.brut}}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            {% for i in inc_res %}
+            <tr>
+                <td class="font-weight-bold">{{ forloop.counter0 }}</td>
+                <td class="text-left">{{i.financial_statement_line}}</td>
+                <td class="text-right">{{i.brut}}</td>
+                <td class="text-right">None</td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+        <!--small id="bank_waiter">As of {{rpt_date}}</small-->
+        <a href="{% url 'jdafinancialsapp_inc_edit_form' stmt_params.0 stmt_params.1 stmt_params.2 stmt_params.3 %}">
+            <input class="btn btn-info" role="button" type="submit" value="Edit Statement">
+        </a>
+    </div>
+
+
+</div>
+
+<style>
+.my_header_color_bold
+{
+ font-weight:bold;
+ background-color: #f8f9f8;
+}
+
+.my_header_td_fff
+{
+ /*background-color:yellow;*/
+ color:#ffffff;
+}
+
+.my_bg {
+  background: orange;
+}
+
+</style>
+
+<script>
+ window.onload = function(){
+  // All code comes here
+  paint_row_hearder();
+ }
+
+function paint_row_hearder()
+{
+ /* table rows */
+ var row_0 = document.querySelectorAll('tr:nth-child(2)'); //LIBELLES = row0+2
+ var row_4 = document.querySelectorAll('tr:nth-child(6)'); //MARGE COMMERCIALE (somme TA à RB) = row4+2
+ var row_8 = document.querySelectorAll('tr:nth-child(10)'); //CHIFFRE D"AFFAIRES (A+B+C+D) (somme TA à RB)
+ var row_22 = document.querySelectorAll('tr:nth-child(24)'); //VALEUR AJOUTEE (XB+RA+RB)
+ var row_24 = document.querySelectorAll('tr:nth-child(26)'); //EXCEDENT BRUT D"EXPLOITATION (XC + RK)
+ var row_27 = document.querySelectorAll('tr:nth-child(29)'); //RESULTAT D'EXPLOITATION (XD+TJ+RL)
+ var row_33 = document.querySelectorAll('tr:nth-child(35)'); //RESULTAT FINANCIER (somme de TK à RN)
+ var row_34 = document.querySelectorAll('tr:nth-child(36)'); //RESULTAT DES ACTIVITES ORDINAIRES (XE+XF)
+ var row_39 = document.querySelectorAll('tr:nth-child(41)'); //RESULTAT HORS ACTIVITES ORDINAIRES (somme de TN à RP)
+ var row_42 = document.querySelectorAll('tr:nth-child(44)'); //RESULTAT NET (XG+XH+RQ+RS)
+
+ /* table Columns */
+ var td_brut_val = document.querySelectorAll('td:nth-child(3)'); //LIBELLE td brut
+ var td_brut_prev_val = document.querySelectorAll('td:nth-child(4)'); //LIBELLE td brut prev
+
+ /*for all td in row_0 add a bold color then mask td_brut_val*/
+ for(var i = 0 ; i < row_0.length ; i++)
+ {
+  if(row_0[i].textContent.trim() > '')
+  {
+   row_0[i].classList.add('my_header_color_bold');  //bold entire row_0
+   row_4[i].classList.add('my_header_color_bold');  //bold entire row_4
+   row_8[i].classList.add('my_header_color_bold');  //bold entire row_8
+   row_22[i].classList.add('my_header_color_bold');  //bold entire row_22
+   row_24[i].classList.add('my_header_color_bold');  //bold entire row_24
+   row_27[i].classList.add('my_header_color_bold');  //bold entire row_27
+   row_33[i].classList.add('my_header_color_bold');  //bold entire row_33
+   row_34[i].classList.add('my_header_color_bold');  //bold entire row_34
+   row_39[i].classList.add('my_header_color_bold');  //bold entire row_39
+   row_42[i].classList.add('my_header_color_bold');  //bold entire row_42
+
+   td_brut_val[i].classList.add('my_header_td_fff'); // mask only td cell 2
+   td_brut_prev_val[i].classList.add('my_header_td_fff'); // mask only td cell 3
+  }
+ }
+}
+
+</script>
+
+{% endblock %}
+

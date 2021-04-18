@@ -1,0 +1,108 @@
+{% extends 'jdamainapp/jdamainapp_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<div class="card shadow-sm p-2 mb-3 bg-white rounded">
+    <div class="card-header">
+        <div class="text-center">
+            <h5>Publications</h5>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <form class="hero-form" method="post" action="{% url 'jdapublicationapp_filter' %}" novalidate>
+                    {% csrf_token %}
+                <div class="card shadow-sm bg-light mb-0" style="max-width: 18rem;">
+                    <div class="card-header text-center">Filters</div>
+                    <div class="card-body my_nopad">
+
+                        <div class="mt-1">
+                            <div class="input-group ml-1">
+                                <div class="input-group-prepend">
+                                    {{filterForm.from_date| as_crispy_field}}<i class="mr-2 far fa-calendar-alt fa-fw fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group ml-1">
+                                <div class="input-group-prepend">
+                                    {{filterForm.to_date| as_crispy_field}}<i class=" mr-2 far fa-calendar-alt fa-fw fa-2x text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-1 mr-1">
+                            {{filterForm.author| as_crispy_field}}
+                        </div>
+                        <div class="ml-1 mr-1">
+                            {{filterForm.research_category | as_crispy_field}}
+                        </div>
+                        <div class="ml-1 mr-1">
+                            {{filterForm.research_type | as_crispy_field}}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-sm btn-info mb-2">Filter</button>
+                            <button type="reset" class="btn btn-sm btn-secondary  mb-2">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <table id="publication_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                <!--table id="publication_listing" class="table table-striped table-bordered dt-responsive" style="width:100%"-->
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Author</th>
+                        <th>Publication Date</th>
+                        <th>Research Category</th>
+                        <th>Research Type</th>
+                        <th>Subject</th>
+                        <th>Publication_desc</th>
+                        <th>File Name</th>
+                        <th>Upload Date</th>
+                        <th>View File</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in publication_listing%}
+                    <tr>
+                        <td>{{i.pk}}</td>
+                        <td>{{i.author}}</td>
+                        <td>{{i.publication_date}}</td>
+                        <td>{{i.research_category}}</td>
+                        <td>{{i.research_type}}</td>
+                        <td>{{i.subject}}</td>
+                        <td>{{i.publication_desc}}</td>
+                        <td>{{i.file_name.name}}</td>
+                        <td>{{i.uploaded_at}}</td>
+                        <td><a href="{{ i.file_name.url }}">
+                            <button class="btn btn-info btn-sm">View</button>
+                        </a></td>
+                    </tr>
+                    {% endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

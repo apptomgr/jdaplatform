@@ -1,0 +1,954 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
+                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 mt-2"></i></a>
+            <span class="Xmy_info_txt_title mt-3 text-secondary"><h6>{{title}}</h6></span>
+        </div>
+    </div>
+    <form class="hero-form" method="post" novalidate>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table id='bal_tbl' class="table table-sm table-bordered table-hover">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="input-min-width">Labels</th>
+                        <th class="input-min-width">Brut</th>
+                        <th class="input-min-width">Amort</th>
+                        <th class="input-min-width">Net</th>
+                        <!--th class="input-min-width">Prev Net</th-->
+                    </tr>
+                    <tr>
+                        <td class="text-center">0</td>
+                        <td class="font-weight-bold">{{lines.0}}</td>
+                        <td>{{form.brut_0 | as_crispy_field}}</td>
+                        <td>{{form.amort_0 | as_crispy_field}}</td>
+                        <td>{{form.net_0 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td class="font-weight-bold">{{lines.1}}</td>
+                        <td>{{form.brut_1 | as_crispy_field}}</td>
+                        <td>{{form.amort_1 | as_crispy_field}}</td>
+                        <td>{{form.net_1 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td>{{lines.2}}</td>
+                        <td>{{form.brut_2 | as_crispy_field}}</td>
+                        <td>{{form.amort_2 | as_crispy_field}}</td>
+                        <td>{{form.net_2 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>{{lines.3}}</td>
+                        <td>{{form.brut_3 | as_crispy_field}}</td>
+                        <td>{{form.amort_3 | as_crispy_field}}</td>
+                        <td>{{form.net_3 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td>{{lines.4}}</td>
+                        <td>{{form.brut_4 | as_crispy_field}}</td>
+                        <td>{{form.amort_4 | as_crispy_field}}</td>
+                        <td>{{form.net_4 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">5</td>
+                        <td>{{lines.5}}</td>
+                        <td>{{form.brut_5 | as_crispy_field}}</td>
+                        <td>{{form.amort_5 | as_crispy_field}}</td>
+                        <td>{{form.net_5 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">6</td>
+                        <td class="font-weight-bold">{{lines.6}}</td>
+                        <td>{{form.brut_6 | as_crispy_field}}</td>
+                        <td>{{form.amort_6 | as_crispy_field}}</td>
+                        <td>{{form.net_6 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">7</td>
+                        <td>{{lines.7}}</td>
+                        <td>{{form.brut_7 | as_crispy_field}}</td>
+                        <td>{{form.amort_7 | as_crispy_field}}</td>
+                        <td>{{form.net_7 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">8</td>
+                        <td>{{lines.8}}</td>
+                        <td>{{form.brut_8 | as_crispy_field}}</td>
+                        <td>{{form.amort_8 | as_crispy_field}}</td>
+                        <td>{{form.net_8 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">9</td>
+                        <td>{{lines.9}}</td>
+                        <td>{{form.brut_9 | as_crispy_field}}</td>
+                        <td>{{form.amort_9 | as_crispy_field}}</td>
+                        <td>{{form.net_9 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">10</td>
+                        <td>{{lines.10}}</td>
+                        <td>{{form.brut_10 | as_crispy_field}}</td>
+                        <td>{{form.amort_10 | as_crispy_field}}</td>
+                        <td>{{form.net_10 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">11</td>
+                        <td>{{lines.11}}</td>
+                        <td>{{form.brut_11 | as_crispy_field}}</td>
+                        <td>{{form.amort_11 | as_crispy_field}}</td>
+                        <td>{{form.net_11 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">12</td>
+                        <td>{{lines.12}}</td>
+                        <td>{{form.brut_12 | as_crispy_field}}</td>
+                        <td>{{form.amort_12 | as_crispy_field}}</td>
+                        <td>{{form.net_12 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">13</td>
+                        <td class="font-weight-bold">{{lines.13}}</td>
+                        <td>{{form.brut_13 | as_crispy_field}}</td>
+                        <td>{{form.amort_13 | as_crispy_field}}</td>
+                        <td>{{form.net_13 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">14</td>
+                        <td>{{lines.14}}</td>
+                        <td>{{form.brut_14 | as_crispy_field}}</td>
+                        <td>{{form.amort_14 | as_crispy_field}}</td>
+                        <td>{{form.net_14 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">15</td>
+                        <td>{{lines.15}}</td>
+                        <td>{{form.brut_15 | as_crispy_field}}</td>
+                        <td>{{form.amort_15 | as_crispy_field}}</td>
+                        <td>{{form.net_15 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">16</td>
+                        <td class="font-weight-bold">{{lines.16}}</td>
+                        <td>{{form.brut_16 | as_crispy_field}}</td>
+                        <td>{{form.amort_16 | as_crispy_field}}</td>
+                        <td>{{form.net_16 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">17</td>
+                        <td class="font-weight-bold">{{lines.17}}</td>
+                        <td>{{form.brut_17 | as_crispy_field}}</td>
+                        <td>{{form.amort_17 | as_crispy_field}}</td>
+                        <td>{{form.net_17 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">18</td>
+                        <td>{{lines.18}}</td>
+                        <td>{{form.brut_18 | as_crispy_field}}</td>
+                        <td>{{form.amort_18 | as_crispy_field}}</td>
+                        <td>{{form.net_18 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">19</td>
+                        <td class="font-weight-bold">{{lines.19}}</td>
+                        <td>{{form.brut_19 | as_crispy_field}}</td>
+                        <td>{{form.amort_19 | as_crispy_field}}</td>
+                        <td>{{form.net_19 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">20</td>
+                        <td>{{lines.20}}</td>
+                        <td>{{form.brut_20 | as_crispy_field}}</td>
+                        <td>{{form.amort_20 | as_crispy_field}}</td>
+                        <td>{{form.net_20 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">21</td>
+                        <td>{{lines.21}}</td>
+                        <td>{{form.brut_21 | as_crispy_field}}</td>
+                        <td>{{form.amort_21 | as_crispy_field}}</td>
+                        <td>{{form.net_21 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">22</td>
+                        <td>{{lines.22}}</td>
+                        <td>{{form.brut_22 | as_crispy_field}}</td>
+                        <td>{{form.amort_22 | as_crispy_field}}</td>
+                        <td>{{form.net_22 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">23</td>
+                        <td class="font-weight-bold">{{lines.23}}</td>
+                        <td>{{form.brut_23 | as_crispy_field}}</td>
+                        <td>{{form.amort_23 | as_crispy_field}}</td>
+                        <td>{{form.net_23 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">24</td>
+                        <td>{{lines.24}}</td>
+                        <td>{{form.brut_24 | as_crispy_field}}</td>
+                        <td>{{form.amort_24 | as_crispy_field}}</td>
+                        <td>{{form.net_24 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">25</td>
+                        <td>{{lines.25}}</td>
+                        <td>{{form.brut_25 | as_crispy_field}}</td>
+                        <td>{{form.amort_25 | as_crispy_field}}</td>
+                        <td>{{form.net_25 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">26</td>
+                        <td>{{lines.26}}</td>
+                        <td>{{form.brut_26 | as_crispy_field}}</td>
+                        <td>{{form.amort_26 | as_crispy_field}}</td>
+                        <td>{{form.net_26 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">27</td>
+                        <td class="font-weight-bold">{{lines.27}}</td>
+                        <td>{{form.brut_27 | as_crispy_field}}</td>
+                        <td>{{form.amort_27 | as_crispy_field}}</td>
+                        <td>{{form.net_27 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">28</td>
+                        <td>{{lines.28}}</td>
+                        <td>{{form.brut_28 | as_crispy_field}}</td>
+                        <td>{{form.amort_28 | as_crispy_field}}</td>
+                        <td>{{form.net_28 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">29</td>
+                        <td class="font-weight-bold">{{lines.29}}</td>
+                        <td>{{form.brut_29 | as_crispy_field}}</td>
+                        <td>{{form.amort_29 | as_crispy_field}}</td>
+                        <td>{{form.net_29 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">30</td>
+                        <td class="font-weight-bold">{{lines.30}}</td>
+                        <td>{{form.brut_30 | as_crispy_field}}</td>
+                        <td>{{form.amort_30 | as_crispy_field}}</td>
+                        <td>{{form.net_30 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">31</td>
+                        <td>{{lines.31}}</td>
+                        <td>{{form.brut_31 | as_crispy_field}}</td>
+                        <td>{{form.amort_31 | as_crispy_field}}</td>
+                        <td>{{form.net_31 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">32</td>
+                        <td>{{lines.32}}</td>
+                        <td>{{form.brut_32 | as_crispy_field}}</td>
+                        <td>{{form.amort_32 | as_crispy_field}}</td>
+                        <td>{{form.net_32 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">33</td>
+                        <td>{{lines.33}}</td>
+                        <td>{{form.brut_33 | as_crispy_field}}</td>
+                        <td>{{form.amort_33 | as_crispy_field}}</td>
+                        <td>{{form.net_33 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">34</td>
+                        <td>{{lines.34}}</td>
+                        <td>{{form.brut_34 | as_crispy_field}}</td>
+                        <td>{{form.amort_34 | as_crispy_field}}</td>
+                        <td>{{form.net_34 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">35</td>
+                        <td>{{lines.35}}</td>
+                        <td>{{form.brut_35 | as_crispy_field}}</td>
+                        <td>{{form.amort_35 | as_crispy_field}}</td>
+                        <td>{{form.net_35 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">36</td>
+                        <td>{{lines.36}}</td>
+                        <td>{{form.brut_36 | as_crispy_field}}</td>
+                        <td>{{form.amort_36 | as_crispy_field}}</td>
+                        <td>{{form.net_36 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">37</td>
+                        <td>{{lines.37}}</td>
+                        <td>{{form.brut_37 | as_crispy_field}}</td>
+                        <td>{{form.amort_37 | as_crispy_field}}</td>
+                        <td>{{form.net_37 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">38</td>
+                        <td>{{lines.38}}</td>
+                        <td>{{form.brut_38 | as_crispy_field}}</td>
+                        <td>{{form.amort_38 | as_crispy_field}}</td>
+                        <td>{{form.net_38 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">39</td>
+                        <td>{{lines.39}}</td>
+                        <td>{{form.brut_39 | as_crispy_field}}</td>
+                        <td>{{form.amort_39 | as_crispy_field}}</td>
+                        <td>{{form.net_39 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">40</td>
+                        <td>{{lines.40}}</td>
+                        <td>{{form.brut_40 | as_crispy_field}}</td>
+                        <td>{{form.amort_40 | as_crispy_field}}</td>
+                        <td>{{form.net_40 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">41</td>
+                        <td class="font-weight-bold">{{lines.41}}</td>
+                        <td>{{form.brut_41 | as_crispy_field}}</td>
+                        <td>{{form.amort_41 | as_crispy_field}}</td>
+                        <td>{{form.net_41 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">42</td>
+                        <td>{{lines.42}}</td>
+                        <td>{{form.brut_42 | as_crispy_field}}</td>
+                        <td>{{form.amort_42 | as_crispy_field}}</td>
+                        <td>{{form.net_42 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">43</td>
+                        <td>{{lines.43}}</td>
+                        <td>{{form.brut_43 | as_crispy_field}}</td>
+                        <td>{{form.amort_43 | as_crispy_field}}</td>
+                        <td>{{form.net_43 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">44</td>
+                        <td>{{lines.44}}</td>
+                        <td>{{form.brut_44 | as_crispy_field}}</td>
+                        <td>{{form.amort_44 | as_crispy_field}}</td>
+                        <td>{{form.net_44 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">45</td>
+                        <td class="font-weight-bold">{{lines.45}}</td>
+                        <td>{{form.brut_45 | as_crispy_field}}</td>
+                        <td>{{form.amort_45 | as_crispy_field}}</td>
+                        <td>{{form.net_45 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">46</td>
+                        <td class="font-weight-bold">{{lines.46}}</td>
+                        <td>{{form.brut_46 | as_crispy_field}}</td>
+                        <td>{{form.amort_46 | as_crispy_field}}</td>
+                        <td>{{form.net_46 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">47</td>
+                        <td>{{lines.47}}</td>
+                        <td>{{form.brut_47 | as_crispy_field}}</td>
+                        <td>{{form.amort_47 | as_crispy_field}}</td>
+                        <td>{{form.net_47 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">48</td>
+                        <td>{{lines.48}}</td>
+                        <td>{{form.brut_48 | as_crispy_field}}</td>
+                        <td>{{form.amort_48 | as_crispy_field}}</td>
+                        <td>{{form.net_48 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">49</td>
+                        <td >{{lines.49}}</td>
+                        <td>{{form.brut_49 | as_crispy_field}}</td>
+                        <td>{{form.amort_49 | as_crispy_field}}</td>
+                        <td>{{form.net_49 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">50</td>
+                        <td>{{lines.50}}</td>
+                        <td>{{form.brut_50 | as_crispy_field}}</td>
+                        <td>{{form.amort_50 | as_crispy_field}}</td>
+                        <td>{{form.net_50 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">51</td>
+                        <td>{{lines.51}}</td>
+                        <td>{{form.brut_51 | as_crispy_field}}</td>
+                        <td>{{form.amort_51 | as_crispy_field}}</td>
+                        <td>{{form.net_51 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">52</td>
+                        <td>{{lines.52}}</td>
+                        <td>{{form.brut_52 | as_crispy_field}}</td>
+                        <td>{{form.amort_52 | as_crispy_field}}</td>
+                        <td>{{form.net_52 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">53</td>
+                        <td class="font-weight-bold">{{lines.53}}</td>
+                        <td>{{form.brut_53 | as_crispy_field}}</td>
+                        <td>{{form.amort_53 | as_crispy_field}}</td>
+                        <td>{{form.net_53 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">54</td>
+                        <td>{{lines.54}}</td>
+                        <td>{{form.brut_54 | as_crispy_field}}</td>
+                        <td>{{form.amort_54 | as_crispy_field}}</td>
+                        <td>{{form.net_54 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">55</td>
+                        <td>{{lines.55}}</td>
+                        <td>{{form.brut_55 | as_crispy_field}}</td>
+                        <td>{{form.amort_55 | as_crispy_field}}</td>
+                        <td>{{form.net_55 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">56</td>
+                        <td class="font-weight-bold">{{lines.56}}</td>
+                        <td>{{form.brut_56 | as_crispy_field}}</td>
+                        <td>{{form.amort_56 | as_crispy_field}}</td>
+                        <td>{{form.net_56 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">57</td>
+                        <td>{{lines.57}}</td>
+                        <td>{{form.brut_57 | as_crispy_field}}</td>
+                        <td>{{form.amort_57 | as_crispy_field}}</td>
+                        <td>{{form.net_57 | as_crispy_field}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">58</td>
+                        <td class="font-weight-bold">{{lines.58}}</td>
+                        <td>{{form.brut_58 | as_crispy_field}}</td>
+                        <td>{{form.amort_58 | as_crispy_field}}</td>
+                        <td>{{form.net_58 | as_crispy_field}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info" role="button" type="submit" value="submit">
+        </div>
+    </form>
+</div>
+
+<style>
+
+table td {
+  position: relative;
+}
+
+th {
+  text-align: left;
+  background-color:#EEEEEE;
+  /*min-width:100px;*/
+}
+
+td {
+ text-align:left;
+}
+
+
+table td input {
+  position: absolute;
+  display: block;
+  top:0;
+  left:0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: solid 1px;
+  border-color:#f8f9fa;
+  border-width: 1px;
+  padding: 1px;
+  box-sizing: border-box;
+  min-width:100px;
+}
+
+.asterisk{
+ max-width: 30px;
+ align:center;
+}
+
+.min_width{
+ min-width:80px;
+}
+
+.input-min-width{
+ min-width:100px;
+}
+/*ACTIF no input hide values*/
+input[id=id_brut_0]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+input[id=id_amort_0]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+input[id=id_net_0]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+
+/*PASSIF no input hide values*/
+input[id=id_brut_30]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+input[id=id_amort_30]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+input[id=id_net_30]{pointer-events: none; color:#ffffff; background-color:#f8f9f8; }
+
+/*No input for subtotal vals*/
+input[id=id_brut_1]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_1]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_1]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+
+input[id=id_brut_6]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_6]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_6]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_13]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_13]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_13]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_16]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_16]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_16]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_19]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_19]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_19]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_23]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_23]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_23]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_27]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_27]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_29]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_29]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_29]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_41]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_41]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_41]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_45]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_45]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_45]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_46]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_46]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_46]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_53]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_53]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_53]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_56]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_56]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_56]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_58]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_58]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_58]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_brut_59]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_amort_59]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+input[id=id_net_59]{pointer-events: none; font-weight:bold; background-color:#f8f9f8; }
+/* No input for all net*/
+input[id=id_net_0]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_1]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_2]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_3]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_4]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_5]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_6]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_7]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_8]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_9]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_10]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_11]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_12]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_13]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_14]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_15]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_16]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_17]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_18]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_19]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_20]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_21]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_22]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_23]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_24]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_25]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_26]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_27]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_28]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_29]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_30]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_31]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_32]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_33]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_34]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_35]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_36]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_37]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_38]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_39]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_40]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_41]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_42]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_43]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_44]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_45]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_46]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_47]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_48]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_49]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_50]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_51]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_52]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_53]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_54]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_55]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_56]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_57]{pointer-events: none; background-color:#f8f9f8; }
+input[id=id_net_58]{pointer-events: none; background-color:#f8f9f8; }
+//input[id=id_net_59]{pointer-events: none; background-color:#f8f9f8; }
+
+</style>
+
+<script>
+function calc()
+{
+ //set_passive_header(); // Add passive label only once
+ b0=document.getElementById('id_brut_0').value=0.00;
+ b1=document.getElementById('id_brut_1').value;
+ b2=document.getElementById('id_brut_2').value;
+ b3=document.getElementById('id_brut_3').value;
+ b4=document.getElementById('id_brut_4').value;
+ b5=document.getElementById('id_brut_5').value;
+ b6=document.getElementById('id_brut_6').value;
+ b7=document.getElementById('id_brut_7').value;
+ b8=document.getElementById('id_brut_8').value;
+ b9=document.getElementById('id_brut_9').value;
+ b10=document.getElementById('id_brut_10').value;
+ b11=document.getElementById('id_brut_11').value;
+ b12=document.getElementById('id_brut_12').value;
+ b13=document.getElementById('id_brut_13').value;
+ b14=document.getElementById('id_brut_14').value;
+ b15=document.getElementById('id_brut_15').value;
+ b16=document.getElementById('id_brut_16').value;
+ b17=document.getElementById('id_brut_17').value;
+ b18=document.getElementById('id_brut_18').value;
+ b19=document.getElementById('id_brut_19').value;
+ b20=document.getElementById('id_brut_20').value;
+ b21=document.getElementById('id_brut_21').value;
+ b22=document.getElementById('id_brut_22').value;
+ b23=document.getElementById('id_brut_23').value;
+ b24=document.getElementById('id_brut_24').value;
+ b25=document.getElementById('id_brut_25').value;
+ b26=document.getElementById('id_brut_26').value;
+ b27=document.getElementById('id_brut_27').value;
+ b28=document.getElementById('id_brut_28').value;
+ b29=document.getElementById('id_brut_29').value;
+ b30=document.getElementById('id_brut_30').value=0.00;
+ b31=document.getElementById('id_brut_31').value;
+ b32=document.getElementById('id_brut_32').value;
+ b33=document.getElementById('id_brut_33').value;
+ b34=document.getElementById('id_brut_34').value;
+ b35=document.getElementById('id_brut_35').value;
+ b36=document.getElementById('id_brut_36').value;
+ b37=document.getElementById('id_brut_37').value;
+ b38=document.getElementById('id_brut_38').value;
+ b39=document.getElementById('id_brut_39').value;
+ b40=document.getElementById('id_brut_40').value;
+ b41=document.getElementById('id_brut_41').value;
+ b42=document.getElementById('id_brut_42').value;
+ b43=document.getElementById('id_brut_43').value;
+ b44=document.getElementById('id_brut_44').value;
+ b45=document.getElementById('id_brut_45').value;
+ b46=document.getElementById('id_brut_46').value;
+ b47=document.getElementById('id_brut_47').value;
+ b48=document.getElementById('id_brut_48').value;
+ b49=document.getElementById('id_brut_49').value;
+ b50=document.getElementById('id_brut_50').value;
+ b51=document.getElementById('id_brut_51').value;
+ b52=document.getElementById('id_brut_52').value;
+ b53=document.getElementById('id_brut_53').value;
+ b54=document.getElementById('id_brut_54').value;
+ b55=document.getElementById('id_brut_55').value;
+ b56=document.getElementById('id_brut_56').value;
+ b57=document.getElementById('id_brut_57').value;
+ b58=document.getElementById('id_brut_58').value;
+ //b59=document.getElementById('id_brut_59').value;
+
+ a0=document.getElementById('id_amort_0').value=0.00;
+ a1=document.getElementById('id_amort_1').value;
+ a2=document.getElementById('id_amort_2').value;
+ a3=document.getElementById('id_amort_3').value;
+ a4=document.getElementById('id_amort_4').value;
+ a5=document.getElementById('id_amort_5').value;
+ a6=document.getElementById('id_amort_6').value;
+ a7=document.getElementById('id_amort_7').value;
+ a8=document.getElementById('id_amort_8').value;
+ a9=document.getElementById('id_amort_9').value;
+ a10=document.getElementById('id_amort_10').value;
+ a11=document.getElementById('id_amort_11').value;
+ a12=document.getElementById('id_amort_12').value;
+ a13=document.getElementById('id_amort_13').value;
+ a14=document.getElementById('id_amort_14').value;
+ a15=document.getElementById('id_amort_15').value;
+ a16=document.getElementById('id_amort_16').value;
+ a17=document.getElementById('id_amort_17').value;
+ a18=document.getElementById('id_amort_18').value;
+ a19=document.getElementById('id_amort_19').value;
+ a20=document.getElementById('id_amort_20').value;
+ a21=document.getElementById('id_amort_21').value;
+ a22=document.getElementById('id_amort_22').value;
+ a23=document.getElementById('id_amort_23').value;
+ a24=document.getElementById('id_amort_24').value;
+ a25=document.getElementById('id_amort_25').value;
+ a26=document.getElementById('id_amort_26').value;
+ a27=document.getElementById('id_amort_27').value;
+ a28=document.getElementById('id_amort_28').value;
+ a29=document.getElementById('id_amort_29').value;
+ a30=document.getElementById('id_amort_30').value;
+ a31=document.getElementById('id_amort_31').value;
+ a32=document.getElementById('id_amort_32').value;
+ a33=document.getElementById('id_amort_33').value;
+ a34=document.getElementById('id_amort_34').value;
+ a35=document.getElementById('id_amort_35').value;
+ a36=document.getElementById('id_amort_36').value;
+ a37=document.getElementById('id_amort_37').value;
+ a38=document.getElementById('id_amort_38').value;
+ a39=document.getElementById('id_amort_39').value;
+ a40=document.getElementById('id_amort_40').value;
+ a41=document.getElementById('id_amort_41').value;
+ a42=document.getElementById('id_amort_42').value;
+ a43=document.getElementById('id_amort_43').value;
+ a44=document.getElementById('id_amort_44').value;
+ a45=document.getElementById('id_amort_45').value;
+ a46=document.getElementById('id_amort_46').value;
+ a47=document.getElementById('id_amort_47').value;
+ a48=document.getElementById('id_amort_48').value;
+ a49=document.getElementById('id_amort_49').value;
+ a50=document.getElementById('id_amort_50').value;
+ a51=document.getElementById('id_amort_51').value;
+ a52=document.getElementById('id_amort_52').value;
+ a53=document.getElementById('id_amort_53').value;
+ a54=document.getElementById('id_amort_54').value;
+ a55=document.getElementById('id_amort_55').value;
+ a56=document.getElementById('id_amort_56').value;
+ a57=document.getElementById('id_amort_57').value;
+ a58=document.getElementById('id_amort_58').value;
+ //a59=document.getElementById('id_amort_59').value;
+
+
+ /* Net totals */
+ document.getElementById("id_net_0").value=sum(b0,-a0);
+ document.getElementById("id_net_1").value=sum(b1,-a1);
+ document.getElementById("id_net_2").value=sum(b2,-a2);
+ document.getElementById("id_net_3").value=sum(b3,-a3);
+ document.getElementById("id_net_4").value=sum(b4,-a4);
+ document.getElementById("id_net_5").value=sum(b5,-a5);
+ document.getElementById("id_net_6").value=sum(b6,-a6);
+ document.getElementById("id_net_7").value=sum(b7,-a7);
+ document.getElementById("id_net_8").value=sum(b8,-a8);
+ document.getElementById("id_net_9").value=sum(b9,-a9);
+ document.getElementById("id_net_10").value=sum(b10,-a10);
+ document.getElementById("id_net_11").value=sum(b11,-a11);
+ document.getElementById("id_net_12").value=sum(b12,-a12);
+ document.getElementById("id_net_13").value=sum(b13,-a13);
+ document.getElementById("id_net_14").value=sum(b14,-a14);
+ document.getElementById("id_net_15").value=sum(b15,-a15);
+ document.getElementById("id_net_16").value=sum(b16,-a16);
+ document.getElementById("id_net_17").value=sum(b17,-a17);
+ document.getElementById("id_net_18").value=sum(b18,-a18);
+ document.getElementById("id_net_19").value=sum(b19,-a19);
+ document.getElementById("id_net_20").value=sum(b20,-a20);
+ document.getElementById("id_net_21").value=sum(b21,-a21);
+ document.getElementById("id_net_22").value=sum(b22,-a22);
+ document.getElementById("id_net_23").value=sum(b23,-a23);
+ document.getElementById("id_net_24").value=sum(b24,-a24);
+ document.getElementById("id_net_25").value=sum(b25,-a25);
+ document.getElementById("id_net_26").value=sum(b26,-a26);
+ document.getElementById("id_net_27").value=sum(b27,-a27);
+ document.getElementById("id_net_28").value=sum(b28,-a28);
+ document.getElementById("id_net_29").value=sum(b29,-a29);
+ document.getElementById("id_net_30").value=sum(b30,-a30);
+ document.getElementById("id_net_31").value=sum(b31,-a31);
+ document.getElementById("id_net_32").value=sum(b32,-a32);
+ document.getElementById("id_net_33").value=sum(b33,-a33);
+ document.getElementById("id_net_34").value=sum(b34,-a34);
+ document.getElementById("id_net_35").value=sum(b35,-a35);
+ document.getElementById("id_net_36").value=sum(b36,-a36);
+ document.getElementById("id_net_37").value=sum(b37,-a37);
+ document.getElementById("id_net_38").value=sum(b38,-a38);
+ document.getElementById("id_net_39").value=sum(b39,-a39);
+ document.getElementById("id_net_40").value=sum(b40,-a40);
+ document.getElementById("id_net_41").value=sum(b41,-a41);
+ document.getElementById("id_net_42").value=sum(b42,-a42);
+ document.getElementById("id_net_43").value=sum(b43,-a43);
+ document.getElementById("id_net_44").value=sum(b44,-a44);
+ document.getElementById("id_net_45").value=sum(b45,-a45);
+ document.getElementById("id_net_46").value=sum(b46,-a46);
+ document.getElementById("id_net_47").value=sum(b47,-a47);
+ document.getElementById("id_net_48").value=sum(b48,-a48);
+ document.getElementById("id_net_49").value=sum(b49,-a49);
+ document.getElementById("id_net_50").value=sum(b50,-a50);
+ document.getElementById("id_net_51").value=sum(b51,-a51);
+ document.getElementById("id_net_52").value=sum(b52,-a52);
+ document.getElementById("id_net_53").value=sum(b53,-a53);
+ document.getElementById("id_net_54").value=sum(b54,-a54);
+ document.getElementById("id_net_55").value=sum(b55,-a55);
+ document.getElementById("id_net_56").value=sum(b56,-a56);
+ document.getElementById("id_net_57").value=sum(b57,-a57);
+ document.getElementById("id_net_58").value=sum(b58,-a58);
+ //document.getElementById("id_net_59").value=sum(b59,-a59);
+
+ /*alert(b1);
+  alert(b6);
+  alert(b13);*/
+
+ /* Sub totals */
+ document.getElementById("id_brut_1").value=sum(b2,b3,b4,b5); //Immobilisations incorporelles
+ document.getElementById("id_amort_1").value=sum(a2,a3,a4,a5); //Immobilisations incorporelles
+
+ document.getElementById("id_brut_6").value=sum(b7,b8,b9,b10,b11,b12); //Immobilisations corporelles
+ document.getElementById("id_amort_6").value=sum(a7,a8,a9,a10,a11,a12); //Immobilisations corporelles
+
+
+ document.getElementById("id_brut_13").value=sum(b14,b15); //Immobilisations financiéres
+ document.getElementById("id_amort_13").value=sum(a14,a15); //Immobilisations financiéres
+
+ document.getElementById("id_brut_16").value=sum(b1,b6,b13); //TOTAL ACTIF IMMOBILISE
+ document.getElementById("id_amort_16").value=sum(a1,a6,a13); //TOTAL ACTIF IMMOBILISE
+
+ document.getElementById("id_brut_19").value=sum(b20,b21,b22); //Créances et emplois assimilés
+ document.getElementById("id_amort_19").value=sum(a20,a21,a22); //Créances et emplois assimilés
+
+ document.getElementById("id_brut_23").value=sum(b18,b19); // TOTAL ACTIF CIRCULANT
+ document.getElementById("id_amort_23").value=sum(a18,a19); // TOTAL ACTIF CIRCULANT
+
+ document.getElementById("id_brut_27").value=sum(b24,b25, b26); // TOTAL TRESORERIE ACTIF
+ document.getElementById("id_amort_27").value=sum(a24,a25, a26); // TOTAL TRESORERIE ACTIF
+
+ document.getElementById("id_brut_29").value=sum(b16,b23,b27, b28); // TOTAL GENERAL
+ document.getElementById("id_amort_29").value=sum(a16,a23, a27, a28); // TOTAL GENERAL
+
+ document.getElementById("id_brut_41").value=sum(b31,b32,b33,b34,b35,b36,b37,-b38); // TOTAL CAPITAUX PROPRES ET RESSOURCES ASSIMILEES
+ document.getElementById("id_amort_41").value=sum(a31,a32,a33,a34,a35,a36,a37,-a38); // TOTAL CAPITAUX PROPRES ET RESSOURCES ASSIMILEES
+
+ document.getElementById("id_brut_45").value=sum(b42,b43,b44); // TOTAL DETTES FINANCIERES ET RESSOURCES ASSIMILEES
+ document.getElementById("id_amort_45").value=sum(a42,a43,a44); // TOTAL DETTES FINANCIERES ET RESSOURCES ASSIMILEES
+
+ document.getElementById("id_brut_46").value=sum(b41,b45); // TOTAL RESSOURCES STABLES
+ document.getElementById("id_amort_46").value=sum(a41,a45); // TOTAL RESSOURCES STABLES
+
+ document.getElementById("id_brut_53").value=sum(b47,b48,b49,b50,b51,b52);// TOTAL ACTIF CIRCULANT
+ document.getElementById("id_amort_53").value=sum(a47,a48,a49,a50,a51,a52);// TTOTAL ACTIF CIRCULANT
+
+ document.getElementById("id_brut_56").value=sum(b54,b55);  // TOTAL PASSIF CIRCULANT
+ document.getElementById("id_amort_56").value=sum(a54,a55);  // TTOTAL PASSIF CIRCULANT
+
+ document.getElementById("id_brut_58").value=sum(b46,b53,b56,b57); // TOTAL GENERAL
+ document.getElementById("id_amort_58").value=sum(a46,a53,a56,a57); // TOTAL GENERAL
+
+
+
+}
+
+
+function sum()
+{
+ var tot = 0.00;
+ for (i = 0; i < arguments.length; i++)
+ {
+  tot+=parseFloat(arguments[i]);
+ }
+ if (isNaN(tot)) {
+    return '0.00';
+  }
+  else
+  {
+   return tot.toFixed(2);
+ }
+}
+
+/*
+function my_lbl_row()
+{
+ var table = document.getElementById("bal_tbl");
+  var row = table.insertRow(32);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  cell1.innerHTML = '';
+  cell2.innerHTML = "<span class='text-center font-weight-bold'>BALANCE SHEET(PASSIF)</span>";
+}
+
+
+function my_input_row()
+{
+ var table = document.getElementById("bal_table_input");
+  var row = table.insertRow(32);
+  var cell1 = row.insertCell(0);
+
+  cell1.innerHTML = "<span class='text-center font-weight-bold'>BRUT</span>";
+}
+
+
+function paint_row_hearder()
+{
+ var cells_actif  = document.querySelectorAll('tr:nth-child(4)');
+ var cells_passif = document.querySelectorAll('tr:nth-child(38)');
+
+ for(var i = 0 ; i < cells_actif.length ; i++)
+ {
+  if(cells_actif[i].textContent.trim() > '')
+  {
+    cells_actif[i].classList.add('my_header_bg');
+  }
+ }
+
+ for(var i = 0 ; i < cells_passif.length ; i++)
+ {
+  if(cells_passif[i].textContent.trim() > '')
+  {
+   cells_passif[i].classList.add('my_header_bg');
+  }
+ }
+}
+
+
+
+var set_passive_header = (function() {
+    var executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            // do something only once
+            paint_row_hearder();
+        }
+    };
+})();
+*/
+
+  window.onload = function(){
+        // All code comes here
+        calc();
+        //set_passive_header();
+ }
+
+</script>
+{% endblock %}
+
+
+

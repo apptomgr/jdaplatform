@@ -1,0 +1,28 @@
+{% extends 'jdatester/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<table class="table table-striped table-hover table-bordered table-info">
+    <th>X</th>
+    <th>Y</th>
+    <th>Computed</th>
+    <th>Edit</th>
+    {% for i in data %}
+    <tr>
+        <td>{{i.x}}</td>
+        <td>{{i.y}}</td>
+        <td>{{i.computed}}</td>
+        <td><a href="{% url 'test_model_edit' i.pk %}"><i class="far fa-edit"></i></a></td>
+
+    </tr>
+    {% endfor%}
+</table>
+
+<form method="POST" novalidate>
+    {% csrf_token %}
+    {{form | crispy}}
+    <input class="btn btn-primary" role="button" type="submit" value="Submit">
+</form>
+
+{% endblock %}
