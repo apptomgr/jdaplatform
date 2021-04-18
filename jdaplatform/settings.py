@@ -186,7 +186,8 @@ else:
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
     #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
+    #DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
+    DEFAULT_FILE_STORAGE = 'jdaplatform.storage_backends.MediaStorage'  # the media storage configurations
 
 
 
