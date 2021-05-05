@@ -191,9 +191,9 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
             return redirect('jdafinancialsapp_inc_rpt', sector, company.id, statement, entry_date)
-        else:
+        #else:
             #pass
-            messages.error(request, form.errors)
+        #    messages.error(request, form.errors)
     else:
         #print(f"187 - GET")
         #1) Check if company and entry date exist in the link table
@@ -264,9 +264,9 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
             return redirect('jdafinancialsapp_inv_acct_rpt', sector, company.id, statement, entry_date)
-        else:
+        #else:
             #pass
-            messages.error(request, form.errors)
+        #    messages.error(request, form.errors)
     else:
         #print(f"187 - GET")
         #1) Check if company and entry date exist in the link table
@@ -388,9 +388,9 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
             return redirect('jdafinancialsapp_bal_rpt', sector, company.id, statement, entry_date)
-        else:
+        #else:
             #pass
-            messages.error(request, form.errors)
+        #    messages.error(request, form.errors)
     else:
         #print(f"GET")
         #1) Check if company and entry date exist in the link table
@@ -457,9 +457,9 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
             return redirect('jdafinancialsapp_inc_rpt', sector, company.id, statement, entry_date)
-        else:
+        #else:
             #pass
-            messages.error(request, form.errors)
+        #    messages.error(request, form.errors)
     else:
         #print(f" 348 GET")
         #1) Check if company and entry date exist in the link table
@@ -531,9 +531,9 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
             return redirect('jdafinancialsapp_inv_acct_rpt', sector, company.id, statement, entry_date)
-        else:
+        #else:
             #pass
-            messages.error(request, form.errors)
+        #    messages.error(request, form.errors)
     else:
         #print(f" 505 GET")
         #1) Check if company and entry date exist in the link table

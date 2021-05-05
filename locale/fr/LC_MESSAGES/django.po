@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-03 22:11-0400\n"
+"POT-Creation-Date: 2021-05-05 19:13-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -151,65 +151,70 @@ msgstr "Newsletters"
 msgid "Annual Reports"
 msgstr "Rapports Annuels"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:27
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:26
 msgid "Market Listing as of"
 msgstr "Liste des cours du"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:38
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:37
 msgid "Index"
 msgstr "Indice"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:39
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:38
 msgid "Value"
 msgstr "Valeur"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:63
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:62
 msgid "Security Filter"
 msgstr "Filtre des Codes"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:95
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:94
 msgid "Security Ticker"
 msgstr "Code Symbole"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:97
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:96
 msgid "Label"
 msgstr "Libelle"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:98
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:97
 msgid "Average Price"
 msgstr "Cours Moyen"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:99
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:98
 msgid "Open"
 msgstr "Ouvert"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:100
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:99
 msgid "Close"
 msgstr "Fermeture"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:101
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:100
 msgid "High"
 msgstr "Plus Haut"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:102
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:101
 msgid "Low"
 msgstr "Plus Bas"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:103
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:102
 msgid "Ask"
 msgstr "Meilleur achat"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:104
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:103
 msgid "Bid"
 msgstr "Meilleur vente"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:106
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:105
 msgid "Traded Volume"
 msgstr "Volume Transige"
 
-#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:107
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:106
 msgid "Traded Value"
 msgstr "Valeur Transige"
+
+#: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:132
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:62
+msgid "As of"
+msgstr "Le"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_upload_form.html:25
 msgid "Market data upload"
@@ -220,6 +225,7 @@ msgid "Sector"
 msgstr "Secteur"
 
 #: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:43
+#: jdapublicationsapp/forms.py:98
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:102
 msgid "Company"
 msgstr "Société"
@@ -318,6 +324,14 @@ msgstr "T&eacute;l&eacute;charger"
 msgid "Publication Edit"
 msgstr "Modifier"
 
+#: jdamainapp/templates/jdamainapp/base.html:125
+msgid "My account"
+msgstr "Mon Compte"
+
+#: jdamainapp/templates/jdamainapp/base.html:126
+msgid "Change Password"
+msgstr "Modifier mot de passe"
+
 #: jdamainapp/templates/jdamainapp/base.html:127
 msgid "Logout"
 msgstr "Déconnecter"
@@ -413,10 +427,6 @@ msgstr "Supprimer"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:54
 msgid "Cancel"
 msgstr "Annuler"
-
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:62
-msgid "As of"
-msgstr "Le"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:91
 msgid "Add Publication"

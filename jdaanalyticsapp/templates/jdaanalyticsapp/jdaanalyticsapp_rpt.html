@@ -22,8 +22,7 @@
 <div class="card text-center mt-3">
     <div class="card-header">
         <div class="row justify-content-center">
-            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
-                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
+            <a href="#"><i class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
             <span class="text-secondary mt-2">{% trans 'Market Listing as of'%} {{index.0.index_date |utc}}</span>
         </div>
     </div>
@@ -130,7 +129,7 @@
             </table>
         </div>
         <div class="card-footer text-muted">
-            <small id="bank_waiter">As of {{rpt_date}}</small>
+            <small id="bank_waiter">{% trans 'As of' %} {{rpt_date}}</small>
         </div>
 
     </div>
