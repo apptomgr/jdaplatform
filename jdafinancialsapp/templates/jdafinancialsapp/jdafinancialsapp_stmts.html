@@ -1,6 +1,7 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -22,7 +23,7 @@
 <div class="card text-center mt-5">
     <form method="POST" novalidate>
         <div class="card-header">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Financial Statements</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Financial Statements' %}</h5>
 
         </div>
         <div class="card-body">
@@ -52,109 +53,11 @@
             </div>
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-info"  role="button" type="submit" value="Retrieve Statement">
+            <input class="btn btn-info"  role="button" type="submit" value="{% trans 'Retrieve Statement' %}">
         </div>
     </form>
 </div>
 
 
-<!--
-{% if filterForm.errors %}
-	<div id="errors">
-		<div class="inner">
-			<p>There were some errors in the information you entered. Please correct the following:</p>
-			{{ filterForm.non_field_errors }}
-			<ul>
-				{% for field in filterForm %}
-					{% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
-	</div>
-{% endif %}
--->
-
-<!--div class="jumbotron jumbotron bg-cover">
-    <div class="overlay"></div>
-    <div class="containerX">
-        <div class="text-white text-center py-3 px-2 my-3">
-            <div>
-                <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
-                    J&D </strong><strong class="text-white">Publications</strong></h2>
-                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> Our
-                    Publications</a>
-            </div>
-        </div>
-    </div>
-</div-->
-
-
-<!--div class="card shadow-sm bg-white rounded">
-    <div class="card-header">
-        <div class="float-left">
-            <i class="fas fa-compass  my_info_txt"></i> <span class="text-muted">Financial Statements</span>
-        </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-sm-12">
-                {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert"
-                     role="alert">
-                    <a class="close" data-dismiss="alert">x</a>
-                    <i class="text-muted mr-5">{{message|safe}}</i>
-                </div>
-                {%endfor%}
-                {%endif%}
-            </div>
-        </div>
-    </div-->
-
-    <!--div class="card-header">
-        <div class="text-center">
-            <h5>Financial Statements</h5>
-        </div>
-    </div-->
-
-    <!--div class="card-body">
-
-        <form class="hero-form" method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            <div class="row mt-2">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    {{ form.sector|as_crispy_field }}
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    {{form.company | as_crispy_field}}
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    {{form.statement | as_crispy_field}}
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="input-group justify-content-left">
-                        <div class="input-group-prepend">
-                            {{form.date| as_crispy_field}}
-                            <i class=" mt-0 far fa-calendar-alt fa-fw fa-2x text-info"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-                    <button class="btn btn btn-info" type="submit">Add Publication</button>
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-                        <button class="btn btn btn-info" type="submit">Add Publication</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-
-    </div>
-    <div class="card-footer text-muted">
-        <small>As of {{rpt_date}}</small>
-    </div>
-</div-->
 {% endblock %}
 

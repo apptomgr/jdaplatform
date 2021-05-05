@@ -1,5 +1,6 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block content %}
 
 <div class="row justify-content-center align-items-center">
@@ -20,7 +21,7 @@
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
         <div class="text-center">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Company listing</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Company Listing' %}</h5>
         </div>
     </div>
 
@@ -29,9 +30,9 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Company name</th>
-                <th>Company Detail</th>
-                <th>Remove Company</th>
+                <th>{% trans 'Company Name' %}</th>
+                <th>{% trans 'Company Detail' %}</th>
+                <th>{% trans 'Remove Company' %}</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,7 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{i.company}}</td>
                 <td><a href="{% url 'jdafinancialsapp_view_company_detail' i.pk %}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
-                <td><a href="{ url 'jdapublicationsapp_delete_company_confirm' i.pk }"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td>
+                <td><a href="{% url 'jdafinancialsapp_delete_company_confirm' i.pk %}"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td>
             </tr>
             {% endfor %}
         </tbody>

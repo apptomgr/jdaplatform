@@ -1,6 +1,6 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block content %}
 
 <div class="row justify-content-center align-items-center">
@@ -22,7 +22,7 @@
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Add New Company</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Company' %}</h5>
         </div>
 
         <div class="card-body">
@@ -89,7 +89,7 @@
 
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-info" role="button" type="submit" value="Add New Company">
+            <input class="btn btn-info" role="button" type="submit" value="{% trans 'Add Company' %}">
         </div>
     </form>
 </div>

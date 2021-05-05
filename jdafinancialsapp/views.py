@@ -10,9 +10,11 @@ from django.utils.dateparse import parse_date
 from . utils import get_publication_period, get_rpt_range_period, jdafinancialsapp_migrate_bal_link_data, jdafinancialsapp_migrate_inc_link_data,jdafinancialsapp_migrate_inv_acct_link_data, yearsago
 
 from django.db.models import Sum
-
+from django.contrib.auth.decorators import login_required
+from accounts .decorators import allowed_users
 
 #////////////////////////// jdafinancialsapp_home ///////////////////////
+@login_required
 def jdafinancialsapp_home(request):
     # request.session['user_id'] = '20'
     # request.session['team'] = 'Barcelona'
@@ -32,40 +34,41 @@ def jdafinancialsapp_home(request):
 
 
 #////////////////////////// jdafinancialsapp_stmts ///////////////////////
+@login_required
 def jdafinancialsapp_stmts(request):
     dt = datetime.now()
-    print(f"36 ///////// jdafinancialsapp_stmts")
+    #print(f"36 ///////// jdafinancialsapp_stmts")
 
     if request.method == "POST":
-        print(f"39: Posting")
+        #print(f"39: Posting")
         form = FinStmtDashForm(request.POST)
 
         if form.is_valid():
-            print(f"45://////// Valid")
+            #print(f"45://////// Valid")
             sector = form.cleaned_data['sector']
             company = form.cleaned_data['company']
             statement = form.cleaned_data['statement']
             date = form.cleaned_data['date']
             publication_period = get_publication_period(date)
 
-            print(f"51: sector:{sector} -  company: {company} - statement: {statement} - statement type: {statement.id} - date: {date} - publication_perid: {get_publication_period(date)}")
+            #print(f"51: sector:{sector} -  company: {company} - statement: {statement} - statement type: {statement.id} - date: {date} - publication_perid: {get_publication_period(date)}")
 
             if statement.id == 1:
-                print(f"53: Balance Sheet")
+                #print(f"53: Balance Sheet")
                 return redirect('jdafinancialsapp_bal_entry_form', sector, company.id, statement, publication_period)
             elif statement.id == 2:
-                print(f"56: Income Statement")
+                #print(f"56: Income Statement")
                 return redirect('jdafinancialsapp_inc_entry_form', sector, company.id, statement, publication_period)
             elif statement.id == 3:
-                print(f"59: Income Statement")
+                #print(f"59: Income Statement")
                 return redirect('jdafinancialsapp_inv_acct_entry_form', sector, company.id, statement, publication_period)
             else:
                 messages.warning(request, f"Unknow Financial statement type - {statement}")
                 return redirect('jdafinancialsapp_stmts')
-                print(f"64 DK statement")
+                #print(f"64 DK statement")
 
     else: # end if POST
-        print(f"67//// request is GET")
+        #print(f"67//// request is GET")
         form = FinStmtDashForm()
 
     #print(f"67///// taking us to fin_dash request {request}")
@@ -73,6 +76,8 @@ def jdafinancialsapp_stmts(request):
     return render(request, 'jdafinancialsapp/jdafinancialsapp_stmts.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_bal_entry_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -82,10 +87,10 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
     link_data = FinancialStatementBalLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
     #print(f"143: link_date: {link_data} link_data[0]: {link_data.first().id}")
     bal_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date)
-    print(f"81: {link_data.count()}")
+    #print(f"81: {link_data.count()}")
 
     if request.method == "POST":
-        print(f"84 POST ")
+        #print(f"84 POST ")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementBalLinkModel.objects.get(pk=link_data.first().id)
             form = BalanceSheetForm(request.POST, instance=item)
@@ -101,14 +106,14 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
                 instance.save()
 
             if bal_data.count() > 0:
-                print(f"100 bal exists")
+                #print(f"100 bal exists")
                 # In existing balance sheet del item associated with company and entry_date
                 bal_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementBalLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
                 jdafinancialsapp_migrate_bal_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("107 new Balance Sheet")
+                #print("107 new Balance Sheet")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementBalLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
@@ -120,7 +125,7 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
             #pass
             messages.error(request, form.errors)
     else:
-        print(f"119 - GET")
+        #print(f"119 - GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementBalLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
@@ -141,6 +146,8 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_entry_form.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_inc_entry_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -150,10 +157,10 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
     link_data = FinancialStatementIncLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
     #print(f"143: link_date: {link_data} link_data[0]: {link_data.first().id}")
     inc_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date)
-    print(f"149: {link_data.count()}")
+    #print(f"149: {link_data.count()}")
 
     if request.method == "POST":
-        print(f"152 POST ")
+        #print(f"152 POST ")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementIncLinkModel.objects.get(pk=link_data.first().id)
             form = IncomeStatementForm(request.POST, instance=item)
@@ -176,7 +183,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
                 link_data = FinancialStatementIncLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
                 jdafinancialsapp_migrate_inc_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("175 new Income Statement")
+                #print("175 new Income Statement")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementIncLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
@@ -188,7 +195,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
             #pass
             messages.error(request, form.errors)
     else:
-        print(f"187 - GET")
+        #print(f"187 - GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementIncLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
@@ -196,7 +203,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
             item = FinancialStatementIncLinkModel.objects.get(pk=link_data[0].id)
             form = IncomeStatementForm(instance=item)
             #show bal rpt
-            print("196: redirecting to inc_rpt")
+            #print("196: redirecting to inc_rpt")
             return redirect('jdafinancialsapp_inc_rpt', sector, company.id, statement, entry_date)
         else:
             form = IncomeStatementForm()
@@ -212,6 +219,8 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
 
 
 #////////////////////////////////////// jdafinancialsapp_inv_acct_entry_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -221,10 +230,10 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
     link_data = FinancialStatementInvAcctLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
     #print(f"143: link_date: {link_data} link_data[0]: {link_data.first().id}")
     inc_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date)
-    print(f"149: {link_data.count()}")
+    #print(f"149: {link_data.count()}")
 
     if request.method == "POST":
-        print(f"152 POST ")
+        #print(f"152 POST ")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data.first().id)
             form = InvestmentAccountForm(request.POST, instance=item)
@@ -240,14 +249,14 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
                 instance.save()
 
             if inc_data.count() > 0:
-                print(f"168 bal exists")
+                #print(f"168 bal exists")
                 # In existing balance sheet del item associated with company and entry_date
                 inc_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementInvAcctLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
                 jdafinancialsapp_migrate_inc_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("175 new Income Statement")
+                #print("175 new Income Statement")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementInvAcctLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
@@ -259,7 +268,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
             #pass
             messages.error(request, form.errors)
     else:
-        print(f"187 - GET")
+        #print(f"187 - GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementInvAcctLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
@@ -267,7 +276,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
             item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data[0].id)
             form = InvestmentAccountForm(instance=item)
             #show bal rpt
-            print("196: redirecting to inv_acct")
+            #print("196: redirecting to inv_acct")
             return redirect('jdafinancialsapp_inv_acct_rpt', sector, company.id, statement, entry_date)
         else:
             form = InvestmentAccountForm()
@@ -281,8 +290,9 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inv_acct_entry_form.html', context)
 
 #////////////////////////// jdafinancialsapp_bal_rpt ///////////////////////
+@login_required
 def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date):
-    print(f"210 jdafinancialsapp_bal_rpt")
+    print(f"95 jdafinancialsapp_bal_rpt: User {request.user}")
     company = CompanyModel.objects.get(pk=company_id)
 
     bal = FinancialStatementFactModel.objects.filter(company_id=company_id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=1).order_by('id')
@@ -293,6 +303,7 @@ def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date)
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_rpt.html', context)
 
 #////////////////////////// jdafinancialsapp_inc_rpt ///////////////////////
+@login_required
 def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date):
     #print(f"297 jdafinancialsapp_inc_rpt")
     company = CompanyModel.objects.get(pk=company_id)
@@ -318,8 +329,9 @@ def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date)
 
 
 #////////////////////////// jdafinancialsapp_inv_acct_rpt ///////////////////////
+@login_required
 def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_date):
-    print(f"307 jdafinancialsapp_inv_acct_rpt")
+    #print(f"307 jdafinancialsapp_inv_acct_rpt")
     company = CompanyModel.objects.get(pk=company_id)
 
     inv = FinancialStatementFactModel.objects.filter(company_id=company_id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=3).order_by('id')
@@ -332,8 +344,10 @@ def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_
 
 
 #////////////////////////////////////// jdafinancialsapp_bal_edit_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry_date):
-    print(f"236: bal edit company_id: {company_id}")
+    #print(f"236: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
@@ -343,7 +357,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
     bal_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=1)
 
     if request.method == "POST":
-        print(f"161 POST")
+        #print(f"161 POST")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementBalLinkModel.objects.get(pk=link_data.first().id)
             form = BalanceSheetForm(request.POST, instance=item)
@@ -359,14 +373,14 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
                 instance.save()
 
             if bal_data.count() > 0:
-                print(f"98 bal exists")
+                #print(f"98 bal exists")
                 # In existing balance sheet del item associated with company and entry_date
                 bal_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementBalLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
                 jdafinancialsapp_migrate_bal_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("105 new Balance Sheet")
+                #print("105 new Balance Sheet")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementBalLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
@@ -378,7 +392,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
             #pass
             messages.error(request, form.errors)
     else:
-        print(f"GET")
+        #print(f"GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementBalLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
@@ -397,8 +411,10 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_entry_form.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_inc_edit_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry_date):
-    print(f"300: bal edit company_id: {company_id}")
+    #print(f"300: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
@@ -408,7 +424,7 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
     inc_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=2)
 
     if request.method == "POST":
-        print(f"310 POST")
+        #print(f"310 POST")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementIncLinkModel.objects.get(pk=link_data.first().id)
             form = IncomeStatementForm(request.POST, instance=item)
@@ -424,19 +440,19 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
                 instance.save()
 
             if inc_data.count() > 0:
-                print(f"325 bal exists")
+                #print(f"325 bal exists")
                 # In existing balance sheet del item associated with company and entry_date
                 inc_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementIncLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                print(f"332 calling migrate_inc_link_data")
+                #print(f"332 calling migrate_inc_link_data")
                 jdafinancialsapp_migrate_inc_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("335 new Balance Sheet")
+                #print("335 new Balance Sheet")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementIncLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                print(f"339 calling migrate_inc_link_data")
+                #print(f"339 calling migrate_inc_link_data")
                 jdafinancialsapp_migrate_inc_link_data(lines, link_data, FinancialStatementFactModel)
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
@@ -445,17 +461,17 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
             #pass
             messages.error(request, form.errors)
     else:
-        print(f" 348 GET")
+        #print(f" 348 GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementIncLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
-        print("351")
+        #print("351")
         if link_data.count() > 0:
-            print("353")
+            #print("353")
             item = FinancialStatementIncLinkModel.objects.get(pk=link_data[0].id)
-            print(f"355 itme: {item}")
+            #print(f"355 itme: {item}")
             form = IncomeStatementForm(instance=item)
         else:
-            print("358")
+            #print("358")
             form = IncomeStatementForm()
 
     link = FinancialStatementIncLinkModel.objects.all()
@@ -469,8 +485,10 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
 
 
 #////////////////////////////////////// jdafinancialsapp_inv_acct_edit_form ///////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, entry_date):
-    print(f"458: bal edit company_id: {company_id}")
+    #print(f"458: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
@@ -480,7 +498,7 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
     inv_data = FinancialStatementFactModel.objects.filter(company_id=company.id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=3)
 
     if request.method == "POST":
-        print(f"468 POST")
+        #print(f"468 POST")
         if link_data.count() > 0: # existing balance sheet
             item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data.first().id)
             form = InvestmentAccountForm(request.POST, instance=item)
@@ -496,19 +514,19 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
                 instance.save()
 
             if inv_data.count() > 0:
-                print(f"325 bal exists")
+                #print(f"325 bal exists")
                 # In existing balance sheet del item associated with company and entry_date
                 inv_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementInvAcctLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                print(f"489 calling migrate_inc_link_data")
+                #print(f"489 calling migrate_inc_link_data")
                 jdafinancialsapp_migrate_inv_acct_link_data(lines, link_data, FinancialStatementFactModel)
             else:
-                print("492 new Balance Sheet")
+                #print("492 new Balance Sheet")
                 # new balance sheet items (add try/catch block)
                 # Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
                 link_data = FinancialStatementInvAcctLinkModel.objects.get(company_id=company.id, entry_date=entry_date)
-                print(f"496 calling migrate_inc_link_data")
+                #print(f"496 calling migrate_inc_link_data")
                 jdafinancialsapp_migrate_inv_acct_link_data(lines, link_data, FinancialStatementFactModel)
 
             messages.success(request, f"{company.company} {entry_date} {statement} successfully saved ")
@@ -517,17 +535,17 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
             #pass
             messages.error(request, form.errors)
     else:
-        print(f" 505 GET")
+        #print(f" 505 GET")
         #1) Check if company and entry date exist in the link table
         link_data = FinancialStatementInvAcctLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
-        print("508")
+        #print("508")
         if link_data.count() > 0:
-            print("509")
+            #print("509")
             item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data[0].id)
-            print(f"512 itme: {item}")
+            #print(f"512 itme: {item}")
             form = InvestmentAccountForm(instance=item)
         else:
-            print("515")
+            #print("515")
             form = InvestmentAccountForm()
 
     link = FinancialStatementInvAcctLinkModel.objects.all()
@@ -567,8 +585,10 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 
 
 #////////////////////// jdafinancialsapp_new_company /////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_new_company(request):
-    print(f"121///////// jdafinancialsapp_new_company")
+    #print(f"121///////// jdafinancialsapp_new_company")
     if request.method == "POST":
         form =CompanyForm(request.POST)
         #data = request.POST.copy()
@@ -590,17 +610,17 @@ def jdafinancialsapp_new_company(request):
 
 
 #//////////////////////////////////////// jdafinancialsapp_view_company_detail/////////////////////////////
-#@login_required
+@login_required
 def jdafinancialsapp_view_company_detail(request, pk):
-    print(f"289 PK {pk}")
+    #print(f"289 PK {pk}")
     now = datetime.now()
     company_detail =CompanyModel.objects.get(id=pk)
-    print(f"company_detail: {company_detail}")
+    #print(f"company_detail: {company_detail}")
     context = {'company_detail':company_detail,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_company_detail.html', context)
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
-#@login_required
+@login_required
 def jdafinancialsapp_company_listing(request):
     now = datetime.now()
     company_listing =CompanyModel.objects.all()
@@ -608,7 +628,36 @@ def jdafinancialsapp_company_listing(request):
     return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
 
 
+
+#//////////////////////////////////////// jdafinancialsapp_delete_company_confirm/////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
+def jdafinancialsapp_delete_company_confirm(request, pk):
+    #print(f"387://////{pk}")
+    #company_listing = PublicationCompanyModel.objects.get(pk=pk)
+    comp = CompanyModel.objects.get(pk=pk)
+    messages.warning(request, f"Deletion of company '{comp}' is permanent'?")
+    context = {'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_delete_company_confirm.html', context)
+
+
+#//////////////////////////////////////// jdafinancialsapp_delete_company_yes/////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
+def jdafinancialsapp_delete_company_yes(request, pk):
+    #print(f"398://////{pk}")
+    #company_listing = PublicationCompanyModel.objects.get(pk=pk)
+    comp = CompanyModel.objects.get(pk=pk)
+    comp.delete()
+    messages.success(request, f"Successfully deleted company: '{comp}' ID #{pk}")
+    context = {'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
+    return redirect('jdafinancialsapp_company_listing')
+    #return render(request, 'jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html', context)
+
+
+
 #////////////////////////// jdafinancialsapp_bal_all_rpt ///////////////////////
+@login_required
 def jdafinancialsapp_bal_all_rpt(request):
     bal_data = FinancialStatementFactModel.objects.values('company__company').annotate(Sum('value')) #.order_by('company', 'company__rpt_period', 'entry_date')
 
@@ -617,17 +666,18 @@ def jdafinancialsapp_bal_all_rpt(request):
 
 
 #////////////////////////// FinancialStatementFactForm ///////////////////////
+@login_required
 def financialStatementFactForm(request):
-    print(f"237//////////// Bal entry Form /////// ")
+    #print(f"237//////////// Bal entry Form /////// ")
 
     if request.method == "POST":
-        print("240 - POST")
+        #print("240 - POST")
         form = FinancialStatementFactForm(request.POST)
 
         if form.is_valid():
             #bal_company = form.cleaned_data['bal_company']
             data = request.POST.copy()
-            print(f"247 form data: {data}")
+            #print(f"247 form data: {data}")
 
             form.save()
             messages.success(request, "successfully created ")
@@ -635,11 +685,11 @@ def financialStatementFactForm(request):
 
         else: #end if valid
             messages.error(request, form.errors)
-            print(f"155 form.errors {form.errors} ///////")
+            #print(f"155 form.errors {form.errors} ///////")
     else:
         fact =FinancialStatementFactModel.objects.all()
         form = FinancialStatementFactForm()
-        print("256 - GET")
+        #print("256 - GET")
 
 
     context = {'form': form, 'fact':fact}

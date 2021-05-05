@@ -1,4 +1,5 @@
 <!doctype html>
+{% load flags %}
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -62,8 +63,28 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'jdatester_bal_dash' %}">Balance Sheet</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jdatester_export_data' %}">Export data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jdatester_import_data' %}">Import data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jdatester_load_xls' %}">Load xls</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jdatester_index' %}">Load Index Prices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog_listing' %}">Blog Listing</a>
+                    </li>
+
+                    <li>
+                        {% languages %}
+                    </li>
 
                 </ul>
+
             </div>
         </div>
     </nav>

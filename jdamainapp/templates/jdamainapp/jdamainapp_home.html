@@ -1,9 +1,8 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
-
 <div class="row justify-content-center align-items-center">
     <div class="col-sm-12">
         {% if messages %}
@@ -17,17 +16,9 @@
     </div>
 </div>
 
-
-<!--nav aria-label="breadcrumb">
-    <ol class="breadcrumb my_breadcrumb_bg">
-        <li class="breadcrumb-item">&nbsp;</li>
-
-    </ol>
-</nav-->
-
 <style type="text/css">
     .bg-cover {
-        background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.jpg' %});
+        background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
     }
 
 </style>
@@ -40,7 +31,7 @@
             <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
                 J&D </strong><strong class="text-white wow">Platform</strong></h2>
             <a href="{% url 'jdamainapp_home' %}" class="btn btn-outline-white btn-md"><i
-                    class="fa fa-clone left my_info_txt"></i><span class="text-white"> Our Apps</span></a>
+                    class="fa fa-clone left my_info_txt"></i><span class="text-white"> {% trans 'Our Apps' %}</span></a>
         </div>
     </div>
 
@@ -58,7 +49,7 @@
                                 <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}">
                                     <i class="far fa-compass fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>Financials App</h4>
+                                <h4>{% trans 'Financials App' %}</h4>
                                 <!--p>
                                     <i class="far fa-check-circle my_info_txt"></i> Models
                                     <i class="far fa-check-circle my_info_txt"></i> Newsletters
@@ -78,7 +69,7 @@
                                 <a class="services-icon" href="{% url 'jdaanalyticsapp_home' %}">
                                     <i class="fas fa-chart-line fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>Analytics App</h4>
+                                <h4> {% trans 'Analytics App' %} </h4>
                                 <!--p>
                                     <i class="far fa-check-circle my_info_txt"></i> Valuation Models
                                     <i class="far fa-check-circle my_info_txt"></i> Market data analysis
@@ -97,7 +88,7 @@
                                 <a class="services-icon" href="{% url 'jdapublicationsapp_home' %}">
                                     <i class="fas fa-newspaper fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>Publications App</h4>
+                                <h4> {% trans 'Publications App' %}</h4>
                                 <!--p>
                                     <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
                                     <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
@@ -117,52 +108,5 @@
 </div>
 
 
-<!--div class="card shadow-sm bg-white rounded">
-    <div id="services" class="services-area Xmy_area-padding">
-        <div class="container-fluid">
-            <div class="row text-center">
-
-                <div class="col-md-4 col-sm-12 col-xs-12 my_nopad3">
-                    <div class="card text-dark bg-white">
-                        <div class="card-header">
-                            <h6 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
-                                J&D </strong><strong class="text-secondary wow">Financials App</strong></h6>
-                            <div class="card-body">
-                                <img src="{% static 'jdamainapp/assets/img/slider/compass_sm.jpg' %}" class="img-fluid"
-                                     alt="JDA Financials" style="max-width:100%">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-12 col-xs-12 my_nopad3">
-                    <div class="card text-dark bg-white">
-                        <div class="card-header">
-                            <h6 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
-                                J&D </strong><strong class="text-secondary wow">Analytics App</strong></h6>
-                            <div class="card-body">
-                                <img src="{% static 'jdamainapp/assets/img/slider/charts_sm.jpg' %}" class="img-fluid"
-                                     alt="JDA Analytics" style="max-width:100%">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-12 col-xs-12 my_nopad3">
-                    <div class="card text-dark bg-white">
-                        <div class="card-header">
-                            <h6 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
-                                J&D </strong><strong class="text-secondary wow">Publications App</strong></h6>
-                            <div class="card-body">
-                                <img src="{% static 'jdamainapp/assets/img/slider/newspaper_sm.png' %}"
-                                     class="img-fluid" alt="JDA Analytics">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div-->
 {% endblock %}
 

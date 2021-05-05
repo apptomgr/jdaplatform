@@ -2,12 +2,13 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import PublicationModel, PublicationCompanyModel
 import datetime
+from django.utils.translation import ugettext_lazy
 
 
 #/////////////////////////// PublicationAdminsForm //////////////////////////
 class PublicationAdminsForm(forms.ModelForm):
     CATEGORY_CHOICES = (
-        ('', 'Category'),
+        ('', ugettext_lazy('Category')),
         ('Models', 'Models'),
         ('Newsletters', 'Newsletters'),
         ('Commentaries', 'Commentaries'),
@@ -15,7 +16,7 @@ class PublicationAdminsForm(forms.ModelForm):
     )
 
     RESEARCH_TYPE_CHOICES = (
-        ('', 'Type'),
+        ('', ugettext_lazy('Type')),
         ('Valuation Models', 'Valuation Models'),
         ('Daily Market Briefing', 'Daily Market Briefing'),
         ('Weekly comments', 'Weekly comments'),
@@ -30,16 +31,16 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Economic Notes', 'Economic Notes'),
         ('Investor Conference', 'Investor Conference')
     )
-    author = forms.ModelChoiceField(queryset=User.objects.all(), empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
+    author = forms.ModelChoiceField(queryset=User.objects.all(), empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     publication_date = forms.DateField(initial=datetime.date.today, label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'From'}))
     research_category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
-    subject = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
+    subject = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ugettext_lazy('Subject')}, ))
     visible_flag = forms.BooleanField(label='Visible', required=False, disabled=False,widget=forms.widgets.CheckboxInput(attrs={'class': 'checkbox-inline'})),
-    publication_desc = forms.CharField(label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
+    publication_desc = forms.CharField(label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':ugettext_lazy('Publication Description')}))
     file_name = forms.FileField(label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
     #company = forms.ModelChoiceField(queryset=PublicationCompanyModel.objects.all(), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick'}))
-    company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label=ugettext_lazy('Company'), label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
     class Meta:
         model = PublicationModel
         fields = '__all__'
@@ -49,10 +50,10 @@ class PublicationAdminsForm(forms.ModelForm):
 #////////////////////////////////// PublicationFilterForm ////////////////////////////
 class PublicationFilterForm(forms.ModelForm):
     CATEGORY_CHOICES = (
-        ('', 'Category'),
-        ('Models', 'Models'),
+        ('', ugettext_lazy('Category')),
+        ('Models', ugettext_lazy('Models')),
         ('Newsletters', 'Newsletters'),
-        ('Commentaries', 'Commentaries'),
+        ('Commentaries', ugettext_lazy('Commentaries')),
         ('Reports', 'Reports'),
     )
 
@@ -94,7 +95,7 @@ class PublicationFilterForm(forms.ModelForm):
 
 #/////////////////////////// PublicationCompanyForm //////////////////////////
 class PublicationCompanyForm(forms.ModelForm):
-    company_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Company'}))
+    company_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':ugettext_lazy('Company')}))
 
     class Meta:
         model = PublicationCompanyModel

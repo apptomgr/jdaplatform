@@ -1,0 +1,152 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load i18n %}
+{% load tz %}
+{% include "jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html" %}
+
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="{ url 'jdafinancialsapp_statement_rpt' company_id statement entry_date }"><i
+                    class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
+            <span class="text-secondary mt-2">{% trans 'Market Listing as of'%} {{index.0.index_date |utc}}</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Index block -->
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <table class="table table-sm table-striped table-hover table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Index' %}</th>
+                        <th scope="col">{% trans 'Value' %}</th>
+                        <!--th scope="col">Date time</th-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in index %}
+                    <tr>
+                        <th scope="row">{{i.pk}}</th>
+                        <td class="text-left">{{i.index}}</td>
+                        <td class="text-left">{{i.value}}</td>
+                    </tr>
+                    {% endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- filter block -->
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <form class="hero-form" method="post" action="{% url 'jdaanalyticsapp_sec_filter' %}" novalidate>
+                    {% csrf_token %}
+                    <table class="table table-sm  table-hover table-bordered">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">{% trans 'Security Filter' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td scope="row">{{filterForm.security_date| as_crispy_field}}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">{{filterForm.ticker| as_crispy_field}}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">{{filterForm.index| as_crispy_field}}</td>
+                        </tr>
+                        <tr>
+                            <td class="my_nopad2 text-center">
+                                <button type="submit" class="btn btn-sm btn-info mt-2 mb-2">Filter</button>
+                                <!--button type="reset" class="btn btn-sm btn-secondary  mb-2" onclick="location.href='{ url 'jdapublicationsapp_pubs' }'">Reset</button-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- security block -->
+        <div class="row my_mr my_ml">
+            <table class="table table-sm table-striped table-hover table-bordered responsive">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" class="text-left">{% trans 'Security Ticker' %}</th>
+                    <th scope="col" class="text-left">ISIN</th>
+                    <th scope="col" class="text-left">{% trans 'Label' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Average Price' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Open' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Close' %}</th>
+                    <th scope="col" class="text-right">{% trans 'High' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Low' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Ask' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Bid' %}</th>
+                    <th scope="col" class="text-right">Transaction total</th>
+                    <th scope="col" class="text-right">{% trans 'Traded Volume' %}</th>
+                    <th scope="col" class="text-right">{% trans 'Traded Value' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in security_price %}
+                <tr>
+                    <th scope="row">{{i.pk}}</th>
+                    <td class="text-left">{{i.security.ticker}}</td>
+                    <td class="text-left">{{i.security.isin}}</td>
+                    <td class="text-left">{{i.security.name}}</td>
+                    <td class="text-right">{{i.avg_price}}</td>
+                    <td class="text-right">{{i.open}}</td>
+                    <td class="text-right">{{i.close}}</td>
+                    <td class="text-right">{{i.high}}</td>
+                    <td class="text-right">{{i.low}}</td>
+                    <td class="text-right">{{i.ask}}</td>
+                    <td class="text-right">{{i.bid}}</td>
+                    <td class="text-right">{{i.volume}}</td>
+                    <td class="text-right">{{i.trans_total}}</td>
+                    <td class="text-right">{{i.trans_value}}</td>
+                </tr>
+                {% endfor%}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            <small id="bank_waiter">As of {{rpt_date}}</small>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .my_mr
+    {
+     margin-right:1px;
+    }
+
+    .my_ml
+    {
+     margin-left:1px;
+    }
+
+</style>
+{% endblock %}
+

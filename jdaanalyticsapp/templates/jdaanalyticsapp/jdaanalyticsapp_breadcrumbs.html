@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_home' %}" class="text-light {{bread_home}}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_upload_form' %}" class="text-light {{bread_stmts}}"> {% trans 'Market Data Upload' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_rpt' %}" class="text-light {{bread_stmts}}"> {% trans 'Market Data Report' %}</a></li>
+    </ol>
+</nav>

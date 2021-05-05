@@ -2,6 +2,8 @@ from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel,Language
 
+from django.utils.translation import ugettext_lazy
+#ugettext_lazy('Sector') # this string will be marked for translation
 #from django.core.exceptions import ValidationError
 
 #def validate_id_exists(value):
@@ -45,16 +47,16 @@ class CompanyForm(forms.ModelForm):
     intrnl_actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
     othr_bus_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Autre secteur d\'activites'}, ))
     #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick my_dropdown'}))
-    shrhldr_name_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_name_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
     shrhldr_type_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
     shrs_hld_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_name_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
     shrhldr_type_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
     shrs_hld_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_name_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
     shrhldr_type_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
     shrs_hld_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_name_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
     shrhldr_type_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
     shrs_hld_4 = forms.CharField(required = False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
 
@@ -87,15 +89,15 @@ class FinStmtDashForm(forms.Form):
         ('Q4', 'Full Year'),
     )
 
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='',
+    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label=ugettext_lazy('Sector'), label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 
-    company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Company', label='',
+    company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label=ugettext_lazy('Company'), label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 
-    statement = forms.ModelChoiceField(queryset=FinancialStatementModel.objects.all(), empty_label='Statement', label='',
+    statement = forms.ModelChoiceField(queryset=FinancialStatementModel.objects.all(), empty_label=ugettext_lazy('Statement'), label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 

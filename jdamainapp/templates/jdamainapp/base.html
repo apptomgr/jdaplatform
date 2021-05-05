@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+{% load flags %}
+{% load i18n %}
 <html lang="en">
 
 <head>
@@ -63,28 +65,41 @@
 
         <nav class="nav-menu d-none d-lg-block">
             <ul>
-                <li class="active"><a href="{% url 'jdamainapp_home' %}">JDA Platform</a></li>
+                <li class="active"><a href="{% url 'jdamainapp_home' %}">{% trans 'JDA Platform' %}</a></li>
 
-                <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> Financials App</a>
+                <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
                    <ul>
-                       <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> Our Statements</a></li>
+                       <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
                        <li><hr class="my_hr_divider"></li>
-                       <li><a href="{% url 'jdafinancialsapp_new_company' %}"><i class="fa fa-plus-circle text-info"></i> Add New Company</a></li>
+                       <li><a href="{% url 'jdafinancialsapp_new_company' %}"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Company' %}</a></li>
                        <!--li><a href="{ url 'jdapublicationsapp_entry' }"><i class="fas fa-user-cog text-info"></i> Publication Entry </a></li-->
                         <!--li><a href="{ url 'jdapublicationsapp_listing' }"><i class="fas fa-edit"></i> Publication Edit </a></li-->
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> View Companies</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
 
                     </ul>
                 </li>
-                <li><a href="{% url 'jdaanalyticsapp_home' %}"><i class="fas fa-chart-line"></i> Analytics App</a></li>
-                <li class="drop-down"><a href="{% url 'jdapublicationsapp_home' %}"><i class="far fa-newspaper"></i> Publications App</a>
+                <!--li><a href="{% url 'jdaanalyticsapp_home' %}"><i class="fas fa-chart-line"></i> {% trans 'Analytics App' %}</a></li-->
+
+                <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
                     <ul>
-                        <li><a href="{% url 'jdapublicationsapp_entry' %}"><i class="fas fa-user-cog"></i> Publication Entry </a></li>
-                        <li><a href="{% url 'jdapublicationsapp_listing' %}"><i class="fas fa-edit"></i> Publication Edit </a></li>
+                        <li><a href="{% url 'jdaanalyticsapp_upload_form' %}"><i class="fas fa-cloud-upload-alt"></i> {% trans 'Market Data Upload' %} </a></li>
                         <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'jdaanalyticsapp_rpt' %}"><i class="fas fa-file"></i> {% trans 'Market Data Report' %} </a></li>
+                        <!--li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> View Companies</a></li>
-                        <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> Add Company</a></li>
+                        <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> Add Company</a></li-->
+                    </ul>
+                </li>
+
+                <li class="drop-down"><a href="{% url 'jdapublicationsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Publications App' %}</a>
+                    <ul>
+                        <li><a href="{% url 'jdapublicationsapp_pubs' %}"><i class="fas fa-user-cog"></i> {% trans 'Our Publications' %} </a></li>
+                        <li><a href="{% url 'jdapublicationsapp_entry' %}"><i class="fas fa-user-cog"></i> {% trans 'Publication Entry' %} </a></li>
+                        <li><a href="{% url 'jdapublicationsapp_listing' %}"><i class="fas fa-edit"></i>  {% trans 'Publication Edit' %} </a></li>
+                        <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
+                        <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Company' %}</a></li>
                     </ul>
                 </li>
                 <!--li class="drop-down"><a href="#"><i class="fa fa-file-text"></i> Report</a>
@@ -109,7 +124,7 @@
                     <ul>
                         <li><a href="#"><i class="fas fa-user-circle"></i> My account</a></li>
                         <li><a href="#"><i class="fas fa-passport"></i> Change Password </a></li>
-                        <li><a href="{ url 'logout' }"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Logout' %}</a></li>
                     </ul>
                 </li>
                 <!--ul class="navbar-nav ml-auto">
@@ -128,8 +143,8 @@
                 {% else %}
                 <li class="login">
                     <form class="form-inline ml-auto">{% csrf_token %}
-                        <a href="{ url 'login' }"><i aria-hidden="true" class="fa fa-user text-secondary"></i>
-                            Login</a>
+                        <a href="{% url 'login' %}"><i aria-hidden="true" class="fa fa-user text-secondary"></i>
+                            {% trans 'Login' %}</a>
                     </form>
                 </li>
                 <!--li>
@@ -139,8 +154,10 @@
                     </form>
                 </li-->
                 {% endif %}
+                <li>{% languages 'square' %}</li>
                 <!--li class="login"><a href="#"><i aria-hidden="true" class="fa fa-user text-secondary"></i> Members</a></li-->
             </ul>
+
         </nav><!-- .nav-menu -->
 
 
@@ -175,9 +192,7 @@
                                 <h2><span>J&D </span>Advisory</h2>
                             </div>
 
-                            <p>The first independent research and investment advisory agency in the BRVM market, Joseph
-                                & Daniel Advisory is located in the Ivorian capital Abidjan, more precisely at the
-                                Riviera II roundabout in the Cocody town.
+                            <p>{% trans 'The first independent research and investment advisory agency in the BRVM market, Joseph & Daniel Advisory is located in the Ivorian capital Abidjan, more precisely at the Riviera II roundabout in the Cocody town.' %}
                                 </p>
                             <div class="footer-icons">
                                 <ul>
@@ -204,12 +219,12 @@
                         <div class="footer-head">
                             <h4>information</h4>
                             <p>
-                                More <span class="font-weight-bold">J&D</span> info
+                                {% trans 'J&D info' %}
                             </p>
                             <div class="footer-contacts">
                                 <p><span>Tel:</span> +225 22 46 78 95</p>
                                 <p><span>Email:</span> info@jda-ci.com</p>
-                                <p><span>Working Hours:</span> 8am-5pm</p>
+                                <p><span>{% trans 'Working Hours' %}:</span> 8am-5pm</p>
                             </div>
                         </div>
                     </div>
@@ -218,10 +233,9 @@
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <div class="footer-content">
                         <div class="footer-head">
-                            <h4>JDA Platforme Web</h4>
+                            <h4>{% trans 'JDA Web Platform' %}</h4>
                             <p>
-                                Service Web et ensemble des Apps JDA permettant la diffusion et le partage d'information ou de contenu multimédia,
-                                des fonctionnalités propres a certains domaines telle que des applications tierces.
+                                Service Web et ensemble des Apps JDA permettant la diffusion et le partage d'information ou de contenu multimédia, des fonctionnalités propres a certains domaines telle que des applications tierces.
                             </p>
                             <!--div class="flicker-img">
                                 <a><img src="{% static 'jdamainapp/assets/img/portfolio/1.jpg'%}" alt=""></a>

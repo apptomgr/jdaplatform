@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% extends 'jdatester/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<p> upload Index EXCEL file </p>
+<form class="form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="upload">
+</form>
+
+
+<hr><br>
+
+    <form class="hero-form" method="post" action="{% url 'jdatester_sec_filter' %}" novalidate>
+        <div class="card-header">
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Financial Statements</h5>
+
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    {{ filterForm.index_date|as_crispy_field }}
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    {{ filterForm.index|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info"  role="button" type="submit" value="Filter">
+        </div>
+    </form>
+
+
+
+<hr><br>
+
+<h2>Index as of {{index.0.index_date}}</h2>
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Last</th>
+        <th scope="col">Location</th>
+        <!--th scope="col">Date time</th-->
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in index %}
+    <tr>
+        <th scope="row">{{i.pk}}</th>
+        <td>{{i.index}}</td>
+        <td>{{i.value}}</td>
+        <!--td>{{i.index_date}}</td-->
+    </tr>
+    {% endfor%}
+    </tbody>
+</table>
+
+<hr><br>
+<h2>Security as of {{index.0.index_date}}</h2>
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Ticker</th>
+        <th scope="col">IBIN</th>
+        <th scope="col">Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in security %}
+    <tr>
+        <th scope="row">{{i.pk}}</th>
+        <td>{{i.ticker}}</td>
+        <td>{{i.isin}}</td>
+        <td>{{i.name}}</td>
+    </tr>
+    {% endfor%}
+    </tbody>
+</table>
+
+
+<hr><br>
+<h2>Security Price as of {{index.0.index_date}}</h2>
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Security</th>
+        <th scope="col">Security Date</th>
+        <th scope="col">avg_price</th>
+        <th scope="col">Open</th>
+        <th scope="col">Close</th>
+        <th scope="col">High</th>
+        <th scope="col">Low</th>
+        <th scope="col">Ask</th>
+        <th scope="col">Bid</th>
+        <th scope="col">Transaction(Total)</th>
+        <th scope="col">Volume</th>
+        <th scope="col">Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in security_price %}
+    <tr>
+        <th scope="row">{{i.pk}}</th>
+        <td>{{i.security.ticker}}</td>
+        <td>{{i.security_date}}</td>
+        <td>{{i.avg_price}}</td>
+        <td>{{i.open}}</td>
+        <td>{{i.close}}</td>
+        <td>{{i.high}}</td>
+        <td>{{i.low}}</td>
+        <td>{{i.ask}}</td>
+        <td>{{i.bid}}</td>
+        <td>{{i.volume}}</td>
+        <td>{{i.trans_total}}</td>
+        <td>{{i.trans_value}}</td>
+    </tr>
+    {% endfor%}
+    </tbody>
+</table>
+{% endblock%}

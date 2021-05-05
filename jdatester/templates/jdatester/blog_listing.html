@@ -1,0 +1,13 @@
+{% extends 'jdatester/base.html' %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+
+{% block content %}
+<h1>Blog Listing</h1>
+<ul>
+{% for i in blogs %}
+  <li> <a href="{% url 'blog_view' i.id %}">{{i.title}}</a> </li>
+{% endfor %}
+</ul>
+{% endblock content %}

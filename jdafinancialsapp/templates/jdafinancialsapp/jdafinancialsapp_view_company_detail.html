@@ -1,5 +1,6 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 {% block content %}
 
 <div class="row justify-content-center align-items-center">
@@ -36,7 +37,7 @@
             <tbody>
             <tr>
                 <td><span class="text-muted">Denomination Sociale: </span>{{company_detail.corp_name}}</td>
-                <td><span class="text-muted">Reporting Period: </span>{{company_detail.rpt_period}}</td>
+                <td><span class="text-muted">P&eacute;riode de Publication: </span>{{company_detail.rpt_period}}</td>
                 <td><span class="text-muted">Type de tier: </span>{{company_detail.sector}}</td>
             </tr>
             <tr>

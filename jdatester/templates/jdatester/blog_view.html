@@ -1,0 +1,24 @@
+{% extends 'jdatester/base.html' %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+
+{% block content %}
+<h1>{{blog.title}}</h1>
+
+{{blog.content|safe}}
+
+<hr/>
+
+<a href="{% url 'blog_listing' %}">All Blogs</a>
+<hr/>
+<a href="{% url 'blog_see_request' %}">Blog See Requests</a>
+<hr/>
+<a href="{% url 'blog_user_info' %}">Blog User Info</a>
+<hr/>
+<a href="{% url 'blog_private_place' %}">Private Place</a>
+<hr/>
+<a href="{% url 'blog_staff_place' %}">Staff only Place</a>
+
+
+{% endblock content %}

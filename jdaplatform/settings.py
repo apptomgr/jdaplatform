@@ -52,11 +52,15 @@ INSTALLED_APPS = [
     'jdafinancialsapp.apps.JdafinancialsappConfig',
     'jdaanalyticsapp.apps.JdaanalyticsappConfig',
     'jdapublicationsapp.apps.JdapublicationappsConfig',
+    'jdawebsite.apps.JdawebsiteConfig',
     'jdatester.apps.JdatesterConfig',
     'django.contrib.humanize',
     'crispy_forms',
     'storages',
     'import_export',
+    'translations',
+    'django_translation_flags',
+    'accounts.apps.AccountsConfig',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -66,6 +70,7 @@ LOGOUT_REDIRECT_URL = 'jdamainapp_home'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -138,20 +143,41 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+USE_I18N = True          # use internationalization
+USE_L10N = True          # use localization
+#
+# MIDDLEWARE += [          # locale middleware
+#     'django.middleware.locale.LocaleMiddleware',
+# ]
+#
+LANGUAGE_CODE = 'en-us'  # default (fallback) language
+
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGES = [
+  ('fr', _('French')),
+  ('en-us', _('English')),
+]
+
+#LANGUAGES = (            # supported languages
+#    ('en-us', 'English'),
+#    ('fr', 'French'),
+#)
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+#LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/New_York'
 
-USE_I18N = True
+#USE_I18N = True
 
-USE_L10N = True
+#USE_L10N = True
 
 USE_TZ = True
 
-#LANGUAGE_CODE = 'de'
+#LANGUAGE_CODE = 'en-us'
 USE_THOUSAND_SEPARATOR = True
 
 

@@ -1,6 +1,7 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -21,8 +22,8 @@
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb my_breadcrumb_bg">
-    <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_home' %}" class="text-light font-weight-bold">Home</a></li>
-     <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_home' %}" class="text-light">Our Analytics</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_home' %}" class="text-light font-weight-bold">{% trans 'Home' %}</a></li>
+     <li class="breadcrumb-item"><a href="{% url 'jdaanalyticsapp_home' %}" class="text-light">{% trans 'Our Analytics' %}</a></li>
     <!--li class="breadcrumb-item active" aria-current="page">Library</li-->
   </ol>
 </nav>
@@ -44,8 +45,8 @@
        <div class="text-white text-center py-3 px-2 my-3">
         <div>
             <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
-                J&D </strong><strong class="text-white wow">Analytics App</strong></h2>
-            <a href="{% url 'jdapublicationsapp_pubs' %}" class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i><span class="text-white"> Our Research Data</span></a>
+                J&D </strong><strong class="text-white wow">{% trans 'Analytics App' %}</strong></h2>
+            <a href="{% url 'jdapublicationsapp_pubs' %}" class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i><span class="text-white"> {% trans 'Our Research Data' %}</span></a>
         </div>
     </div>
     </div>
@@ -63,16 +64,16 @@
                         <div class="services-details">
                             <div class="single-services">
                                 <a class="services-icon" href="#">
-                                    <i class="far fa-newspaper fa-2x my_info_txt"></i>
+                                    <i class="far fa-cloud-upload-alt fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>Featured Publications</h4>
-                                <p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Models
-                                    <i class="far fa-check-circle my_info_txt"></i> Newsletters
-                                    <i class="far fa-check-circle my_info_txt"></i> Commentaries
-                                    <i class="far fa-check-circle my_info_txt"></i> Reports
+                                <h4>{% trans 'Market Data Upload' %}</h4>
+                                <!--p>
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Models' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Newsletters' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Commentaries' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Reports' %}
 
-                                </p>
+                                </p-->
                             </div>
                         </div>
                         <!-- end about-details -->
@@ -85,12 +86,12 @@
                                 <a class="services-icon" href="#">
                                     <i class="fas fa-chart-line fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>JDA Models</h4>
-                                <p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Valuation Models
-                                    <i class="far fa-check-circle my_info_txt"></i> Market data analysis
-                                    <i class="far fa-check-circle my_info_txt"></i> Portfolio insights
-                                </p>
+                                <h4>{% trans 'Market Data Analysis' %}</h4>
+                                <!--p>
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Models' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Market data analysis' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Portfolio insights'%}
+                                </p-->
                             </div>
                         </div>
                         <!-- end about-details -->
@@ -102,15 +103,14 @@
                         <div class="services-details">
                             <div class="single-services">
                                 <a class="services-icon" href="#">
-                                    <i class="fas fa-layer-group fa-2x my_info_txt"></i>
+                                    <i class="fas fa-file fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>Publication Types</h4>
-                                <p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
-                                    <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
-                                    <i class="far fa-check-circle my_info_txt"></i> Annual Reports
+                                <h4>{% trans 'Market Data Report' %}</h4>
+                                <!--p>
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Daily Market briefings' %}
+                                    <i class="far fa-check-circle my_info_txt"></i> {% trans 'Annual Reports' %}
 
-                                </p>
+                                </p-->
                             </div>
                         </div>
                         <!-- end about-details -->

@@ -1,32 +1,16 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
         <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
         <!--li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light">Our Department</a></li-->
-        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light font-weight-bold">Our
-            Publications</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light font-weight-bold">{% trans 'Our Publications' %}</a></li>
     </ol>
 </nav>
-<!--
-{% if filterForm.errors %}
-	<div id="errors">
-		<div class="inner">
-			<p>There were some errors in the information you entered. Please correct the following:</p>
-			{{ filterForm.non_field_errors }}
-			<ul>
-				{% for field in filterForm %}
-					{% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
-	</div>
-{% endif %}
--->
 
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
@@ -35,8 +19,7 @@
             <div>
                 <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
                     J&D </strong><strong class="text-white">Publications</strong></h2>
-                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> Our
-                    Publications</a>
+                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> {% trans 'Our Publications' %}</a>
             </div>
         </div>
     </div>
@@ -111,17 +94,17 @@
                 <table id="publication_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
                     <thead class="my_pub_tbl_header_bg">
                     <tr>
-                        <th>Publication Date</th>
-                        <th>Author</th>
-                        <th>Research Category</th>
-                        <th>Research Type</th>
-                        <th>Subject</th>
-                        <th>Company</th>
+                        <th>{% trans 'Publication Date' %}</th>
+                        <th>{% trans 'Author' %}</th>
+                        <th>{% trans 'Research Category' %}</th>
+                        <th>{% trans 'Research Type' %}</th>
+                        <th>{% trans 'Subject' %}</th>
+                        <th>{% trans 'Company' %}</th>
                         <!--th>Publication_desc</th>
                         <th>File Name</th>
                         <th>Upload Date</th-->
                         <th class="text-center">Pubs</th>
-                        <th class="text-center">Expand</th>
+                        <th class="text-center">{% trans 'Expand' %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -167,7 +150,7 @@
                                                    data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
                                                    data-thickness=".20"
                                                    data-readonly="true" disabled>
-                                            <h5 class="progress-h4">Models</h5>
+                                            <h5 class="progress-h4">{% trans 'Models' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +163,7 @@
                                                    data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
                                                    data-thickness=".20"
                                                    data-readonly="true" disabled>
-                                            <h5 class="progress-h4">Newsletters</h5>
+                                            <h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +176,7 @@
                                                    data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
                                                    data-thickness=".20"
                                                    data-readonly="true" disabled>
-                                            <h5 class="progress-h4">Commentaries</h5>
+                                            <h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +189,7 @@
                                                    data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
                                                    data-thickness=".20"
                                                    data-readonly="true" disabled>
-                                            <h5 class="progress-h4">Reports</h5>
+                                            <h5 class="progress-h4">{% trans 'Reports' %}</h5>
                                         </div>
                                     </div>
                                 </div>

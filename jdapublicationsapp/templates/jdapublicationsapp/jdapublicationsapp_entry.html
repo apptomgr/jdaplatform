@@ -1,6 +1,6 @@
 {% extends 'jdamainapp/base.html' %}
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block content %}
 
 <div class="row justify-content-center align-items-center">
@@ -19,11 +19,11 @@
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
-        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">{% trans 'Home' %}</a></li>
         <!--li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light font-weight-bold">Our Department</a></li-->
-        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light">Our Publications</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_entry' %}" class="text-light font-weight-bold">Publications Entry</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_listing' %}" class="text-light">Publications Edit</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light">{% trans 'Our Publications' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_entry' %}" class="text-light font-weight-bold">{% trans 'Publications Entry' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_listing' %}" class="text-light">{% trans 'Publications Edit' %}</a></li>
     </ol>
 </nav>
 
@@ -31,7 +31,7 @@
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
         <div class="text-center">
-            <h5 class="text-muted"><i class="far fa-newspaper my_info_txt"></i> Publication Entry</h5>
+            <h5 class="text-muted"><i class="far fa-newspaper my_info_txt"></i> {% trans 'Publication Entry' %}</h5>
         </div>
     </div>
 
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-                    <button class="btn btn btn-info" type="submit">Add Publication</button>
+                    <button class="btn btn btn-info" type="submit">{% trans 'Add Publication' %}</button>
                 </div>
             </div>
         </form>
