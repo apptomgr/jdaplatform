@@ -3,7 +3,7 @@ from django.db import models
 
 class IndexPriceModel(models.Model):
     index_date = models.DateTimeField(blank=False, null=False)
-    index = models.CharField(max_length=10, blank=False, null=False)
+    index = models.CharField(max_length=12, blank=False, null=False)
     value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
 
     #def __str(self):
@@ -18,7 +18,7 @@ class IndexPriceModel(models.Model):
 
 class SecurityModel(models.Model):
     ticker = models.CharField(max_length=12, blank=False, null=False)
-    isin = models.CharField(max_length=12, blank=False, null=False)
+    isin = models.CharField(max_length=20, blank=False, null=False)
     name = models.CharField(max_length=200, blank=False, null=False)
 
     #def __str(self):

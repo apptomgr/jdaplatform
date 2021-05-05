@@ -37,7 +37,7 @@ def jdaanalyticsapp_upload_form(request):
 
                 for idx, i in enumerate(range(18, nbr_rows), 0):
                     cols = sheet.row_values(i)
-                    print(f"idx:{idx} - i: {i} - cols[0]: {cols[0]} - cols[7]: {type(cols[7])}")
+                    #print(f"idx:{idx} - i: {i} - cols[0]: {cols[0]} - cols[7]: {type(cols[7])}")
 
                 # print(f"487: {dt_obj}")
                 # check if datetime exists in DB/ Opt1: delete and reload Opt2:
