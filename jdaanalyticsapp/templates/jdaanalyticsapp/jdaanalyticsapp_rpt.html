@@ -42,7 +42,7 @@
                     <tbody>
                     {% for i in index %}
                     <tr>
-                        <th scope="row">{{i.pk}}</th>
+                        <th scope="row">{{ forloop.counter }}</th>
                         <td class="text-left">{{i.index}}</td>
                         <td class="text-left">{{i.value}}</td>
                     </tr>
@@ -109,7 +109,7 @@
                 <tbody>
                 {% for i in security_price %}
                 <tr>
-                    <th scope="row">{{i.pk}}</th>
+                    <th scope="row">{{ forloop.counter }}</th>
                     <td class="text-left">{{i.security.ticker}}</td>
                     <td class="text-left">{{i.security.isin}}</td>
                     <td class="text-left">{{i.security.name}}</td>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-05 19:13-0400\n"
+"POT-Creation-Date: 2021-05-07 17:02-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -358,6 +358,12 @@ msgstr "Horaires"
 #: jdamainapp/templates/jdamainapp/base.html:236
 msgid "JDA Web Platform"
 msgstr "Service WEB de JDA"
+
+#: jdamainapp/templates/jdamainapp/base.html:238
+msgid ""
+"JDA Platform and web services is designed to help facilite the distribution "
+"of its domain specific content or select third-party data."
+msgstr "JDA Service Web est concue pour faciliter la diffusion et le partage de son contenu ou d'autres information tierces."
 
 #: jdamainapp/views.py:8 jdatester/views.py:31 jdatester/views.py:39
 msgid "hello"

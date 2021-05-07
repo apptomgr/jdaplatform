@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import IndexForm, UploadExcelForm, SecurityFilterForm
-from .models import IndexPriceModel, SecurityModel, SecurityPriceModel
+from .models import IndexModel, IndexPriceModel, SecurityModel, SecurityPriceModel
 import xlrd
 from datetime import datetime
 import pytz
@@ -39,22 +39,40 @@ def jdaanalyticsapp_upload_form(request):
                     cols = sheet.row_values(i)
                     #print(f"idx:{idx} - i: {i} - cols[0]: {cols[0]} - cols[7]: {type(cols[7])}")
 
-                # print(f"487: {dt_obj}")
                 # check if datetime exists in DB/ Opt1: delete and reload Opt2:
+
                 if IndexPriceModel.objects.filter(index_date = dt_obj):
                     messages.info(request, f"Market data as of {dt_obj} already loaded")
                 else:
-                    # get index info save it to DB
-                    for i in range(6, 15): # index price info in spreadsheet starting from row 6 to row 15th
+                    # get index info & save it to DB only if new indexes
+                    for i in range(6, 15):  # index price info in spreadsheet starting from row 6 to row 15th
                         cols = sheet.row_values(i)
-                        IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
+                        #check if index not in IndexModel tbl then save it else skip it
+                        if not IndexModel.objects.filter(index=cols[0]):
+                            IndexModel.objects.create(index=cols[0])
+                            #IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
 
-                    #get security info
-                    for i in range(18, nbr_rows): # security info
-                        cols =sheet.row_values(i)
-                        SecurityModel.objects.create(ticker=cols[0], isin=cols[1], name=cols[2])
+                    # get indexPrice info & save it to DB base on existing indexes
+                    for i in range(6, 15):  # index price info in spreadsheet starting from row 6 to row 15th
+                        cols = sheet.row_values(i)
+                        idx = IndexModel.objects.get(index=cols[0])
 
-                    #get SecurityPriceModel info
+                        if idx: #indexPriceModel vals based on existing indexes
+                            IndexPriceModel.objects.create(index_date=dt_obj, index=idx, value=cols[1])
+                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index={idx}, value={cols[1]})")
+                        else: # save based on non-existing indexes
+                            IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
+                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index=cols{cols[0]}, value={cols[1]})")
+
+                    # get Security info & save it to DB only for new Securities from row 18 through the end of the page
+                    for i in range(18, nbr_rows):  # security info index price info in spreadsheet
+                         cols =sheet.row_values(i)
+                         # check if sec not in SecurityModel tbl then save it else skip it
+                         if not SecurityModel.objects.filter(ticker=cols[0], isin=cols[1], name=cols[2]):
+                             SecurityModel.objects.create(ticker=cols[0], isin=cols[1], name=cols[2])
+                             print(f"SecurityModel.objects.create(ticker={cols[0]}, isin={cols[1]}, name={cols[2]})")
+
+                    # get SecurityPriceModel vals based on existing securities
                     for idx, i in enumerate(range(18, nbr_rows), 0):
                         cols = sheet.row_values(i)
 
@@ -95,6 +113,8 @@ def jdaanalyticsapp_upload_form(request):
 
     context={'form':form}#, 'index':index, 'security':security, 'security_price':security_price}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_upload_form.html', context)
+
+
 
 @login_required
 def jdaanalyticsapp_rpt(request):
