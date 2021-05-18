@@ -4,7 +4,7 @@ from PyPDF4 import PdfFileWriter, PdfFileReader
 import PyPDF4
 from django.http import FileResponse
 from django.conf import settings #or from my_project import settings
-import img2pdf
+#import img2pdf
 from PIL import Image
 from reportlab.pdfgen import canvas
 import os
