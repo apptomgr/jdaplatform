@@ -23,15 +23,17 @@
     .bg-cover {
         background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
     }
+
 </style>
 
 
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
 
-    <div class="text-white text-center xpy-3 Xpx-2 Xmy-3">
+    <div-- class="text-white text-center xpy-3 Xpx-2 Xmy-3">
         <div>
-            <h2 class="card-title  Xpt-3 Xmb-2 font-bold"><strong class="my_info_txt">J&D </strong><strong class="text-white wow">Platform</strong></h2>
+            <h2 class="card-title  Xpt-3 Xmb-2 font-bold"><strong class="my_info_txt">J&D </strong><strong
+                    class="text-white wow">Platform</strong></h2>
             <a href="{% url 'jdamainapp_home' %}" class="btn btn-outline-white btn-md"><i
                     class="fa fa-clone left my_info_txt"></i><span class="text-white">{% trans 'Our Apps' %}</span></a>
         </div>
@@ -58,6 +60,28 @@
                 </div>
             </div>
         </div>
+
+        <!--div class="content-section">
+
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Log in</legend>
+                    {{ form|crispy }}
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-info" type="submit">Login</button>
+                </div>
+            </form>
+          
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Do you need an account? <a class="ml-2" href="{% url 'register' %}">Sign up now</a>
+                </small>
+            </div>
+        </div-->
+
+
     </div>
 
 </div>

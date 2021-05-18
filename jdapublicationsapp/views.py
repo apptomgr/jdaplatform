@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from .forms import PublicationAdminsForm, PublicationFilterForm, PublicationCompanyForm, CountryForm, EmptyForm, SimpleForm, FullSearchForm
 from .models import PublicationModel, PublicationCompanyModel
+from accounts.models import Profile
 from datetime import datetime
 from django.contrib import messages
 from django.db.models import Q
@@ -10,6 +11,8 @@ from accounts .decorators import allowed_users
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from jdamainapp.utils import put_watermark, res_tes, img2pdf
+import re
 
 from django.urls import resolve
 import os
@@ -33,12 +36,61 @@ def jdapublicationsapp_dept(request):
     return render(request, 'jdapublicationsapp/jdapublicationsapp_dept.html', context)
 
 #/////////////////////// jdapublicationsapp_pubs /////////////////////
+from django.conf import settings #or from my_project import settings
+
+
 @login_required
 def jdapublicationsapp_pubs(request):
     form = PublicationAdminsForm()
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
     publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
+
+    grp = request.user.groups.all()[0].name
+    #print(f"48 - grp: {grp}")
+
+    if grp == 'brokers':
+        # Get current user profile info (username and logo)
+        curr_user = User.objects.get(username=request.user)
+        #print(f"54 - curr_user: {curr_user}")
+        user_profile = Profile.objects.get(user=curr_user)
+        #print(f"56 - user_profile.logo: {user_profile.logo}")
+
+        # Check the curr user logo has been already converted
+        if os.path.exists(f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf"):
+            pass # do nothing since the logo pdf version already exist
+            #print(f"60: Current user logo already exists for {settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf")
+        else:
+            #print("62: File not exist convert curr user logo")
+            #  Convert current user logo from img to pdf and save it user_watermark
+            img2pdf(f"{settings.MEDIA_ROOT}/{user_profile.logo}", curr_user.username)  # (f"media/profile_logo/{curr_user}_watermark.pdf")
+
+        # get candidate publication_listing filenames to prep for watermarking
+        candidate_files=[]
+        #print(f"68 pubs count {publication_listing.count()}")
+        # Get all candidate files including full path
+        for i in publication_listing:
+            #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
+            candidate_files.append(i.file_name)
+
+        for j in candidate_files:
+            # if candidate files' extention is .pdf
+            if str(j).endswith('.pdf'):
+                #print(f"79 - Candidate file is pdf: {j}_watermark.pdf")
+                if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
+                    pass # do nothing since watermarked pdf files already exist
+                    #print(f"79: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
+                else:
+                    #print(f"81 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
+                    # Apply watermark on all candidate files if they were not previously watermarked
+                    put_watermark(
+                        input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf
+                        output_pdf=f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf",  # the modified pdf with watermark
+                        watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf", # the watermark to be provided
+                        logo_img=f"{settings.MEDIA_ROOT}/{user_profile.logo}"
+                    )
+
+
     models_cnt=publication_listing.filter(research_category='Models').count()
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
     commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
@@ -57,11 +109,14 @@ def jdapublicationsapp_pubs(request):
 
     #print(publication_listing.filename())
     # print(f"//////////17: {publication_listing.count()}/////////")
+    #my_list_zip = zip(publication_listing, candidate_files)
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
                'per_models':per_models,
                'per_newsletters':per_newsletters,
                'per_commentaries':per_commentaries,
-               'per_reports':per_reports
+               'per_reports':per_reports,
+                #'my_list_zip':my_list_zip,
+               'user_grp':grp
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
@@ -253,8 +308,6 @@ def jdapublicationsapp_filter(request):
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
 
-
-
 #//////////////////////////////////////// jdapublicationsapp_entry/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs'])
@@ -353,6 +406,37 @@ def jdapublicationsapp_listing(request):
     return render(request, 'jdapublicationsapp/jdapublicationsapp_listing.html', context)
 
 
+#//////////////////////////////////////// jdapublicationsapp_view_watermarked_pub/////////////////////////////
+@login_required
+def jdapublicationsapp_view_watermarked_pub(request, file_name):
+    #reconvert file_name rpl '~~' with '/'
+    wm_file = file_name.replace('~~', '/')
+
+    #get_user_logo
+    curr_user =User.objects.get(username=request.user)
+    user_profile=Profile.objects.get(user=curr_user)
+    #print(user_profile.logo)
+    #logo_path=f"media/{user_profile.logo}"
+    #print(logo_path)
+    #watermark file_name
+    #print(f"415: - {curr_user.username}")
+    put_watermark(
+        input_pdf=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
+        output_pdf=f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf",  # the modified pdf with watermark
+        watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user.username}_watermark.pdf"  # the watermark to be provided
+    )
+
+    #get grp info
+    #if request.user.groups.exists():
+    #    grp_name = request.user.groups.all()[0].name
+
+    #    print(f"395 - grp: {grp.name}")
+
+    context={'param_file': file_name, 'wm_file': wm_file}
+    return render(request, 'jdapublicationsapp/tes.html', context)
+    #return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+
+
 #//////////////////////////////////////// jdapublicationsapp_delete/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs'])
@@ -360,7 +444,31 @@ def jdapublicationsapp_delete(request, pk):
 
     if request.method == 'POST':
         pub = PublicationModel.objects.get(pk=pk)
+        curr_file = str(pub.file_name)
+        #print(f"447: {pub.file_name}")
+        #print(f"448: ^{str(pub.file_name)}.*watermark.pdf$")
+        user_file = f"{curr_file}_{request.user}_watermark.pdf"
+        #print(f"450: {user_file}")
+        # get all user that are in the broker group
+        brokers = User.objects.filter(groups__name='brokers')
+        #print(f"453: {brokers}")
+        for user in brokers:
+            #print(f"455: {user}")
+            # Check if the file about to be deleted starts with pub.file_name and ends with watermark.pdf:
+            match = re.search(f"^{curr_file}.*watermark.pdf$", f"{curr_file}_{user}_watermark.pdf")
+            if match:
+                # delete matched files if they exist
+                if os.path.exists(f"{settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf"):
+                    os.remove(os.path.join(settings.MEDIA_ROOT, f"{curr_file}_{user}_watermark.pdf"))
+                #print(f"461: match: {settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf")
+                #print("YES! We have a match!")
+
+
+        # The delete DB entry and pdf file names in MEDIA folder
         pub.delete()
+
+
+        # Delete corresponding watermark files
         messages.success(request, f"Successfully deleted publication ID {pk}")
         return redirect('jdapublicationsapp_listing')
 

@@ -1,22 +1,38 @@
-
-{% extends 'jdamainapp/jdamainapp_base.html' %}
+{% extends 'jdamainapp/base.html' %}
 
 {% block content %}
 
+<div>
+  Tes
+
+  {{param_file}}
+
+  <br>
+  {{wm_file}}
+
+  <br>
+ <a href="../../media/{{wm_file}}_watermark.pdf" target="_blank">res</a>
+  <br>
+  <a href="../../media/{{wm_file}}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a>
+../../media/{{wm_file}}|watermark:"My Watermark,position=br,opacity=35" }}
+</div>
 
 
-<a href="#" class="my_link" data-val="user1" data-toggle="modal" data-target="#my-modal">Open Modal</a>
+
+
+<a href="../../media/{{wm_file}}_watermark.pdf" class="my_link" data-val="user1" data-toggle="modal" data-target="#my-modal" target="_blank">Open Modal</a>
 
 <div class="modal fade" id="my-modal" tabindex="-1" role="dialog" aria-labelledby="my-modal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">My Modal</h5>
+        <h5 class="modal-title" id="exampleModalLabel">My Modal </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+          <a href="../../media/{{wm_file}}_watermark.pdf" target="_blank">res</a>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

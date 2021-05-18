@@ -8,3 +8,11 @@ def jdamainapp_home(request):
     context ={'hello': _('hello')}
     return render(request, 'jdamainapp/jdamainapp_home.html', context)
     #return render(request, 'jdamainapp/base_bk.html')
+
+
+@login_required
+def jdamainapp_account_profile(request):
+    context ={'hello': _('hello')}
+    return render(request, 'jdamainapp/profile.html', context)
+
+

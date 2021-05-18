@@ -1,0 +1,119 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<style type="text/css">
+    .bg-cover {
+        background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
+    }
+
+
+
+
+
+</style>
+
+<div class="jumbotron jumbotron bg-cover">
+    <div class="overlay"></div>
+
+    <div class="text-white text-center py-3 px-2 my-3">
+        <div>
+            <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
+                J&D </strong><strong class="text-white wow">Platform</strong></h2>
+            <a href="{% url 'jdamainapp_home' %}" class="btn btn-outline-white btn-md"><i
+                    class="fa fa-clone left my_info_txt"></i><span class="text-white"> {% trans 'Our Apps' %}</span></a>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow-sm p-2 mb-2 bg-white rounded">
+    <!-- ======= Services Section ======= -->
+    <div id="services" class="services-area my_area-padding">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <!-- Start Left services -->
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="about-move">
+                        <div class="services-details">
+                            <div class="single-services">
+                                <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}"><i
+                                        class="far fa-user-circle fa-2x my_info_txt"></i>
+                                    <legend>Profile Info</legend>
+                                </a>
+                                <ul class="container text-left">
+                                    <li>Username: {{ user.username }}</li>
+                                    <li>{{user.email}}</li>
+                                    <li>Last Login: {{ user.last_login }}</li>
+                                    <li>Date Joined: {{ user.date_joined }}</li>
+                                    <li>Staff: {{ user.is_staff }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- end about-details -->
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12 vl">
+                    <div class="about-move">
+                        <div class="services-details">
+                            <div class="single-services">
+                                <a class="services-icon" href="{% url 'jdaanalyticsapp_home' %}">
+                                    <i class="far fa-user-circle fa-2x my_info_txt"></i>
+
+                                    <legend>Profile logo</legend>
+                                </a>
+                                <ul>
+                                    <li><img class="account-img" src="{{ user.profile.logo.url }}"></li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        <!-- end about-details -->
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12 vl">
+                    <!-- end col-md-4 -->
+
+
+
+
+                                <ul class="container text-left">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+                                            {{ u_form|crispy }} <!-- User form -->
+                                            {{ p_form|crispy }} <!-- Profile form -->
+
+
+                                            <button class="btn btn-outline-info" type="submit">Update</button>
+
+                                    </form>
+                                </ul>
+
+
+                        <!-- end about-details -->
+                    </div>
+
+
+
+            </div>
+        </div>
+    </div><!-- End Services Section -->
+</div>
+
+{% endblock %}
+

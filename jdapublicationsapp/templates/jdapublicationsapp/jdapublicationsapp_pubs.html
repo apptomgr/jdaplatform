@@ -2,15 +2,17 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% load i18n %}
+{% load watermark %}
 {% block content %}
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
         <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
-        <!--li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_dept' %}" class="text-light">Our Department</a></li-->
+
         <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_pubs' %}" class="text-light font-weight-bold">{% trans 'Our Publications' %}</a></li>
     </ol>
 </nav>
+
 
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
@@ -108,6 +110,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {#% for i,j in my_list_zip %#}
                     {% for i in publication_listing %}
                     <tr>
                         <!--td>{{i.pk}}</td-->
@@ -120,7 +123,12 @@
                         <!--td>{{i.publication_desc}}</td>
                         <td>{{i.file_name.name}}</td>
                         <td>{{i.uploaded_at}}</td-->
-                        <td class="text-center"><a href="{{ i.file_name.url }}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+                        {% if user_grp == "brokers" %}
+                            <td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+                        {% else %}
+                            <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+                        {% endif %}
+
                         <!--td>
                             <button type="button" class="btn btn-info" aria-label="Left Align" data-toggle="modal" data-target="#pubModal">
                                 <span class="far fa-eye fa-fw fa-lg" aria-hidden="true"></span>
@@ -216,9 +224,8 @@
 </style>
 
 
-
 <!--Pub Modals -->
-<div class="modal modal-md fade" id="pub-modal" tabindex="-1" role="dialog" aria-labelledby="pub-modal" aria-hidden="true">
+<div class="modal modal-md fade" id="pub-modal" tabindex="-1" data-val={{wm_file}} role="dialog" aria-labelledby="pub-modal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header bg-light">
@@ -231,6 +238,7 @@
         </button>
       </div>
       <div class="modal-body">
+
                     <i class="far fa-user fa-2x text-info mr-1"></i>
                     <span class="modal-author pub-modal-vals"></span>
                     <hr>

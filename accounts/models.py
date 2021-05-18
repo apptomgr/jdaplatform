@@ -1,3 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
+from PIL import Image
 
-# Create your models here.
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    logo = models.ImageField(default='default.jpg', upload_to='profile_logo')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+    # Override the save method of the model
+    def save(self, *args, **kwargs):
+        super(Profile, self).save(*args, **kwargs)
+
+        img = Image.open(self.logo.path)  # Open image
+
+        # resize image
+        if img.height > 60 or img.width > 60:
+            output_size = (60, 60)
+            img.thumbnail(output_size)  # Resize image
+            img.save(self.logo.path)  # Save it again and override the larger image

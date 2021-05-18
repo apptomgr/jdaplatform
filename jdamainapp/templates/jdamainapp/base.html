@@ -122,7 +122,7 @@
                 <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b>
                     {{user.username}}</b></a>
                     <ul>
-                        <li><a href="#"><i class="fas fa-user-circle"></i> {% trans 'My account' %}</a></li>
+                        <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
                         <li><a href="#"><i class="fas fa-passport"></i> {% trans 'Change Password' %} </a></li>
                         <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Logout' %}</a></li>
                     </ul>

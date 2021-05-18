@@ -1,6 +1,7 @@
 
 from django.urls import path
 from . import views #, ajax
+from django.utils.text import slugify
 
 urlpatterns = [
     path('', views.jdapublicationsapp_home, name='jdapublicationsapp_home'),
@@ -16,6 +17,8 @@ urlpatterns = [
     path('jdapublicationsapp_new_company/', views.jdapublicationsapp_new_company, name='jdapublicationsapp_new_company'),
     path('jdapublicationsapp_delete_company_confirm/<int:pk>', views.jdapublicationsapp_delete_company_confirm, name='jdapublicationsapp_delete_company_confirm'),
     path('jdapublicationsapp_delete_company_yes/<int:pk>', views.jdapublicationsapp_delete_company_yes, name='jdapublicationsapp_delete_company_yes'),
+    #path('jdapublicationsapp_view_one_pub/<str:folder>/<str:yr>/<str:mon>/<str:file_name>', views.jdapublicationsapp_view_one_pub, name='jdapublicationsapp_view_one_pub'),
+    path('jdapublicationsapp_view_watermarked_pub/<str:file_name>', views.jdapublicationsapp_view_watermarked_pub, name='jdapublicationsapp_view_watermarked_pub'),
 
     path('tes/', views.tes, name='tes'),
     path('jda_simple_form_tester/', views.jda_simple_form_tester, name='jda_simple_form_tester'),
