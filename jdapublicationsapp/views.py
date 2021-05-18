@@ -18,7 +18,7 @@ from django.urls import resolve
 import os
 
 
-@login_required
+#@login_required
 def jdapublicationsapp_home(request):
     form = PublicationAdminsForm()
     full_search_form = FullSearchForm()
@@ -30,7 +30,7 @@ def jdapublicationsapp_home(request):
 
 
 #/////////////////////// jdapublicationsapp_dept /////////////////////
-@login_required
+#@login_required
 def jdapublicationsapp_dept(request):
     context = {}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_dept.html', context)
@@ -39,7 +39,7 @@ def jdapublicationsapp_dept(request):
 from django.conf import settings #or from my_project import settings
 
 
-@login_required
+#@login_required
 def jdapublicationsapp_pubs(request):
     form = PublicationAdminsForm()
     #full_search_form = FullSearchForm()

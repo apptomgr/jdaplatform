@@ -17,7 +17,7 @@ class Profile(models.Model):
         img = Image.open(self.logo.path)  # Open image
 
         # resize image
-        if img.height > 60 or img.width > 60:
-            output_size = (60, 60)
+        if img.height > 70 or img.width > 70:
+            output_size = (70, 70)
             img.thumbnail(output_size)  # Resize image
             img.save(self.logo.path)  # Save it again and override the larger image
