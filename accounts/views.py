@@ -51,7 +51,7 @@ def register(request):
 
 
 # profile
-#@login_required
+@login_required
 def profile(request):
     #user=request.username
     #u_form = UserUpdateForm(instance=request.user)
@@ -63,7 +63,7 @@ def profile(request):
 
 
 # profile edit
-#@login_required
+@login_required
 def profile_edit(request):
     print("pro edit")
     if request.method == 'POST':
