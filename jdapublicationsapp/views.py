@@ -670,4 +670,7 @@ def jdapublicationsapp_fullSearch(request):
 
 
 def tes(request):
-    return render(request, 'jdapublicationsapp/tes.html', {})
+    context ={}
+    return render(request, 'jdapublicationsapp/tes.html', context)
+
+
