@@ -34,22 +34,22 @@ def res_tes(input_pdf, output_pdf, watermark):
 
     #print(f"24: {settings.MEDIA_ROOT}")
 
-def put_watermark(input_pdf, output_pdf, watermark, logo_img):
-    print(f"38: {logo_img}")
-    picture_path = logo_img #'everest_logo.jpg'
-    text = None #'Produite pour'
-
-    c = canvas.Canvas(watermark)
-
-    if picture_path:
-        c.drawImage(picture_path, 450, 560)
-
-    if text:
-        c.setFontSize(14)
-        c.setFont('Helvetica-Bold', 14)
-        c.drawString(45, 20, text)
-
-    c.save()
+def put_watermark(input_pdf, output_pdf, watermark): # , logo_img):
+    # print(f"38: {logo_img}")
+    # picture_path = logo_img #'everest_logo.jpg'
+    # text = None #'Produite pour'
+    #
+    # c = canvas.Canvas(watermark)
+    #
+    # if picture_path:
+    #     c.drawImage(picture_path, 420, 560)
+    #
+    # if text:
+    #     c.setFontSize(14)
+    #     c.setFont('Helvetica-Bold', 14)
+    #     c.drawString(45, 20, text)
+    #
+    # c.save()
 
     # reads the watermark pdf file through
     # PdfFileReader

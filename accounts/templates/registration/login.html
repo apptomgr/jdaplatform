@@ -24,13 +24,14 @@
         background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
     }
 
+
 </style>
 
 
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
 
-    <div-- class="text-white text-center xpy-3 Xpx-2 Xmy-3">
+    <div class="text-white text-center xpy-3 Xpx-2 Xmy-3">
         <div>
             <h2 class="card-title  Xpt-3 Xmb-2 font-bold"><strong class="my_info_txt">J&D </strong><strong
                     class="text-white wow">Platform</strong></h2>
@@ -53,38 +54,18 @@
                     </div>
                 </div>
                 <div class="row">&nbsp;</div>
-                <div class="card-footer shadown p3 text-muted text-center Xmb-5">
+                <!--div class="card-footer shadown p3 text-muted text-center Xmb-5">
                     <small class="text-white">{% trans 'New to JDA? Register for an account' %}</small>
                     <br>
                     <a href="{% url 'register' %}"><span class="text-info">{% trans 'Register' %}</span></a>
-                </div>
+                </div-->
             </div>
         </div>
 
-        <!--div class="content-section">
-
-            <form method="POST">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Log in</legend>
-                    {{ form|crispy }}
-                </fieldset>
-                <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Login</button>
-                </div>
-            </form>
-          
-            <div class="border-top pt-3">
-                <small class="text-muted">
-                    Do you need an account? <a class="ml-2" href="{% url 'register' %}">Sign up now</a>
-                </small>
-            </div>
-        </div-->
-
 
     </div>
-
 </div>
+
 
 <div class="card shadow-sm p-2 mb-2 bg-white rounded">
     <!-- ======= Services Section ======= -->
@@ -100,13 +81,7 @@
                                     <i class="far fa-compass fa-2x my_info_txt"></i>
                                 </a>
                                 <h4>{% trans 'Financials App' %}</h4>
-                                <!--p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Models
-                                    <i class="far fa-check-circle my_info_txt"></i> Newsletters
-                                    <i class="far fa-check-circle my_info_txt"></i> Commentaries
-                                    <i class="far fa-check-circle my_info_txt"></i> Reports
 
-                                </p-->
                             </div>
                         </div>
                         <!-- end about-details -->
@@ -120,11 +95,7 @@
                                     <i class="fas fa-chart-line fa-2x my_info_txt"></i>
                                 </a>
                                 <h4>{% trans 'Analytics App' %}</h4>
-                                <!--p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Valuation Models
-                                    <i class="far fa-check-circle my_info_txt"></i> Market data analysis
-                                    <i class="far fa-check-circle my_info_txt"></i> Portfolio insights
-                                </p-->
+
                             </div>
                         </div>
                         <!-- end about-details -->
@@ -139,12 +110,7 @@
                                     <i class="fas fa-newspaper fa-2x my_info_txt"></i>
                                 </a>
                                 <h4>{% trans 'Publications App' %}</h4>
-                                <!--p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
-                                    <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
-                                    <i class="far fa-check-circle my_info_txt"></i> Annual Reports
 
-                                </p-->
                             </div>
                         </div>
                         <!-- end about-details -->

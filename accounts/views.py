@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import Group
+from accounts .decorators import allowed_users
 
 # def signup(request):
 #     if request.method == 'POST':
@@ -64,8 +65,9 @@ def profile(request):
 
 # profile edit
 @login_required
+@allowed_users(allowed_roles=['admins'])
 def profile_edit(request):
-    print("pro edit")
+    #print("pro edit")
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
@@ -74,6 +76,8 @@ def profile_edit(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
+            # Now assoc watermark with the updated logo
+
             messages.success(request, f'Your account profile has been updated!')
             return redirect('profile')  # Redirect back to profile page
 
