@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'translations',
     'django_translation_flags',
     'accounts.apps.AccountsConfig',
-    'watermarker',
+
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

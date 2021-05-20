@@ -11,7 +11,7 @@ from accounts .decorators import allowed_users
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from jdamainapp.utils import put_watermark, res_tes, img2pdf
+from jdamainapp.utils import fitz_pdf
 import re
 
 from django.urls import resolve
@@ -46,6 +46,12 @@ def jdapublicationsapp_pubs(request):
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
     publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
+
+    # get publication_listing filenames
+    my_files = []
+    for i in publication_listing:
+        x = i.file_name.name.replace("/", "~~")
+        my_files.append(x)
     #
     # grp =None
     #
@@ -113,13 +119,13 @@ def jdapublicationsapp_pubs(request):
 
     #print(publication_listing.filename())
     # print(f"//////////17: {publication_listing.count()}/////////")
-    #my_list_zip = zip(publication_listing, candidate_files)
+    my_list_zip = zip(publication_listing, my_files)
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
                'per_models':per_models,
                'per_newsletters':per_newsletters,
                'per_commentaries':per_commentaries,
                'per_reports':per_reports,
-                #'my_list_zip':my_list_zip,
+               'my_list_zip':my_list_zip,
                #'user_grp':grp
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
@@ -418,6 +424,8 @@ def jdapublicationsapp_view_watermarked_pub(request, file_name):
     #reconvert file_name rpl '~~' with '/'
     wm_file = file_name.replace('~~', '/')
 
+    print(wm_file)
+
     #get_user_logo
     curr_user =User.objects.get(username=request.user)
     user_profile=Profile.objects.get(user=curr_user)
@@ -426,11 +434,11 @@ def jdapublicationsapp_view_watermarked_pub(request, file_name):
     #print(logo_path)
     #watermark file_name
     #print(f"415: - {curr_user.username}")
-    put_watermark(
-        input_pdf=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
-        output_pdf=f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf",  # the modified pdf with watermark
-        watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user.username}_watermark.pdf"  # the watermark to be provided
-    )
+    # put_watermark(
+    #     input_pdf=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
+    #     output_pdf=f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf",  # the modified pdf with watermark
+    #     watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user.username}_watermark.pdf"  # the watermark to be provided
+    # )
 
     #get grp info
     #if request.user.groups.exists():

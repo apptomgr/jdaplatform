@@ -6,8 +6,31 @@ from django.http import FileResponse
 from django.conf import settings #or from my_project import settings
 #import img2pdf
 from PIL import Image
-from reportlab.pdfgen import canvas
-import os
+#from reportlab.pdfgen import canvas
+#import os
+import fitz
+
+
+def fitz_pdf(pdf_doc, logo, pdf_out):
+    doc =fitz.open(pdf_doc)
+
+    rect =fitz.Rect(0, 10, 700, 60)
+    fname = "F0"
+    text = "Intended\nfor"
+    #text = "Preparer\npour"
+    where = fitz.Point(270, 30) # (x,y)
+
+    for page in doc:
+         page.insertImage(rect, filename=logo)
+         page.insertText(where, text,
+                         fontsize=12,  # default
+                         rotate=0,  # rotate text
+                         color=(1, 1, 1),  # some color (blue)
+                         overlay=True)  # text in foreground
+
+    doc.save(pdf_out)
+
+
 
 # img2pdf converts curr user profile .png logo to pdf
 def img2pdf(img, curr_user):
@@ -17,22 +40,6 @@ def img2pdf(img, curr_user):
     im1.save(f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf")
 
 
-
-def res_tes(input_pdf, output_pdf, watermark):
-
-    #print(f"File input util  orig:{settings.MEDIA_ROOT}/{input_pdf}")
-    #print(f"File output util {output_pdf}")
-    #print(f"File watermark util {settings.MEDIA_ROOT}/{watermark}")
-    #input_pdf=settings.MEDIA_ROOT+'/'+input_pdf
-
-    print(f"input_pdf: {input_pdf}")
-    print(f"output_pdf: {output_pdf}")
-    print(f"watermark: {watermark}")
-    #pdf_reader = PdfFileReader(watermark)
-
-    #print(input_pdf)
-
-    #print(f"24: {settings.MEDIA_ROOT}")
 
 def put_watermark(input_pdf, output_pdf, watermark): # , logo_img):
     # print(f"38: {logo_img}")
@@ -105,39 +112,4 @@ if __name__ == "__main__":
     # )
 
 
-# f = default_storage.open(os.path.join('Data_Files', new_file), 'r')
-# data = f.read()
-# f.close()
-# print(data)
-
-# import PyPDF2
-#
-# pdf_file = "pdf_test_doc.pdf"
-#
-# watermark = "everest_logo.pdf"
-#
-# merged_file = "merged.pdf"
-#
-# input_file = open(pdf_file,'rb')
-# input_pdf = PyPDF2.PdfFileReader(input_file)
-#
-# watermark_file = open(watermark,'rb')
-# watermark_pdf = PyPDF2.PdfFileReader(watermark_file)
-#
-# pdf_page = input_pdf.getPage(0)
-#
-# watermark_page = watermark_pdf.getPage(0)
-#
-# pdf_page.mergePage(watermark_page)
-#
-# output = PyPDF2.PdfFileWriter()
-#
-# output.addPage(pdf_page)
-#
-# merged_file = open(merged_file,'wb')
-# output.write(merged_file)
-#
-# merged_file.close()
-# watermark_file.close()
-# input_file.close()
 

@@ -1,14 +1,70 @@
 # compatible with Python versions 2.6, 2.7,
 # and 3.2 - 3.5. (pip3 install pypdf4)
 from PyPDF4 import PdfFileWriter, PdfFileReader
-import PyPDF4
+#import PyPDF4
+import fitz
 
 #PyPDF4.PdfFileReader('pdf_test_doc.pdf')
+
+
+def fitz_pdf():
+    print('testing fitz_pdf')
+    doc =fitz.open("SONATEL_2021.pdf")
+
+    rect =fitz.Rect(0, 10, 700, 60)
+    fname = "F0"
+    text = "Intended\nfor"
+    #text = "Preparer\npour"
+    where = fitz.Point(270, 30) # (x,y)
+
+
+    for page in doc:
+         page.insertImage(rect, filename='everest_logo.jpg')
+         page.insertText(where, text,
+                         fontsize=12,  # default
+                         rotate=0,  # rotate text
+                         color=(1, 1, 1),  # some color (blue)
+                         overlay=True)  # text in foreground
+
+
+    doc.save('fitz_out.pdf')
+    #doc.write('fitz_out.pdf')
+
+
+
+def fitz_pdf_2():
+    doc = fitz.open("SONATEL_2021.pdf")
+    w = 300
+    h = 300
+    img = open("everest_logo.jpg", "rb").read()
+    rect = fitz.Rect(100, 200, w, h)
+
+    for i in range(0, doc.pageCount):
+        page = doc[i]
+        page.insertImage(rect, stream=img)
+
+    doc.save('fitz_out.pdf')
 
 def res_tes():
     pass
 
-def put_watermark(input_pdf, output_pdf, watermark):
+def put_watermark(input_pdf, output_pdf, watermark): # , logo_img):
+    # print(f"38: {logo_img}")
+    # picture_path = logo_img #'everest_logo.jpg'
+    # text = None #'Produite pour'
+    #
+    # c = canvas.Canvas(watermark)
+    #
+    # if picture_path:
+    #     c.drawImage(picture_path, 420, 560)
+    #
+    # if text:
+    #     c.setFontSize(14)
+    #     c.setFont('Helvetica-Bold', 14)
+    #     c.drawString(45, 20, text)
+    #
+    # c.save()
+
     # reads the watermark pdf file through
     # PdfFileReader
     watermark_instance = PdfFileReader(watermark)
@@ -42,12 +98,16 @@ def put_watermark(input_pdf, output_pdf, watermark):
         pdf_writer.write(out)
 
 
+
+
+
 if __name__ == "__main__":
-    put_watermark(
-        input_pdf='pdf_test_doc.pdf',  # the original pdf
-        output_pdf='watermark_added1.pdf',  # the modified pdf with watermark
-        watermark='everest_logo.pdf'  # the watermark to be provided
-    )
+    fitz_pdf()
+    # put_watermark(
+    #     input_pdf='pdf_test_doc.pdf',  # the original pdf
+    #     output_pdf='watermark_added1.pdf',  # the modified pdf with watermark
+    #     watermark='everest_logo.pdf'  # the watermark to be provided
+    # )
 
 
 
