@@ -52,54 +52,55 @@ def jdapublicationsapp_pubs(request):
     for i in publication_listing:
         x = i.file_name.name.replace("/", "~~")
         my_files.append(x)
-    #
-    # grp =None
-    #
-    # if request.user.groups.all():
-    #     grp = request.user.groups.all()[0].name
-    #     #print(f"48 - grp: {grp}")
-    #
-    # if grp == 'brokers':
-    #     # Get current user profile info (username and logo)
-    #     curr_user = User.objects.get(username=request.user)
-    #     #print(f"54 - curr_user: {curr_user}")
-    #     user_profile = Profile.objects.get(user=curr_user)
-    #     #print(f"56 - user_profile.logo: {user_profile.logo}")
-    #
-    #     # Check the curr user logo has been already converted
-    #     if os.path.exists(f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf"):
-    #         pass  # Delete prev watermark assoc w/ user # do nothing since the logo pdf version already exist
-    #         #print(f"60: Current user logo already exists for {settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf")
-    #     else:
-    #         #print("62: File not exist convert curr user logo")
-    #         #  Convert current user logo from img to pdf and save it user_watermark
-    #         img2pdf(f"{settings.MEDIA_ROOT}/{user_profile.logo}", curr_user.username)  # (f"media/profile_logo/{curr_user}_watermark.pdf")
-    #
-    #     # get candidate publication_listing filenames to prep for watermarking
-    #     candidate_files=[]
-    #     #print(f"68 pubs count {publication_listing.count()}")
-    #     # Get all candidate files including full path
-    #     for i in publication_listing:
-    #         #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
-    #         candidate_files.append(i.file_name)
-    #
-    #     for j in candidate_files:
-    #         # if candidate files' extention is .pdf
-    #         if str(j).endswith('.pdf'):
-    #             #print(f"79 - Candidate file is pdf: {j}_watermark.pdf")
-    #             if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
-    #                 pass # do nothing since watermarked pdf files already exist
-    #                 #print(f"79: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
-    #             else:
-    #                 #print(f"81 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
-    #                 # Apply watermark on all candidate files if they were not previously watermarked
-    #                 put_watermark(
-    #                     input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf
-    #                     output_pdf=f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf",  # the modified pdf with watermark
-    #                     watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf" # the watermark to be provided
-    #                     #logo_img=f"{settings.MEDIA_ROOT}/{user_profile.logo}"
-    #                 )
-    #
+
+    grp =None
+
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+        #print(f"48 - grp: {grp}")
+
+    if grp == 'brokers':
+        # Get current user profile info (username and logo)
+        curr_user = User.objects.get(username=request.user)
+        #print(f"54 - curr_user: {curr_user}")
+        user_profile = Profile.objects.get(user=curr_user)
+        #print(f"56 - user_profile.logo: {user_profile.logo}")
+        #
+        # # Check the curr user logo has been already converted
+        # if os.path.exists(f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf"):
+        #     pass  # Delete prev watermark assoc w/ user # do nothing since the logo pdf version already exist
+        #     #print(f"60: Current user logo already exists for {settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf")
+        # else:
+        #     #print("62: File not exist convert curr user logo")
+        #     #  Convert current user logo from img to pdf and save it user_watermark
+        #     img2pdf(f"{settings.MEDIA_ROOT}/{user_profile.logo}", curr_user.username)  # (f"media/profile_logo/{curr_user}_watermark.pdf")
+
+        # get candidate publication_listing filenames to prep for watermarking
+        candidate_files=[]
+        #print(f"68 pubs count {publication_listing.count()}")
+        # Get all candidate files including full path
+        for i in publication_listing:
+            #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
+            candidate_files.append(i.file_name)
+
+        for j in candidate_files:
+            # if candidate files' extention is .pdf
+            if str(j).endswith('.pdf'):
+                print(f"89 - Candidate file is pdf: {j}_watermark.pdf")
+                if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
+                    print(f"91: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
+                    pass  # do nothing since watermarked pdf files already exist
+                else:
+                    print(f"94 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
+                    # Apply watermark on all candidate files if they were not previously watermarked
+                    fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
+                    # put_watermark(
+                    #     input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf
+                    #     output_pdf=f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf",  # the modified pdf with watermark
+                    #     watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf" # the watermark to be provided
+                    #     #logo_img=f"{settings.MEDIA_ROOT}/{user_profile.logo}"
+                    # )
+
 
     models_cnt=publication_listing.filter(research_category='Models').count()
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
@@ -126,7 +127,7 @@ def jdapublicationsapp_pubs(request):
                'per_commentaries':per_commentaries,
                'per_reports':per_reports,
                'my_list_zip':my_list_zip,
-               #'user_grp':grp
+               'user_grp':grp
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)

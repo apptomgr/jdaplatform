@@ -16,6 +16,7 @@
     </div>
 </div>
 
+
 <style type="text/css">
     .bg-cover {
         background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
@@ -57,6 +58,7 @@
                                     <li>Last Login: {{ user.last_login }}</li>
                                     <li>Date Joined: {{ user.date_joined }}</li>
                                     <li>Staff: {{ user.is_staff }}</li>
+                                    <li>User Group: {{user_grp }}</li>
                                 </ul>
                             </div>
                         </div>

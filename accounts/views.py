@@ -57,9 +57,15 @@ def profile(request):
     #user=request.username
     #u_form = UserUpdateForm(instance=request.user)
     #p_form = ProfileUpdateForm(instance=request.user.profile)
-    #user_profile = User.objects.all().select_related('profile')
-    context={}
-    #context = {'user_profile': user_profile}
+    user_profile = User.objects.all().select_related('profile')
+    #print(user_profile.group.name)
+    grp =None
+
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+        print(f"48 - grp: {grp}")
+
+    context = {'user_grp': grp}
     return render(request, 'registration/profile.html', context)
 
 

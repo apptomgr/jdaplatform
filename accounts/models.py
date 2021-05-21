@@ -5,7 +5,7 @@ from accounts.utils import image_resize
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  #, related_name='profile')
     logo = models.ImageField(default='default.jpg', upload_to='profile_logo')
 
     def __str__(self):
@@ -13,7 +13,7 @@ class Profile(models.Model):
 
 
     def save(self, *args, **kwargs):
-        image_resize(self.image, 80, 80)
+        image_resize(self.logo, 80, 80)
         super().save(*args, **kwargs)
 
     # # Override the save method of the model

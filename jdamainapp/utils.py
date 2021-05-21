@@ -12,18 +12,20 @@ import fitz
 
 
 def fitz_pdf(pdf_doc, logo, pdf_out):
+    #print(f"15: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
     doc =fitz.open(pdf_doc)
 
-    rect =fitz.Rect(0, 10, 700, 60)
-    fname = "F0"
+    rect = fitz.Rect(320, 10, 360, 50)
+    #rect =fitz.Rect(0, 10, 700, 60)
     text = "Intended\nfor"
     #text = "Preparer\npour"
     where = fitz.Point(270, 30) # (x,y)
 
+
     for page in doc:
          page.insertImage(rect, filename=logo)
          page.insertText(where, text,
-                         fontsize=12,  # default
+                         fontsize=10,  # default
                          rotate=0,  # rotate text
                          color=(1, 1, 1),  # some color (blue)
                          overlay=True)  # text in foreground
