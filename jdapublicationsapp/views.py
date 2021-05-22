@@ -86,7 +86,7 @@ def jdapublicationsapp_pubs(request):
         for j in candidate_files:
             # if candidate files' extention is .pdf
             if str(j).endswith('.pdf'):
-                print(f"89 - Candidate file is pdf: {j}_watermark.pdf")
+                #print(f"89 - Candidate file is pdf: {j}_watermark.pdf")
                 if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
                     print(f"91: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
                     pass  # do nothing since watermarked pdf files already exist
@@ -94,6 +94,7 @@ def jdapublicationsapp_pubs(request):
                     print(f"94 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
                     # Apply watermark on all candidate files if they were not previously watermarked
                     fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
+
                     # put_watermark(
                     #     input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf
                     #     output_pdf=f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf",  # the modified pdf with watermark
