@@ -4,11 +4,10 @@ from PyPDF4 import PdfFileWriter, PdfFileReader
 import PyPDF4
 from django.http import FileResponse
 from django.conf import settings #or from my_project import settings
-#import img2pdf
 from PIL import Image
-#from reportlab.pdfgen import canvas
-#import os
+from jdapublicationsapp.models import PubTempModel
 import fitz
+from django.core.files.base import ContentFile
 
 
 def fitz_pdf(pdf_doc, logo, pdf_out):
@@ -20,7 +19,6 @@ def fitz_pdf(pdf_doc, logo, pdf_out):
     text = "Intended\nfor"
     #text = "Preparer\npour"
     where = fitz.Point(270, 30) # (x,y)
-
 
     for page in doc:
          page.insertImage(rect, filename=logo)

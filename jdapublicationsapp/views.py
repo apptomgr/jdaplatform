@@ -84,28 +84,43 @@ def jdapublicationsapp_pubs(request):
         # Get all candidate files including full path
         for i in publication_listing:
             #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
-            candidate_files.append(i.file_name.url)
+            if not settings.DEVELOPMENT_MODE:
+                candidate_files.append(i.file_name.url)
+            else:
+                candidate_files.append(i.file_name)
+
 
         for j in candidate_files:
             # if candidate files' extention is .pdf
             if str(j).endswith('.pdf'):
-                # Prod
-                if os.path.exists(f"{j}_{curr_user}_watermark.pdf"):
-                    print(f"91: candidate file {j}_watermark.pdf exists")
+                if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
+                    print(f"97: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
                     pass  # do nothing since watermarked pdf files already exist
                 else:
-                    print(f"94 {j}_watermark.pdf does not exist - Applying watermarks")
+                    print(f"100 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
                     # Apply watermark on all candidate files if they were not previously watermarked
-                    fitz_pdf(f"{j}", f"{user_profile.logo.url}", f"{j}_{curr_user}_watermark.pdf")
+                    fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
 
-                # Dev mode
-                # if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
-                #     print(f"91: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
-                #     pass  # do nothing since watermarked pdf files already exist
+                # if not settings.DEVELOPMENT_MODE:
+                #     # Prod
+                #     print("98 - PROD MODE")
+                #     if os.path.exists(f"{j}_{curr_user}_watermark.pdf"):
+                #         print(f"91: candidate file {j}_watermark.pdf exists")
+                #         pass  # do nothing since watermarked pdf files already exist
+                #     else:
+                #         print(f"94 {j}_watermark.pdf does not exist - Applying watermarks")
+                #         # Apply watermark on all candidate files if they were not previously watermarked
+                #         fitz_pdf(f"{j}", f"{user_profile.logo.url}", f"{j}_{curr_user}_watermark.pdf")
                 # else:
-                #     print(f"94 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
-                #     # Apply watermark on all candidate files if they were not previously watermarked
-                #     fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
+                #     # Dev mode
+                #     print("107 - DEV MODE")
+                #     if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
+                #         print(f"108: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
+                #         pass  # do nothing since watermarked pdf files already exist
+                #     else:
+                #         print(f"111 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
+                #         # Apply watermark on all candidate files if they were not previously watermarked
+                #         fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
 
                     # put_watermark(
                     #     input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf

@@ -69,5 +69,8 @@ class PublicationModel(models.Model):
         verbose_name_plural = 'PublicationModel'
 
 
+class PubTempModel(models.Model):
+    watermark_pdf = models.FileField(upload_to='publications/%Y/%m/')
 
-
+    def __str__(self):
+        return self.watermark_pdf
