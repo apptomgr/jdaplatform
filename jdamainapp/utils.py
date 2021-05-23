@@ -27,7 +27,7 @@ def fitz_pdf(pdf_doc, logo, pdf_out):
          page.insertText(where, text,
                          fontsize=10,  # default
                          rotate=0,  # rotate text
-                         color=(1, 1, 1),  # some color (blue)
+                         color=(1, 1, 1),  # some color (beige)
                          overlay=True)  # text in foreground
 
     doc.save(pdf_out)

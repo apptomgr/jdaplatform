@@ -84,6 +84,7 @@ def jdapublicationsapp_pubs(request):
             candidate_files.append(i.file_name)
 
         for j in candidate_files:
+            print(f"87 - full path: {os.path.join(settings.BASE_DIR, 'media')}")
             # if candidate files' extention is .pdf
             if str(j).endswith('.pdf'):
                 #print(f"89 - Candidate file is pdf: {j}_watermark.pdf")

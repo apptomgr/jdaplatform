@@ -216,8 +216,7 @@ else:
     #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     #DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
     DEFAULT_FILE_STORAGE = 'jdaplatform.storage_backends.MediaStorage'  # the media storage configurations
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 
 
 
