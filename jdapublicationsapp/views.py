@@ -42,7 +42,7 @@ from django.conf import settings #or from my_project import settings
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
-    print(f"45 - STATICFILES_STORAGE: {settings.STATICFILES_STORAGE}")
+
     form = PublicationAdminsForm()
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
@@ -51,6 +51,8 @@ def jdapublicationsapp_pubs(request):
     # get publication_listing filenames
     my_files = []
     for i in publication_listing:
+        print(f"54: i.file_name.url: {i.file_name.url}")
+
         x = i.file_name.name.replace("/", "~~")
         my_files.append(x)
 
