@@ -42,6 +42,7 @@ from django.conf import settings #or from my_project import settings
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
+    print(f"45 - STATICFILES_STORAGE: {settings.STATICFILES_STORAGE}")
     form = PublicationAdminsForm()
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
