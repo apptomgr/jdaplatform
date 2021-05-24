@@ -216,8 +216,8 @@ else:
     #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     #DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
     DEFAULT_FILE_STORAGE = 'jdaplatform.storage_backends.MediaStorage'  # the media storage configurations
-    MEDIA_ROOT =f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}"
-
+    #MEDIA_ROOT =f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}"
+    MEDIA_ROOT = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/media"
 
 
 
