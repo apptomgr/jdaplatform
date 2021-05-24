@@ -449,11 +449,10 @@ def jdapublicationsapp_listing(request):
 
 #//////////////////////////////////////// jdapublicationsapp_view_watermarked_pub/////////////////////////////
 @login_required
+@login_required
 def jdapublicationsapp_view_watermarked_pub(request, file_name):
     #reconvert file_name rpl '~~' with '/'
     wm_file = file_name.replace('~~', '/')
-
-    print(wm_file)
 
     #get_user_logo
     curr_user =User.objects.get(username=request.user)
@@ -462,12 +461,12 @@ def jdapublicationsapp_view_watermarked_pub(request, file_name):
     #logo_path=f"media/{user_profile.logo}"
     #print(logo_path)
     #watermark file_name
-    #print(f"415: - {curr_user.username}")
-    # put_watermark(
-    #     input_pdf=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
-    #     output_pdf=f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf",  # the modified pdf with watermark
-    #     watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user.username}_watermark.pdf"  # the watermark to be provided
-    # )
+    print(f"415: - {curr_user.username}")
+    fitz_pdf(
+        pdf_doc=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
+        logo=f"{settings.MEDIA_ROOT}/{curr_user.profile.logo}",  # the watermark to be provided
+        pdf_out = f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf"  # the modified pdf with watermark
+        )
 
     #get grp info
     #if request.user.groups.exists():
