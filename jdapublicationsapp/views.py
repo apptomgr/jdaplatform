@@ -51,7 +51,7 @@ def jdapublicationsapp_pubs(request):
     # get publication_listing filenames
     my_files = []
     for i in publication_listing:
-        #print(f"54: i.file_name.url: {i.file_name.url}")
+        print(f"54: i.file_name.url: {i.file_name.url}")
 
         x = i.file_name.name.replace("/", "~~")
         my_files.append(x)
@@ -60,7 +60,7 @@ def jdapublicationsapp_pubs(request):
 
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
-        #print(f"48 - grp: {grp}")
+        print(f"48 - grp: {grp}")
 
     if grp == 'brokers':
         # Get current user profile info (username and logo)
