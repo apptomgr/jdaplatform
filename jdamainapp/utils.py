@@ -8,12 +8,14 @@ from PIL import Image
 from jdapublicationsapp.models import PubTempModel
 import fitz
 from django.core.files.base import ContentFile
+import os
 
 
 def fitz_pdf(pdf_doc, logo, pdf_out):
-    #print(f"15: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
+    print(f"14: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
     doc =fitz.open(pdf_doc)
 
+    #print(f"18: {os.path.join()}")
     rect = fitz.Rect(320, 10, 360, 50)
     #rect =fitz.Rect(0, 10, 700, 60)
     text = "Intended\nfor"
@@ -28,7 +30,8 @@ def fitz_pdf(pdf_doc, logo, pdf_out):
                          color=(1, 1, 1),  # some color (beige)
                          overlay=True)  # text in foreground
 
-    doc.save(pdf_out)
+
+    #doc.save(f"{pdf_doc}_watermarked")
 
 
 
