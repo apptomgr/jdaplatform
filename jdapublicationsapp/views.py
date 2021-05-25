@@ -60,16 +60,16 @@ def jdapublicationsapp_pubs(request):
 
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
-        print(f"48 - grp: {grp}")
+        print(f"63 - grp: {grp}")
 
 
     if grp == 'brokers':
         # Get current user profile info (username and logo)
         curr_user = User.objects.get(username=request.user)
-        #print(f"54 - curr_user: {curr_user}")
+        print(f"69 - curr_user: {curr_user}")
         user_profile = Profile.objects.get(user=curr_user)
 
-        print(f"{i.file_name.url}, {user_profile.logo}, {i}_{curr_user}_watermark.pdf")
+        print(f"72 - {i.file_name.url}, {user_profile.logo.url}, {i.file_name.url}_{curr_user}_watermark.pdf")
         #print(f"56 - user_profile.logo: {user_profile.logo}")
         #
         # # Check the curr user logo has been already converted
@@ -86,7 +86,7 @@ def jdapublicationsapp_pubs(request):
         #print(f"68 pubs count {publication_listing.count()}")
         # Get all candidate files including full path
         for i in publication_listing:
-            fitz_pdf(i.file_name.url, user_profile.logo, f"{i}_{curr_user}_watermark.pdf")
+            fitz_pdf(i.file_name.url, user_profile.logo.url, f"{i.file_name.url}_{curr_user}_watermark.pdf")
 
     # #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
             # if not settings.DEVELOPMENT_MODE:
