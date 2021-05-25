@@ -69,7 +69,7 @@ def jdapublicationsapp_pubs(request):
         print(f"69 - curr_user: {curr_user}")
         user_profile = Profile.objects.get(user=curr_user)
 
-        print(f"72 - {i.file_name.url}, {user_profile.logo.url}, {i.file_name.url}_{curr_user}_watermark.pdf")
+        print(f"72 - {settings.MEDIA_ROOT}/{i.file_name}, {user_profile.logo}, {i.file_name}_{curr_user}_watermark.pdf")
         #print(f"56 - user_profile.logo: {user_profile.logo}")
         #
         # # Check the curr user logo has been already converted
@@ -86,7 +86,7 @@ def jdapublicationsapp_pubs(request):
         #print(f"68 pubs count {publication_listing.count()}")
         # Get all candidate files including full path
         for i in publication_listing:
-            fitz_pdf(i.file_name.url, user_profile.logo.url, f"{i.file_name.url}_{curr_user}_watermark.pdf")
+            fitz_pdf(f"{settings.MEDIA_ROOT}/{i.file_name}", user_profile.logo.url, f"{settings.MEDIA_ROOT}/{i.file_name}_{curr_user}_watermark.pdf")
 
     # #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
             # if not settings.DEVELOPMENT_MODE:
