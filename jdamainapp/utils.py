@@ -30,7 +30,7 @@ def fitz_pdf(pdf_doc, logo, pdf_out):
                          overlay=True)  # text in foreground
 
 
-    #doc.save(f"{pdf_doc}_watermarked")
+    doc.save(pdf_out)
 
 
 
