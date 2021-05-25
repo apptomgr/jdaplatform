@@ -60,16 +60,13 @@ def jdapublicationsapp_pubs(request):
 
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
-        print(f"63 - grp: {grp}")
-
+        print(f"48 - grp: {grp}")
 
     if grp == 'brokers':
         # Get current user profile info (username and logo)
         curr_user = User.objects.get(username=request.user)
-        print(f"69 - curr_user: {curr_user}")
+        #print(f"54 - curr_user: {curr_user}")
         user_profile = Profile.objects.get(user=curr_user)
-
-        print(f"72 - {settings.MEDIA_ROOT}/{i.file_name}, {user_profile.logo}, {i.file_name}_{curr_user}_watermark.pdf")
         #print(f"56 - user_profile.logo: {user_profile.logo}")
         #
         # # Check the curr user logo has been already converted
@@ -82,30 +79,28 @@ def jdapublicationsapp_pubs(request):
         #     img2pdf(f"{settings.MEDIA_ROOT}/{user_profile.logo}", curr_user.username)  # (f"media/profile_logo/{curr_user}_watermark.pdf")
 
         # get candidate publication_listing filenames to prep for watermarking
-        #candidate_files=[]
+        candidate_files=[]
         #print(f"68 pubs count {publication_listing.count()}")
         # Get all candidate files including full path
         for i in publication_listing:
-            fitz_pdf(f"{settings.MEDIA_ROOT}/{i.file_name}", user_profile.logo.url, f"{settings.MEDIA_ROOT}/{i.file_name}_{curr_user}_watermark.pdf")
-
-    # #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
-            # if not settings.DEVELOPMENT_MODE:
-            #     candidate_files.append(i.file_name.url)
-            # else:
-            #     candidate_files.append(i.file_name)
+            #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
+            if not settings.DEVELOPMENT_MODE:
+                candidate_files.append(i.file_name.url)
+            else:
+                candidate_files.append(i.file_name)
 
 
-        # for j in candidate_files:
-        #     # if candidate files' extention is .pdf
-        #     if str(j).endswith('.pdf'):
-        #         if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
-        #             print(f"97: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
-        #             pass  # do nothing since watermarked pdf files already exist
-        #         else:
-        #             print(f"100 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
-        #             # Apply watermark on all candidate files if they were not previously watermarked
-        #             fitz_pdf(j, f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
-        #             #fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
+        for j in candidate_files:
+            # if candidate files' extention is .pdf
+            if str(j).endswith('.pdf'):
+                if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
+                    print(f"97: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
+                    pass  # do nothing since watermarked pdf files already exist
+                else:
+                    print(f"100 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
+                    # Apply watermark on all candidate files if they were not previously watermarked
+                    fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
+                    #fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
 
                 # if not settings.DEVELOPMENT_MODE:
                 #     # Prod
