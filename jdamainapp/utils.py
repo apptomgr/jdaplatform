@@ -11,7 +11,7 @@ from django.core.files.base import ContentFile
 import os
 
 def fitz_pdf(pdf_doc, logo, pdf_out):
-    print(f"14: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
+    #print(f"14: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
     doc =fitz.open(pdf_doc)
 
     #print(f"18: {os.path.join()}")
