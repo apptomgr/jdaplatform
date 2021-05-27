@@ -18,6 +18,14 @@ from django.urls import resolve
 import os
 
 
+def get_user_grp(request):
+    grp = None
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+    return grp
+
+
+
 @login_required
 def jdapublicationsapp_home(request):
     form = PublicationAdminsForm()
@@ -25,18 +33,22 @@ def jdapublicationsapp_home(request):
     filterForm =PublicationFilterForm()
     publication_listing =PublicationModel.objects.filter(visible_flag=True).all()
     #print(f"//////////17: {publication_listing.count()}/////////")
-    context = {'form':form, 'filterForm':filterForm, 'publication_listing':publication_listing, 'full_search_form': full_search_form,'search_result': publication_listing}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form':form, 'filterForm':filterForm, 'publication_listing':publication_listing, 'full_search_form': full_search_form,'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_home.html', context)
 
 
 #/////////////////////// jdapublicationsapp_dept /////////////////////
 @login_required
 def jdapublicationsapp_dept(request):
-    context = {}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_dept.html', context)
 
 #/////////////////////// jdapublicationsapp_pubs /////////////////////
-from django.conf import settings #or from my_project import settings
+#from django.conf import settings #or from my_project import settings
 
 
 @login_required
@@ -51,17 +63,17 @@ def jdapublicationsapp_pubs(request):
     # get publication_listing filenames
     my_files = []
     for i in publication_listing:
-        print(f"54: i.file_name.url: {i.file_name.url}")
+        #print(f"54: i.file_name.url: {i.file_name.url}")
 
         x = i.file_name.name.replace("/", "~~")
         my_files.append(x)
 
     grp =None
 
-    # if request.user.groups.all():
-    #     grp = request.user.groups.all()[0].name
-    #     #print(f"48 - grp: {grp}")
-    #
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+        #print(f"48 - grp: {grp}")
+
     # if grp == 'brokers':
     #     # Get current user profile info (username and logo)
     #     curr_user = User.objects.get(username=request.user)
@@ -346,7 +358,9 @@ def jdapublicationsapp_filter(request):
     else:
         filterForm =PublicationFilterForm()
         #print(filterForm)
-    context = {'filterForm': filterForm}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'filterForm': filterForm}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
 
@@ -384,7 +398,8 @@ def jdapublicationsapp_entry(request):
         form=PublicationAdminsForm()
         #print("200")
 
-    context={'form':form, 'rpt_date': now}
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'form':form, 'rpt_date': now}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_entry.html', context)
 
 #//////////////////////////////////////// jdapublicationsapp_edit/////////////////////////////
@@ -434,7 +449,9 @@ def jdapublicationsapp_edit(request, pk):
         #print(f"254:{base}")
         file_name =str(item.file_name).split('/')
         uploaded_file=file_name[-1]
-    context={'form':form, 'uploaded_file':uploaded_file, 'rpt_date': now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'form':form, 'uploaded_file':uploaded_file, 'rpt_date': now}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_entry.html', context)
 
 
@@ -445,40 +462,42 @@ def jdapublicationsapp_edit(request, pk):
 def jdapublicationsapp_listing(request):
     now = datetime.now()
     publication_listing =PublicationModel.objects.all()
-    context = {'publication_listing':publication_listing,'rpt_date': now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'publication_listing':publication_listing,'rpt_date': now}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_listing.html', context)
 
 
-#//////////////////////////////////////// jdapublicationsapp_view_watermarked_pub/////////////////////////////
-@login_required
-@login_required
-def jdapublicationsapp_view_watermarked_pub(request, file_name):
-    #reconvert file_name rpl '~~' with '/'
-    wm_file = file_name.replace('~~', '/')
-
-    #get_user_logo
-    curr_user =User.objects.get(username=request.user)
-    user_profile=Profile.objects.get(user=curr_user)
-    #print(user_profile.logo)
-    #logo_path=f"media/{user_profile.logo}"
-    #print(logo_path)
-    #watermark file_name
-    print(f"415: - {curr_user.username}")
-    fitz_pdf(
-        pdf_doc=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
-        logo=f"{settings.MEDIA_ROOT}/{curr_user.profile.logo}",  # the watermark to be provided
-        pdf_out = f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf"  # the modified pdf with watermark
-        )
-
-    #get grp info
-    #if request.user.groups.exists():
-    #    grp_name = request.user.groups.all()[0].name
-
-    #    print(f"395 - grp: {grp.name}")
-
-    context={'param_file': file_name, 'wm_file': wm_file}
-    return render(request, 'jdapublicationsapp/tes.html', context)
-    #return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+# #//////////////////////////////////////// jdapublicationsapp_view_watermarked_pub/////////////////////////////
+# @login_required
+# @login_required
+# def jdapublicationsapp_view_watermarked_pub(request, file_name):
+#     #reconvert file_name rpl '~~' with '/'
+#     wm_file = file_name.replace('~~', '/')
+#
+#     #get_user_logo
+#     curr_user =User.objects.get(username=request.user)
+#     user_profile=Profile.objects.get(user=curr_user)
+#     #print(user_profile.logo)
+#     #logo_path=f"media/{user_profile.logo}"
+#     #print(logo_path)
+#     #watermark file_name
+#     print(f"415: - {curr_user.username}")
+#     fitz_pdf(
+#         pdf_doc=f"{settings.MEDIA_ROOT}/{wm_file}",  # the original pdf
+#         logo=f"{settings.MEDIA_ROOT}/{curr_user.profile.logo}",  # the watermark to be provided
+#         pdf_out = f"{settings.MEDIA_ROOT}/{wm_file}_watermark.pdf"  # the modified pdf with watermark
+#         )
+#
+#     #get grp info
+#     #if request.user.groups.exists():
+#     #    grp_name = request.user.groups.all()[0].name
+#
+#     #    print(f"395 - grp: {grp.name}")
+#
+#     context={'param_file': file_name, 'wm_file': wm_file}
+#     return render(request, 'jdapublicationsapp/tes.html', context)
+#     #return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
 
 #//////////////////////////////////////// jdapublicationsapp_delete/////////////////////////////
@@ -488,33 +507,44 @@ def jdapublicationsapp_delete(request, pk):
 
     if request.method == 'POST':
         pub = PublicationModel.objects.get(pk=pk)
-        curr_file = str(pub.file_name)
-        #print(f"447: {pub.file_name}")
-        #print(f"448: ^{str(pub.file_name)}.*watermark.pdf$")
-        user_file = f"{curr_file}_{request.user}_watermark.pdf"
-        #print(f"450: {user_file}")
-        # get all user that are in the broker group
-        brokers = User.objects.filter(groups__name='brokers')
-        #print(f"453: {brokers}")
-        for user in brokers:
-            #print(f"455: {user}")
-            # Check if the file about to be deleted starts with pub.file_name and ends with watermark.pdf:
-            match = re.search(f"^{curr_file}.*watermark.pdf$", f"{curr_file}_{user}_watermark.pdf")
-            if match:
-                # delete matched files if they exist
-                if os.path.exists(f"{settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf"):
-                    os.remove(os.path.join(settings.MEDIA_ROOT, f"{curr_file}_{user}_watermark.pdf"))
-                #print(f"461: match: {settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf")
-                #print("YES! We have a match!")
-
-
-        # The delete DB entry and pdf file names in MEDIA folder
         pub.delete()
-
-
-        # Delete corresponding watermark files
         messages.success(request, f"Successfully deleted publication ID {pk}")
         return redirect('jdapublicationsapp_listing')
+
+
+
+#
+# def jdapublicationsapp_delete(request, pk):
+#
+#     if request.method == 'POST':
+#         pub = PublicationModel.objects.get(pk=pk)
+#         curr_file = str(pub.file_name)
+#         #print(f"447: {pub.file_name}")
+#         #print(f"448: ^{str(pub.file_name)}.*watermark.pdf$")
+#         user_file = f"{curr_file}_{request.user}_watermark.pdf"
+#         #print(f"450: {user_file}")
+#         # get all user that are in the broker group
+#         brokers = User.objects.filter(groups__name='brokers')
+#         #print(f"453: {brokers}")
+#         for user in brokers:
+#             #print(f"455: {user}")
+#             # Check if the file about to be deleted starts with pub.file_name and ends with watermark.pdf:
+#             match = re.search(f"^{curr_file}.*watermark.pdf$", f"{curr_file}_{user}_watermark.pdf")
+#             if match:
+#                 # delete matched files if they exist
+#                 if os.path.exists(f"{settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf"):
+#                     os.remove(os.path.join(settings.MEDIA_ROOT, f"{curr_file}_{user}_watermark.pdf"))
+#                 #print(f"461: match: {settings.MEDIA_ROOT}/{curr_file}_{user}_watermark.pdf")
+#                 #print("YES! We have a match!")
+#
+#
+#         # The delete DB entry and pdf file names in MEDIA folder
+#         pub.delete()
+#
+#
+#         # Delete corresponding watermark files
+#         messages.success(request, f"Successfully deleted publication ID {pk}")
+#         return redirect('jdapublicationsapp_listing')
 
 
 """jda_ajax_tester"""
@@ -564,7 +594,8 @@ def jdapublicationsapp_company_listing(request):
 
     company_listing = PublicationCompanyModel.objects.all().order_by('company_name')
 
-    context={'company_listing':company_listing,'rpt_date': now}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_company_listing.html', context)
 
 #////////////////////// jdapublicationsapp_new_company /////////////////////////
@@ -588,8 +619,8 @@ def jdapublicationsapp_new_company(request):
     else:
         form = PublicationCompanyForm()
 
-
-    context={'form':form, 'rpt_date': now}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form':form, 'rpt_date': now}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_new_company.html', context)
 
 
@@ -598,11 +629,13 @@ def jdapublicationsapp_new_company(request):
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs'])
 def jdapublicationsapp_delete_company_confirm(request, pk):
-    print(f"387://////{pk}")
+    #print(f"387://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
     comp = PublicationCompanyModel.objects.get(pk=pk)
     messages.warning(request, f"Deletion of company '{comp}' is permanent'?")
-    context = {'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html', context)
 
 
@@ -610,7 +643,7 @@ def jdapublicationsapp_delete_company_confirm(request, pk):
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs'])
 def jdapublicationsapp_delete_company_yes(request, pk):
-    print(f"398://////{pk}")
+    #print(f"398://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
     comp = PublicationCompanyModel.objects.get(pk=pk)
     comp.delete()

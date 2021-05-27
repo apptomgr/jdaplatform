@@ -63,7 +63,7 @@ def profile(request):
 
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
-        print(f"48 - grp: {grp}")
+        #print(f"48 - grp: {grp}")
 
     context = {'user_grp': grp}
     return render(request, 'registration/profile.html', context)

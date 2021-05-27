@@ -13,7 +13,7 @@ class Profile(models.Model):
 
 
     def save(self, *args, **kwargs):
-        image_resize(self.logo, 80, 80)
+        image_resize(self.logo, 120, 120)
         super().save(*args, **kwargs)
 
     # # Override the save method of the model

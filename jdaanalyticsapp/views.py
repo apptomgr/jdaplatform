@@ -9,9 +9,18 @@ from django.contrib.auth.decorators import login_required
 from accounts .decorators import allowed_users
 
 
+def get_user_grp(request):
+    grp = None
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+    return grp
+
 @login_required
 def jdaanalyticsapp_home(request):
-    return render(request, 'jdaanalyticsapp/jdaanalyticsapp_home.html')
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp}
+    return render(request, 'jdaanalyticsapp/jdaanalyticsapp_home.html', context)
 
 
 # //////////////////////////////////////////////// jdaanalyticsapp_upload_form /////////////////////
@@ -111,12 +120,14 @@ def jdaanalyticsapp_upload_form(request):
     #security = SecurityModel.objects.all()
     #security_price = SecurityPriceModel.objects.all()
 
-    context={'form':form}#, 'index':index, 'security':security, 'security_price':security_price}
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'form':form}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_upload_form.html', context)
 
 
 
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdaanalyticsapp_rpt(request):
     now = datetime.now()
     if IndexPriceModel.objects.all():
@@ -130,12 +141,15 @@ def jdaanalyticsapp_rpt(request):
         security_price = SecurityPriceModel.objects.all()
 
     filterForm = SecurityFilterForm()
-    context={'filterForm':filterForm, 'index':index, 'security_price':security_price, 'rpt_date':now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'filterForm':filterForm, 'index':index, 'security_price':security_price, 'rpt_date':now}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
 
 
 #/////////////////////// jdaanalyticsapp_sec_filter /////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdaanalyticsapp_sec_filter(request):
     now = datetime.now()
     if request.method == 'POST':
@@ -215,6 +229,7 @@ def jdaanalyticsapp_sec_filter(request):
         security = SecurityModel.objects.all()
         security_price = SecurityPriceModel.objects.all()
 
-    context = {'filterForm':filterForm,'index': index, 'security_price': security_price, 'rpt_date': now}
+    grp = get_user_grp(request)
+    context = {'user_grp': grp,'filterForm':filterForm,'index': index, 'security_price': security_price, 'rpt_date': now}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
 

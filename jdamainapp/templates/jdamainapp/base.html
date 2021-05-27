@@ -51,7 +51,7 @@
 </head>
 
 <body data-spy="scroll" data-target="#navbar-example">
-
+{{user_grp}}
 <!-- ======= Header ======= -->
 <header class="fixed-top" id="header">
     <div class="container-custom d-flex">
@@ -94,12 +94,17 @@
 
                 <li class="drop-down"><a href="{% url 'jdapublicationsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Publications App' %}</a>
                     <ul>
+                        {% if user_grp == "brokers" or user_grp == "customers" %}
+                        <li><a href="{% url 'jdapublicationsapp_pubs' %}"><i class="fas fa-user-cog"></i> {% trans 'Our Publications' %} </a></li>
+                        {% else %}
                         <li><a href="{% url 'jdapublicationsapp_pubs' %}"><i class="fas fa-user-cog"></i> {% trans 'Our Publications' %} </a></li>
                         <li><a href="{% url 'jdapublicationsapp_entry' %}"><i class="fas fa-user-cog"></i> {% trans 'Publication Entry' %} </a></li>
                         <li><a href="{% url 'jdapublicationsapp_listing' %}"><i class="fas fa-edit"></i>  {% trans 'Publication Edit' %} </a></li>
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Company' %}</a></li>
+                        {% endif%}
+
                     </ul>
                 </li>
                 <!--li class="drop-down"><a href="#"><i class="fa fa-file-text"></i> Report</a>

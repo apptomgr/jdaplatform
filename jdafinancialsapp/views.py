@@ -13,6 +13,13 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from accounts .decorators import allowed_users
 
+
+def get_user_grp(request):
+    grp = None
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+    return grp
+
 #////////////////////////// jdafinancialsapp_home ///////////////////////
 @login_required
 def jdafinancialsapp_home(request):
@@ -28,13 +35,14 @@ def jdafinancialsapp_home(request):
     #
     # print(request.session.get('user_id'))
     # print(request.session.get('team'))
-
-    context ={'bread_home':'font-weight-bold'}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'bread_home':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_home.html', context)
 
 
 #////////////////////////// jdafinancialsapp_stmts ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_stmts(request):
     dt = datetime.now()
     #print(f"36 ///////// jdafinancialsapp_stmts")
@@ -72,7 +80,8 @@ def jdafinancialsapp_stmts(request):
         form = FinStmtDashForm()
 
     #print(f"67///// taking us to fin_dash request {request}")
-    context = {'form': form, 'dt':dt, 'bread_stmts':'font-weight-bold'}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'dt':dt, 'bread_stmts':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_stmts.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_bal_entry_form ///////////////////////////////////
@@ -142,7 +151,8 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
     title = f"{statement} as of {entry_date}"
     line_hearders_subs=['ACTIF']
 
-    context = {'form': form, 'title': title, 'bal':bal, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'bal':bal, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_entry_form.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_inc_entry_form ///////////////////////////////////
@@ -213,7 +223,8 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
     title = f"{statement} as of {entry_date}"
     line_hearders_subs=['ACTIF']
 
-    context = {'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inc_entry_form.html', context)
 
 
@@ -286,11 +297,13 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
     title = f"{statement} as of {entry_date}"
     line_hearders_subs=['ACTIF']
 
-    context = {'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link, 'line_hearders_subs':line_hearders_subs}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inv_acct_entry_form.html', context)
 
 #////////////////////////// jdafinancialsapp_bal_rpt ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date):
     print(f"95 jdafinancialsapp_bal_rpt: User {request.user}")
     company = CompanyModel.objects.get(pk=company_id)
@@ -299,11 +312,14 @@ def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date)
     title=f"{company} {statement} as of {entry_date}"
     now = datetime.now()
     stmt_params=[sector, company_id, statement, entry_date]
-    context ={'bread_home':'font-weight-bold', 'bal': bal, 'stmt_params':stmt_params, 'title':title, "rpt_date":now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'bread_home':'font-weight-bold', 'bal': bal, 'stmt_params':stmt_params, 'title':title, "rpt_date":now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_rpt.html', context)
 
 #////////////////////////// jdafinancialsapp_inc_rpt ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date):
     #print(f"297 jdafinancialsapp_inc_rpt")
     company = CompanyModel.objects.get(pk=company_id)
@@ -324,12 +340,15 @@ def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date)
 
     title=f"{company} {statement} as of {entry_date}"
     stmt_params=[sector, company_id, statement, entry_date]
-    context ={'bread_home':'font-weight-bold', 'inc_res': inc_res, 'iterate_type':iterate_type, 'stmt_params':stmt_params, 'title':title, 'curr_yr':curr_yr, 'prev_yr':prev_yr}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'bread_home':'font-weight-bold', 'inc_res': inc_res, 'iterate_type':iterate_type, 'stmt_params':stmt_params, 'title':title, 'curr_yr':curr_yr, 'prev_yr':prev_yr}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inc_rpt.html', context)
 
 
 #////////////////////////// jdafinancialsapp_inv_acct_rpt ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_date):
     #print(f"307 jdafinancialsapp_inv_acct_rpt")
     company = CompanyModel.objects.get(pk=company_id)
@@ -339,7 +358,9 @@ def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_
     title=f"{company} {statement} as of {entry_date}"
     now = datetime.now()
     stmt_params=[sector, company_id, statement, entry_date]
-    context ={'bread_home':'font-weight-bold', 'inv': inv, 'stmt_params':stmt_params, 'title':title, "rpt_date":now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'bread_home':'font-weight-bold', 'inv': inv, 'stmt_params':stmt_params, 'title':title, "rpt_date":now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inv_acct_rpt.html', context)
 
 
@@ -407,7 +428,8 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
 
     title = f"{statement} as of {entry_date}"
 
-    context = {'form': form, 'title': title, 'bal':bal, 'lines':lines,'link':link}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'bal':bal, 'lines':lines,'link':link}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_entry_form.html', context)
 
 #////////////////////////////////////// jdafinancialsapp_inc_edit_form ///////////////////////////////////
@@ -479,7 +501,8 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
 
     title = f"{statement} as of {entry_date}"
 
-    context = {'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'inc':inc, 'lines':lines,'link':link}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inc_entry_form.html', context)
 
 
@@ -553,7 +576,8 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 
     title = f"{statement} as of {entry_date}"
 
-    context = {'form': form, 'title': title, 'inv':inv, 'lines':lines,'link':link}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'title': title, 'inv':inv, 'lines':lines,'link':link}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_inv_acct_entry_form.html', context)
 
 
@@ -603,28 +627,33 @@ def jdafinancialsapp_new_company(request):
     else:
         form = CompanyForm()
 
-
-    context={'form':form, 'bread_new_company':'font-weight-bold'}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form':form, 'bread_new_company':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_new_company.html', context)
 
 
 
 #//////////////////////////////////////// jdafinancialsapp_view_company_detail/////////////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_view_company_detail(request, pk):
     #print(f"289 PK {pk}")
     now = datetime.now()
     company_detail =CompanyModel.objects.get(id=pk)
     #print(f"company_detail: {company_detail}")
-    context = {'company_detail':company_detail,'rpt_date': now}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'company_detail':company_detail,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_company_detail.html', context)
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_company_listing(request):
     now = datetime.now()
     company_listing =CompanyModel.objects.all()
-    context = {'company_listing':company_listing,'rpt_date': now}
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
 
 
@@ -637,7 +666,8 @@ def jdafinancialsapp_delete_company_confirm(request, pk):
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
     comp = CompanyModel.objects.get(pk=pk)
     messages.warning(request, f"Deletion of company '{comp}' is permanent'?")
-    context = {'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_delete_company_confirm.html', context)
 
 
@@ -658,15 +688,18 @@ def jdafinancialsapp_delete_company_yes(request, pk):
 
 #////////////////////////// jdafinancialsapp_bal_all_rpt ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdafinancialsapp_bal_all_rpt(request):
     bal_data = FinancialStatementFactModel.objects.values('company__company').annotate(Sum('value')) #.order_by('company', 'company__rpt_period', 'entry_date')
 
-    context ={'bread_all_bal':'font-weight-bold', 'bal_data': bal_data}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'bread_all_bal':'font-weight-bold', 'bal_data': bal_data}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_bal_rpt.html', context)
 
 
 #////////////////////////// FinancialStatementFactForm ///////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def financialStatementFactForm(request):
     #print(f"237//////////// Bal entry Form /////// ")
 
@@ -691,8 +724,8 @@ def financialStatementFactForm(request):
         form = FinancialStatementFactForm()
         #print("256 - GET")
 
-
-    context = {'form': form, 'fact':fact}
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form': form, 'fact':fact}
     return render(request, 'jdafinancialsapp/FinancialStatementFactForm.html', context)
 
 """ model formset test """
