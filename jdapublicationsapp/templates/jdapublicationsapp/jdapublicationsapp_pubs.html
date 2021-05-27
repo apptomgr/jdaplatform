@@ -123,11 +123,11 @@
                         <td>{{i.file_name.name}}</td>
                         <td>{{i.uploaded_at}}</td-->
                         <!--td><a href="{% url 'jdapublicationsapp_view_watermarked_pub' j %}">One pub</a></td-->
-                        {% if user_grp == "brokers" %}
-                            <td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
-                        {% else %}
+                        {#% if user_grp == "brokers" %#}
+                            <!--td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
+                        {#% else %#}
                             <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
-                        {% endif %}
+                        {#% endif %#}
 
                         <!--td>
                             <button type="button" class="btn btn-info" aria-label="Left Align" data-toggle="modal" data-target="#pubModal">

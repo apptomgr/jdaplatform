@@ -51,6 +51,7 @@ class PublicationModel(models.Model):
     subject = models.CharField(max_length=150)
     publication_desc = models.CharField(max_length=250)
     file_name = models.FileField(upload_to='publications/%Y/%m/') #%Y/%m/%d
+    #tmp_pdf_file = models.FileField(upload_to='publications/%Y/%m/', null=True, blank=True)  # %Y/%m/%d  this will hold watermarked pdf files
     uploaded_at = models.DateTimeField(auto_now_add=True)
     visible_flag = models.BooleanField(default=True)
     edited_by = models.CharField(max_length=100, blank=True, null=True)

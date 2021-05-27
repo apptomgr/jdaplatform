@@ -9,6 +9,11 @@ from jdapublicationsapp.models import PubTempModel
 import fitz
 from django.core.files.base import ContentFile
 import os
+# from django.core.files.storage import default_storage
+#
+#
+# def read_media_file():
+#     f = default_storage.open(os.path.join('data_files', new_file), 'r')
 
 def fitz_pdf(pdf_doc, logo, pdf_out):
     #print(f"14: Inside fitz_pdf: pdf_doc: {pdf_doc} - logo: {logo} - pdf_out: {pdf_out}")
