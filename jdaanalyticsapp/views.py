@@ -19,6 +19,7 @@ def get_user_grp(request):
 def jdaanalyticsapp_home(request):
 
     grp = get_user_grp(request)
+    print(f"22 - user_grp: {grp}")
     context = {'user_grp': grp}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_home.html', context)
 
