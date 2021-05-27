@@ -24,8 +24,6 @@ def get_user_grp(request):
         grp = request.user.groups.all()[0].name
     return grp
 
-
-
 @login_required
 def jdapublicationsapp_home(request):
     form = PublicationAdminsForm()
