@@ -43,6 +43,10 @@ class PublicationModel(models.Model):
         ('Investor Conference', 'Investor Conference')
     )
 
+    LANGUAGE_CHOICES = (
+        ('English', 'English'),
+        ('French', 'French'),
+    )
     #author = models.CharField(max_length=100, blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE) # new
     publication_date = models.DateField(blank=False, null=False)
@@ -57,6 +61,7 @@ class PublicationModel(models.Model):
     edited_by = models.CharField(max_length=100, blank=True, null=True)
     company = models.ForeignKey(PublicationCompanyModel, blank=True, null=True, on_delete=models.CASCADE)
     #publication_date = models.DateField(auto_now_add=True, blank=False, null=False)
+    pub_language = models.CharField(default='English', max_length=100, choices=LANGUAGE_CHOICES, null=False, blank=False)
 
 
     def __str__(self):

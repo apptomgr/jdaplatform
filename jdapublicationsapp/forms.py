@@ -5,6 +5,7 @@ import datetime
 from django.utils.translation import ugettext_lazy
 
 
+
 #/////////////////////////// PublicationAdminsForm //////////////////////////
 class PublicationAdminsForm(forms.ModelForm):
     CATEGORY_CHOICES = (
@@ -31,6 +32,13 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Economic Notes', 'Economic Notes'),
         ('Investor Conference', 'Investor Conference')
     )
+
+    LANGUAGE_CHOICES = (
+        ('', ugettext_lazy('Language')),
+        ('English', ugettext_lazy('English')),
+        ('French', ugettext_lazy('French')),
+    )
+
     author = forms.ModelChoiceField(queryset=User.objects.all(), empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     publication_date = forms.DateField(initial=datetime.date.today, label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'From'}))
     research_category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
@@ -41,6 +49,9 @@ class PublicationAdminsForm(forms.ModelForm):
     file_name = forms.FileField(label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
     #company = forms.ModelChoiceField(queryset=PublicationCompanyModel.objects.all(), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick'}))
     company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label=ugettext_lazy('Company'), label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    pub_language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick'}))
+    #research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
+
     class Meta:
         model = PublicationModel
         fields = '__all__'
@@ -74,16 +85,30 @@ class PublicationFilterForm(forms.ModelForm):
         ('Investor Conference', 'Investor Conference')
     )
 
-    author = forms.ModelChoiceField(required = False, queryset=User.objects.all(), empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
-    from_date = forms.DateField(required = False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'From Date'}))
-    to_date = forms.DateField(required = False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'To Date'}))
-    research_category = forms.ChoiceField(required = False, choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
-    research_type = forms.ChoiceField(required = False, choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm show-tick'}))
-    subject = forms.CharField(required = False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
+    LANGUAGE_CHOICES = (
+        ('', ugettext_lazy('Language')),
+        ('English', ugettext_lazy('English')),
+        ('French', ugettext_lazy('French')),
+    )
+
+
+    auth = PublicationModel.objects.values_list('author__username', flat='True').distinct()
+    queryset = User.objects.filter(username__in=auth)
+
+    #queryset = PublicationModel.objects.values('author__username').distinct()
+    #queryset = PublicationModel.objects.values_list('author__username', flat='True').distinct()
+    author = forms.ModelChoiceField(required=False, queryset=queryset, empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
+
+    from_date = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'From Date'}))
+    to_date = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'To Date'}))
+    research_category = forms.ChoiceField(required=False, choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
+    research_type = forms.ChoiceField(required=False, choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm show-tick'}))
+    subject = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
     #visible_flag = forms.BooleanField(label='Visible', required=False, disabled=False,widget=forms.widgets.CheckboxInput(attrs={'class': 'checkbox-inline'})),
-    publication_desc = forms.CharField(required = False, label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
-    company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
-    file_name = forms.FileField(required = False, label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
+    publication_desc = forms.CharField(required=False, label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
+    company = forms.ModelChoiceField(required=False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
+    file_name = forms.FileField(required=False, label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
+    pub_language =      forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
 
 
     class Meta:
