@@ -39,8 +39,12 @@ class PublicationAdminsForm(forms.ModelForm):
         ('French', ugettext_lazy('French')),
     )
 
+    #auth = PublicationModel.objects.values_list('author__username', flat='True').distinct()
+    #queryset = User.objects.filter(username__in=auth)
+    queryset = User.objects.filter(groups__name__in=['staffs', 'admins'])
+
     #initial = datetime.date.today,
-    author = forms.ModelChoiceField(queryset=User.objects.all(), empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
+    author = forms.ModelChoiceField(queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     publication_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'From'}))
     research_category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))

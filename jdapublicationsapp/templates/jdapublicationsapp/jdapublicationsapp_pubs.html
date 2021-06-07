@@ -21,8 +21,7 @@
             <div>
                 <h2 class="card-title  pt-3 mb-2 font-bold"><strong class="my_info_txt">
                     J&D </strong><strong class="text-white">Publications</strong></h2>
-                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> {% trans 'Our
-                    Publications' %}</a>
+                <a class="btn btn-outline-white btn-md"><i class="fa fa-clone left my_info_txt"></i> {% trans 'Our Publications' %}</a>
             </div>
         </div>
     </div>
@@ -38,8 +37,7 @@
             <div class="col-sm-12">
                 {% if messages %}
                 {% for message in messages %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert"
-                     role="alert">
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
                     <a class="close" data-dismiss="alert">x</a>
                     <i class="text-muted mr-5">{{message|safe}}</i>
                 </div>
@@ -65,12 +63,10 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td class="my_nopad2 input-group-prepend">{{filterForm.from_date| as_crispy_field}}<i
-                                        class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
+                                <td class="my_nopad2 input-group-prepend">{{filterForm.from_date| as_crispy_field}}<i class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
                             </tr>
                             <tr>
-                                <td class="my_nopad2 input-group-prepend">{{filterForm.to_date| as_crispy_field}}<i
-                                        class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
+                                <td class="my_nopad2 input-group-prepend">{{filterForm.to_date| as_crispy_field}}<i class="far fa-calendar-alt fa-fw fa-2x text-info"></i></td>
                             </tr>
                             <tr>
                                 <td class="my_nopad2"> {{filterForm.author| as_crispy_field}}</td>
@@ -90,8 +86,7 @@
                             </tr>
                             <td class="my_nopad2 text-center">
                                 <button type="submit" class="btn btn-sm btn-info mb-2">Filter</button>
-                                <button type="reset" class="btn btn-sm btn-secondary  mb-2"
-                                        onclick="location.href='{% url 'jdapublicationsapp_pubs' %}'">Reset
+                                <button type="reset" class="btn btn-sm btn-secondary  mb-2" onclick="location.href='{% url 'jdapublicationsapp_pubs' %}'">Reset
                                 </button>
                             </td>
                             </tr>
@@ -138,8 +133,7 @@
                         {#% if user_grp == "brokers" %#}
                         <!--td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
                         {#% else %#}
-                        <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i
-                                class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+                        <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
                         {#% endif %#}
 
                         <!--td>
@@ -148,10 +142,7 @@
                             </button>
                         </td-->
                         <td class="text-center">
-                            <a href="#" class="my_link"
-                               data-val="{{i.subject}}~~{{i.author}}~~{{i.publication_desc}}~~{{i.company}}~~{{i.file_name.name}}~~{{i.uploaded_at}}"
-                               data-toggle="modal" data-target="#pub-modal"><i
-                                    class="fas fa-expand-arrows-alt fa-fw fa-2x text-info"></i></a>
+                            <a href="#" class="my_link" data-val="{{i.subject}}~~{{i.author}}~~{{i.publication_desc}}~~{{i.company}}~~{{i.file_name.name}}~~{{i.uploaded_at}}" data-toggle="modal" data-target="#pub-modal"><i class="fas fa-expand-arrows-alt fa-fw fa-2x text-info"></i></a>
                         </td>
                     </tr>
                     {% endfor%}
@@ -170,12 +161,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0"
-                                                   data-rel="{{per_models|floatformat:'1'}}" data-linecap="round"
-                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
-                                                   data-thickness=".20"
-                                                   data-readonly="true" disabled>
-                                            <h5 class="progress-h4">{% trans 'Models' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{per_models|floatformat:'1'}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Models' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -184,12 +170,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{per_newsletters}}"
-                                                   data-linecap="round"
-                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
-                                                   data-thickness=".20"
-                                                   data-readonly="true" disabled>
-                                            <h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{per_newsletters}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -198,12 +179,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0"
-                                                   data-rel="{{per_commentaries|floatformat:'2'}}" data-linecap="round"
-                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
-                                                   data-thickness=".20"
-                                                   data-readonly="true" disabled>
-                                            <h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{per_commentaries|floatformat:'2'}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -212,12 +188,7 @@
                                 <div class="col-xs-12 col-sm-3 col-md-3 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0"
-                                                   data-rel="{{per_reports |floatformat:'4'}}" data-linecap="round"
-                                                   data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5"
-                                                   data-thickness=".20"
-                                                   data-readonly="true" disabled>
-                                            <h5 class="progress-h4">{% trans 'Reports' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{per_reports |floatformat:'4'}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Reports' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -287,15 +258,9 @@
 
 
 <!-- jQuery, Popper and Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 <script>
  $('#pub-modal').on('show.bs.modal', function (event) {
