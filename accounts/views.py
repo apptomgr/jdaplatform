@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, AccountAdminForm, AccountAdminUpdateForm
 from django.contrib.auth.models import User
 # from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from accounts .decorators import allowed_users
+from datetime import datetime
 
 # def signup(request):
 #     if request.method == 'POST':
@@ -95,6 +96,83 @@ def profile_edit(request):
 
     return render(request, 'registration/profile_edit.html', context)
 
+
+# Account admin
+@login_required
+@allowed_users(allowed_roles=['admins'])
+def account_admin(request):
+    now = datetime.now()
+    if request.method == 'POST':
+        form = AccountAdminForm(request.POST) #, instance=request.user)
+        if form.is_valid():
+            #Choices are: date_joined, email, first_name, groups, id, is_active, is_staff, is_superuser, last_login, last_name, logentry, password, profile, publicationmodel, user, user_permissions, username
+            user=form.cleaned_data['username']
+            user_info = User.objects.all().select_related('profile').filter(username=user)
+            email = user_info.first().email
+            grp = User.objects.values_list('groups__name', flat='True').filter(username=user).first()
+            logo= user_info.first().profile.logo
+
+            #print(f"user:{user_info} - email:{email} - Grp: {grp} - logo: {logo}")
+
+            form = AccountAdminUpdateForm(request.POST or None, initial ={'user':user_info.first().username,'email':email,'group': grp, 'logo':logo})
+
+            messages.success(request, f'Saved Lorem Ipsom Your account profile has been updated!')
+            context={'form':form,'user':user,'email':email,'grp':grp,'logo':logo, 'rpt_date':now}
+            return render(request, 'registration/account_admin_update.html', context)
+        #else:
+        #    messages.error(request, f'Lorem Ipsom select a user before proceeding!')
+        #    return redirect('account_admin')  # Redirect back to account_admin page
+
+    else:
+        form = AccountAdminForm()
+        #p_form = ProfileUpdateForm(instance=request.user.profile)
+
+
+    context ={'form':form, 'rpt_date':now}  # {'u_form': u_form,'p_form': p_form}
+
+    return render(request, 'registration/account_admin.html', context)
+
+
+
+# account_admin_update
+@login_required
+@allowed_users(allowed_roles=['admins'])
+def account_admin_update(request):
+    print("account_admin_update")
+    now = datetime.now()
+    #print(user=form.cleaned_data['user'])
+    form = AccountAdminUpdateForm(request.POST or None)
+
+    user = form.cleaned_data['user']
+    print(user)
+    #
+    # if request.method == 'POST':
+    #     form = AccountAdminUpdateForm(request.POST or None) #, instance=request.user)
+    #     if form.is_valid():
+    #         print('valid')
+    # if request.method == 'POST':
+    #     u_form = UserUpdateForm(request.POST, instance=request.user)
+    #     p_form = ProfileUpdateForm(request.POST,
+    #                                request.FILES,
+    #                                instance=request.user.profile)
+    #     if u_form.is_valid() and p_form.is_valid():
+    #         u_form.save()
+    #         p_form.save()
+    #         # Now assoc watermark with the updated logo
+    #
+    #         messages.success(request, f'Your account profile has been updated!')
+    #         return redirect('account_admin')  # Redirect back to account admin page
+    #     else:
+    #         messages.error(request, f'{form.errors}')
+    #
+    # else:
+    #     pass
+    #     # u_form = UserUpdateForm(instance=request.user)
+    #     # p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {} #{'u_form': u_form,'p_form': p_form}
+
+    return render(request, 'registration/account_admin_update.html', context)
 
 # @login_required
 # def view_profile(request):

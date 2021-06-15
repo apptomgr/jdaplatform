@@ -45,7 +45,7 @@ class PublicationAdminsForm(forms.ModelForm):
 
     #initial = datetime.date.today,
     author = forms.ModelChoiceField(queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
-    publication_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'From'}))
+    publication_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date'}))
     research_category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     subject = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ugettext_lazy('Subject')}, ))
@@ -102,18 +102,18 @@ class PublicationFilterForm(forms.ModelForm):
 
     #queryset = PublicationModel.objects.values('author__username').distinct()
     #queryset = PublicationModel.objects.values_list('author__username', flat='True').distinct()
-    author = forms.ModelChoiceField(required=False, queryset=queryset, empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
+    author = forms.ModelChoiceField(required=False, queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
 
-    from_date = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'From Date'}))
-    to_date = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'To Date'}))
+    from_date = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('From Date')}))
+    to_date = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('To Date')}))
     research_category = forms.ChoiceField(required=False, choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
     research_type = forms.ChoiceField(required=False, choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm show-tick'}))
     subject = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
     #visible_flag = forms.BooleanField(label='Visible', required=False, disabled=False,widget=forms.widgets.CheckboxInput(attrs={'class': 'checkbox-inline'})),
     publication_desc = forms.CharField(required=False, label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
-    company = forms.ModelChoiceField(required=False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
+    company = forms.ModelChoiceField(required=False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label=ugettext_lazy('Company'), label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
     file_name = forms.FileField(required=False, label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
-    pub_language =      forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
+    pub_language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
 
 
     class Meta:
