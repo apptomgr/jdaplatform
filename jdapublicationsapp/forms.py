@@ -12,25 +12,26 @@ class PublicationAdminsForm(forms.ModelForm):
         ('', ugettext_lazy('Category')),
         ('Models', 'Models'),
         ('Newsletters', 'Newsletters'),
-        ('Commentaries', 'Commentaries'),
-        ('Reports', 'Reports'),
+        ('Commentaries', ugettext_lazy('Commentaries')),
+        ('Reports', ugettext_lazy('Reports')),
     )
 
     RESEARCH_TYPE_CHOICES = (
         ('', ugettext_lazy('Type')),
+        ('Daily Market Briefing', ugettext_lazy('Daily Market Briefing')),
+        ('Research Notes', ugettext_lazy('Research Notes')),
+        ('Equity Research', ugettext_lazy('Equity Research')),
+        ('Quarterly Results', ugettext_lazy('Quarterly Results')),
+        ('Half Year Results', ugettext_lazy('Half Year Results')),
+        ('Annual Results', ugettext_lazy('Annual Results')),
+        ('Sector Reports', ugettext_lazy('Sector Reports')),
+        ('Strategic Reports', ugettext_lazy('Strategic Reports')),
+        ('IPO Analysis', ugettext_lazy('IPO Analysis')),
+        ('Economic Notes', ugettext_lazy('Economic Notes')),
+        ('Annual Shareholder Meeting', ugettext_lazy('Annual Shareholder Meeting')),
         ('Valuation Models', 'Valuation Models'),
-        ('Daily Market Briefing', 'Daily Market Briefing'),
-        ('Weekly comments', 'Weekly comments'),
-        ('Quarterly Results', 'Quarterly Results'),
-        ('Half Year Results', 'Half Year Results'),
-        ('Annual Results', 'Annual Results'),
-        ('Annual Shareholder Meeting', 'Annual Shareholder Meeting'),
-        ('IPO Analysis', 'IPO Analysis'),
-        ('Research Notes', 'Research Notes'),
-        ('Sector Reports', 'Sector Reports'),
-        ('Strategic Reports', 'Strategic Reports'),
-        ('Economic Notes', 'Economic Notes'),
-        ('Investor Conference', 'Investor Conference')
+        ('Weekly comments', ugettext_lazy('Weekly comments')),
+        ('Investor Conference', ugettext_lazy('Investor Conference'))
     )
 
     LANGUAGE_CHOICES = (
@@ -70,24 +71,25 @@ class PublicationFilterForm(forms.ModelForm):
         ('Models', ugettext_lazy('Models')),
         ('Newsletters', 'Newsletters'),
         ('Commentaries', ugettext_lazy('Commentaries')),
-        ('Reports', 'Reports'),
+        ('Reports', ugettext_lazy('Reports')),
     )
 
     RESEARCH_TYPE_CHOICES = (
-        ('', 'Type'),
+        ('', ugettext_lazy('Type')),
+        ('Daily Market Briefing', ugettext_lazy('Daily Market Briefing')),
+        ('Research Notes', ugettext_lazy('Research Notes')),
+        ('Equity Research', ugettext_lazy('Equity Research')),
+        ('Quarterly Results', ugettext_lazy('Quarterly Results')),
+        ('Half Year Results', ugettext_lazy('Half Year Results')),
+        ('Annual Results', ugettext_lazy('Annual Results')),
+        ('Sector Reports', ugettext_lazy('Sector Reports')),
+        ('Strategic Reports', ugettext_lazy('Strategic Reports')),
+        ('IPO Analysis', ugettext_lazy('IPO Analysis')),
+        ('Economic Notes', ugettext_lazy('Economic Notes')),
+        ('Annual Shareholder Meeting', ugettext_lazy('Annual Shareholder Meeting')),
         ('Valuation Models', 'Valuation Models'),
-        ('Daily Market Briefing', 'Daily Market Briefing'),
-        ('Weekly comments', 'Weekly comments'),
-        ('Quarterly Results', 'Quarterly Results'),
-        ('Half Year Results', 'Half Year Results'),
-        ('Annual Results', 'Annual Results'),
-        ('Annual Shareholder Meeting', 'Annual Shareholder Meeting'),
-        ('IPO Analysis', 'IPO Analysis'),
-        ('Research Notes', 'Research Notes'),
-        ('Sector Reports', 'Sector Reports'),
-        ('Strategic Reports', 'Strategic Reports'),
-        ('Economic Notes', 'Economic Notes'),
-        ('Investor Conference', 'Investor Conference')
+        ('Weekly comments', ugettext_lazy('Weekly comments')),
+        ('Investor Conference', ugettext_lazy('Investor Conference'))
     )
 
     LANGUAGE_CHOICES = (

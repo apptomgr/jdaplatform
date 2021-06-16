@@ -138,13 +138,15 @@ def account_admin(request):
 @login_required
 @allowed_users(allowed_roles=['admins'])
 def account_admin_update(request):
-    print("account_admin_update")
     now = datetime.now()
-    #print(user=form.cleaned_data['user'])
     form = AccountAdminUpdateForm(request.POST or None)
 
-    user = form.cleaned_data['user']
-    print(user)
+    user = request.POST.get('user')
+    email = request.POST.get('email')
+    group = request.POST.get('group')
+    logo = request.POST.get('logo')
+
+    print(f"user {user} - email: {email} - group {group} - logo {logo}")
     #
     # if request.method == 'POST':
     #     form = AccountAdminUpdateForm(request.POST or None) #, instance=request.user)

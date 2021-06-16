@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-13 14:22-0400\n"
+"POT-Creation-Date: 2021-06-16 14:59-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,17 +28,14 @@ msgstr ""
 
 #: accounts/forms.py:38
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
-#: accounts/forms.py:39
-msgid "Email"
-msgstr ""
-
-#: accounts/forms.py:40
+#: accounts/forms.py:45
 msgid "Group"
 msgstr "Groupe"
 
 #: accounts/templates/registration/account_admin.html:22
+#: accounts/templates/registration/account_admin_update.html:24
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:4
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:23
@@ -48,49 +45,27 @@ msgstr "Groupe"
 msgid "Home"
 msgstr "Acceuil"
 
-#: accounts/templates/registration/account_admin.html:24
-#: jdamainapp/templates/jdamainapp/base.html:98
-#: jdamainapp/templates/jdamainapp/base.html:100
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:23
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:25
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:24
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:26
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:44
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:23
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:24
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:11
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:24
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:12
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:27
-msgid "Our Publications"
-msgstr "Nos Publications"
-
-#: accounts/templates/registration/account_admin.html:25
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:24
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:26
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:25
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:24
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:25
-msgid "Publications Entry"
-msgstr "Entr&eacute;e des Publications"
-
-#: accounts/templates/registration/account_admin.html:26
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:25
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:27
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:26
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:25
-msgid "Publications Edit"
-msgstr "Editer les Publications"
-
-#: accounts/templates/registration/account_admin.html:34
+#: accounts/templates/registration/account_admin.html:30
 #: jdamainapp/templates/jdamainapp/base.html:131
 msgid "Account Activation"
 msgstr "Activation de comptes"
 
-#: accounts/templates/registration/account_admin.html:56
+#: accounts/templates/registration/account_admin.html:42
+msgid "Select User"
+msgstr "Sélectionner le nom d'utilisateur"
+
+#: accounts/templates/registration/account_admin.html:57
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:92
 msgid "Add Publication"
 msgstr "Ajouter une publication"
+
+#: accounts/templates/registration/account_admin_update.html:32
+msgid "Activate or Update User Info"
+msgstr "Activer ou Modifier le nom d'utilisateur"
+
+#: accounts/templates/registration/account_admin_update.html:54
+msgid "Update User"
+msgstr "Modifier le nom d'utilisateur"
 
 #: accounts/templates/registration/login.html:39
 #: accounts/templates/registration/profile.html:38
@@ -174,7 +149,7 @@ msgstr "Nos Donne&eacute;s de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:71
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:91
-#: jdapublicationsapp/forms.py:70
+#: jdapublicationsapp/forms.py:71
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:164
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:164
 msgid "Models"
@@ -187,13 +162,14 @@ msgid "Newsletters"
 msgstr "Notice de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
-#: jdapublicationsapp/forms.py:72
+#: jdapublicationsapp/forms.py:15 jdapublicationsapp/forms.py:73
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:182
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
+#: jdapublicationsapp/forms.py:16 jdapublicationsapp/forms.py:74
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:191
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
@@ -292,8 +268,8 @@ msgstr "Télécharger les données du marché"
 msgid "Sector"
 msgstr "Secteur"
 
-#: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:56
-#: jdapublicationsapp/forms.py:114 jdapublicationsapp/forms.py:128
+#: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:57
+#: jdapublicationsapp/forms.py:116 jdapublicationsapp/forms.py:130
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:110
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:107
 msgid "Company"
@@ -371,6 +347,22 @@ msgstr "Plateforme JDA"
 msgid "View Companies"
 msgstr "Consulter Soci&eacute;t&eacute;"
 
+#: jdamainapp/templates/jdamainapp/base.html:98
+#: jdamainapp/templates/jdamainapp/base.html:100
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:23
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:25
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:24
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:26
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:44
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:23
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:24
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:11
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:24
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:12
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:27
+msgid "Our Publications"
+msgstr "Nos Publications"
+
 #: jdamainapp/templates/jdamainapp/base.html:101
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:34
 msgid "Publication Entry"
@@ -428,53 +420,126 @@ msgstr ""
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:159 jdapublicationsapp/forms.py:39
-#: jdapublicationsapp/forms.py:96
+#: jdaplatform/settings.py:159 jdapublicationsapp/forms.py:40
+#: jdapublicationsapp/forms.py:98
 msgid "French"
 msgstr "Francais"
 
-#: jdaplatform/settings.py:160 jdapublicationsapp/forms.py:38
-#: jdapublicationsapp/forms.py:95
+#: jdaplatform/settings.py:160 jdapublicationsapp/forms.py:39
+#: jdapublicationsapp/forms.py:97
 msgid "English"
 msgstr "Anglais"
 
-#: jdapublicationsapp/forms.py:12 jdapublicationsapp/forms.py:69
+#: jdapublicationsapp/forms.py:12 jdapublicationsapp/forms.py:70
 msgid "Category"
 msgstr "Categorie"
 
-#: jdapublicationsapp/forms.py:20
+#: jdapublicationsapp/forms.py:20 jdapublicationsapp/forms.py:78
 msgid "Type"
 msgstr "Research par Type"
 
-#: jdapublicationsapp/forms.py:37 jdapublicationsapp/forms.py:94
+#: jdapublicationsapp/forms.py:21 jdapublicationsapp/forms.py:79
+msgid "Daily Market Briefing"
+msgstr "Briefing Quotidien"
+
+# msgid "Research Type"
+# msgstr "Type de Recherche"
+#: jdapublicationsapp/forms.py:22 jdapublicationsapp/forms.py:80
+msgid "Research Notes"
+msgstr "Nos Donneés de Recherche"
+
+#: jdapublicationsapp/forms.py:23 jdapublicationsapp/forms.py:81
+#, fuzzy
+#| msgid "Our Research Data"
+msgid "Equity Research"
+msgstr "Nos Donne&eacute;s de Recherche"
+
+#: jdapublicationsapp/forms.py:24 jdapublicationsapp/forms.py:82
+msgid "Quarterly Results"
+msgstr "Résultats Trimestriels"
+
+#: jdapublicationsapp/forms.py:25 jdapublicationsapp/forms.py:83
+msgid "Half Year Results"
+msgstr "Résultats Semestriels"
+
+#: jdapublicationsapp/forms.py:26 jdapublicationsapp/forms.py:84
+msgid "Annual Results"
+msgstr "Résultats Annuels"
+
+#: jdapublicationsapp/forms.py:27 jdapublicationsapp/forms.py:85
+msgid "Sector Reports"
+msgstr "Rapports Sectoriels"
+
+#: jdapublicationsapp/forms.py:28 jdapublicationsapp/forms.py:86
+msgid "Strategic Reports"
+msgstr "Note Strategiques"
+
+#: jdapublicationsapp/forms.py:29 jdapublicationsapp/forms.py:87
+msgid "IPO Analysis"
+msgstr "Analyse IPO"
+
+#: jdapublicationsapp/forms.py:30 jdapublicationsapp/forms.py:88
+msgid "Economic Notes"
+msgstr "Notes Economiques"
+
+# msgid "Annual Reports"
+# msgstr "Rapports Annuels"
+#: jdapublicationsapp/forms.py:31 jdapublicationsapp/forms.py:89
+msgid "Annual Shareholder Meeting"
+msgstr "Feedback Assemblees Generales"
+
+#: jdapublicationsapp/forms.py:33 jdapublicationsapp/forms.py:91
+msgid "Weekly comments"
+msgstr "Commentaires hebdomadaires"
+
+#: jdapublicationsapp/forms.py:34 jdapublicationsapp/forms.py:92
+msgid "Investor Conference"
+msgstr ""
+
+#: jdapublicationsapp/forms.py:38 jdapublicationsapp/forms.py:96
 msgid "Language"
 msgstr "Langue"
 
-#: jdapublicationsapp/forms.py:47 jdapublicationsapp/forms.py:105
+#: jdapublicationsapp/forms.py:48 jdapublicationsapp/forms.py:107
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:41
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:106
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:103
 msgid "Author"
 msgstr "Auteur"
 
-#: jdapublicationsapp/forms.py:51
+#: jdapublicationsapp/forms.py:52
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:45
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:109
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:106
 msgid "Subject"
 msgstr "Sujet"
 
-#: jdapublicationsapp/forms.py:53
+#: jdapublicationsapp/forms.py:54
 msgid "Publication Description"
 msgstr "Description de la publication"
 
-#: jdapublicationsapp/forms.py:107
+#: jdapublicationsapp/forms.py:109
 msgid "From Date"
 msgstr "De"
 
-#: jdapublicationsapp/forms.py:108
+#: jdapublicationsapp/forms.py:110
 msgid "To Date"
 msgstr "A"
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:24
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:26
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:25
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:24
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:25
+msgid "Publications Entry"
+msgstr "Entr&eacute;e des Publications"
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:25
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:27
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:26
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:25
+msgid "Publications Edit"
+msgstr "Editer les Publications"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:43
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:47
@@ -528,7 +593,7 @@ msgstr "Recherche<br>par Categorie"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:108
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:105
 msgid "Research Type"
-msgstr "Nos Donne&eacute;s<br>de Recherche"
+msgstr "Recherche<br> par Type"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:46
 msgid "Publication Desc"
@@ -567,17 +632,15 @@ msgstr "Voir"
 msgid "Edit"
 msgstr "Modifier"
 
+# msgid "Our Publications"
+# msgstr "Nos Publications"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:12
-#, fuzzy
-#| msgid "Our Publications"
 msgid "French Publications"
-msgstr "Nos Publications"
+msgstr "Publications Francaise"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:13
-#, fuzzy
-#| msgid "Publications"
 msgid "English Publications"
-msgstr "Publications"
+msgstr "Publications Anglaises"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:61
 msgid "Filters"
@@ -605,11 +668,8 @@ msgstr "C'est la vie"
 msgid "Static template content"
 msgstr ""
 
-#, fuzzy
-#~| msgid "Research Type"
-#~ msgid "Reseach Type"
-#~ msgstr "Nos Donne&eacute;s<br>de Recherche"
-
+# msgid "Research Type"
+# msgstr "Nos Donne&eacute;s<br>de Recherche"
 #~ msgid "Date"
 #~ msgstr "Date"
 
