@@ -97,9 +97,7 @@
             </div>
 
             <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 mt-1">
-                <table id="publication_listing"
-                       class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap"
-                       style="width:100%">
+                <table id="publication_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
                     <thead class="my_pub_tbl_header_bg">
                     <tr>
                         <th>{% trans 'Publication Date' %}</th>
@@ -120,7 +118,7 @@
                     {% for i in publication_listing %}
                     <tr>
                         <!--td>{{i.pk}}</td-->
-                        <td>{{i.publication_date}}</td>
+                        <td>{{i.publication_date |date:"Y-m-d" }}</td>
                         <td>{{i.author}}</td>
                         <td>{{i.research_category}}</td>
                         <td>{{i.research_type}}</td>

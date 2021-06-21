@@ -54,7 +54,7 @@ def jdapublicationsapp_pubs(request):
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
     #publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
-    publication_listing = PublicationModel.objects.all()
+    publication_listing = PublicationModel.objects.all().order_by('publication_date')
 
     # get publication_listing filenames
     my_files = []

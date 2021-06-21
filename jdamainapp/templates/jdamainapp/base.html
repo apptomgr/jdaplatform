@@ -305,7 +305,7 @@
 </script>
 
 <!--  jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 
 <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
 <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css"/>
@@ -323,22 +323,31 @@
 
 
 <!-- Datatable -->
-<!--script src="https://code.jquery.com/jquery-3.5.1.js"></script-->
+
+<!--script src="{% static 'jdamainapp/assets/js/moment.js' %}" defer></script>
+<script src="{% static 'jdamainapp/assets/js/moment-with-locales.js' %}" defer></script-->
+
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap4.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 <script>
 <!-- Financial stmts dataTable-->
 $(document).ready(function() {
     $('#financial_stmt_data_table').DataTable();
+
     responsive: true
 } );
 
 
 <!-- Publications dataTable -->
 $(document).ready(function() {
+    $.fn.dataTable.moment('MM-DD-YYYY');
+    $.fn.dataTable.moment('D-MM-YY');
     $('#publication_listing').DataTable();
     responsive: true
 } );
