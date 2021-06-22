@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy
 class PublicationAdminsForm(forms.ModelForm):
     CATEGORY_CHOICES = (
         ('', ugettext_lazy('Category')),
-        ('Models', 'Models'),
+        #('Models', 'Models'),
         ('Newsletters', 'Newsletters'),
         ('Commentaries', ugettext_lazy('Commentaries')),
         ('Reports', ugettext_lazy('Reports')),
@@ -18,7 +18,7 @@ class PublicationAdminsForm(forms.ModelForm):
 
     RESEARCH_TYPE_CHOICES = (
         ('', ugettext_lazy('Type')),
-        ('Daily Market Briefing', ugettext_lazy('Daily Market Briefing')),
+        ('Daily Briefing', ugettext_lazy('Daily Briefing')),
         ('Research Notes', ugettext_lazy('Research Notes')),
         ('Equity Research', ugettext_lazy('Equity Research')),
         ('Quarterly Results', ugettext_lazy('Quarterly Results')),
@@ -28,10 +28,10 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Strategic Reports', ugettext_lazy('Strategic Reports')),
         ('IPO Analysis', ugettext_lazy('IPO Analysis')),
         ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Annual Shareholder Meeting', ugettext_lazy('Annual Shareholder Meeting')),
-        ('Valuation Models', 'Valuation Models'),
-        ('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investor Conference', ugettext_lazy('Investor Conference'))
+        ('Stakeholder Meeting Feedback', ugettext_lazy('Stakeholder Meeting Feedback')),
+        #('Valuation Models', 'Valuation Models'),
+        #('Weekly comments', ugettext_lazy('Weekly comments')),
+        ('Investment Case', ugettext_lazy('Investment Case'))
     )
 
     LANGUAGE_CHOICES = (
@@ -68,7 +68,7 @@ class PublicationAdminsForm(forms.ModelForm):
 class PublicationFilterForm(forms.ModelForm):
     CATEGORY_CHOICES = (
         ('', ugettext_lazy('Category')),
-        ('Models', ugettext_lazy('Models')),
+        #('Models', ugettext_lazy('Models')),
         ('Newsletters', 'Newsletters'),
         ('Commentaries', ugettext_lazy('Commentaries')),
         ('Reports', ugettext_lazy('Reports')),
@@ -76,7 +76,7 @@ class PublicationFilterForm(forms.ModelForm):
 
     RESEARCH_TYPE_CHOICES = (
         ('', ugettext_lazy('Type')),
-        ('Daily Market Briefing', ugettext_lazy('Daily Market Briefing')),
+        ('Daily Briefing', ugettext_lazy('Daily Briefing')),
         ('Research Notes', ugettext_lazy('Research Notes')),
         ('Equity Research', ugettext_lazy('Equity Research')),
         ('Quarterly Results', ugettext_lazy('Quarterly Results')),
@@ -86,10 +86,10 @@ class PublicationFilterForm(forms.ModelForm):
         ('Strategic Reports', ugettext_lazy('Strategic Reports')),
         ('IPO Analysis', ugettext_lazy('IPO Analysis')),
         ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Annual Shareholder Meeting', ugettext_lazy('Annual Shareholder Meeting')),
-        ('Valuation Models', 'Valuation Models'),
-        ('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investor Conference', ugettext_lazy('Investor Conference'))
+        ('Stakeholder Meeting Feedback', ugettext_lazy('Stakeholder Meeting Feedback')),
+        #('Valuation Models', 'Valuation Models'),
+        #('Weekly comments', ugettext_lazy('Weekly comments')),
+        ('Investment Case', ugettext_lazy('Investment Case'))
     )
 
     LANGUAGE_CHOICES = (

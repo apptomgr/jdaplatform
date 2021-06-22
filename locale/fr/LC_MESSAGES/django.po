@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-16 14:59-0400\n"
+"POT-Creation-Date: 2021-06-22 19:10-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,28 +149,27 @@ msgstr "Nos Donne&eacute;s de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:71
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:91
-#: jdapublicationsapp/forms.py:71
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:164
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:162
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:164
 msgid "Models"
 msgstr "Mod&eacute;les d'evaluation"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:72
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:173
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:171
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
 msgid "Newsletters"
 msgstr "Notice de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
 #: jdapublicationsapp/forms.py:15 jdapublicationsapp/forms.py:73
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:182
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:180
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
 #: jdapublicationsapp/forms.py:16 jdapublicationsapp/forms.py:74
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:191
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:189
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
 msgstr "Rapports"
@@ -188,7 +187,7 @@ msgid "Portfolio insights"
 msgstr "Aper&ccedil;u du Portefeuille"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:110
-msgid "Daily Market briefings"
+msgid "Daily briefings"
 msgstr "Newsletters"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:111
@@ -270,7 +269,7 @@ msgstr "Secteur"
 
 #: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:57
 #: jdapublicationsapp/forms.py:116 jdapublicationsapp/forms.py:130
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:110
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:108
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:107
 msgid "Company"
 msgstr "Société"
@@ -436,17 +435,19 @@ msgstr "Categorie"
 
 #: jdapublicationsapp/forms.py:20 jdapublicationsapp/forms.py:78
 msgid "Type"
-msgstr "Research par Type"
+msgstr "Recherche par Type"
 
 #: jdapublicationsapp/forms.py:21 jdapublicationsapp/forms.py:79
-msgid "Daily Market Briefing"
+#, fuzzy
+#| msgid "Daily Market Briefing"
+msgid "Daily Briefing"
 msgstr "Briefing Quotidien"
 
 # msgid "Research Type"
 # msgstr "Type de Recherche"
 #: jdapublicationsapp/forms.py:22 jdapublicationsapp/forms.py:80
 msgid "Research Notes"
-msgstr "Nos Donneés de Recherche"
+msgstr "Note de Recherche"
 
 #: jdapublicationsapp/forms.py:23 jdapublicationsapp/forms.py:81
 #, fuzzy
@@ -472,7 +473,7 @@ msgstr "Rapports Sectoriels"
 
 #: jdapublicationsapp/forms.py:28 jdapublicationsapp/forms.py:86
 msgid "Strategic Reports"
-msgstr "Note Strategiques"
+msgstr "Note Stratégique"
 
 #: jdapublicationsapp/forms.py:29 jdapublicationsapp/forms.py:87
 msgid "IPO Analysis"
@@ -485,16 +486,14 @@ msgstr "Notes Economiques"
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"
 #: jdapublicationsapp/forms.py:31 jdapublicationsapp/forms.py:89
-msgid "Annual Shareholder Meeting"
-msgstr "Feedback Assemblees Generales"
-
-#: jdapublicationsapp/forms.py:33 jdapublicationsapp/forms.py:91
-msgid "Weekly comments"
-msgstr "Commentaires hebdomadaires"
+msgid "Stakeholder Meeting Feedback"
+msgstr "Feedback Assemblées Générales"
 
 #: jdapublicationsapp/forms.py:34 jdapublicationsapp/forms.py:92
-msgid "Investor Conference"
-msgstr ""
+#, fuzzy
+#| msgid "Investment Account"
+msgid "Investment Case"
+msgstr "Tableaux des Flux de Tr&eacute;sorier"
 
 #: jdapublicationsapp/forms.py:38 jdapublicationsapp/forms.py:96
 msgid "Language"
@@ -502,14 +501,14 @@ msgstr "Langue"
 
 #: jdapublicationsapp/forms.py:48 jdapublicationsapp/forms.py:107
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:41
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:106
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:104
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:103
 msgid "Author"
 msgstr "Auteur"
 
 #: jdapublicationsapp/forms.py:52
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:45
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:109
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:107
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:106
 msgid "Subject"
 msgstr "Sujet"
@@ -584,13 +583,13 @@ msgid "Publication"
 msgstr "Publications"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:43
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:107
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:105
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:104
 msgid "Research Category"
 msgstr "Recherche<br>par Categorie"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:44
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:108
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:106
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:105
 msgid "Research Type"
 msgstr "Recherche<br> par Type"
@@ -650,12 +649,12 @@ msgstr "Filtres"
 msgid "Filter"
 msgstr "Filtrer"
 
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:105
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:103
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:102
 msgid "Publication Date"
 msgstr "Date de<br>Publication"
 
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:115
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:113
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:112
 msgid "Expand"
 msgstr "Agrandir"
@@ -667,6 +666,17 @@ msgstr "C'est la vie"
 #: jdatester/templates/jdatester/home.html:9
 msgid "Static template content"
 msgstr ""
+
+#~ msgid "Daily Market Briefing"
+#~ msgstr "Briefing Quotidien"
+
+# msgid "Annual Reports"
+# msgstr "Rapports Annuels"
+#~ msgid "Annual Shareholder Meeting"
+#~ msgstr "Feedback Assemblees Generales"
+
+#~ msgid "Weekly comments"
+#~ msgstr "Commentaires hebdomadaires"
 
 # msgid "Research Type"
 # msgstr "Nos Donne&eacute;s<br>de Recherche"

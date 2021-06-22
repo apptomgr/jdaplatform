@@ -21,26 +21,26 @@ class PublicationCompanyModel(models.Model):
 # ///////////////////////////////// PublicationModel /////////////////////////////////
 class PublicationModel(models.Model):
     CATEGORY_CHOICES = (
-        ('Models', 'Models'),
+        #('Models', 'Models'),
         ('Newsletters', 'Newsletters'),
         ('Commentaries', 'Commentaries'),
         ('Reports', 'Reports'),
     )
     TYPE_CHOICES = (
         ('', 'Type'),
-        ('Valuation Models', 'Valuation Models'),
-        ('Daily Market Briefing', 'Daily Market Briefing'),
-        ('Weekly comments', 'Weekly comments'),
+        #('Valuation Models', 'Valuation Models'),
+        ('Daily Briefing', 'Daily Briefing'),
+        #('Weekly comments', 'Weekly comments'),
         ('Quarterly Results', 'Quarterly Results'),
         ('Half Year Results', 'Half Year Results'),
         ('Annual Results', 'Annual Results'),
-        ('Annual Shareholder Meeting', 'Annual Shareholder Meeting'),
+        ('Stakeholder Meeting Feedback', 'Stakeholder Meeting Feedback'),
         ('IPO Analysis', 'IPO Analysis'),
         ('Research Notes', 'Research Notes'),
         ('Sector Reports', 'Sector Reports'),
         ('Strategic Reports', 'Strategic Reports'),
         ('Economic Notes', 'Economic Notes'),
-        ('Investor Conference', 'Investor Conference')
+        ('Investor Case', 'Investor Case')
     )
 
     LANGUAGE_CHOICES = (

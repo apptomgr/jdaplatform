@@ -68,6 +68,7 @@
                 <li class="active"><a href="{% url 'jdamainapp_home' %}">{% trans 'JDA Platform' %}</a></li>
 
                 <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
+                    {% if user_grp == "admins" or user_grp == "staffs" %}
                    <ul>
                        <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
                        <li><hr class="my_hr_divider"></li>
@@ -78,10 +79,12 @@
                         <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
 
                     </ul>
+                    {% endif%}
                 </li>
                 <!--li><a href="{% url 'jdaanalyticsapp_home' %}"><i class="fas fa-chart-line"></i> {% trans 'Analytics App' %}</a></li-->
 
                 <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
+                    {% if user_grp == "admins" or user_grp == "staffs" %}
                     <ul>
                         <li><a href="{% url 'jdaanalyticsapp_upload_form' %}"><i class="fas fa-cloud-upload-alt"></i> {% trans 'Market Data Upload' %} </a></li>
                         <li><hr class="my_hr_divider"></li>
@@ -90,6 +93,7 @@
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> View Companies</a></li>
                         <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> Add Company</a></li-->
                     </ul>
+                    {% endif%}
                 </li>
 
                 <li class="drop-down"><a href="{% url 'jdapublicationsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Publications App' %}</a>
