@@ -54,7 +54,7 @@ def jdapublicationsapp_pubs(request):
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
     #publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
-    publication_listing = PublicationModel.objects.all().order_by('publication_date')
+    publication_listing = PublicationModel.objects.all().order_by('-publication_date')
 
     # get publication_listing filenames
     my_files = []
@@ -158,13 +158,13 @@ def jdapublicationsapp_pubs(request):
 
     #print(publication_listing.filename())
     # print(f"//////////17: {publication_listing.count()}/////////")
-    my_list_zip = zip(publication_listing, my_files)
+    #my_list_zip = zip(publication_listing, my_files)
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
                'per_models':per_models,
                'per_newsletters':per_newsletters,
                'per_commentaries':per_commentaries,
                'per_reports':per_reports,
-               'my_list_zip':my_list_zip,
+               #'my_list_zip':my_list_zip,
                'user_grp':grp
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}

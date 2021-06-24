@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-22 19:10-0400\n"
+"POT-Creation-Date: 2021-06-24 17:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgid "Home"
 msgstr "Acceuil"
 
 #: accounts/templates/registration/account_admin.html:30
-#: jdamainapp/templates/jdamainapp/base.html:131
+#: jdamainapp/templates/jdamainapp/base.html:135
 msgid "Account Activation"
 msgstr "Activation de comptes"
 
@@ -78,7 +78,7 @@ msgstr "Nos Applications"
 
 #: accounts/templates/registration/login.html:45
 #: accounts/templates/registration/login.html:51
-#: jdamainapp/templates/jdamainapp/base.html:153
+#: jdamainapp/templates/jdamainapp/base.html:157
 msgid "Login"
 msgstr "Connexion"
 
@@ -103,8 +103,8 @@ msgstr "App Financi&egrave;re"
 #: accounts/templates/registration/register.html:123
 #: accounts/templates/registration/signup.html:97
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:48
-#: jdamainapp/templates/jdamainapp/base.html:82
 #: jdamainapp/templates/jdamainapp/base.html:84
+#: jdamainapp/templates/jdamainapp/base.html:86
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:72
 msgid "Analytics App"
 msgstr "App Boursi&egrave;re"
@@ -112,7 +112,7 @@ msgstr "App Boursi&egrave;re"
 #: accounts/templates/registration/login.html:112
 #: accounts/templates/registration/register.html:142
 #: accounts/templates/registration/signup.html:116
-#: jdamainapp/templates/jdamainapp/base.html:95
+#: jdamainapp/templates/jdamainapp/base.html:99
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:91
 msgid "Publications App"
 msgstr "Publications"
@@ -129,13 +129,13 @@ msgstr "Type de fichier invalide: %(value)s"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:6
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:69
-#: jdamainapp/templates/jdamainapp/base.html:86
+#: jdamainapp/templates/jdamainapp/base.html:89
 msgid "Market Data Upload"
 msgstr "Télécharger les données du marché"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:7
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:108
-#: jdamainapp/templates/jdamainapp/base.html:88
+#: jdamainapp/templates/jdamainapp/base.html:91
 msgid "Market Data Report"
 msgstr "Rapport des données du marché"
 
@@ -161,14 +161,14 @@ msgid "Newsletters"
 msgstr "Notice de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
-#: jdapublicationsapp/forms.py:15 jdapublicationsapp/forms.py:73
+#: jdapublicationsapp/forms.py:15 jdapublicationsapp/forms.py:72
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:180
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
-#: jdapublicationsapp/forms.py:16 jdapublicationsapp/forms.py:74
+#: jdapublicationsapp/forms.py:16 jdapublicationsapp/forms.py:73
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:189
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
@@ -187,8 +187,10 @@ msgid "Portfolio insights"
 msgstr "Aper&ccedil;u du Portefeuille"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:110
-msgid "Daily briefings"
-msgstr "Newsletters"
+#, fuzzy
+#| msgid "Daily Market Briefing"
+msgid "Daily Market briefings"
+msgstr "Briefing Quotidien"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:111
 msgid "Annual Reports"
@@ -267,8 +269,8 @@ msgstr "Télécharger les données du marché"
 msgid "Sector"
 msgstr "Secteur"
 
-#: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:57
-#: jdapublicationsapp/forms.py:116 jdapublicationsapp/forms.py:130
+#: jdafinancialsapp/forms.py:96 jdapublicationsapp/forms.py:56
+#: jdapublicationsapp/forms.py:114 jdapublicationsapp/forms.py:128
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:108
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:107
 msgid "Company"
@@ -279,7 +281,7 @@ msgid "Statement"
 msgstr "Etats"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:5
-#: jdamainapp/templates/jdamainapp/base.html:72
+#: jdamainapp/templates/jdamainapp/base.html:73
 msgid "Our Statements"
 msgstr "Etats Financiers"
 
@@ -322,8 +324,8 @@ msgstr "Tableaux des Flux de Tr&eacute;sorier"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:92
-#: jdamainapp/templates/jdamainapp/base.html:74
-#: jdamainapp/templates/jdamainapp/base.html:105
+#: jdamainapp/templates/jdamainapp/base.html:75
+#: jdamainapp/templates/jdamainapp/base.html:109
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:36
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:57
 msgid "Add Company"
@@ -341,13 +343,13 @@ msgstr "Récupérer Etat financier"
 msgid "JDA Platform"
 msgstr "Plateforme JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:78
-#: jdamainapp/templates/jdamainapp/base.html:104
+#: jdamainapp/templates/jdamainapp/base.html:79
+#: jdamainapp/templates/jdamainapp/base.html:108
 msgid "View Companies"
 msgstr "Consulter Soci&eacute;t&eacute;"
 
-#: jdamainapp/templates/jdamainapp/base.html:98
-#: jdamainapp/templates/jdamainapp/base.html:100
+#: jdamainapp/templates/jdamainapp/base.html:102
+#: jdamainapp/templates/jdamainapp/base.html:104
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:23
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:25
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:24
@@ -362,28 +364,28 @@ msgstr "Consulter Soci&eacute;t&eacute;"
 msgid "Our Publications"
 msgstr "Nos Publications"
 
-#: jdamainapp/templates/jdamainapp/base.html:101
+#: jdamainapp/templates/jdamainapp/base.html:105
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:34
 msgid "Publication Entry"
 msgstr "T&eacute;l&eacute;charger"
 
-#: jdamainapp/templates/jdamainapp/base.html:102
+#: jdamainapp/templates/jdamainapp/base.html:106
 msgid "Publication Edit"
 msgstr "Modifier"
 
-#: jdamainapp/templates/jdamainapp/base.html:130
+#: jdamainapp/templates/jdamainapp/base.html:134
 msgid "My Account"
 msgstr "Mon Compte"
 
-#: jdamainapp/templates/jdamainapp/base.html:132
+#: jdamainapp/templates/jdamainapp/base.html:136
 msgid "Change Password"
 msgstr "Modifier mot de passe"
 
-#: jdamainapp/templates/jdamainapp/base.html:133
+#: jdamainapp/templates/jdamainapp/base.html:137
 msgid "Logout"
 msgstr "Déconnecter"
 
-#: jdamainapp/templates/jdamainapp/base.html:201
+#: jdamainapp/templates/jdamainapp/base.html:205
 msgid ""
 "The first independent research and investment advisory agency in the BRVM "
 "market, Joseph & Daniel Advisory is located in the Ivorian capital Abidjan, "
@@ -394,19 +396,19 @@ msgstr ""
 "dans la capitale ivoirienne Abidjan, plus précisément au rond-point de la "
 "Riviera II dans la commune de Cocody."
 
-#: jdamainapp/templates/jdamainapp/base.html:228
+#: jdamainapp/templates/jdamainapp/base.html:232
 msgid "J&D info"
 msgstr "En savoir plus sur J&D"
 
-#: jdamainapp/templates/jdamainapp/base.html:233
+#: jdamainapp/templates/jdamainapp/base.html:237
 msgid "Working Hours"
 msgstr "Horaires"
 
-#: jdamainapp/templates/jdamainapp/base.html:242
+#: jdamainapp/templates/jdamainapp/base.html:246
 msgid "JDA Web Platform"
 msgstr "Service WEB de JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:244
+#: jdamainapp/templates/jdamainapp/base.html:248
 msgid ""
 "JDA Platform and web services is designed to help facilite the distribution "
 "of its domain specific content or select third-party data."
@@ -419,109 +421,101 @@ msgstr ""
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:159 jdapublicationsapp/forms.py:40
-#: jdapublicationsapp/forms.py:98
+#: jdaplatform/settings.py:159 jdapublicationsapp/forms.py:39
+#: jdapublicationsapp/forms.py:96
 msgid "French"
 msgstr "Francais"
 
-#: jdaplatform/settings.py:160 jdapublicationsapp/forms.py:39
-#: jdapublicationsapp/forms.py:97
+#: jdaplatform/settings.py:160 jdapublicationsapp/forms.py:38
+#: jdapublicationsapp/forms.py:95
 msgid "English"
 msgstr "Anglais"
 
-#: jdapublicationsapp/forms.py:12 jdapublicationsapp/forms.py:70
+#: jdapublicationsapp/forms.py:12 jdapublicationsapp/forms.py:69
 msgid "Category"
 msgstr "Categorie"
 
-#: jdapublicationsapp/forms.py:20 jdapublicationsapp/forms.py:78
+#: jdapublicationsapp/forms.py:20 jdapublicationsapp/forms.py:77
 msgid "Type"
 msgstr "Recherche par Type"
 
-#: jdapublicationsapp/forms.py:21 jdapublicationsapp/forms.py:79
-#, fuzzy
-#| msgid "Daily Market Briefing"
+#: jdapublicationsapp/forms.py:21 jdapublicationsapp/forms.py:78
 msgid "Daily Briefing"
 msgstr "Briefing Quotidien"
 
 # msgid "Research Type"
 # msgstr "Type de Recherche"
-#: jdapublicationsapp/forms.py:22 jdapublicationsapp/forms.py:80
+#: jdapublicationsapp/forms.py:22 jdapublicationsapp/forms.py:79
 msgid "Research Notes"
 msgstr "Note de Recherche"
 
-#: jdapublicationsapp/forms.py:23 jdapublicationsapp/forms.py:81
-#, fuzzy
-#| msgid "Our Research Data"
-msgid "Equity Research"
-msgstr "Nos Donne&eacute;s de Recherche"
-
-#: jdapublicationsapp/forms.py:24 jdapublicationsapp/forms.py:82
+#: jdapublicationsapp/forms.py:23 jdapublicationsapp/forms.py:80
 msgid "Quarterly Results"
 msgstr "Résultats Trimestriels"
 
-#: jdapublicationsapp/forms.py:25 jdapublicationsapp/forms.py:83
+#: jdapublicationsapp/forms.py:24 jdapublicationsapp/forms.py:81
 msgid "Half Year Results"
 msgstr "Résultats Semestriels"
 
-#: jdapublicationsapp/forms.py:26 jdapublicationsapp/forms.py:84
+#: jdapublicationsapp/forms.py:25 jdapublicationsapp/forms.py:82
 msgid "Annual Results"
 msgstr "Résultats Annuels"
 
-#: jdapublicationsapp/forms.py:27 jdapublicationsapp/forms.py:85
+#: jdapublicationsapp/forms.py:26 jdapublicationsapp/forms.py:83
 msgid "Sector Reports"
 msgstr "Rapports Sectoriels"
 
-#: jdapublicationsapp/forms.py:28 jdapublicationsapp/forms.py:86
+#: jdapublicationsapp/forms.py:27 jdapublicationsapp/forms.py:84
 msgid "Strategic Reports"
 msgstr "Note Stratégique"
 
-#: jdapublicationsapp/forms.py:29 jdapublicationsapp/forms.py:87
+#: jdapublicationsapp/forms.py:28 jdapublicationsapp/forms.py:85
 msgid "IPO Analysis"
 msgstr "Analyse IPO"
 
-#: jdapublicationsapp/forms.py:30 jdapublicationsapp/forms.py:88
+#: jdapublicationsapp/forms.py:29 jdapublicationsapp/forms.py:86
 msgid "Economic Notes"
 msgstr "Notes Economiques"
 
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"
-#: jdapublicationsapp/forms.py:31 jdapublicationsapp/forms.py:89
+#: jdapublicationsapp/forms.py:30 jdapublicationsapp/forms.py:87
 msgid "Stakeholder Meeting Feedback"
 msgstr "Feedback Assemblées Générales"
 
-#: jdapublicationsapp/forms.py:34 jdapublicationsapp/forms.py:92
+#: jdapublicationsapp/forms.py:33 jdapublicationsapp/forms.py:90
 #, fuzzy
 #| msgid "Investment Account"
 msgid "Investment Case"
 msgstr "Tableaux des Flux de Tr&eacute;sorier"
 
-#: jdapublicationsapp/forms.py:38 jdapublicationsapp/forms.py:96
+#: jdapublicationsapp/forms.py:37 jdapublicationsapp/forms.py:94
 msgid "Language"
 msgstr "Langue"
 
-#: jdapublicationsapp/forms.py:48 jdapublicationsapp/forms.py:107
+#: jdapublicationsapp/forms.py:47 jdapublicationsapp/forms.py:105
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:41
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:104
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:103
 msgid "Author"
 msgstr "Auteur"
 
-#: jdapublicationsapp/forms.py:52
+#: jdapublicationsapp/forms.py:51
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:45
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:107
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:106
 msgid "Subject"
 msgstr "Sujet"
 
-#: jdapublicationsapp/forms.py:54
+#: jdapublicationsapp/forms.py:53
 msgid "Publication Description"
 msgstr "Description de la publication"
 
-#: jdapublicationsapp/forms.py:109
+#: jdapublicationsapp/forms.py:107
 msgid "From Date"
 msgstr "De"
 
-#: jdapublicationsapp/forms.py:110
+#: jdapublicationsapp/forms.py:108
 msgid "To Date"
 msgstr "A"
 
@@ -667,8 +661,13 @@ msgstr "C'est la vie"
 msgid "Static template content"
 msgstr ""
 
-#~ msgid "Daily Market Briefing"
-#~ msgstr "Briefing Quotidien"
+#~ msgid "Daily briefings"
+#~ msgstr "Newsletters"
+
+#, fuzzy
+#~| msgid "Our Research Data"
+#~ msgid "Equity Research"
+#~ msgstr "Nos Donne&eacute;s de Recherche"
 
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"

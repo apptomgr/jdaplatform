@@ -40,7 +40,7 @@ class PublicationModel(models.Model):
         ('Sector Reports', 'Sector Reports'),
         ('Strategic Reports', 'Strategic Reports'),
         ('Economic Notes', 'Economic Notes'),
-        ('Investor Case', 'Investor Case')
+        ('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (
@@ -73,6 +73,7 @@ class PublicationModel(models.Model):
 
     class Meta:
         verbose_name_plural = 'PublicationModel'
+        ordering = ['-publication_date']
 
 
 class PubTempModel(models.Model):
