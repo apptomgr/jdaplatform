@@ -352,11 +352,17 @@ $(document).ready(function() {
 $(document).ready(function() {
     $.fn.dataTable.moment('MM-DD-YYYY');
     $.fn.dataTable.moment('D-MM-YY');
-    $('#publication_listing').DataTable();
+    $('#publication_listingX').DataTable();
     responsive: true
-    "order": [[ 0, "desc" ]]
 } );
 
+
+$(document).ready(function() {
+    $('#publication_listing').DataTable( {
+        "order": [[ 0, "desc" ]]
+    } );
+    responsive: true
+} );
 
 </script>
 
