@@ -54,8 +54,7 @@
                 <form class="hero-form" method="post" action="{% url 'jdapublicationsapp_filter' %}" novalidate>
                     {% csrf_token %}
                     <div class="table-responsive">
-                        <table id="pubs_table"
-                               class="table table-bordered tbl_border_outline_only table-hover dt-responsive nowrap">
+                        <table id="pubs_table" class="table table-bordered tbl_border_outline_only table-hover dt-responsive nowrap">
                             <thead class="my_pub_tbl_header_bg">
                             <tr>
                                 <th class="my_filter_txt text-center">{% trans 'Filters' %}</th>
