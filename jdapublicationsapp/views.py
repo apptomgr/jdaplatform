@@ -140,18 +140,18 @@ def jdapublicationsapp_pubs(request):
     #                 # )
 
 
-    models_cnt=publication_listing.filter(research_category='Models').count()
+    #models_cnt=publication_listing.filter(research_category='Models').count()
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
     commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
     reports_cnt=publication_listing.filter(research_category='Reports').count()
     total = publication_listing.count()
     if total >0:
-        per_models=(models_cnt/total) *100
+        #per_models=(models_cnt/total) *100
         per_newsletters = round((newsletters_cnt / total) * 100)
         per_commentaries = round((commentaries_cnt / total) * 100)
         per_reports = round((reports_cnt / total) * 100)
     else:
-        per_models=0
+        #per_models=0
         per_newsletters=0
         per_commentaries=0
         per_reports=0
@@ -160,7 +160,7 @@ def jdapublicationsapp_pubs(request):
     # print(f"//////////17: {publication_listing.count()}/////////")
     #my_list_zip = zip(publication_listing, my_files)
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
-               'per_models':per_models,
+               #'per_models':per_models,
                'per_newsletters':per_newsletters,
                'per_commentaries':per_commentaries,
                'per_reports':per_reports,
