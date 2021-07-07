@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-06 15:19-0400\n"
+"POT-Creation-Date: 2021-07-07 17:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -480,7 +480,9 @@ msgstr "Notes Economiques"
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"
 #: jdapublicationsapp/forms.py:30 jdapublicationsapp/forms.py:87
-msgid "Stakeholder Meeting Feedback"
+#, fuzzy
+#| msgid "Stakeholder Meeting Feedback"
+msgid "Shareholder Meeting Feedback"
 msgstr "Feedback Assemblées Générales"
 
 #: jdapublicationsapp/forms.py:33 jdapublicationsapp/forms.py:90
@@ -660,6 +662,11 @@ msgstr "C'est la vie"
 #: jdatester/templates/jdatester/home.html:9
 msgid "Static template content"
 msgstr ""
+
+# msgid "Annual Reports"
+# msgstr "Rapports Annuels"
+#~ msgid "Stakeholder Meeting Feedback"
+#~ msgstr "Feedback Assemblées Générales"
 
 #~ msgid "This is the title"
 #~ msgstr "C'est le titre"

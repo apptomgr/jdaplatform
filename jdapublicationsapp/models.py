@@ -34,7 +34,7 @@ class PublicationModel(models.Model):
         ('Quarterly Results', 'Quarterly Results'),
         ('Half Year Results', 'Half Year Results'),
         ('Annual Results', 'Annual Results'),
-        ('Stakeholder Meeting Feedback', 'Stakeholder Meeting Feedback'),
+        ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         ('IPO Analysis', 'IPO Analysis'),
         ('Research Notes', 'Research Notes'),
         ('Sector Reports', 'Sector Reports'),

@@ -27,7 +27,7 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Strategic Reports', ugettext_lazy('Strategic Reports')),
         ('IPO Analysis', ugettext_lazy('IPO Analysis')),
         ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Stakeholder Meeting Feedback', ugettext_lazy('Stakeholder Meeting Feedback')),
+        ('Shareholder Meeting Feedback', ugettext_lazy('Shareholder Meeting Feedback')),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
         ('Investment Case', ugettext_lazy('Investment Case'))
@@ -84,7 +84,7 @@ class PublicationFilterForm(forms.ModelForm):
         ('Strategic Reports', ugettext_lazy('Strategic Reports')),
         ('IPO Analysis', ugettext_lazy('IPO Analysis')),
         ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Stakeholder Meeting Feedback', ugettext_lazy('Stakeholder Meeting Feedback')),
+        ('Shareholder Meeting Feedback', ugettext_lazy('Shareholder Meeting Feedback')),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
         ('Investment Case', ugettext_lazy('Investment Case'))
