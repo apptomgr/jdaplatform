@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-07 17:30-0400\n"
+"POT-Creation-Date: 2021-07-08 14:26-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgid "Select User"
 msgstr "Sélectionner le nom d'utilisateur"
 
 #: accounts/templates/registration/account_admin.html:57
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:92
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:94
 msgid "Add Publication"
 msgstr "Ajouter une publication"
 

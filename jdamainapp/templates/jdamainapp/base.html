@@ -54,7 +54,7 @@
 
 <!-- ======= Header ======= -->
 <header class="fixed-top" id="header">
-    <div class="container-custom d-flex">
+    <div class="container-custom d-flex"> <!-- container-fluid -->
 
         <!--div class="logo mr-auto">
             <h1 class="text-light"><a href="{% url 'jdamainapp_home' %}"><span>J&D </span>Platform</a></h1>
@@ -179,7 +179,7 @@
 
     <!-- ======= About Section ======= -->
     <div class="about-area main_container_area-padding" id="about">
-        <div class="container-custom wow">
+        <div class="container-custom wow"> <!-- container-fluid -->
             <!--div class="layer-1-1 hidden-xs wow animate__slideInDown animate__animated" data-wow-delay=".2s"
                  data-wow-duration="2s"-->
 
@@ -193,7 +193,7 @@
 <!-- ======= Footer ======= -->
 <footer>
     <div class="footer-area">
-        <div class="container-custom">
+        <div class="container-custom"> <!-- container-fluid -->
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="footer-content">
@@ -362,6 +362,8 @@ $(document).ready(function() {
         responsive: true,
         "order": [[ 0, "desc" ]]
     } );
+    overflow: hidden;
+
 
 } );
 
