@@ -157,8 +157,8 @@ msgstr "Mod&eacute;les d'evaluation"
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:72
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:170
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
-msgid "Newsletters"
-msgstr "Note de Recherche"
+#msgid "Newsletters"
+#msgstr "Note de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
 #: jdapublicationsapp/forms.py:15 jdapublicationsapp/forms.py:72
