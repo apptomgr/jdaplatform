@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
+from django.utils import translation
 
 def get_user_grp(request):
     grp = None
@@ -11,9 +12,10 @@ def get_user_grp(request):
 
 @login_required
 def jdamainapp_home(request):
+    curr_lang_code=translation.get_language()
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'hello': _('hello')}
+    context = {'user_grp':grp,'hello': _('hello'), 'curr_lang_code': curr_lang_code}
     return render(request, 'jdamainapp/jdamainapp_home.html', context)
     #return render(request, 'jdamainapp/base_bk.html')
 

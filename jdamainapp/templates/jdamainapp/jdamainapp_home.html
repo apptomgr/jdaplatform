@@ -3,6 +3,8 @@
 {% load static %}
 {% load i18n %}
 {% block content %}
+
+
 <div class="row justify-content-center align-items-center">
     <div class="col-sm-12">
         {% if messages %}
@@ -36,7 +38,10 @@
     </div>
 
 </div>
+
+
 <div class="card shadow-sm p-2 mb-2 bg-white rounded">
+
     <!-- ======= Services Section ======= -->
     <div id="services" class="services-area my_area-padding">
         <div class="container-fluid">
@@ -49,7 +54,8 @@
                                 <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}">
                                     <i class="far fa-compass fa-2x my_info_txt"></i>
                                 </a>
-                                <h4>{% trans 'Financials App' %}</h4>
+
+                                <h4>r{% trans 'Financials App' %}</h4>
                                 <!--p>
                                     <i class="far fa-check-circle my_info_txt"></i> Models
                                     <i class="far fa-check-circle my_info_txt"></i> Newsletters

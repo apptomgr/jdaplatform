@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from jdamainapp.utils import fitz_pdf
+from django.utils import translation
 
 
 from django.urls import resolve
@@ -159,13 +160,15 @@ def jdapublicationsapp_pubs(request):
     #print(publication_listing.filename())
     # print(f"//////////17: {publication_listing.count()}/////////")
     #my_list_zip = zip(publication_listing, my_files)
+    curr_lang_code = translation.get_language()
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
                #'per_models':per_models,
                'per_newsletters':per_newsletters,
                'per_commentaries':per_commentaries,
                'per_reports':per_reports,
                #'my_list_zip':my_list_zip,
-               'user_grp':grp
+               'user_grp':grp,
+               'curr_lang_code': curr_lang_code
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
@@ -465,7 +468,8 @@ def jdapublicationsapp_entry(request):
         #print("200")
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp,'form':form, 'rpt_date': now}
+    curr_lang_code = translation.get_language()
+    context = {'user_grp': grp,'form':form, 'rpt_date': now, 'curr_lang_code': curr_lang_code}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_entry.html', context)
 
 #//////////////////////////////////////// jdapublicationsapp_edit/////////////////////////////
@@ -517,7 +521,8 @@ def jdapublicationsapp_edit(request, pk):
         uploaded_file=file_name[-1]
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp,'form':form, 'uploaded_file':uploaded_file, 'rpt_date': now}
+    curr_lang_code = translation.get_language()
+    context = {'user_grp': grp,'form':form, 'uploaded_file':uploaded_file, 'rpt_date': now, 'curr_lang_code': curr_lang_code}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_entry.html', context)
 
 
@@ -530,7 +535,8 @@ def jdapublicationsapp_listing(request):
     publication_listing =PublicationModel.objects.all()
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp,'publication_listing':publication_listing,'rpt_date': now}
+    curr_lang_code = translation.get_language()
+    context = {'user_grp': grp,'publication_listing':publication_listing,'rpt_date': now, 'curr_lang_code': curr_lang_code}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_listing.html', context)
 
 
