@@ -97,7 +97,7 @@ msgstr "S'inscrire"
 #: jdamainapp/templates/jdamainapp/base.html:70
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:52
 msgid "Financials App"
-msgstr "App Financi&egrave;re"
+msgstr "App Financiére"
 
 #: accounts/templates/registration/login.html:97
 #: accounts/templates/registration/register.html:123
@@ -107,7 +107,7 @@ msgstr "App Financi&egrave;re"
 #: jdamainapp/templates/jdamainapp/base.html:86
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:72
 msgid "Analytics App"
-msgstr "App Boursi&egrave;re"
+msgstr "App Boursiére"
 
 #: accounts/templates/registration/login.html:112
 #: accounts/templates/registration/register.html:142
@@ -387,18 +387,18 @@ msgstr "Déconnecter"
 
 #: jdamainapp/templates/jdamainapp/base.html:205
 msgid ""
-"The first independent research and investment advisory agency in the BRVM "
+"The first independent research and investment advisory agency in the UEAMOA "
 "market, Joseph & Daniel Advisory is located in the Ivorian capital Abidjan, "
 "more precisely at the Riviera II roundabout in the Cocody town."
 msgstr ""
 "Première agence indépendante de recherche et de conseil en investissements "
-"sur le marché financier de la BRVM, Joseph and Daniel Advisory est implanté "
+"sur le marché financier de l'UEAMOA, Joseph and Daniel Advisory est implanté "
 "dans la capitale ivoirienne Abidjan, plus précisément au rond-point de la "
 "Riviera II dans la commune de Cocody."
 
 #: jdamainapp/templates/jdamainapp/base.html:232
-msgid "J&D info"
-msgstr "En savoir plus sur J&D"
+msgid "JDA info"
+msgstr "En savoir plus sur JDA"
 
 #: jdamainapp/templates/jdamainapp/base.html:237
 msgid "Working Hours"
@@ -413,7 +413,7 @@ msgid ""
 "JDA Platform and web services is designed to help facilite the distribution "
 "of its domain specific content or select third-party data."
 msgstr ""
-"JDA Service Web est concue pour faciliter la diffusion et le partage de son "
+"JDA Service Web est con&ccedil;ue pour faciliter la diffusion et le partage de son "
 "contenu ou d'autres information tierces."
 
 #: jdamainapp/views.py:16 jdamainapp/views.py:24 jdatester/views.py:31
