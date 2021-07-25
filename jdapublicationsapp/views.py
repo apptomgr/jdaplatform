@@ -13,7 +13,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from jdamainapp.utils import fitz_pdf
 from django.utils import translation
-
+from django.db.models import Max
 
 from django.urls import resolve
 import os
@@ -145,6 +145,7 @@ def jdapublicationsapp_pubs(request):
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
     commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
     reports_cnt=publication_listing.filter(research_category='Reports').count()
+    #pub stats
     total = publication_listing.count()
     if total >0:
         #per_models=(models_cnt/total) *100
@@ -156,11 +157,24 @@ def jdapublicationsapp_pubs(request):
         per_newsletters=0
         per_commentaries=0
         per_reports=0
+    #push all stats vals in a list that will be set as a session DRY
+    pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
+    pub_stats_session = request.session.get('pub_stats_session')
+    if pub_stats_session is None:
+        pub_stats_session = pub_stats_lst
+    request.session['pub_stats_session'] = pub_stats_session
 
+    stats_sess = request.session.get('pub_stats_session')
+    #print(f"168 - session val: {stats_sess}")
+
+    #pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
+    #request.session['pub_stats_session']
+    #pub_stats_session = request.session.get('pub_stats_session')
     #print(publication_listing.filename())
     # print(f"//////////17: {publication_listing.count()}/////////")
     #my_list_zip = zip(publication_listing, my_files)
     curr_lang_code = translation.get_language()
+    max_pub_date = publication_listing.aggregate(Max('publication_date'))
     context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
                #'per_models':per_models,
                'per_newsletters':per_newsletters,
@@ -168,7 +182,9 @@ def jdapublicationsapp_pubs(request):
                'per_reports':per_reports,
                #'my_list_zip':my_list_zip,
                'user_grp':grp,
-               'curr_lang_code': curr_lang_code
+               'curr_lang_code': curr_lang_code,
+               'max_pub_date':max_pub_date,
+               'stats_sess':stats_sess
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
@@ -235,6 +251,7 @@ def jdapublicationsapp_pubs(request):
 @login_required
 @allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
 def jdapublicationsapp_filter(request):
+    stats_sess = request.session.get('pub_stats_session') # stats_sess was set in jdapublicationsapp_pubs function
     #print(f"180: Filter - Request.method: {request.method}")
     if request.method == 'POST':
         filterForm = PublicationFilterForm(request.POST, request.FILES)
@@ -256,7 +273,9 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.all()
                 if publication_listing:
                      messages.success(request, f"Found {publication_listing.count()} item(s) associated with all empty filters")
-                     context = {'filterForm': filterForm,'publication_listing': publication_listing}
+                     max_pub_date = publication_listing.aggregate(Max('publication_date'))
+
+                     context = {'filterForm': filterForm,'publication_listing': publication_listing, 'max_pub_date':max_pub_date,'stats_sess':stats_sess}
                      return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")
@@ -265,7 +284,9 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date=from_date)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date value '{filterForm.cleaned_data['from_date']}'")
-                    context = {'filterForm': filterForm,'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    #context = {'filterForm': filterForm,'publication_listing': publication_listing}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with keyword '{from_date}'")
@@ -274,7 +295,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date__range=(from_date, to_date))
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range '{from_date}' and '{to_date}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with date range '{from_date} and {to_date}'")
@@ -282,8 +304,8 @@ def jdapublicationsapp_filter(request):
             elif from_date == None and to_date == None and author != None and category == '' and type == '' and company ==None and company ==None and pub_language == '':  # Only author
                 publication_listing = PublicationModel.objects.filter(author=author)
                 if publication_listing:
-                    messages.success(request,f"Found {publication_listing.count()} item(s) associated with author '{author}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated author '{author}'")
@@ -292,7 +314,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(research_category=category)
                 if publication_listing:
                     messages.success(request,f"Found {publication_listing.count()} item(s) associated with category '{category}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated category '{category}'")
@@ -301,7 +324,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(research_type=type)
                 if publication_listing:
                     messages.success(request,f"Found {publication_listing.count()} item(s) associated with type '{type}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated type '{type}'")
@@ -310,7 +334,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(company__company_name=company)
                 if publication_listing:
                     messages.success(request,f"Found {publication_listing.count()} item(s) associated with type '{company}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated type '{company}'")
@@ -319,7 +344,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date__range=(from_date, to_date), author=author)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range '{from_date}' and '{to_date}' and author '{author}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with date range '{from_date} and {to_date}' and author '{author}' ")
@@ -328,7 +354,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date__range=(from_date, to_date), research_category=category)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range '{from_date}' and '{to_date}' and category '{category}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with date range '{from_date} and {to_date}' and category '{category}' ")
@@ -337,7 +364,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date__range=(from_date, to_date), research_type=type)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range '{from_date}' and '{to_date}' and type '{type}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with date range '{from_date} and '{to_date}' and type '{type}' ")
@@ -346,7 +374,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(author=author, research_category=category)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with author '{author}' and category '{category}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with author '{author} and category '{category}' ")
@@ -355,7 +384,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(author=author, research_type=type)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with author '{author}' and type '{type}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with author '{author} and type '{type}' ")
@@ -364,7 +394,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(research_category=category, research_type=type)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with category '{category}' and type '{type}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with category '{category} and type '{type}' ")
@@ -373,7 +404,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(company__company_name=company, publication_date__range=(from_date, to_date))
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range from '{from_date}' to '{to_date}' and company '{company}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with date range from '{from_date}' to '{to_date}' and company '{company}' ")
@@ -382,7 +414,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(company__company_name=company, author=author)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with Author '{author}' and company '{company}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with Author '{author}' and company '{company}' ")
@@ -390,7 +423,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(company__company_name=company, research_category=category)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with category '{category}' and company '{company}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with category '{category}' and company '{company}' ")
@@ -398,7 +432,8 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(company__company_name=company, research_type=type)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with type '{type}' and company '{company}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
                 else:
                     messages.warning(request,f"Could not find any items associated with category '{category}' and company '{company}' ")
@@ -408,16 +443,131 @@ def jdapublicationsapp_filter(request):
                 publication_listing = PublicationModel.objects.filter(publication_date__range=(from_date, to_date), author=author, research_category=category)
                 if publication_listing:
                     messages.success(request, f"Found {publication_listing.count()} item(s) associated with date range '{from_date}' to '{to_date}', author '{author}' and Category '{category}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
             #Language filter
             elif from_date == None and to_date == None and author == None and category =='' and type =='' and company ==None and pub_language != '':
                 publication_listing = PublicationModel.objects.filter(pub_language=pub_language)
                 if publication_listing:
-                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with publications in '{pub_language}'")
-                    context = {'filterForm': filterForm, 'publication_listing': publication_listing}
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + from_date
+            elif from_date != None and to_date == None and author == None and category =='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(publication_date=from_date, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with from_date '{from_date}' and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + from_date + author
+            elif from_date != None and to_date == None and author != None and category =='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(publication_date=from_date, author=author, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with from_date '{from_date}', author {author} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + from_date + author + category
+            elif from_date != None and to_date == None and author != None and category !='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(publication_date=from_date, author=author, research_category=category, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with from_date '{from_date}', author {author}, category {category} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + from_date + author + category + type
+            elif from_date != None and to_date == None and author != None and category !='' and type !='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(publication_date=from_date, author=author, research_category=category, research_type=type, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with from_date '{from_date}', author {author}, category {category}, type {type} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + from_date + author + category + type + company
+            elif from_date != None and to_date == None and author != None and category !='' and type !='' and company !=None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(publication_date=from_date, author=author, research_category=category, research_type=type, company__company_name=company, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with from_date '{from_date}', author {author}, category {category}, type {type}, company {company} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang +  author
+            elif from_date == None and to_date == None and author != None and category =='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(author=author, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with author {author} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + category
+            elif from_date == None and to_date == None and author == None and category !='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(research_category=category, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with category {category} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + type
+            elif from_date == None and to_date == None and author == None and category =='' and type !='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(research_type=type, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with type {type} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + company
+            elif from_date == None and to_date == None and author == None and category =='' and type =='' and company !=None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(company__company_name=company, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with company {company} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + author + category + type + company
+            elif from_date == None and to_date == None and author != None and category !='' and type !='' and company !=None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(author=author, research_category=category, research_type=type, company__company_name=company, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with author {author}, category {category}, type {type}, company {company} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + category + type + company
+            elif from_date == None and to_date == None and author == None and category !='' and type !='' and company !=None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(research_category=category, research_type=type, company__company_name=company, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with category {category}, type {type}, company {company} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + type + company
+            elif from_date == None and to_date == None and author == None and category =='' and type !='' and company !=None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(research_type=type, company__company_name=company, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with category {category}, type {type}, company {company} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            #lang + author + category
+            elif from_date == None and to_date == None and author != None and category !='' and type =='' and company ==None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(author=author, research_category=category, pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request, f"Found {publication_listing.count()} item(s) associated with author {author}, category {category} and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+            # lang + author + category + type
+            elif from_date == None and to_date == None and author != None and category != '' and type != '' and company == None and pub_language != '':
+                publication_listing = PublicationModel.objects.filter(author=author, research_category=category,research_type=type,pub_language=pub_language)
+                if publication_listing:
+                    messages.success(request,f"Found {publication_listing.count()} item(s) associated with author {author}, category {category}, type {type}, and publications '{pub_language}'")
+                    max_pub_date = publication_listing.aggregate(Max('publication_date'))
+                    context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
+                    return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+
 
         else:
             print(f"////////354 filter form is invalid {filterForm.errors}")

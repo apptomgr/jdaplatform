@@ -167,7 +167,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{per_newsletters}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.0}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{per_commentaries|floatformat:'2'}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.1}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{per_reports |floatformat:'4'}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Reports' %}</h5>
+                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.2 }}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Reports' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -200,12 +200,12 @@
     </div>
 
     <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
+        <small class="text-muted">Last updated {{max_pub_date.publication_date__max}}</small>
     </div>
 </div>
 <style type="text/css">
     .bg-cover {
-        
+
         background-image: url({% static 'jdamainapp/assets/img/publication/newspaper_3.png' %});
     }
 
