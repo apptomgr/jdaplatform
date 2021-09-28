@@ -2,15 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from accounts.utils import image_resize
+from django.contrib.auth.models import Group
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  #, related_name='profile')
+    #group = models.ForeignKey(Group, on_delete=models.CASCADE)
     logo = models.ImageField(default='default.jpg', upload_to='profile_logo')
 
     def __str__(self):
-        return f'{self.user.username} Profile'
-
+        return f'{self.user} profile'
 
     def save(self, *args, **kwargs):
         image_resize(self.logo, 120, 120)
@@ -27,3 +28,16 @@ class Profile(models.Model):
     #         output_size = (70, 70)
     #         img.thumbnail(output_size)  # Resize image
     #         img.save(self.logo.path)  # Save it again and override the larger image
+
+
+class UserGroups(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.group
+
+
+# class Group(models.Model):
+#     myuser = models.ForeignKey(User, related_name='groups')

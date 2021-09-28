@@ -40,6 +40,7 @@ def jdapublicationsapp_home(request):
 
 #/////////////////////// jdapublicationsapp_dept /////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdapublicationsapp_dept(request):
 
     grp = get_user_grp(request)
@@ -1091,6 +1092,7 @@ def jda_simple_form_tester(request):
 
 #////////////////////// jdapublicationsapp_company_listing ////////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdapublicationsapp_company_listing(request):
     now =datetime.now()
 
@@ -1173,6 +1175,7 @@ def jdapublicationsapp_delete_company_yes(request, pk):
 
 #/////////////////////// jdapublicationsapp_fullSearch /////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins', 'staffs'])
 def jdapublicationsapp_fullSearch(request):
     if request.method == 'POST':
         full_search_form = FullSearchForm(request.POST or None)

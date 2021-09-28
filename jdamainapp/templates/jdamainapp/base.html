@@ -29,9 +29,9 @@
     <link href="{% static 'jdamainapp/assets/vendor/nivo-slider/css/nivo-slider.css' %}" rel="stylesheet">
     <link href="{% static 'jdamainapp/assets/vendor/owl.carousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
     <link href="{% static 'jdamainapp/assets/vendor/venobox/venobox.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
+    <link href="{% static 'jdamainapp/assets/css/awesome_pro.css' %}" rel="stylesheet">
+    <!--link rel="stylesheet" href="https://fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <!-- Template Main CSS File -->
     <link href="{% static 'jdamainapp/assets/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'jdamainapp/assets/css/style_pub.css' %}" rel="stylesheet">
@@ -130,12 +130,18 @@
                     </ul>
                 </li-->
                 {% if user.is_authenticated %}
-                <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b>
-                    {{user.username}}</b></a>
-                    <ul>
+                <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> {{user.username}}</b></a>
+                    <ul class="dropdown-menu">
                         <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
+                        {% if user_grp == "admins" or user_grp == "managers" %}
+                        <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'admin_tasks' %}"><i class="fas fa-tasks"></i> {% trans 'Admin Tasks' %}</a></li>
+                        <!--li class="mr-3"><a href="{% url 'profile' %}"><i class="fas fa-bolt"></i> {% trans 'Account Activation' %}</a></li>
+                        <li><a href="{% url 'profile' %}"><i class="far fa-edit"></i> {% trans 'Ref Data Management' %}</a></li-->
                         <!--li><a href="{% url 'account_admin' %}"><i class="fas fa-unlock-alt"></i></i> {% trans 'Account Activation' %} </a></li-->
                         <!--li><a href="#"><i class="fas fa-passport"></i> {% trans 'Change Password' %} </a></li-->
+                        {% endif %}
+                        <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Logout' %}</a></li>
                     </ul>
                 </li>

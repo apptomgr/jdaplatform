@@ -92,7 +92,7 @@
 
 
                                 <ul class="container text-left">
-                                    <form method="POST" enctype="multipart/form-data">
+                                    <form method="POST" enctype="multipart/form-data" class="updatelabel">
                                         {% csrf_token %}
 
                                             {{ u_form|crispy }} <!-- User form -->
@@ -114,6 +114,18 @@
         </div>
     </div><!-- End Services Section -->
 </div>
+
+<style>
+
+ .logo_admin {
+    width: auto;
+    height: 70px;
+}
+
+.updatelabel label{
+    display: none;
+}
+</style>
 
 {% endblock %}
 
