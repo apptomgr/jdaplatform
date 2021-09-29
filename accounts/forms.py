@@ -35,13 +35,13 @@ class ProfileUpdateForm(forms.ModelForm):
 class GroupUpdateForm(forms.ModelForm):
     queryset_groups = Group.objects.all()
     #email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    name = forms.ModelChoiceField(required=True, queryset=queryset_groups, to_field_name='name', empty_label=ugettext_lazy('Group Name'))
+    name = forms.ModelChoiceField(required=True, queryset=queryset_groups, label='Group', to_field_name='name', empty_label=ugettext_lazy('Group Name'))
 
     class Meta:
         model = Group
         fields = ['name']
 
-# Create a GroupUpdateForm to update group
+# Create a GroupAddForm to update group
 class GroupAddForm(forms.ModelForm):
     name = forms.CharField(label='Group', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Group'}))
     class Meta:

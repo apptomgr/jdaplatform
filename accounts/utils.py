@@ -5,9 +5,12 @@ from io import BytesIO
 
 image_types = {
     "jpg": "JPEG",
+    "JPG": "JPEG",
     "jpeg": "JPEG",
     "png": "PNG",
+    "PNG": "PNG",
     "gif": "GIF",
+    "GIF": "GIF",
     "tif": "TIFF",
     "tiff": "TIFF",
 }

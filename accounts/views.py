@@ -10,21 +10,6 @@ from django.contrib.auth.models import Group
 from accounts .decorators import allowed_users
 from datetime import datetime
 
-# def signup(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             auth_login(request, user)
-#             return redirect('jdamainapp_home')
-#         else:
-#             for msg in form.error_messages:
-#                 print(form.error_messages[msg])
-#     else:
-#         form = UserCreationForm()
-#
-#     context = {'form': form}
-#     return render(request, 'registration/signup.html', context)
 
 
 # update registration
@@ -77,6 +62,10 @@ def profile(request):
 @login_required
 @allowed_users(allowed_roles=['admins'])
 def profile_edit(request):
+    curr_grp = None
+    if request.user.groups.all():
+        curr_grp = request.user.groups.all()[0].name
+        # print(f"98 - grp: {grp}")
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
@@ -92,12 +81,8 @@ def profile_edit(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
-        grp = None
-        if request.user.groups.all():
-            grp = request.user.groups.all()[0].name
-            #print(f"98 - grp: {grp}")
 
-    context = {'u_form': u_form,'p_form': p_form, 'user_grp': grp}
+    context = {'u_form': u_form,'p_form': p_form, 'user_grp': curr_grp}
 
     return render(request, 'registration/profile_edit.html', context)
 
@@ -107,6 +92,10 @@ def profile_edit(request):
 @allowed_users(allowed_roles=['managers'])
 def account_admin(request):
     now = datetime.now()
+    curr_grp = None
+    if request.user.groups.all():
+        curr_grp = request.user.groups.all()[0].name
+
     if request.method == 'POST':
         form = AccountAdminForm(request.POST) #, instance=request.user)
         if form.is_valid():
@@ -131,12 +120,9 @@ def account_admin(request):
     else:
         form = AccountAdminForm()
         #p_form = ProfileUpdateForm(instance=request.user.profile)
-        grp = None
-        if request.user.groups.all():
-            grp = request.user.groups.all()[0].name
-            #print(f"135 - grp: {grp}")
 
-    context ={'form':form, 'rpt_date':now, 'user_grp': grp}  # {'u_form': u_form,'p_form': p_form}
+
+    context ={'form':form, 'rpt_date':now, 'user_grp': curr_grp}
 
     return render(request, 'registration/account_admin.html', context)
 
@@ -193,6 +179,9 @@ def admin_tasks(request):
 def admin_tasks_edit(request, req_type, pk):
     now = datetime.now()
     user = User.objects.get(pk=pk)
+    curr_grp = None
+    if request.user.groups.all():
+        curr_grp = request.user.groups.all()[0].name
 
     if req_type =='del_user':
         user_id = User.objects.get(username=user).pk
@@ -243,11 +232,9 @@ def admin_tasks_edit(request, req_type, pk):
             g_form = GroupUpdateForm(instance=user, initial={'name': grp})
             p_form = ProfileUpdateForm(instance=user.profile, initial = {'email':email})
 
-            grp = None
-            if request.user.groups.all():
-                grp = request.user.groups.all()[0].name
 
-    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': grp}
+
+    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': curr_grp}
 
     return render(request, 'registration/admin_tasks_edit.html', context)
 
@@ -258,6 +245,9 @@ def admin_tasks_edit(request, req_type, pk):
 @allowed_users(allowed_roles=['managers'])
 def admin_tasks_add(request):
     now = datetime.now()
+    curr_grp = None
+    if request.user.groups.all():
+        curr_grp = request.user.groups.all()[0].name
 
     if request.method == 'POST':
         u_form = UserRegisterForm(request.POST)
@@ -295,10 +285,23 @@ def admin_tasks_add(request):
         g_form = GroupUpdateForm(initial={'name': 'deactivated'})
         p_form = ProfileUpdateForm()
 
-        grp = None
-        if request.user.groups.all():
-            grp = request.user.groups.all()[0].name
-
-    context = {'u_form': u_form,'p_form': p_form, 'g_form': g_form, 'rpt_date':now, 'user_grp': grp}
+    context = {'u_form': u_form,'p_form': p_form, 'g_form': g_form, 'rpt_date':now, 'user_grp': curr_grp}
 
     return render(request, 'registration/admin_tasks_add.html', context)
+
+
+# def signup(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             auth_login(request, user)
+#             return redirect('jdamainapp_home')
+#         else:
+#             for msg in form.error_messages:
+#                 print(form.error_messages[msg])
+#     else:
+#         form = UserCreationForm()
+#
+#     context = {'form': form}
+#     return render(request, 'registration/signup.html', context)

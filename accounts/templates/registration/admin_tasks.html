@@ -59,8 +59,8 @@
                 {% for j in i.groups.all %}
                 <td>{{ j }}{% if not forloop.last %},{% endif %}</td>
                 {% endfor %}
-                <td>{{ i.last_login }}</td>
-                <td>{{ i.date_joined }}</td>
+                <td>{{ i.last_login |date:"Y-m-d" }}</td>
+                <td>{{ i.date_joined |date:"Y-m-d" }}</td>
                 <td class="text-center"><img class="account-img logo_admin" src="{{ i.profile.logo.url }}" /></td>
                 <td class="text-center" style="width: 8%"><a href="{% url 'admin_tasks_edit' 'edit_user' i.pk %}"><i class="fas fa-edit fa-1.5x text-info"></i></a></td>
                 <td class="text-center" style="width: 4%"><a href="{% url 'admin_tasks_edit' 'del_user' i.pk %}"><i class="fas fa-user-slash fa-1.5x text-danger"></i></a></td>
