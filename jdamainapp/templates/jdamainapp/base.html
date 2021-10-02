@@ -70,7 +70,7 @@
                 <li class="active"><a href="{% url 'jdamainapp_home' %}">{% trans 'JDA Platform' %}</a></li>
 
                 <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
-                    {% if user_grp == "admins" or user_grp == "staffs" %}
+                    {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
                    <ul>
                        <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
                        <li><hr class="my_hr_divider"></li>
@@ -86,7 +86,7 @@
                 <!--li><a href="{% url 'jdaanalyticsapp_home' %}"><i class="fas fa-chart-line"></i> {% trans 'Analytics App' %}</a></li-->
 
                 <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
-                    {% if user_grp == "admins" or user_grp == "staffs" %}
+                    {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
                     <ul>
                         <li><a href="{% url 'jdaanalyticsapp_upload_form' %}"><i class="fas fa-cloud-upload-alt"></i> {% trans 'Market Data Upload' %} </a></li>
                         <li><hr class="my_hr_divider"></li>
@@ -133,7 +133,7 @@
                 <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> {{user.username}}</b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
-                        {% if user_grp == "admins" or user_grp == "managers" %}
+                        {% if user_grp == "admins" or user_grp == "managers" or user_grp == "managers" %}
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'admin_tasks' %}"><i class="fas fa-tasks"></i> {% trans 'Admin Tasks' %}</a></li>
                         <!--li class="mr-3"><a href="{% url 'profile' %}"><i class="fas fa-bolt"></i> {% trans 'Account Activation' %}</a></li>

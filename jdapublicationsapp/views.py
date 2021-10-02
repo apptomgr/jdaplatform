@@ -40,7 +40,7 @@ def jdapublicationsapp_home(request):
 
 #/////////////////////// jdapublicationsapp_dept /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_dept(request):
 
     grp = get_user_grp(request)
@@ -49,7 +49,7 @@ def jdapublicationsapp_dept(request):
 
 #/////////////////////// jdapublicationsapp_pubs /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
+@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
 
     form = PublicationAdminsForm()
@@ -250,7 +250,7 @@ def jdapublicationsapp_pubs(request):
 
 #/////////////////////// jdapublicationsapp_filter /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
+@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_filter(request):
     stats_sess = request.session.get('pub_stats_session') # stats_sess was set in jdapublicationsapp_pubs function
     #print(f"180: Filter - Request.method: {request.method}")
@@ -866,7 +866,7 @@ def jdapublicationsapp_filter(request):
 
 #//////////////////////////////////////// jdapublicationsapp_entry/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_entry(request):
     now = datetime.now()
     if request.method == 'POST':
@@ -905,7 +905,7 @@ def jdapublicationsapp_entry(request):
 
 #//////////////////////////////////////// jdapublicationsapp_edit/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_edit(request, pk):
     now = datetime.now()
     current_url = resolve(request.path_info).url_name
@@ -960,7 +960,7 @@ def jdapublicationsapp_edit(request, pk):
 
 #//////////////////////////////////////// jdapublicationsapp_listing/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs', 'brokers'])
+@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_listing(request):
     now = datetime.now()
     publication_listing =PublicationModel.objects.all()
@@ -1005,7 +1005,7 @@ def jdapublicationsapp_listing(request):
 
 #//////////////////////////////////////// jdapublicationsapp_delete/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_delete(request, pk):
 
     if request.method == 'POST':
@@ -1092,7 +1092,7 @@ def jda_simple_form_tester(request):
 
 #////////////////////// jdapublicationsapp_company_listing ////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_company_listing(request):
     now =datetime.now()
 
@@ -1104,7 +1104,7 @@ def jdapublicationsapp_company_listing(request):
 
 #////////////////////// jdapublicationsapp_new_company /////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_new_company(request):
     now = datetime.now()
     if request.method == "POST":
@@ -1131,7 +1131,7 @@ def jdapublicationsapp_new_company(request):
 
 #//////////////////////////////////////// jdapublicationsapp_delete_company_confirm/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_delete_company_confirm(request, pk):
     #print(f"387://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
@@ -1145,7 +1145,7 @@ def jdapublicationsapp_delete_company_confirm(request, pk):
 
 #//////////////////////////////////////// jdapublicationsapp_delete_company_yes/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdapublicationsapp_delete_company_yes(request, pk):
     #print(f"398://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
@@ -1175,7 +1175,7 @@ def jdapublicationsapp_delete_company_yes(request, pk):
 
 #/////////////////////// jdapublicationsapp_fullSearch /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdapublicationsapp_fullSearch(request):
     if request.method == 'POST':
         full_search_form = FullSearchForm(request.POST or None)

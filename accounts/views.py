@@ -89,7 +89,7 @@ def profile_edit(request):
 
 # Account admin
 @login_required
-@allowed_users(allowed_roles=['managers'])
+@allowed_users(allowed_roles=['admins','managers'])
 def account_admin(request):
     now = datetime.now()
     curr_grp = None
@@ -130,7 +130,7 @@ def account_admin(request):
 
 # account_admin_update
 @login_required
-@allowed_users(allowed_roles=['managers'])
+@allowed_users(allowed_roles=['admins','managers'])
 def account_admin_update(request):
     now = datetime.now()
     form = AccountAdminUpdateForm(request.POST or None)
@@ -152,7 +152,7 @@ def account_admin_update(request):
 
 # profile
 @login_required
-@allowed_users(allowed_roles=['managers'])
+@allowed_users(allowed_roles=['admins','managers'])
 def admin_tasks(request):
     now = datetime.now()
     #1) List all user profiles
@@ -175,7 +175,7 @@ def admin_tasks(request):
 
 # admin_tasks
 @login_required
-@allowed_users(allowed_roles=['managers'])
+@allowed_users(allowed_roles=['admins','managers'])
 def admin_tasks_edit(request, req_type, pk):
     now = datetime.now()
     user = User.objects.get(pk=pk)
@@ -242,7 +242,7 @@ def admin_tasks_edit(request, req_type, pk):
 
 # admin_tasks_add
 @login_required
-@allowed_users(allowed_roles=['managers'])
+@allowed_users(allowed_roles=['admins','managers'])
 def admin_tasks_add(request):
     now = datetime.now()
     curr_grp = None

@@ -26,7 +26,7 @@ def jdaanalyticsapp_home(request):
 
 # //////////////////////////////////////////////// jdaanalyticsapp_upload_form /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdaanalyticsapp_upload_form(request):
     if request.method == 'POST':
         form = IndexForm(request.POST, request.FILES)
@@ -128,7 +128,7 @@ def jdaanalyticsapp_upload_form(request):
 
 
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdaanalyticsapp_rpt(request):
     now = datetime.now()
     if IndexPriceModel.objects.all():
@@ -150,7 +150,7 @@ def jdaanalyticsapp_rpt(request):
 
 #/////////////////////// jdaanalyticsapp_sec_filter /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdaanalyticsapp_sec_filter(request):
     now = datetime.now()
     if request.method == 'POST':

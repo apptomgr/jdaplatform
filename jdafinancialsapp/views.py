@@ -42,7 +42,7 @@ def jdafinancialsapp_home(request):
 
 #////////////////////////// jdafinancialsapp_stmts ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdafinancialsapp_stmts(request):
     dt = datetime.now()
     #print(f"36 ///////// jdafinancialsapp_stmts")
@@ -86,7 +86,7 @@ def jdafinancialsapp_stmts(request):
 
 #////////////////////////////////////// jdafinancialsapp_bal_entry_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -157,7 +157,7 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
 
 #////////////////////////////////////// jdafinancialsapp_inc_entry_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -231,7 +231,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
 
 #////////////////////////////////////// jdafinancialsapp_inv_acct_entry_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement, entry_date):
     company=CompanyModel.objects.get(pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
@@ -303,7 +303,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
 
 #////////////////////////// jdafinancialsapp_bal_rpt ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date):
     print(f"95 jdafinancialsapp_bal_rpt: User {request.user}")
     company = CompanyModel.objects.get(pk=company_id)
@@ -319,7 +319,7 @@ def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date)
 
 #////////////////////////// jdafinancialsapp_inc_rpt ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date):
     #print(f"297 jdafinancialsapp_inc_rpt")
     company = CompanyModel.objects.get(pk=company_id)
@@ -348,7 +348,7 @@ def jdafinancialsapp_inc_rpt(request, sector, company_id, statement, entry_date)
 
 #////////////////////////// jdafinancialsapp_inv_acct_rpt ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_date):
     #print(f"307 jdafinancialsapp_inv_acct_rpt")
     company = CompanyModel.objects.get(pk=company_id)
@@ -366,7 +366,7 @@ def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_
 
 #////////////////////////////////////// jdafinancialsapp_bal_edit_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"236: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
@@ -434,7 +434,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
 
 #////////////////////////////////////// jdafinancialsapp_inc_edit_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"300: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
@@ -509,7 +509,7 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
 
 #////////////////////////////////////// jdafinancialsapp_inv_acct_edit_form ///////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"458: bal edit company_id: {company_id}")
     company=CompanyModel.objects.get(pk=company_id)
@@ -610,7 +610,7 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 
 #////////////////////// jdafinancialsapp_new_company /////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_new_company(request):
     #print(f"121///////// jdafinancialsapp_new_company")
     if request.method == "POST":
@@ -635,7 +635,7 @@ def jdafinancialsapp_new_company(request):
 
 #//////////////////////////////////////// jdafinancialsapp_view_company_detail/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_view_company_detail(request, pk):
     #print(f"289 PK {pk}")
     now = datetime.now()
@@ -647,7 +647,7 @@ def jdafinancialsapp_view_company_detail(request, pk):
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_company_listing(request):
     now = datetime.now()
     company_listing =CompanyModel.objects.all()
@@ -660,7 +660,7 @@ def jdafinancialsapp_company_listing(request):
 
 #//////////////////////////////////////// jdafinancialsapp_delete_company_confirm/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_delete_company_confirm(request, pk):
     #print(f"387://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
@@ -673,7 +673,7 @@ def jdafinancialsapp_delete_company_confirm(request, pk):
 
 #//////////////////////////////////////// jdafinancialsapp_delete_company_yes/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_delete_company_yes(request, pk):
     #print(f"398://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
@@ -688,7 +688,7 @@ def jdafinancialsapp_delete_company_yes(request, pk):
 
 #////////////////////////// jdafinancialsapp_bal_all_rpt ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_bal_all_rpt(request):
     bal_data = FinancialStatementFactModel.objects.values('company__company').annotate(Sum('value')) #.order_by('company', 'company__rpt_period', 'entry_date')
 
@@ -699,7 +699,7 @@ def jdafinancialsapp_bal_all_rpt(request):
 
 #////////////////////////// FinancialStatementFactForm ///////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'staffs'])
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def financialStatementFactForm(request):
     #print(f"237//////////// Bal entry Form /////// ")
 
