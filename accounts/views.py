@@ -161,9 +161,9 @@ def admin_tasks(request):
 
     group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
 
-    user_profile = User.objects.all().select_related('profile').order_by('-date_joined')
+    user_profile = User.objects.all().select_related('profile').exclude(groups__name='admins').order_by('-date_joined')
 
-    us = user_profile.filter(groups__name__in=['admins', 'brokers', 'customers', 'staffs', 'managers'])
+    #us = user_profile.filter(groups__name__in=['admins', 'brokers', 'customers', 'staffs', 'managers'])
 
     grp =None
     if request.user.groups.all():

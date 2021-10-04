@@ -33,7 +33,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
 # Create a GroupUpdateForm to update group
 class GroupUpdateForm(forms.ModelForm):
-    queryset_groups = Group.objects.all()
+    queryset_groups = Group.objects.exclude(name='admins').all().order_by('name')
     #email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
     name = forms.ModelChoiceField(required=True, queryset=queryset_groups, label='Group', to_field_name='name', empty_label=ugettext_lazy('Group Name'))
 
