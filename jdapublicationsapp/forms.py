@@ -41,7 +41,7 @@ class PublicationAdminsForm(forms.ModelForm):
 
     #auth = PublicationModel.objects.values_list('author__username', flat='True').distinct()
     #queryset = User.objects.filter(username__in=auth)
-    queryset = User.objects.filter(groups__name__in=['staffs', 'admins'])
+    queryset = User.objects.filter(groups__name__in=['staffs', 'managers', 'admins'])
 
     #initial = datetime.date.today,
     author = forms.ModelChoiceField(queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
