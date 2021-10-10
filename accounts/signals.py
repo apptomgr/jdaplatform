@@ -2,6 +2,8 @@ from django.db.models.signals import post_save #Import a post_save signal when a
 from django.contrib.auth.models import User # Import the built-in User model, which is a sender
 from django.dispatch import receiver # Import the receiver
 from .models import Profile
+from django.db.models.signals import pre_save
+import os
 
 
 @receiver(post_save, sender=User)
@@ -13,3 +15,23 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+@receiver(pre_save, sender=Profile)
+def delete_old_file(sender, instance, **kwargs):
+    # on creation, signal callback won't be triggered
+    if instance._state.adding and not instance.pk:
+        return False
+
+    try:
+        old_file = sender.objects.get(pk=instance.pk).logo
+    except sender.DoesNotExist:
+        return False
+
+    # comparing the new file with the old one
+    file = instance.logo
+
+    if not old_file == file:
+        if old_file != 'profile_logo/default.jpg':
+            if os.path.isfile(old_file.path):
+                os.remove(old_file.path)

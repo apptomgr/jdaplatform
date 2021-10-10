@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  #, related_name='profile')
     #group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    logo = models.ImageField(default='default.jpg', upload_to='profile_logo')
+    logo = models.ImageField(default='profile_logo/default.jpg', upload_to='profile_logo')
 
     def __str__(self):
         return f'{self.user} profile'
@@ -16,6 +16,18 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         image_resize(self.logo, 120, 120)
         super().save(*args, **kwargs)
+
+    # def delete(self, *args, **kwargs):
+    #     self.logo.delete()
+    #     self.logo.profile.image.delete(save=False)
+    #     super().delete(*args, **kwargs)
+
+    def SetUserImageDefault(self):
+        self.user.profile.logo.delete(save=False)  # delete old image file
+        self.user.profile.logo = 'default.jpg'  # set default image
+        self.user.profile.save()
+
+
 
     # # Override the save method of the model
     # def save(self, *args, **kwargs):

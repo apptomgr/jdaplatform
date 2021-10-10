@@ -64,6 +64,7 @@
                 <td class="text-center"><img class="account-img logo_admin" src="{{ i.profile.logo.url }}" /></td>
                 <td class="text-center" style="width: 8%"><a href="{% url 'admin_tasks_edit' 'edit_user' i.pk %}"><i class="fas fa-edit fa-1.5x text-info"></i></a></td>
                 <td class="text-center" style="width: 4%"><a href="{% url 'admin_tasks_edit' 'del_user' i.pk %}"><i class="fas fa-user-slash fa-1.5x text-danger"></i></a></td>
+
                 <!--td class="text-center" style="width: 4%"><a href="{% url 'admin_tasks_edit' 'del_user' i.pk %}" onclick="return confirm('Are you sure you want delete user id {{i.pk}}? This action is not reversible');"><i class="fas fa-user-slash fa-1.5x text-danger"></i></a></td-->
 
                 <!--td><a href="#" data-href="{% url 'admin_tasks_edit' 'del_user' i.pk %}" data-toggle="modal" data-target="#confirm-delete" onclick="return res_tes({{i.pk}});">Delete record #23</a>Name: <input type="hidden" name="name" id="name" value="{{i.pk}}"></td-->

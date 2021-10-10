@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from accounts .decorators import allowed_users
 from datetime import datetime
+#from .models import Profile
+from django.core.exceptions import ObjectDoesNotExist
 
 
 
@@ -185,6 +187,7 @@ def admin_tasks_edit(request, req_type, pk):
 
     if req_type =='del_user':
         user_id = User.objects.get(username=user).pk
+
         curr_grp_id = User.objects.values_list('groups__id', flat='True').get(pk=pk)
         grp_to_update = Group.objects.get(pk=curr_grp_id)
         grp_to_add = Group.objects.get(name='deactivated').id
@@ -194,6 +197,25 @@ def admin_tasks_edit(request, req_type, pk):
 
         messages.success(request, f'{user} account profile has successfully deactivated')
         return redirect('admin_tasks')  # Redirect back to profile page
+    elif req_type =='del_logo':
+        pk_user= User.objects.get(pk=pk)
+        old_logo= pk_user.profile.logo
+
+        if old_logo:
+            if old_logo.name != 'profile_logo/default.jpg':
+                print(f'old_logo.name != default.jpg {old_logo}')
+                print('old NOT default changed it')
+                pk_user.profile.logo.delete(save=False)  # delete old image file
+                pk_user.profile.logo = 'profile_logo/default.jpg'  # set default image
+                pk_user.profile.save()
+                print("Changed")
+            else:
+                print(f'old is default delete do nothing {old_logo}')
+                pass
+        else:
+            pass
+
+        return redirect('admin_tasks')
     else:
         if request.method == 'POST':
             curr_grp_id = User.objects.values_list('groups__id', flat='True').filter(username=user).first()
@@ -234,7 +256,7 @@ def admin_tasks_edit(request, req_type, pk):
 
 
 
-    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': curr_grp}
+    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': curr_grp, 'profile_pk':pk}
 
     return render(request, 'registration/admin_tasks_edit.html', context)
 
@@ -288,6 +310,24 @@ def admin_tasks_add(request):
     context = {'u_form': u_form,'p_form': p_form, 'g_form': g_form, 'rpt_date':now, 'user_grp': curr_grp}
 
     return render(request, 'registration/admin_tasks_add.html', context)
+
+
+
+# # admin_tasks_add
+# @login_required
+# @allowed_users(allowed_roles=['admins','managers'])
+# def admin_tasks_del_logo(request, pk):
+#     user_profile = User.objects.get(pk=pk)
+#     reset_profile = Profile.SetUserImageDefault()
+#     print(reset_profile)
+#     grp =None
+#
+#     if request.user.groups.all():
+#         grp = request.user.groups.all()[0].name
+#
+#     context = {'user_grp': grp}
+#     return render(request, 'registration/profile.html', context)
+
 
 
 # def signup(request):

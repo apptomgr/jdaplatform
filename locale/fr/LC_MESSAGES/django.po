@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 16:16-0400\n"
+"POT-Creation-Date: 2021-10-10 17:27-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgid "Group"
 msgstr "Groupe"
 
 #: accounts/templates/registration/account_admin.html:22
-#: accounts/templates/registration/account_admin_update.html:24
+#: accounts/templates/registration/account_admin_update.html:21
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:4
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:23
@@ -66,11 +66,11 @@ msgstr "Sélectionner le nom d'utilisateur"
 msgid "Add Publication"
 msgstr "Ajouter une publication"
 
-#: accounts/templates/registration/account_admin_update.html:32
+#: accounts/templates/registration/account_admin_update.html:29
 msgid "Activate or Update User Info"
 msgstr "Activer ou Modifier le nom d'utilisateur"
 
-#: accounts/templates/registration/account_admin_update.html:54
+#: accounts/templates/registration/account_admin_update.html:51
 msgid "Update User"
 msgstr "Modifier le nom d'utilisateur"
 
@@ -133,11 +133,15 @@ msgstr "Ajouter un nouvel utilisateur"
 msgid "Administrative Tasks - Edit Profile"
 msgstr "Tâches administratives - Modifier le Profil"
 
-#: accounts/templates/registration/admin_tasks_edit.html:64
+#: accounts/templates/registration/admin_tasks_edit.html:50
+msgid "Delete profile picture"
+msgstr "Supprimer la photo de profil"
+
+#: accounts/templates/registration/admin_tasks_edit.html:66
 msgid "Save User Info"
 msgstr "Enregistrer les informations utilisateur"
 
-#: accounts/templates/registration/admin_tasks_edit.html:69
+#: accounts/templates/registration/admin_tasks_edit.html:71
 msgid "Save"
 msgstr "Enregistrer"
 
