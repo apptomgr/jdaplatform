@@ -202,7 +202,7 @@ def admin_tasks_edit(request, req_type, pk):
         old_logo= pk_user.profile.logo
 
         if old_logo:
-            if old_logo.name != 'profile_logo/default.jpg':
+            if old_logo.name != 'default.jpg':
                 print(f'old_logo.name != default.jpg {old_logo}')
                 print('old NOT default changed it')
                 pk_user.profile.logo.delete(save=False)  # delete old image file

@@ -25,6 +25,7 @@ def delete_old_file(sender, instance, **kwargs):
 
     try:
         old_file = sender.objects.get(pk=instance.pk).logo
+        #print(f'signal 28: {old_file} type: {type(old_file)} name: {old_file.name}')
     except sender.DoesNotExist:
         return False
 
@@ -32,6 +33,9 @@ def delete_old_file(sender, instance, **kwargs):
     file = instance.logo
 
     if not old_file == file:
-        if old_file != 'profile_logo/default.jpg':
+        if old_file != 'default.jpg':
             if os.path.isfile(old_file.path):
                 os.remove(old_file.path)
+        else:
+            pass
+            #print(f"signal 41: same_name")
