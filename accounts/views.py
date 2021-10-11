@@ -246,6 +246,7 @@ def admin_tasks_edit(request, req_type, pk):
 def admin_tasks_add(request):
     now = datetime.now()
     curr_grp = None
+    print('adding')
     if request.user.groups.all():
         curr_grp = request.user.groups.all()[0].name
 
