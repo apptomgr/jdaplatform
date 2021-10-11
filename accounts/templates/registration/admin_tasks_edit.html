@@ -46,9 +46,7 @@
                     <div class="updatelabel">{{g_form.name | as_crispy_field}}</div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="updatelabel">{{p_form.logo | as_crispy_field}}
-                        <span class="text-center" style="width: 4%"><a href="{% url 'admin_tasks_edit' 'del_logo' profile_pk %}" onclick="return confirm('Are you sure you want to remove this logo?')"><i class="fas fa-trash fa-1.5x text-danger"> <small>{% trans 'Delete profile picture' %} </small></i></a></span>
-                    </div>
+                    <div class="updatelabel">{{p_form.logo | as_crispy_field}}</div>
                 </div>
             </div>
 

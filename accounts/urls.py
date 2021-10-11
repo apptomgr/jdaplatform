@@ -17,4 +17,9 @@ urlpatterns = [
     path('admin_tasks_edit/<str:req_type>/<int:pk>',views.admin_tasks_edit, name='admin_tasks_edit'),
     path('admin_tasks_add',views.admin_tasks_add, name='admin_tasks_add'),
 
+
+
+
+
+
 ]

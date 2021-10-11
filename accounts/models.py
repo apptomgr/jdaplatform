@@ -17,18 +17,6 @@ class Profile(models.Model):
         image_resize(self.logo, 120, 120)
         super().save(*args, **kwargs)
 
-    # def delete(self, *args, **kwargs):
-    #     self.logo.delete()
-    #     self.logo.profile.image.delete(save=False)
-    #     super().delete(*args, **kwargs)
-
-    # def SetUserImageDefault(self):
-    #     self.user.profile.logo.delete(save=False)  # delete old image file
-    #     self.user.profile.logo = 'default.jpg'  # set default image
-    #     self.user.profile.save()
-
-
-
     # # Override the save method of the model
     # def save(self, *args, **kwargs):
     #     super(Profile, self).save(*args, **kwargs)
