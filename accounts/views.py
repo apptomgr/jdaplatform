@@ -194,6 +194,15 @@ def admin_tasks_edit(request, req_type, pk):
 
         messages.success(request, f'{user} account profile has successfully deactivated')
         return redirect('admin_tasks')  # Redirect back to profile page
+    elif req_type =='del_logo':
+        pk_user= User.objects.get(pk=pk)
+        pk_user.profile.logo = 'default.jpg'
+        pk_user.save()
+
+        messages.success(request, f'{user} account profile logo has been successfully removed')
+        return redirect('admin_tasks')  # Redirect back to profile page
+
+        #old_logo= pk_user.profile.logo
     else:
         if request.method == 'POST':
             curr_grp_id = User.objects.values_list('groups__id', flat='True').filter(username=user).first()
@@ -233,8 +242,7 @@ def admin_tasks_edit(request, req_type, pk):
             p_form = ProfileUpdateForm(instance=user.profile, initial = {'email':email})
 
 
-
-    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': curr_grp}
+    context = {'u_form': u_form,'g_form': g_form, 'p_form': p_form, 'rpt_date':now, 'user_grp': curr_grp, 'profile_pk':pk}
 
     return render(request, 'registration/admin_tasks_edit.html', context)
 
@@ -246,7 +254,7 @@ def admin_tasks_edit(request, req_type, pk):
 def admin_tasks_add(request):
     now = datetime.now()
     curr_grp = None
-    print('adding')
+    #print('adding')
     if request.user.groups.all():
         curr_grp = request.user.groups.all()[0].name
 
