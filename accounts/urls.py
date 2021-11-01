@@ -16,10 +16,7 @@ urlpatterns = [
     path('admin_tasks/',views.admin_tasks, name='admin_tasks'),
     path('admin_tasks_edit/<str:req_type>/<int:pk>',views.admin_tasks_edit, name='admin_tasks_edit'),
     path('admin_tasks_add',views.admin_tasks_add, name='admin_tasks_add'),
-
-
-
-
+    path('admin_tasks_stats/<str:stats_type>',views.admin_tasks_stats, name='admin_tasks_stats'),
 
 
 ]

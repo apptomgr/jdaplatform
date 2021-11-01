@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 16:16-0400\n"
+"POT-Creation-Date: 2021-10-27 15:02-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,16 +32,16 @@ msgstr ""
 msgid "Group Name"
 msgstr "Groupe"
 
-#: accounts/forms.py:57 accounts/templates/registration/admin_tasks.html:40
+#: accounts/forms.py:57 accounts/templates/registration/admin_tasks.html:37
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: accounts/forms.py:100 accounts/templates/registration/admin_tasks.html:43
+#: accounts/forms.py:100 accounts/templates/registration/admin_tasks.html:40
 msgid "Group"
 msgstr "Groupe"
 
 #: accounts/templates/registration/account_admin.html:22
-#: accounts/templates/registration/account_admin_update.html:24
+#: accounts/templates/registration/account_admin_update.html:21
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:4
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:23
@@ -66,80 +66,91 @@ msgstr "Sélectionner le nom d'utilisateur"
 msgid "Add Publication"
 msgstr "Ajouter une publication"
 
-#: accounts/templates/registration/account_admin_update.html:32
+#: accounts/templates/registration/account_admin_update.html:29
 msgid "Activate or Update User Info"
 msgstr "Activer ou Modifier le nom d'utilisateur"
 
-#: accounts/templates/registration/account_admin_update.html:54
+#: accounts/templates/registration/account_admin_update.html:51
 msgid "Update User"
 msgstr "Modifier le nom d'utilisateur"
 
-#: accounts/templates/registration/admin_tasks.html:22
-#: accounts/templates/registration/admin_tasks_add.html:22
-#: accounts/templates/registration/admin_tasks_edit.html:22
+#: accounts/templates/registration/admin_tasks.html:27
+#: accounts/templates/registration/admin_tasks_add.html:27
+#: accounts/templates/registration/admin_tasks_breadcrum.html:5
+#: accounts/templates/registration/admin_tasks_breadcrum.html:6
+#: accounts/templates/registration/admin_tasks_breadcrum.html:7
+#: accounts/templates/registration/admin_tasks_edit.html:27
 #: jdamainapp/templates/jdamainapp/base.html:138
 msgid "Admin Tasks"
 msgstr "Tâches administratives"
 
-#: accounts/templates/registration/admin_tasks.html:23
-#: accounts/templates/registration/admin_tasks_add.html:23
-#: accounts/templates/registration/admin_tasks_edit.html:23
-msgid "Admin Tasks - Add User"
-msgstr "Tâches d'administration - Ajouter un utilisateur"
+#: accounts/templates/registration/admin_tasks.html:27
+msgid "Profile Info"
+msgstr "Profil des l'utilizateurs"
 
-#: accounts/templates/registration/admin_tasks.html:30
-msgid "Administrative Tasks"
-msgstr "Tâches d'administration"
+#: accounts/templates/registration/admin_tasks.html:38
+#msgid "Change Password"
+#msgstr "Modifier mot de passe"
 
-#: accounts/templates/registration/admin_tasks.html:41
-#, fuzzy
-#| msgid "Change Password"
-msgid "Password"
-msgstr "Modifier mot de passe"
-
-#: accounts/templates/registration/admin_tasks.html:42
+#: accounts/templates/registration/admin_tasks.html:39
 msgid "Email"
 msgstr "Email"
 
-#: accounts/templates/registration/admin_tasks.html:44
+#: accounts/templates/registration/admin_tasks.html:41
 msgid "Last Login"
 msgstr "Dernière connexion"
 
-#: accounts/templates/registration/admin_tasks.html:45
+#: accounts/templates/registration/admin_tasks.html:42
 msgid "Date Joined"
 msgstr "Date d'adhésion"
 
-#: accounts/templates/registration/admin_tasks.html:46
+#: accounts/templates/registration/admin_tasks.html:43
 msgid "Profile Logo"
 msgstr "Logo du profil"
 
-#: accounts/templates/registration/admin_tasks.html:47
+#: accounts/templates/registration/admin_tasks.html:44
 msgid "Edit Profile"
 msgstr "Modifier le Profil"
 
-#: accounts/templates/registration/admin_tasks.html:48
+#: accounts/templates/registration/admin_tasks.html:45
 msgid "Deactivate"
 msgstr "Désactiver"
 
-#: accounts/templates/registration/admin_tasks_add.html:30
-msgid "Administrative Tasks - Add New User"
-msgstr "Tâches administratives - Ajouter un nouvel utilisateur"
+#: accounts/templates/registration/admin_tasks_add.html:27
+msgid "Add New User"
+msgstr "Ajouter un nouvel utilisateur"
 
-#: accounts/templates/registration/admin_tasks_add.html:77
+#: accounts/templates/registration/admin_tasks_add.html:74
 msgid "Add new user"
 msgstr "Ajouter un nouvel utilisateur"
 
-#: accounts/templates/registration/admin_tasks_edit.html:30
-msgid "Administrative Tasks - Edit Profile"
-msgstr "Tâches administratives - Modifier le Profil"
+#: accounts/templates/registration/admin_tasks_edit.html:27
+#, fuzzy
+#| msgid "Edit Profile"
+msgid "Edit User Profile"
+msgstr "Modifier le Profil de l'utilisateur"
 
-#: accounts/templates/registration/admin_tasks_edit.html:64
+#: accounts/templates/registration/admin_tasks_edit.html:48
+msgid "Delete profile picture"
+msgstr "Supprimer la photo de profil"
+
+#: accounts/templates/registration/admin_tasks_edit.html:65
 msgid "Save User Info"
 msgstr "Enregistrer les informations utilisateur"
 
-#: accounts/templates/registration/admin_tasks_edit.html:69
+#: accounts/templates/registration/admin_tasks_edit.html:70
 msgid "Save"
 msgstr "Enregistrer"
+
+#: accounts/templates/registration/admin_tasks_stats.html:27
+#, fuzzy
+#| msgid "Admin Tasks"
+msgid "Admin tasks"
+msgstr "Tâches administratives"
+
+#: accounts/templates/registration/admin_tasks_stats.html:27
+msgid "Stats"
+msgstr "Statistiques"
 
 #: accounts/templates/registration/login.html:39
 #: accounts/templates/registration/profile.html:38
@@ -232,7 +243,7 @@ msgstr "Mod&eacute;les d'evaluation"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:170
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
 msgid "Newsletters"
-msgstr ""
+msgstr "Newsletters"
 
 # msgid "Newsletters"
 # msgstr "Note de Recherche"
@@ -501,12 +512,12 @@ msgstr ""
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:159 jdapublicationsapp/forms.py:39
+#: jdaplatform/settings.py:161 jdapublicationsapp/forms.py:39
 #: jdapublicationsapp/forms.py:96
 msgid "French"
 msgstr "Francais"
 
-#: jdaplatform/settings.py:160 jdapublicationsapp/forms.py:38
+#: jdaplatform/settings.py:162 jdapublicationsapp/forms.py:38
 #: jdapublicationsapp/forms.py:95
 msgid "English"
 msgstr "Anglais"
@@ -742,6 +753,23 @@ msgstr "C'est la vie"
 #: jdatester/templates/jdatester/home.html:9
 msgid "Static template content"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Save User Info"
+#~ msgid "User Info"
+#~ msgstr "Info utilisateur"
+
+#~ msgid "Admin Tasks - Add User"
+#~ msgstr "Tâches d'administration - Ajouter un utilisateur"
+
+#~ msgid "Administrative Tasks"
+#~ msgstr "Tâches d'administration"
+
+#~ msgid "Administrative Tasks - Add New User"
+#~ msgstr "Tâches administratives - Ajouter un nouvel utilisateur"
+
+#~ msgid "Administrative Tasks - Edit Profile"
+#~ msgstr "Tâches administratives - Modifier le Profil"
 
 #~ msgid "Welcome"
 #~ msgstr "Bienvenue"

@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from accounts .decorators import allowed_users
 from datetime import datetime
+from django.db.models import Count
 
 
 
@@ -298,6 +299,28 @@ def admin_tasks_add(request):
 
     return render(request, 'registration/admin_tasks_add.html', context)
 
+from django.db.models.functions import TruncMonth
+from django.db.models.functions import ExtractMonth
+#admin_tasks_stats
+@login_required
+@allowed_users(allowed_roles=['admins','managers'])
+def admin_tasks_stats(request, stats_type):
+    now = datetime.now()
+    curr_grp = None
+    if request.user.groups.all():
+        curr_grp = request.user.groups.all()[0].name
+
+    jda_profile_chart=""
+    #jda_user_login_period_count=""
+
+    if stats_type =='login_by_group':
+        jda_profile_chart = User.objects.exclude(groups__name='admins').values('groups__name').annotate(gcount=Count('groups__name')).exclude(groups__name='deactivated').order_by('groups__name')
+    elif stats_type =='login_by_period':
+        #jda_profile_chart = User.objects.values('last_login').annotate(gcount=Count('last_login')).exclude(groups__name='deactivated').order_by('last_login')
+        #jda_profile_chart = User.objects.values('last_login').annotate(month=TruncMonth('last_login')).annotate(gcount=Count('last_login')).exclude(groups__name='deactivated').values('month', 'gcount')
+        jda_profile_chart = User.objects.exclude(last_login=None).exclude(groups__name='admins').annotate(month=TruncMonth('last_login')).values('month').annotate(gcount=Count('id')).values('month', 'gcount')
+    context = {'stats_type': stats_type, 'jda_profile_chart':jda_profile_chart, 'rpt_date':now, 'user_grp': curr_grp}
+    return render(request, 'registration/admin_tasks_stats.html', context)
 
 # def signup(request):
 #     if request.method == 'POST':

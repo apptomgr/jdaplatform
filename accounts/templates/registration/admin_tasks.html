@@ -18,16 +18,13 @@
 </div>
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb my_breadcrumb_bg">
-        <li class="breadcrumb-item"><a href="{% url 'admin_tasks' %}" class="text-light"><i class="fas fa-tasks text-white"></i> {% trans 'Admin Tasks' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'admin_tasks_add' %}" class="text-light"><i class="fas fa-user-plus text-white"></i> {% trans 'Admin Tasks - Add User' %} </a></li>
-    </ol>
+    {% include "registration/admin_tasks_breadcrum.html" %}
 </nav>
 
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
         <div class="text-center">
-            <h5 class="text-muted"><i class="fas fa-user-lock my_info_txt"></i> {% trans 'Administrative Tasks' %}</h5>
+            <h5 class="text-muted"><i class="fas fa-user-lock my_info_txt"></i> {% trans 'Admin Tasks' %} <i class="fas fa-angle-double-right text-info"></i> <small>{% trans 'Profile Info' %}</small></h5>
         </div>
     </div>
 
