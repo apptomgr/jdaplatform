@@ -234,3 +234,9 @@ def jdaanalyticsapp_sec_filter(request):
     context = {'user_grp': grp,'filterForm':filterForm,'index': index, 'security_price': security_price, 'rpt_date': now}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
 
+
+
+from django.http import HttpResponse
+def res(request):
+    return HttpResponse('res')
+
