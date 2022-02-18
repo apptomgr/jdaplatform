@@ -39,32 +39,47 @@
             <div class="row">
                 <div class="col-4">{{form.company|as_crispy_field}}</div>
                 <div class="col-4">{{form.creatn_dt | as_crispy_field}}</div>
-                <div class="col-4">{{form.id_cntry | as_crispy_field}}</div>
+                <div class="col-4">{{form.country | as_crispy_field}}</div>
             </div>
             <div class="row">
                 <div class="col-4">{{form.legl_form | as_crispy_field}}</div>
                 <div class="col-4">{{form.rccm_nbr | as_crispy_field}}</div>
-                <div class="col-2 form-check float-right">
-                    <label class="form-check-labelX">Societe sous control public</label>
-                </div>
-                <div class="col-2">
-                    {{form.flag_pub_ctrl | as_crispy_field}}
-                </div>
+                <div class="col-3 float-left">
+                    <label class="form-check-label float-left ml-2"> Societe sous control public</label></div>
+                <div class="col-1">{{form.flag_pub_ctrl| as_crispy_field}}</div>
             </div>
+
             <!-- activite -->
             <div class="row">
                 <div class="col-6"><input class="form-control" type="text" placeholder="Activite" readonly></div>
-                <div class="col-6"><input class="form-control" type="text" placeholder="Actionnariat" readonly>
-                    <span class="float_right"><i class="fas fa-user-plus"></i></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">{{form.actvty_sctr|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_name_1|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_type_1|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrs_hld_1|as_crispy_field}}</div>
+                <div class="col-6"><input class="form-control" type="text" placeholder="Actionnariat" readonly></div>
+                    <!--span class="float_right"><i class="fas fa-user-plus"></i></span-->
+
             </div>
 
+            <div class="row">
+                <div class="col-6"><!--activity-->
+                    <div class="">{{form.actvty_sctr|as_crispy_field}}</div>
+                    <div class="">{{form.actvty_code|as_crispy_field}}</div>
+                    <div class="">{{form.intrnl_actvty_code | as_crispy_field}}</div>
+                    <div class="">{{form.othr_bus_sctr | as_crispy_field}}</div>
+                </div>
+                <div class="col-6"><!--Shareholder-->
+                    <div class="">{{form.shareholder|as_crispy_field}}</div>
+                    <!--div class="">{{form.shareholder|as_crispy_field}}</div>
+                    <div class="">{{form.shareholder|as_crispy_field}}</div-->
+                </div>
+            </div>
+
+            {% comment %}
+            <div class="row">
+                <div class="col-6">{{form.actvty_sctr|as_crispy_field}}</div>
+                <div class="col-2">{{form.shrhldr_name|as_crispy_field}}</div>
+                <div class="col-2">{{form.shrhldr_type|as_crispy_field}}</div>
+                <div class="col-2">{{form.shrs_hld|as_crispy_field}}</div>
+            </div>
+            {% endcomment %}
+            {% comment %}
             <div class="row">
                 <div class="col-6">{{form.actvty_code|as_crispy_field}}</div>
                 <div class="col-2">{{form.shrhldr_name_2|as_crispy_field}}</div>
@@ -83,8 +98,7 @@
                 <div class="col-2">{{form.shrhldr_type_4|as_crispy_field}}</div>
                 <div class="col-2">{{form.shrs_hld_4|as_crispy_field}}</div>
             </div>
-
-
+            {% endcomment%}
 
 
         </div>

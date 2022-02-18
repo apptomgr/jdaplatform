@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'
+#SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 
@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'django_translation_flags',
     'accounts.apps.AccountsConfig',
     'preventconcurrentlogins',
-
+    'django_countries',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

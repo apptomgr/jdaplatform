@@ -621,9 +621,11 @@ def jdafinancialsapp_new_company(request):
             form.save()
             messages.success(request, f"{form.cleaned_data['company']} info successfully added ")
             return redirect('jdafinancialsapp_new_company')
-        else:
-            messages.error(request, form.errors)
-            return redirect('jdafinancialsapp_new_company')
+        #else:
+        #    messages.error(request, form.errors)
+        #    return redirect('jdafinancialsapp_new_company')
+        messages.error(request, form.errors)
+        messages.error(request, "Please complete filling all required fields before proceeding...")
     else:
         form = CompanyForm()
 

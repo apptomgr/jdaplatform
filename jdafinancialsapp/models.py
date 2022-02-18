@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 from .utils import get_rpt_range_period, get_period
 from django.core.exceptions import ValidationError
+from django_countries.fields import CountryField
 
 
 #///////////////////////////////// SectorModel /////////////////////////////////
@@ -18,24 +19,24 @@ class SectorModel(models.Model):
 #/////////////////////////////////// ShareholderModel ///////////////////////////////
 class ShareholderModel(models.Model):
     #company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE)
-    shrhldr_name_1 = models.CharField(max_length=100, blank=True, null=True)
-    shrhldr_type_1 = models.CharField(max_length=35, blank=True, null=True)
-    shrs_hld_1     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
-
-    shrhldr_name_2 = models.CharField(max_length=100, blank=True, null=True)
-    shrhldr_type_2 = models.CharField(max_length=35, blank=True, null=True)
-    shrs_hld_2     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
-
-    shrhldr_name_3 = models.CharField(max_length=100, blank=True, null=True)
-    shrhldr_type_3 = models.CharField(max_length=35, blank=True, null=True)
-    shrs_hld_3     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
-
-    shrhldr_name_4 = models.CharField(max_length=100, blank=True, null=True)
-    shrhldr_type_4 = models.CharField(max_length=35, blank=True, null=True)
-    shrs_hld_4     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
+    shrhldr_name = models.CharField(max_length=100, blank=True, null=True)
+    shrhldr_type = models.CharField(max_length=35, blank=True, null=True)
+    shrs_hld     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
+    #
+    # shrhldr_name_2 = models.CharField(max_length=100, blank=True, null=True)
+    # shrhldr_type_2 = models.CharField(max_length=35, blank=True, null=True)
+    # shrs_hld_2     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
+    #
+    # shrhldr_name_3 = models.CharField(max_length=100, blank=True, null=True)
+    # shrhldr_type_3 = models.CharField(max_length=35, blank=True, null=True)
+    # shrs_hld_3     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
+    #
+    # shrhldr_name_4 = models.CharField(max_length=100, blank=True, null=True)
+    # shrhldr_type_4 = models.CharField(max_length=35, blank=True, null=True)
+    # shrs_hld_4     = models.DecimalField(max_digits=13, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.shrhldr_name_1
+        return self.shrhldr_name
 
     class Meta:
         verbose_name_plural ='ShareholderModel'
@@ -54,7 +55,9 @@ class CompanyModel(models.Model):
     legl_form = models.CharField(max_length=10, blank=False, null=False)
     creatn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     rccm_nbr = models.CharField(max_length=15, blank=True, null=True)
-    id_cntry = models.IntegerField(blank=False, null=True)
+    country = CountryField(blank=True, null=True)
+    #country =models.CharField(max_length=300, blank=False, null=False)
+    #id_cntry = models.IntegerField(blank=False, null=True)
     flag_pub_ctrl = models.BooleanField(default=True)
     actvty_sctr = models.CharField(max_length=30, blank=True, null=True)
     actvty_code = models.CharField(max_length=30, blank=True, null=True)

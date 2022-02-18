@@ -1,7 +1,7 @@
 from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel,Language
-
+from django_countries.fields import CountryField
 from django.utils.translation import ugettext_lazy
 #ugettext_lazy('Sector') # this string will be marked for translation
 #from django.core.exceptions import ValidationError
@@ -31,34 +31,36 @@ class CompanyForm(forms.ModelForm):
         ('Annually', 'Annually'),
     )
 
+    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Denomination Sociale'},))
+    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Non Usuel'},))
+    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
+    #rpt_period = forms.ChoiceField(choices=CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'placeholder':'Reporting Period'}))
+    legl_form = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Forme Juridique'},))
+    creatn_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Date de creation'}))
+    rccm_nbr = forms.CharField(max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Numero RCCM'}, ))
+    country = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
+    #id_cntry = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Pays du siege social'}, ))
+    #flag_pub_ctrl = forms.BooleanField(label='Societe sous control public', required=False, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm form-check-input checkbox-inline', 'id':'flag_pub_ctrl'})),
+    flag_pub_ctrl = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm selectpicker'})),
+    actvty_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Secteur d\'activite BRVM'}, ))
+    actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites economiques (CIV)'}, ))
+    intrnl_actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
+    othr_bus_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Autre secteur d\'activites'}, ))
+    shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
 
-    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Denomination Sociale'},))
-    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Non Usuel'},))
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
-    #rpt_period = forms.ChoiceField(choices=CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control selector selectpicker show-tick', 'placeholder':'Reporting Period'}))
-    legl_form = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'Forme Juridique'},))
-    creatn_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control selectpicker', 'placeholder': 'Date de creation'}))
-    rccm_nbr = forms.CharField(max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'Numero RCCM'}, ))
-    id_cntry = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pays du siege social'}, ))
-    #flag_pub_ctrl = forms.BooleanField(label='Societe sous control public', required=False, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm form-check-input checkbox-inline', 'id':'flag_pub_ctrl'})),
-    flag_pub_ctrl = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm selectpicker'})),
-    actvty_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Secteur d\'activite BRVM'}, ))
-    actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Code activites economiques (CIV)'}, ))
-    intrnl_actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
-    othr_bus_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Autre secteur d\'activites'}, ))
-    #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick my_dropdown'}))
-    shrhldr_name_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
-    shrhldr_type_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
-    shrs_hld_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
-    shrhldr_type_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
-    shrs_hld_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
-    shrhldr_type_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
-    shrs_hld_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
-    shrhldr_name_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de l\'actionnaire'}, ))
-    shrhldr_type_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type d\'actionnaire'}, ))
-    shrs_hld_4 = forms.CharField(required = False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Part detenue'}, ))
+    #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown'}))
+    #shrhldr_name_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nom de l\'actionnaire'}, ))
+    #shrhldr_type_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
+    #shrs_hld_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
+    #shrhldr_name_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nom de l\'actionnaire'}, ))
+    #shrhldr_type_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
+    #shrs_hld_2 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
+    #shrhldr_name_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nom de l\'actionnaire'}, ))
+    #shrhldr_type_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
+    #shrs_hld_3 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
+    #shrhldr_name_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nom de l\'actionnaire'}, ))
+    #shrhldr_type_4 = forms.CharField(required = False,max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
+    #shrs_hld_4 = forms.CharField(required = False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
 
 
     class Meta:
@@ -68,10 +70,10 @@ class CompanyForm(forms.ModelForm):
 
 #///////////////////////////// ShareholderForm //////////////////////////////////////
 class ShareholderForm(forms.ModelForm):
-    shrhldr_name = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome de l\'actionnaire'}, ))
-    #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm'}))
-    #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
-    #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
+    shrhldr_name = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))
+    #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control-sm'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
+    #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
     #value = forms.DecimalField(max_digits=13, decimal_places=2, label='Value', widget=forms.TextInput(attrs={'onBlur':'calc();', 'class': 'form-control-sm', 'placeholder':'0.00'}))#models.DecimalField(max_digits=13, decimal_places=2)
 
     class Meta:
