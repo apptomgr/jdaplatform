@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from datetime import datetime
-from django.utils.timezone import timedelta
+# from django.utils.timezone import timedelta
 from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
-from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, ShareholderForm, FinancialStatementFactForm
+from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
-from django.utils.dateparse import parse_date
-from . utils import get_publication_period, get_rpt_range_period, jdafinancialsapp_migrate_bal_link_data, jdafinancialsapp_migrate_inc_link_data,jdafinancialsapp_migrate_inv_acct_link_data, yearsago
+# from django.utils.dateparse import parse_date
+from . utils import get_publication_period, jdafinancialsapp_migrate_bal_link_data, jdafinancialsapp_migrate_inc_link_data,jdafinancialsapp_migrate_inv_acct_link_data, yearsago
 
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required

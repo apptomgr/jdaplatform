@@ -1,13 +1,13 @@
 
 from django.urls import path
-from . import views #, ajax
-from django.utils.text import slugify
+from . import views
+# from django.utils.text import slugify
 
 urlpatterns = [
     path('', views.jdapublicationsapp_home, name='jdapublicationsapp_home'),
     path('jdapublicationsapp_dept/', views.jdapublicationsapp_dept, name='jdapublicationsapp_dept'),
     path('jdapublicationsapp_pubs/', views.jdapublicationsapp_pubs, name='jdapublicationsapp_pubs'),
-    #path('jdapublicationsapp_pubs/<str:pub_lang>', views.jdapublicationsapp_pubs_lang, name='jdapublicationsapp_pubs_lang'),
+    # path('jdapublicationsapp_pubs/<str:pub_lang>', views.jdapublicationsapp_pubs_lang, name='jdapublicationsapp_pubs_lang'),
 
     path('jdapublicationsapp_filter/', views.jdapublicationsapp_filter, name='jdapublicationsapp_filter'),
     path('jdapublicationsapp_fullSearch/', views.jdapublicationsapp_fullSearch, name='jdapublicationsapp_fullSearch'),
@@ -19,22 +19,12 @@ urlpatterns = [
     path('jdapublicationsapp_new_company/', views.jdapublicationsapp_new_company, name='jdapublicationsapp_new_company'),
     path('jdapublicationsapp_delete_company_confirm/<int:pk>', views.jdapublicationsapp_delete_company_confirm, name='jdapublicationsapp_delete_company_confirm'),
     path('jdapublicationsapp_delete_company_yes/<int:pk>', views.jdapublicationsapp_delete_company_yes, name='jdapublicationsapp_delete_company_yes'),
-    #path('jdapublicationsapp_view_one_pub/<str:folder>/<str:yr>/<str:mon>/<str:file_name>', views.jdapublicationsapp_view_one_pub, name='jdapublicationsapp_view_one_pub'),
-    #path('jdapublicationsapp_view_watermarked_pub/<str:file_name>', views.jdapublicationsapp_view_watermarked_pub, name='jdapublicationsapp_view_watermarked_pub'),
+    # path('jdapublicationsapp_view_one_pub/<str:folder>/<str:yr>/<str:mon>/<str:file_name>', views.jdapublicationsapp_view_one_pub, name='jdapublicationsapp_view_one_pub'),
+    # path('jdapublicationsapp_view_watermarked_pub/<str:file_name>', views.jdapublicationsapp_view_watermarked_pub, name='jdapublicationsapp_view_watermarked_pub'),
     # Securities
-    #path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
+    # path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
 
-    #misc
+    # misc
     path('tes/', views.tes, name='tes'),
     path('jda_simple_form_tester/', views.jda_simple_form_tester, name='jda_simple_form_tester'),
-
-#    path('jda_ajax_tester/', views.jda_ajax_tester, name='jda_ajax_tester'),
-#    path('jda_ajax_tester/ajax_tester_btn', ajax.ajax_tester_btn, name='ajax_tester_btn'),
-#    path('jda_ajax_tester/ajax_selected', ajax.ajax_selected, name='ajax_selected'),
-#    path('jda_ajax_tester/ajax_dropdown_test/<str:id_param>', ajax.ajax_dropdown_test, name='ajax_dropdown_test'),
-
-#    path('jdapublicationsapp_ajax_set_type/<str:id_param>', ajax.jdapublicationsapp_ajax_set_type, name='jdapublicationsapp_ajax_set_type'),
-
-
-
 ]
