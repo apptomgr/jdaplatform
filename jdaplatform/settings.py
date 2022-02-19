@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 import sys
 import dj_database_url
-
 from pathlib import Path
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
+from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
@@ -27,15 +28,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
+# SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+# DEBUG = True
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
@@ -111,7 +112,7 @@ if DEVELOPMENT_MODE is True:
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    #print("post")
+    # print("post")
     if os.getenv("DATABASE_URL", None) is None:
         raise Exception("DATABASE_URL environment variable not defined")
     DATABASES = {
@@ -119,12 +120,12 @@ elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     }
 
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
-#}
+# }
 
 
 # Password validation
@@ -155,32 +156,31 @@ USE_L10N = True          # use localization
 #
 LANGUAGE_CODE = 'en-us'  # default (fallback) language
 
-from django.utils.translation import gettext_lazy as _
 
 LANGUAGES = [
   ('fr', _('French')),
   ('en-us', _('English')),
 ]
 
-#LANGUAGES = (            # supported languages
+# LANGUAGES = (            # supported languages
 #    ('en-us', 'English'),
 #    ('fr', 'French'),
-#)
+# )
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
-#LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/New_York'
 
-#USE_I18N = True
+# USE_I18N = True
 
-#USE_L10N = True
+# USE_L10N = True
 
 USE_TZ = True
 
-#LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
 USE_THOUSAND_SEPARATOR = True
 
 
@@ -194,16 +194,16 @@ if DEVELOPMENT_MODE is True:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     # Comment below before prod deployment
-    #AWS_STORAGE_BUCKET_NAME = 'djangotestspace'
-    #AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
-    #AWS_S3_OBJECT_PARAMETERS = {
+    # AWS_STORAGE_BUCKET_NAME = 'djangotestspace'
+    # AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+    # AWS_S3_OBJECT_PARAMETERS = {
     #    'CacheControl': 'max-age=86400',
-    #}
-    ##AWS_LOCATION = 'django_test_space'
-    ##STATIC_URL = '/static/'
-    ##STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    ##STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    #DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
+    # }
+    # #AWS_LOCATION = 'django_test_space'
+    # #STATIC_URL = '/static/'
+    # #STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+    # #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    # DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
 else:
     AWS_STORAGE_BUCKET_NAME = 'djangotestspace'
     AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
@@ -215,22 +215,19 @@ else:
     # MEDIA_URL = 'https://%s/%s/' % (AWS_S3_ENDPOINT_URL, AWS_LOCATION)
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    #DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
+    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    # DEFAULT_FILE_STORAGE = 'django_test.storage_backends.MediaStorage'  # the media storage configurations
     DEFAULT_FILE_STORAGE = 'jdaplatform.storage_backends.MediaStorage'  # the media storage configurations
-    #MEDIA_ROOT =f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}"
+    # MEDIA_ROOT =f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}"
     MEDIA_ROOT = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/media"
 
 
-
-
-
-#STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
-from django.contrib.messages import constants as messages
-MESSAGE_TAGS ={
-    messages.ERROR:'danger',
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
 }

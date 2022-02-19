@@ -22,7 +22,7 @@ urlpatterns = [
     #path('jdapublicationsapp_view_one_pub/<str:folder>/<str:yr>/<str:mon>/<str:file_name>', views.jdapublicationsapp_view_one_pub, name='jdapublicationsapp_view_one_pub'),
     #path('jdapublicationsapp_view_watermarked_pub/<str:file_name>', views.jdapublicationsapp_view_watermarked_pub, name='jdapublicationsapp_view_watermarked_pub'),
     # Securities
-    path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
+    #path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
 
     #misc
     path('tes/', views.tes, name='tes'),

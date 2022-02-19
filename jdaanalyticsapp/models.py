@@ -2,7 +2,8 @@ from django.db import models
 from django_countries.fields import CountryField
 from jdafinancialsapp.models import CompanyModel, SectorModel
 
-#///////////////////////////// ExchangeModel ///////////////////////////////
+
+# ///////////////////////////// ExchangeModel ///////////////////////////////
 class ExchangeModel(models.Model):
     name = models. CharField(max_length=25, null=False, blank=False)
     acronym = models. CharField(max_length=10, null=False, blank=False)
@@ -13,7 +14,8 @@ class ExchangeModel(models.Model):
     class Meta:
         verbose_name_plural = 'ExchangeModel'
 
-#/////////////////////////////// IndexModel//////////////////////////////////////////////
+
+# /////////////////////////////// IndexModel//////////////////////////////////////////////
 class IndexModel(models.Model):
     index = models.CharField(max_length=12, blank=False, null=False)
 
@@ -24,20 +26,20 @@ class IndexModel(models.Model):
         verbose_name_plural = 'IndexModel'
 
 
-#/////////////////////////////// IndexPriceModel//////////////////////////////////////////////
+# //////////////////////////////// IndexPriceModel//////////////////////////////////////////////
 class IndexPriceModel(models.Model):
     index_date = models.DateTimeField(blank=False, null=False)
     index = models.ForeignKey(IndexModel, on_delete=models.CASCADE, null=False, blank=False)
     value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.index.index
+        return self.index
 
     class Meta:
         verbose_name_plural = 'IndexPriceModel'
 
 
-#/////////////////////////////// SecurityModel//////////////////////////////////////////////
+# /////////////////////////////// SecurityModel//////////////////////////////////////////////
 class SecurityModel(models.Model):
     # ticker = models.CharField(max_length=12, blank=False, null=False)
     # isin = models.CharField(max_length=20, blank=False, null=False)
@@ -51,42 +53,42 @@ class SecurityModel(models.Model):
 
     CHOICES_INSTR_TYPE = (
         ('', 'Security Status'),
-        ('Listed','Listed'),
+        ('Listed', 'Listed'),
         ('Unquoted', 'Unquoted'),
         ('Suspended', 'Suspended'),
     )
     CHOICES_LISTG = (
-        ('','Listing Status'),
+        ('', 'Listing Status'),
         ('Listed', 'Listed'),
         ('Unlisted', 'Unlisted'),
         ('Suspended', 'Suspended'),
         ('Deleted', 'Deleted'),
     )
     CHOICES_TITLE_TYPE = (
-        ('','Title Type'),
+        ('', 'Title Type'),
         ('Listed Share', 'Listed Share'),
         ('Listed Bond', 'Listed Bond'),
         ('Unlisted Share', 'Unlisted Share'),
         ('Unlisted Bond', 'Unlisted Bond'),
     )
     CHOICES_SHR_CLASS = (
-        ('','Share Class'),
+        ('', 'Share Class'),
         ('A', 'A'),
         ('B', 'B'),
         ('C', 'C'),
     )
     CHOICES_ISUR_TYPE = (
-        ('','Issuer Type'),
+        ('', 'Issuer Type'),
         ('Private', 'Private'),
         ('Public', 'Public'),
     )
     CHOICES_RGSTRR = (
         ('', 'Registrar'),
-        ('Central Bank','Central Bank'),
+        ('Central Bank', 'Central Bank'),
     )
     CHOICES_DEPSTY = (
         ('', 'Depository'),
-        ('Bourse Regionale','Bourse Regionale'),
+        ('Bourse Regionale', 'Bourse Regionale'),
     )
 
     ticker = models.CharField(max_length=12, blank=False, null=False)
@@ -124,7 +126,8 @@ class SecurityModel(models.Model):
     class Meta:
         verbose_name_plural = 'SecurityModel'
 
-#/////////////////////////////// SecurityPriceModel//////////////////////////////////////////////
+
+# /////////////////////////////// SecurityPriceModel//////////////////////////////////////////////
 class SecurityPriceModel(models.Model):
     security = models.ForeignKey(SecurityModel, on_delete=models.CASCADE, null=False, blank=False)
     security_date = models.DateTimeField(blank=False, null=False)
@@ -140,18 +143,17 @@ class SecurityPriceModel(models.Model):
     trans_value = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.security.ticker
+        return self.security
 
     class Meta:
         verbose_name_plural = 'SecurityPriceModel'
 
 
-
-#///////////////////////////// StockModel ///////////////////////////////
+# ///////////////////////////// StockModel ///////////////////////////////
 class StockModel(models.Model):
     CHOICES_SECR_STS = (
         ('', 'Security Status'),
-        ('Listed','Listed'),
+        ('Listed', 'Listed'),
         ('Unquoted', 'Unquoted'),
         ('Suspended', 'Suspended'),
     )
@@ -162,13 +164,13 @@ class StockModel(models.Model):
     dvdnd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.security.ticker
+        return self.security
 
     class Meta:
         verbose_name_plural = 'StockModel'
 
 
-#///////////////////////////// BondModel ///////////////////////////////
+# ///////////////////////////// BondModel ///////////////////////////////
 class BondModel(models.Model):
     CHOICES_BND_TYPE = (
         ('', 'Bond Type'),
@@ -228,21 +230,19 @@ class BondModel(models.Model):
     net_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     bnd_type = models.CharField(max_length=50, choices=CHOICES_BND_TYPE)
     duratn_amt = models.IntegerField(blank=False, null=False)
-    duratn_units =  models.CharField(max_length=50, choices=CHOICES_DURATN_UNITS)
+    duratn_units = models.CharField(max_length=50, choices=CHOICES_DURATN_UNITS)
     pymt_perd = models.CharField(max_length=50, choices=PYMT_PERD)
     pymt_perd_units = models.CharField(max_length=50, choices=CHOICES_PYMT_PERDU)
-    dfrrd_rpymt_perd_units =models.CharField(max_length=50, choices=CHOICES_DRPU)
-    rpymt_mthd =models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD)
-    rpymt_type =models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE)
+    dfrrd_rpymt_perd_units = models.CharField(max_length=50, choices=CHOICES_DRPU)
+    rpymt_mthd = models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD)
+    rpymt_type = models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE)
     bnd_isu_dt = models.DateField(auto_now=False)
     first_pay_date = models.DateField(auto_now_add=False)
     lst_pay_dt = models.DateField(auto_now_add=False)
     usage = models.IntegerField(blank=False, null=False, choices=CHOICES_USAGE)
 
     def __str__(self):
-        return self.security.ticker
+        return self.security
 
     class Meta:
         verbose_name_plural = 'BondModel'
-
-

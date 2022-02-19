@@ -1,22 +1,22 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+# from django.http import HttpResponse, Http404
 from .forms import PublicationAdminsForm, PublicationFilterForm, PublicationCompanyForm, CountryForm, EmptyForm, SimpleForm, FullSearchForm
 from .models import PublicationModel, PublicationCompanyModel
-from accounts.models import Profile
+# from accounts.models import Profile
 from datetime import datetime
 from django.contrib import messages
-from django.db.models import Q
+# from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from accounts .decorators import allowed_users
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.models import User
-from jdamainapp.utils import fitz_pdf
+# from django.contrib.auth.decorators import user_passes_test
+# from django.contrib.admin.views.decorators import staff_member_required
+# from django.contrib.auth.models import User
+# from jdamainapp.utils import fitz_pdf
 from django.utils import translation
 from django.db.models import Max
 
 from django.urls import resolve
-import os
+# import os
 
 
 def get_user_grp(request):
@@ -25,16 +25,17 @@ def get_user_grp(request):
         grp = request.user.groups.all()[0].name
     return grp
 
+# ////////////////////////////////jdapublicationsapp_home///////////////////////////////////////
 @login_required
 def jdapublicationsapp_home(request):
     form = PublicationAdminsForm()
     full_search_form = FullSearchForm()
-    filterForm =PublicationFilterForm()
-    publication_listing =PublicationModel.objects.filter(visible_flag=True).all()
-    #print(f"//////////17: {publication_listing.count()}/////////")
+    filterForm = PublicationFilterForm()
+    publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
+    # print(f"//////////17: {publication_listing.count()}/////////")
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'filterForm':filterForm, 'publication_listing':publication_listing, 'full_search_form': full_search_form,'search_result': publication_listing}
+    context = {'user_grp': grp, 'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing, 'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_home.html', context)
 
 
@@ -1157,34 +1158,34 @@ def jdapublicationsapp_delete_company_yes(request, pk):
     #return render(request, 'jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html', context)
 
 
-#////////////////////////// jdafinancialsapp_add_security ///////////////////////
-@login_required
-@allowed_users(allowed_roles=['admins','managers', 'staffs'])
-def jdafinancialsapp_add_security(request):
-    #print("785 Post security info")
-    if request.method == "POST":
-        form = SecurityForm(request.POST)
-        #print(request.POST.get('issuer'))
-        #data = request.POST.copy()
-        #print(f": 708 {data}") #{request.POST.get('company')}")
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
-            return redirect('jdafinancialsapp_add_security')
-
-        #if len(form.errors) < 6:
-        #    #messages.error(request, form.errors)
-        messages.error(request, "Please complete filling all required fields before submitting ")
-        #else:
-        #    messages.error(request, form.errors)
-        #    return redirect('jdafinancialsapp_add_security')
-    else:
-        print("inv")
-        form = SecurityForm()
-
-    grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
-    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_security.html', context)
+# #////////////////////////// jdafinancialsapp_add_security ///////////////////////
+# @login_required
+# @allowed_users(allowed_roles=['admins','managers', 'staffs'])
+# def jdafinancialsapp_add_security(request):
+#     #print("785 Post security info")
+#     if request.method == "POST":
+#         form = SecurityForm(request.POST)
+#         #print(request.POST.get('issuer'))
+#         #data = request.POST.copy()
+#         #print(f": 708 {data}") #{request.POST.get('company')}")
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+#             return redirect('jdafinancialsapp_add_security')
+#
+#         #if len(form.errors) < 6:
+#         #    #messages.error(request, form.errors)
+#         messages.error(request, "Please complete filling all required fields before submitting ")
+#         #else:
+#         #    messages.error(request, form.errors)
+#         #    return redirect('jdafinancialsapp_add_security')
+#     else:
+#         print("inv")
+#         form = SecurityForm()
+#
+#     grp = get_user_grp(request)
+#     context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+#     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_security.html', context)
 
 
 # #//////////////////////////////////////// jdapublicationsapp_delete_company/////////////////////////////
