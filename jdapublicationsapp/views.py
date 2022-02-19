@@ -1157,6 +1157,36 @@ def jdapublicationsapp_delete_company_yes(request, pk):
     #return render(request, 'jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html', context)
 
 
+#////////////////////////// jdafinancialsapp_add_security ///////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_add_security(request):
+    #print("785 Post security info")
+    if request.method == "POST":
+        form = SecurityForm(request.POST)
+        #print(request.POST.get('issuer'))
+        #data = request.POST.copy()
+        #print(f": 708 {data}") #{request.POST.get('company')}")
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+            return redirect('jdafinancialsapp_add_security')
+
+        #if len(form.errors) < 6:
+        #    #messages.error(request, form.errors)
+        messages.error(request, "Please complete filling all required fields before submitting ")
+        #else:
+        #    messages.error(request, form.errors)
+        #    return redirect('jdafinancialsapp_add_security')
+    else:
+        print("inv")
+        form = SecurityForm()
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_security.html', context)
+
+
 # #//////////////////////////////////////// jdapublicationsapp_delete_company/////////////////////////////
 # @login_required
 # def jdapublicationsapp_delete_company(request, pk):

@@ -236,7 +236,4 @@ def jdaanalyticsapp_sec_filter(request):
 
 
 
-from django.http import HttpResponse
-def res(request):
-    return HttpResponse('res')
 

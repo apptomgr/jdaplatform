@@ -72,7 +72,16 @@ class CompanyModel(models.Model):
         verbose_name_plural ='CompanyModel'
 
 
+#///////////////////////////// ExchangeModel ///////////////////////////////
+class ExchangeModel(models.Model):
+    name = models. CharField(max_length=25, null=False, blank=False)
+    acronym = models. CharField(max_length=10, null=False, blank=False)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'ExchangeModel'
 
 """
 GUI Field	            Column	Data Type	Length
