@@ -18,8 +18,8 @@ urlpatterns = [
     path('jdatester_import', views.jdatester_import_data, name='jdatester_import_data'),
 
     path('jdatester_load_xls', views.jdatester_load_xls, name='jdatester_load_xls'),
-    path('jdatester_index', views.jdatester_index, name='jdatester_index'),
-    path('jdatester_sec_filter', views.jdatester_sec_filter, name='jdatester_sec_filter'),
+    #path('jdatester_index', views.jdatester_index, name='jdatester_index'),
+    #path('jdatester_sec_filter', views.jdatester_sec_filter, name='jdatester_sec_filter'),
 
     path('blog_listing', views.blog_listing, name='blog_listing'),
     path('blog_view/<int:blog_id>', views.blog_view, name='blog_view'),

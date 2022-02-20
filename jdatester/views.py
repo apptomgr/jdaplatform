@@ -451,15 +451,15 @@ def jdatester_load_xls(request):
     return render(request, 'jdatester/load_xls.html', context)
 
 
-#//////////////////////////// jdatester_index /////////////////////
-from .forms import IndexForm
-# from .models import IndexPriceModel, SecurityModel, SecurityPriceModel
-import xlrd
-from datetime import datetime
-from django.utils import timezone
-import pytz
-
-import pandas as pd
+# #//////////////////////////// jdatester_index /////////////////////
+# from .forms import IndexForm
+# # from .models import IndexPriceModel, SecurityModel, SecurityPriceModel
+# import xlrd
+# from datetime import datetime
+# from django.utils import timezone
+# import pytz
+#
+# import pandas as pd
 
 # def jdatester_index(request):
 #     if request.method == 'POST':
