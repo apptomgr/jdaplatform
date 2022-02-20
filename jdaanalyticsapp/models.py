@@ -17,10 +17,10 @@ class ExchangeModel(models.Model):
 
 # /////////////////////////////// IndexModel//////////////////////////////////////////////
 class IndexModel(models.Model):
-    index = models.CharField(max_length=12, blank=False, null=False)
+    idx = models.CharField(max_length=12, blank=False, null=False)
 
     def __str__(self):
-        return self.index
+        return self.idx
 
     class Meta:
         verbose_name_plural = 'IndexModel'
@@ -29,11 +29,11 @@ class IndexModel(models.Model):
 # //////////////////////////////// IndexPriceModel//////////////////////////////////////////////
 class IndexPriceModel(models.Model):
     index_date = models.DateTimeField(blank=False, null=False)
-    index = models.ForeignKey(IndexModel, on_delete=models.CASCADE, null=False, blank=False)
+    idx = models.ForeignKey(IndexModel, on_delete=models.CASCADE, null=False, blank=False)
     value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.index
+        return self.idx.idx
 
     class Meta:
         verbose_name_plural = 'IndexPriceModel'
@@ -143,7 +143,7 @@ class SecurityPriceModel(models.Model):
     trans_value = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.security
+        return self.security.ticker
 
     class Meta:
         verbose_name_plural = 'SecurityPriceModel'
@@ -164,7 +164,7 @@ class StockModel(models.Model):
     dvdnd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return self.security
+        return self.security.ticker
 
     class Meta:
         verbose_name_plural = 'StockModel'
@@ -242,7 +242,7 @@ class BondModel(models.Model):
     usage = models.IntegerField(blank=False, null=False, choices=CHOICES_USAGE)
 
     def __str__(self):
-        return self.security
+        return self.security.ticker
 
     class Meta:
         verbose_name_plural = 'BondModel'

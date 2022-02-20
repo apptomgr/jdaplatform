@@ -105,12 +105,12 @@ class UploadExcelForm(forms.Form):
     excel = forms.FileField(validators=[validate_excel]) # Custom validation is used here
 
 
-def validate_excel(value):
-    if value.name.split('.')[-1] not in ['xls','xlsx']:
-        raise ValidationError(_('Invalid File Type: %(value)s'),params={'value': value},)
-
-class IndexForm(forms.Form):
-    excel = forms.FileField(validators=[validate_excel]) # Custom validation is used here
+# def validate_excel(value):
+#     if value.name.split('.')[-1] not in ['xls','xlsx']:
+#         raise ValidationError(_('Invalid File Type: %(value)s'),params={'value': value},)
+#
+# class IndexForm(forms.Form):
+#     excel = forms.FileField(validators=[validate_excel]) # Custom validation is used here
 
 
 #IndexPriceModel.objects.values_list('index_date', flat=True).distinct()

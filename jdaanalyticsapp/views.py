@@ -209,7 +209,7 @@ def jdaanalyticsapp_sec_filter(request):
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")
 
-        #else:
+        # else:
         #    print("147 invalid form")
         #    messages.error(request, filterForm.errors)
         #    print(f"149 form.errors {filterForm.errors} ///////")
@@ -221,17 +221,17 @@ def jdaanalyticsapp_sec_filter(request):
 
     if IndexPriceModel.objects.all():
         max_index_dt = IndexPriceModel.objects.latest('index_date').index_date
-        #print(max_index_dt)
-        index = IndexPriceModel.objects.filter(index_date=max_index_dt)
+        # print(max_index_dt)
+        idx_price = IndexPriceModel.objects.filter(index_date=max_index_dt)
         security = SecurityModel.objects.all()
         security_price = SecurityPriceModel.objects.filter(security_date = max_index_dt)
     else:
-        index = IndexPriceModel.objects.all()
-        security = SecurityModel.objects.all()
+        idx_price = IndexPriceModel.objects.all()
+        # security = SecurityModel.objects.all()
         security_price = SecurityPriceModel.objects.all()
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp,'filterForm':filterForm,'index': index, 'security_price': security_price, 'rpt_date': now}
+    context = {'user_grp': grp,'filterForm':filterForm,'idx_price': idx_price, 'security_price': security_price, 'rpt_date': now}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
 
 

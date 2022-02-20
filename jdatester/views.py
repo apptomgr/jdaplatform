@@ -26,7 +26,7 @@ import pandas as pd
 from django.utils.translation import gettext as _
 
 
-def index(request):
+def res_index(request):
     context_dict = {  # 2
         'hello': _('hello')  # 3
     }

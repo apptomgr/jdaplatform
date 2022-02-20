@@ -40,10 +40,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in index %}
+                    {% for i in idx_price %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
-                        <td class="text-left">{{i.index}}</td>
+                        <td class="text-left">{{i.idx}}</td>
                         <td class="text-left">{{i.value}}</td>
                     </tr>
                     {% endfor%}
@@ -70,7 +70,7 @@
                             <td scope="row">{{filterForm.ticker| as_crispy_field}}</td>
                         </tr>
                         <tr>
-                            <td scope="row">{{filterForm.index| as_crispy_field}}</td>
+                            <td scope="row">{{filterForm.idx| as_crispy_field}}</td>
                         </tr>
                         <tr>
                             <td class="my_nopad2 text-center">
