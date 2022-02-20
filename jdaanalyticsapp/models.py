@@ -31,9 +31,10 @@ class IndexPriceModel(models.Model):
     index_date = models.DateTimeField(blank=False, null=False)
     idx = models.ForeignKey(IndexModel, on_delete=models.CASCADE, null=False, blank=False)
     value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    res = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return self.idx.idx
+        return f"{self.idx.idx} - {self.value}"
 
     class Meta:
         verbose_name_plural = 'IndexPriceModel'
