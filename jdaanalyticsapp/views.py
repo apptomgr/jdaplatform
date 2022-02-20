@@ -54,25 +54,22 @@ def jdaanalyticsapp_upload_form(request):
                 if IndexPriceModel.objects.filter(index_date = dt_obj):
                     messages.info(request, f"Market data as of {dt_obj} already loaded")
                 else:
-                    # get index info & save it to DB only if new indexes
-                    for i in range(6, 15):  # index price info in spreadsheet starting from row 6 to row 15th
+                    # get idx info & save it to DB only if new indexes
+                    for i in range(6, 15):  # idx price info in spreadsheet starting from row 6 to row 15th
                         cols = sheet.row_values(i)
-                        #check if index not in IndexModel tbl then save it else skip it
-                        if not IndexModel.objects.filter(index=cols[0]):
-                            IndexModel.objects.create(index=cols[0])
-                            #IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
+                        #check if idx not in IndexModel tbl then save it else skip it
+                        if not IndexModel.objects.filter(idx=cols[0]):
+                            IndexModel.objects.create(idx=cols[0])
 
                     # get indexPrice info & save it to DB base on existing indexes
                     for i in range(6, 15):  # index price info in spreadsheet starting from row 6 to row 15th
                         cols = sheet.row_values(i)
-                        idx = IndexModel.objects.get(index=cols[0])
+                        idx = IndexModel.objects.get(idx=cols[0])
 
                         if idx: #indexPriceModel vals based on existing indexes
-                            IndexPriceModel.objects.create(index_date=dt_obj, index=idx, value=cols[1])
-                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index={idx}, value={cols[1]})")
+                            IndexPriceModel.objects.create(index_date=dt_obj, idx=idx, value=cols[1])
                         else: # save based on non-existing indexes
                             IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
-                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index=cols{cols[0]}, value={cols[1]})")
 
                     # get Security info & save it to DB only for new Securities from row 18 through the end of the page
                     for i in range(18, nbr_rows):  # security info index price info in spreadsheet
@@ -133,20 +130,19 @@ def jdaanalyticsapp_rpt(request):
     now = datetime.now()
     if IndexPriceModel.objects.all():
         max_index_dt = IndexPriceModel.objects.latest('index_date').index_date
-        index = IndexPriceModel.objects.filter(index_date=max_index_dt)
+        idx = IndexPriceModel.objects.filter(index_date=max_index_dt)
         security_price = SecurityPriceModel.objects.filter(security_date = max_index_dt)
 
     else:
-        index = IndexPriceModel.objects.all()
+        idx= IndexPriceModel.objects.all()
         #security = SecurityModel.objects.all()
         security_price = SecurityPriceModel.objects.all()
 
     filterForm = SecurityFilterForm()
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp,'filterForm':filterForm, 'index':index, 'security_price':security_price, 'rpt_date':now}
+    context = {'user_grp': grp,'filterForm':filterForm, 'idx':idx, 'security_price':security_price, 'rpt_date':now}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
-
 
 #/////////////////////// jdaanalyticsapp_sec_filter /////////////////////
 @login_required
@@ -160,51 +156,48 @@ def jdaanalyticsapp_sec_filter(request):
         if filterForm.is_valid():
             security_date = filterForm.cleaned_data['security_date']
             ticker = filterForm.cleaned_data['ticker']
-            index = filterForm.cleaned_data['index']
-
-            #print(f"119://// security_date:{security_date} ticker:{ticker} index:{index}  ")
-
+            idx = filterForm.cleaned_data['idx']
             # build querystring conditions
-            if ticker==None and index==None: #all None bring back all index info and sec info based on security_date
-                index = IndexPriceModel.objects.filter(index_date=security_date)
+            if ticker==None and idx==None: #all None bring back all idx info and sec info based on security_date
+                idx = IndexPriceModel.objects.filter(index_date=security_date)
                 security_price = SecurityPriceModel.objects.filter(security_date=security_date)
 
-                if index and security_price:
-                     messages.success(request, f"Found {index.count()}, {security_price.count()} item(s) as of {security_date}")
-                     context = {'filterForm': filterForm, 'index': index, 'security_price': security_price, 'rpt_date': now}
+                if idx and security_price:
+                     messages.success(request, f"Found {idx.count()}, {security_price.count()} item(s) as of {security_date}")
+                     context = {'filterForm': filterForm, 'idx': idx, 'security_price': security_price, 'rpt_date': now}
                      return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")
 
-            elif ticker!=None and index==None: #filter by ticker only based on security_date
-                index = IndexPriceModel.objects.filter(index_date=security_date)
+            elif ticker!=None and idx==None: #filter by ticker only based on security_date
+                idx = IndexPriceModel.objects.filter(index_date=security_date)
                 security_price = SecurityPriceModel.objects.filter(security_date=security_date, security__ticker=ticker)
 
-                if index and security_price:
-                     messages.success(request, f"Found {index.count()}, {security_price.count()} item(s) as of {security_date}")
-                     context = {'filterForm': filterForm, 'index': index, 'security_price': security_price, 'rpt_date': now}
+                if idx and security_price:
+                     messages.success(request, f"Found {idx.count()}, {security_price.count()} item(s) as of {security_date}")
+                     context = {'filterForm': filterForm, 'idx': idx, 'security_price': security_price, 'rpt_date': now}
                      return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")
 
-            elif ticker==None and index!=None: #filter by index only based on security_date
-                index = IndexPriceModel.objects.filter(index_date=security_date, index=index)
+            elif ticker==None and idx!=None: #filter by idx only based on security_date
+                idx = IndexPriceModel.objects.filter(index_date=security_date, idx=idx)
                 security_price = SecurityPriceModel.objects.filter(security_date=security_date)
 
-                if index and security_price:
-                     messages.success(request, f"Found {index.count()}, {security_price.count()} item(s) as of {security_date}")
-                     context = {'filterForm': filterForm, 'index': index, 'security_price': security_price, 'rpt_date': now}
+                if idx and security_price:
+                     messages.success(request, f"Found {idx.count()}, {security_price.count()} item(s) as of {security_date}")
+                     context = {'filterForm': filterForm, 'idx': idx, 'security_price': security_price, 'rpt_date': now}
                      return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")
 
-            elif ticker!=None and index!=None: #filter by both index amd ticker based on security_date
-                index = IndexPriceModel.objects.filter(index_date=security_date, index=index)
+            elif ticker!=None and idx!=None: #filter by both idx amd ticker based on security_date
+                idx = IndexPriceModel.objects.filter(index_date=security_date, idx=idx)
                 security_price = SecurityPriceModel.objects.filter(security_date=security_date, security__ticker=ticker)
 
-                if index and security_price:
-                     messages.success(request, f"Found {index.count()}, {security_price.count()} item(s) as of {security_date}")
-                     context = {'filterForm': filterForm, 'index': index, 'security_price': security_price, 'rpt_date': now}
+                if idx and security_price:
+                     messages.success(request, f"Found {idx.count()}, {security_price.count()} item(s) as of {security_date}")
+                     context = {'filterForm': filterForm, 'idx': idx, 'security_price': security_price, 'rpt_date': now}
                      return render(request, 'jdaanalyticsapp/jdaanalyticsapp_rpt.html', context)
                 else:
                      messages.warning(request,f"Could not find any items associated with all empty filters")

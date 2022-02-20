@@ -31,7 +31,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 DEBUG = os.getenv("DEBUG", "False") == "True"
