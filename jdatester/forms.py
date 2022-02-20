@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Student, Course, TestModel, Author, jdatesterBalanceSheetModel, jdatesterLinkModel, jdatesterCompanyModel
-from jdaanalyticsapp.models import IndexPriceModel
+# from jdaanalyticsapp.models import IndexPriceModel
 import datetime
 from django.core.exceptions import ValidationError
 
@@ -115,14 +115,14 @@ class IndexForm(forms.Form):
 
 #IndexPriceModel.objects.values_list('index_date', flat=True).distinct()
 # ////////////////////////////////// SecurityFilterForm ////////////////////////////
-class SecurityFilterForm(forms.ModelForm):
-    index_date = forms.ModelChoiceField(queryset=IndexPriceModel.objects.values_list('index_date', flat=True).distinct(), to_field_name="index_date", empty_label='Date', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick form-control-sm  show-tick', 'data-live-search=': 'true'}))
-    index = forms.ModelChoiceField(required=False,queryset=IndexPriceModel.objects.values_list('index', flat=True).distinct(), empty_label='Index', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
-
-    class Meta:
-        model = IndexPriceModel
-        fields = ['index_date', 'index']
-
-from jdafinancialsapp.models import SectorModel
-class FinStmtDashForm(forms.Form):
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+# class SecurityFilterForm(forms.ModelForm):
+#     index_date = forms.ModelChoiceField(queryset=IndexPriceModel.objects.values_list('index_date', flat=True).distinct(), to_field_name="index_date", empty_label='Date', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick form-control-sm  show-tick', 'data-live-search=': 'true'}))
+#     index = forms.ModelChoiceField(required=False,queryset=IndexPriceModel.objects.values_list('index', flat=True).distinct(), empty_label='Index', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+#
+#     class Meta:
+#         model = IndexPriceModel
+#         fields = ['index_date', 'index']
+#
+# from jdafinancialsapp.models import SectorModel
+# class FinStmtDashForm(forms.Form):
+#     sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
