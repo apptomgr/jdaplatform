@@ -383,6 +383,17 @@ def yearsago(years, from_date=None):
         from_date = datetime.now()
     return from_date - relativedelta(years=years)
 
+# ////////////////////// Merge_two_lists ////////////////////////////
+def merge_two_lists(list1, list2):
+    merge_list_head = [('', 'Issue')]
+    merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
+    merged_list = merge_list_head + merged_list
+    return merged_list
+
+def merge_company_lists(list1, list2):
+    merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
+    merged_list = merged_list
+    return merged_list
 #date = datetime.now()
 #print(get_publication_period(date))
 

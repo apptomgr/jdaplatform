@@ -2,8 +2,10 @@ from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel, Language
 from jdaanalyticsapp.models import ExchangeModel, SecurityModel
-from django_countries.fields import CountryField
+from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
+from .utils import merge_two_lists, merge_company_lists
+# from jdafinancialsapp.utils import merge_two_lists
 
 # /////////////////////////// SectorForm //////////////////////////
 class SectorForm(forms.ModelForm):
@@ -542,10 +544,33 @@ class SecurityForm(forms.ModelForm):
         ('Manufacture', 'Manufacture'),
     )
     # Combining Country and Company -> Issuer
-    #country = list(CountryField()) # .objects.values_list('cntry_name', flat=True)
-    #company = CompanyModel.objects.values_list('corp_name', flat=True)
-    #ISSUER_LIST= CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
+    # countries = merge_two_lists(list(countries)[:3], list(countries)[:3])
+    #list1 = [1, 2, 3]
+    #list2 = ['a', 'b', 'c']
+    #for code, name in list(countries)[:3]:
+    #    #print(f"{name} ({name})")
+    #    country_list = merge_two_lists(name, list1)
+    country_list = []
+    country_list_name = []
 
+    for code, name in list(countries):
+        country_list_name.append(name)
+
+    country_list = merge_two_lists(country_list_name, country_list_name)
+    country_list =  tuple(country_list)
+
+    #print(country_list)
+    company = CompanyModel.objects.values_list('company', flat=True).order_by('company')
+    company_list = list(company)
+    company_list = merge_company_lists(company_list, company_list)
+
+    #company_list = list(company)
+    #print(company_list)
+    country_company = tuple(country_list) + tuple(company_list)
+    #print(tuple(country_company))
+    CHOICES_ISSUER_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
+    #print(CHOICES_USAGE)
+    #print(CHOICES_ISSUER_LIST)
     isin =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
     ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
     desc = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
@@ -566,7 +591,7 @@ class SecurityForm(forms.ModelForm):
     isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Type'}))
     # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
     actvy_sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
-    issuer = CountryField(blank_label='Issuer').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
+    issuer = forms.ChoiceField(choices=CHOICES_ISSUER_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
     rgstrr = forms.ChoiceField(choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
     exchg  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all(), empty_label='Exchange', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
     depsty = forms.ChoiceField(choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))
