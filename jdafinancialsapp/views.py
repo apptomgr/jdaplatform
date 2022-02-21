@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
-from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
-from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm
+from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, \
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
+from jdaanalyticsapp.models import SecurityModel
+from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm, SecurityForm
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -45,14 +47,11 @@ def jdafinancialsapp_home(request):
 @allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdafinancialsapp_stmts(request):
     dt = datetime.now()
-    #print(f"36 ///////// jdafinancialsapp_stmts")
 
     if request.method == "POST":
-        #print(f"39: Posting")
         form = FinStmtDashForm(request.POST)
 
         if form.is_valid():
-            #print(f"45://////// Valid")
             sector = form.cleaned_data['sector']
             company = form.cleaned_data['company']
             statement = form.cleaned_data['statement']
@@ -735,6 +734,57 @@ def financialStatementFactForm(request):
     context = {'user_grp':grp,'form': form, 'fact':fact}
     return render(request, 'jdafinancialsapp/FinancialStatementFactForm.html', context)
 
+#////////////////////////// jdafinancialsapp_add_security ///////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_add_security(request):
+    if request.method == "POST":
+        form = SecurityForm(request.POST)
+        #print(request.POST.get('issuer'))
+        #data = request.POST.copy()
+        #print(f": 708 {data}") #{request.POST.get('company')}")
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+            return redirect('jdafinancialsapp_add_security')
+
+        if len(form.errors) < 4:
+            messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
+        messages.error(request, f"Please complete filling all required fields before submitting")
+        #else:
+        #    messages.error(request, form.errors)
+        #    return redirect('jdafinancialsapp_add_security')
+    else:
+        print("756 : invalid")
+        form = SecurityForm()
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_security.html', context)
+
+# //////////////////////////////////////// jdafinancialsapp_security_listing/////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
+def jdafinancialsapp_security_listing(request):
+    now = datetime.now()
+    security_listing = SecurityModel.objects.all()
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'security_listing':security_listing,'rpt_date': now}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_security_listing.html', context)
+
+# //////////////////////////////////////// jdafinancialsapp_view_security_detail/////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
+def jdafinancialsapp_view_security_detail(request, pk):
+    #print(f"289 PK {pk}")
+    now = datetime.now()
+    company_detail = SecurityModel.objects.get(id=pk)
+    #print(f"company_detail: {company_detail}")
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'security_detail':company_detail,'rpt_date': now}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_view_security_detail.html', context)
+
+# ///////////////////////////// MISC ///////////////////////////////////////////
 """ model formset test """
 from .models import Programmer, Language
 from . forms import LanguageForm

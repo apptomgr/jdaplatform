@@ -26,24 +26,25 @@
     </div>
 
     <div class="card-body">
-    <table id="company_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+    <table id="security_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
             <tr>
                 <th>#</th>
-                <th>{% trans 'Company Name' %}</th>
-                <th>{% trans 'Company Short Name' %}</th>
-                <!--th>{% trans 'Company Detail' %}</th-->
-                <th>{% trans 'Remove Company' %}</th>
+                <th>{% trans 'ISIN' %}</th>
+                <th>{% trans 'Ticker' %}</th>
+                <!--th>{% trans 'Remove Seurity' %}</th-->
             </tr>
         </thead>
         <tbody>
-            {% for i in company_listing %}
+            {% for i in security_listing %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{i.corp_name}}</td>
-                <td>{{i.company}}</td>
+                <td>{{i.isin}}</td>
+                <td>{{i.ticker}}</td>
+                {% comment %}
                 <td><a href="{% url 'jdafinancialsapp_view_company_detail' i.pk %}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
                 <td><a href="{% url 'jdafinancialsapp_delete_company_confirm' i.pk %}"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td>
+                {% endcomment %}
             </tr>
             {% endfor %}
         </tbody>

@@ -47,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
@@ -64,7 +63,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="row">
@@ -79,7 +77,6 @@
 
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
-                <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{form.ttl_type|as_crispy_field}</div-->
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.actvy_sector|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
@@ -176,8 +173,8 @@
                     <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rpymt_type|as_crispy_field}}X</div-->
                 </div>
             </div>
-
-
+            {% comment %}
+            {% endcomment %}
         </div>
         <div class="card-footer text-muted">
             <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Add Security' %}">

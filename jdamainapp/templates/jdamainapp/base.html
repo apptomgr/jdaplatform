@@ -77,12 +77,11 @@
                        <li><a href="{% url 'jdafinancialsapp_new_company' %}"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Company' %}</a></li>
                        <!--li><a href="{ url 'jdapublicationsapp_entry' }"><i class="fas fa-user-cog text-info"></i> Publication Entry </a></li-->
                         <!--li><a href="{ url 'jdapublicationsapp_listing' }"><i class="fas fa-edit"></i> Publication Edit </a></li-->
-                        <li><hr class="my_hr_divider"></li>
+                        <!--li><hr class="my_hr_divider"></li-->
                         <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
-                       {% comment%}
                         <li><a href="{% url 'jdafinancialsapp_add_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Security' %}</a></li>
-                       {% endcomment%}
+                        <li><a href="{% url 'jdafinancialsapp_security_listing' %}"><i class="far fa-eye"></i> {% trans 'View Securities' %}</a></li>
                     </ul>
                     {% endif%}
                 </li>

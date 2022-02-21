@@ -5,7 +5,6 @@
 {% load tz %}
 {% include "jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html" %}
 
-
 <div class="row justify-content-center align-items-center">
     <div class="col-sm-12">
         {% if messages %}
@@ -40,7 +39,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in idx_price %}
+                    {% for i in idx %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td class="text-left">{{i.idx}}</td>
