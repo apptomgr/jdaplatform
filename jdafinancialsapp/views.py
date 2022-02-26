@@ -5,7 +5,7 @@ from datetime import datetime
 from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
 from jdaanalyticsapp.models import SecurityModel
-from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm, SecurityForm
+from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm, SecurityStockForm, SecurityBondForm
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -734,19 +734,19 @@ def financialStatementFactForm(request):
     context = {'user_grp':grp,'form': form, 'fact':fact}
     return render(request, 'jdafinancialsapp/FinancialStatementFactForm.html', context)
 
-#////////////////////////// jdafinancialsapp_add_security ///////////////////////
+#////////////////////////// jdafinancialsapp_add_stock_security ///////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
-def jdafinancialsapp_add_security(request):
+def jdafinancialsapp_add_stock_security(request):
     if request.method == "POST":
-        form = SecurityForm(request.POST)
+        form = SecurityStockForm(request.POST)
         #print(request.POST.get('issuer'))
         #data = request.POST.copy()
         #print(f": 708 {data}") #{request.POST.get('company')}")
         if form.is_valid():
             form.save()
             messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
-            return redirect('jdafinancialsapp_add_security')
+            return redirect('jdafinancialsapp_add_stock_security')
 
         if len(form.errors) < 4:
             messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
@@ -756,11 +756,39 @@ def jdafinancialsapp_add_security(request):
         #    return redirect('jdafinancialsapp_add_security')
     else:
         print("756 : invalid")
-        form = SecurityForm()
+        form = SecurityStockForm()
 
     grp = get_user_grp(request)
     context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
-    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_security.html', context)
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_stock_security.html', context)
+
+#////////////////////////// jdafinancialsapp_add_bond_security ///////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_add_bond_security(request):
+    if request.method == "POST":
+        form = SecurityBondForm(request.POST)
+        #print(request.POST.get('issuer'))
+        #data = request.POST.copy()
+        #print(f": 708 {data}") #{request.POST.get('company')}")
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+            return redirect('jdafinancialsapp_add_bond_security')
+
+        if len(form.errors) < 4:
+            messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
+        messages.error(request, f"Please complete filling all required fields before submitting")
+        #else:
+        #    messages.error(request, form.errors)
+        #    return redirect('jdafinancialsapp_add_security')
+    else:
+        print("756 : invalid")
+        form = SecurityBondForm()
+
+    grp = get_user_grp(request)
+    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
 # //////////////////////////////////////// jdafinancialsapp_security_listing/////////////////////////////
 @login_required

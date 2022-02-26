@@ -25,12 +25,14 @@ urlpatterns = [
     path('jdafinancialsapp_bal_all_rpt', views.jdafinancialsapp_bal_all_rpt, name='jdafinancialsapp_bal_all_rpt'),
 
     # Securities
-    path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
+    path('jdafinancialsapp_add_stock_security', views.jdafinancialsapp_add_stock_security, name='jdafinancialsapp_add_stock_security'),
+    path('jdafinancialsapp_add_bond_security', views.jdafinancialsapp_add_bond_security, name='jdafinancialsapp_add_bond_security'),
     path('jdafinancialsapp_security_listing', views.jdafinancialsapp_security_listing, name='jdafinancialsapp_security_listing'),
     path('jdafinancialsapp_view_security_detail/<int:pk>', views.jdafinancialsapp_view_security_detail, name='jdafinancialsapp_view_security_detail'),
 
     # misc
     path('res', views.res, name='res'),
+
 
     #path('jdafinancialsapp_inc_entry_formset/<str:sector>/<int:company_id>/<str:publication_date>/<str:statement>', views.jdafinancialsapp_inc_entry_formset, name='jdafinancialsapp_inc_entry_formset'),
 

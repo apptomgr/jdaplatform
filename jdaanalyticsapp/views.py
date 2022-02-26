@@ -58,8 +58,9 @@ def jdaanalyticsapp_upload_form(request):
                     for i in range(6, 15):  # idx price info in spreadsheet starting from row 6 to row 15th
                         cols = sheet.row_values(i)
                         #check if idx not in IndexModel tbl then save it else skip it
-                        if not IndexModel.objects.filter(idx=cols[0]):
-                            IndexModel.objects.create(idx=cols[0])
+                        if not IndexModel.objects.filter(index=cols[0]):
+                            IndexModel.objects.create(index=cols[0])
+                            #IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
 
                     # get indexPrice info & save it to DB base on existing indexes
                     for i in range(6, 15):  # index price info in spreadsheet starting from row 6 to row 15th
@@ -67,9 +68,11 @@ def jdaanalyticsapp_upload_form(request):
                         idx = IndexModel.objects.get(idx=cols[0])
 
                         if idx: #indexPriceModel vals based on existing indexes
-                            IndexPriceModel.objects.create(index_date=dt_obj, idx=idx, value=cols[1])
+                            IndexPriceModel.objects.create(index_date=dt_obj, index=idx, value=cols[1])
+                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index={idx}, value={cols[1]})")
                         else: # save based on non-existing indexes
                             IndexPriceModel.objects.create(index_date=dt_obj, index=cols[0], value=cols[1])
+                            #print(f"IndexPriceModel.objects.create(index_date={dt_obj}, index=cols{cols[0]}, value={cols[1]})")
 
                     # get Security info & save it to DB only for new Securities from row 18 through the end of the page
                     for i in range(18, nbr_rows):  # security info index price info in spreadsheet

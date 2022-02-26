@@ -80,7 +80,10 @@
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{% url 'jdafinancialsapp_add_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Security' %}</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_add_stock_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Stock' %}</a></li>
+                        <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'jdafinancialsapp_add_bond_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Bond' %}</a></li>
+                        <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdafinancialsapp_security_listing' %}"><i class="far fa-eye"></i> {% trans 'View Securities' %}</a></li>
                     </ul>
                     {% endif%}

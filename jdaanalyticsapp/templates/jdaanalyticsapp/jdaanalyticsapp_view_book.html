@@ -1,0 +1,83 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load i18n %}
+{% load tz %}
+{% include "jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html" %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+<div class="card text-center mt-3">
+    <div class="card-header">
+        <div class="row justify-content-center">
+            <a href="#"><i class="fas fa-layer-group  fa-2x my_info_txt mr-1 Xmt-2"></i></a>
+            <span class="text-secondary mt-2">{% trans 'View Books as of'%} {{rpt_date |utc}}</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Index block -->
+        <div class="row">
+            <!-- Author List -->
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <table class="table table-sm table-striped table-hover table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Authors' %}</th>
+                        <th scope="col">Create Book</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in author %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td class="text-left">{{i.name}}</td>
+                        <td class="text-center">
+                            <input class="btn btn-info"  type="button" value="Create Book" onClick="location.href='{% url 'jdaanalyticsapp_create_book_form' i.pk %}'">
+                        </td>
+                    </tr>
+                    {% endfor%}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Book list -->
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <table class="table table-sm table-striped table-hover table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Title' %}</th>
+                        <th scope="col">{% trans 'Author' %}</th>
+                        <th scope="col">{% trans 'No. of Pages' %}</th>
+                        <!--th scope="col">Date time</th-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in books %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td class="text-left">{{i.title}}</td>
+                        <td class="text-left">{{i.author.name}}</td>
+                        <td class="text-left">{{i.number_of_pages}}</td>
+                    </tr>
+                    {% endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,59 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html" %}
+
+<div class="card text-center mt-5">
+    <form method="POST"  novalidate>
+        <div class="card-header">
+            <h5 class="text-muted"><i class="fas fa-chart-line my_info_txt"></i> {%trans 'Create Book for'%} {{author}} </h5>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="d-flex justify-content-center">
+                <div class="row">
+                    <div class="col-12"> {{ formset|crispy}}</div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-info"  role="button" type="submit" value="Create Book">
+        </div>
+    </form>
+    <hr>
+<a href="{% url 'jdaanalyticsapp_view_book' %}">View Books</a>
+</div>
+
+
+<style>
+    .fileinput{
+    background-color:#f8f9fa;
+    margin-top:5px;
+    }
+
+    .fileUpload{
+     margin-top:16px;
+     padding-left:2px;
+     padding-top:3.5px;
+    }
+</style>
+{% endblock %}
+

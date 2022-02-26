@@ -443,8 +443,8 @@ class InvestmentAccountForm(forms.ModelForm):
         fields = ['brut_0','brut_1','brut_2','brut_3','brut_4','brut_5','brut_6','amort_0','amort_1','amort_2','amort_3','amort_4','amort_5','amort_6']
 
 
-#/////////////////////////// SecurityForm //////////////////////////
-class SecurityForm(forms.ModelForm):
+#/////////////////////////// SecurityStockForm //////////////////////////
+class SecurityStockForm(forms.ModelForm):
     CHOICES_LISTG = (
         ('','Listing Status'),
         ('Listed', 'Listed'),
@@ -606,6 +606,194 @@ class SecurityForm(forms.ModelForm):
     under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
     secr_sts = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
     dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
+    # auth = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    # gr_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Gross Bond Interest Rate'}))
+    # net_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Net Bond Interest Rate'}))
+    # nbr_shrs_outstg = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number Shares Outstanding'}))
+    # bnd_type = forms.ChoiceField(choices=CHOICES_BND_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Type'}))
+    # duratn_amt = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Duration'}, ))
+    # duratn_units = forms.ChoiceField(choices=CHOICES_DURATN_UNITS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Duration Units'}))
+    # pymt_perd = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Payment Period'}, ))
+    # pymt_perd_units = forms.ChoiceField(choices=CHOICES_PPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Payment Period Units'}))
+    # #pymt_perd_units = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Payment Period Units'}, ))
+    # dfrrd_rpymt_perd = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Deferred Repayment Period'}, ))
+    # dfrrd_rpymt_perd_units = forms.ChoiceField(choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Deferred Repayment Period Units'}))
+    # rpymt_mthd = forms.ChoiceField(choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
+    # rpymt_type = forms.ChoiceField(choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Type'}))
+    # bnd_isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issue Date'}))
+    # first_pay_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'First Payment Date'}))
+    # last_pay_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Last Payment Date'}))
+    # usage = forms.ChoiceField(choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Usage'}))
+
+    class Meta:
+        model = SecurityModel
+        fields = '__all__'
+        #fields = ['company', 'sector', 'rpt_period']
+
+
+#/////////////////////////// SecurityBondForm //////////////////////////
+class SecurityBondForm(forms.ModelForm):
+    CHOICES_LISTG = (
+        ('','Listing Status'),
+        ('Listed', 'Listed'),
+        ('Unlisted', 'Unlisted'),
+        ('Suspended', 'Suspended'),
+        ('Deleted', 'Deleted'),
+    )
+
+    CHOICES_TITLE_TYPE = (
+        ('','Title Type'),
+        ('Listed Share', 'Listed Share'),
+        ('Listed Bond', 'Listed Bond'),
+        ('Unlisted Share', 'Unlisted Share'),
+        ('Unlisted Bond', 'Unlisted Bond'),
+    )
+
+    CHOICES_SHR_CLASS = (
+        ('','Share Class'),
+        ('A', 'A'),
+        ('B', 'B'),
+        ('C', 'C'),
+    )
+
+    CHOICES_ISUR_TYPE = (
+        ('','Issue Type'),
+        ('Private', 'Private'),
+        ('Public', 'Public'),
+    )
+
+    CHOICES_SECR_STS = (
+        ('', 'Security Status'),
+        ('Listed','Listed'),
+        ('Unquoted', 'Unquoted'),
+        ('Suspended', 'Suspended'),
+        ('Deleted', 'Deleted'),
+    )
+    CHOICES_RGSTRR = (
+        ('', 'Registrar'),
+        ('Central Bank','Central Bank'),
+    )
+    CHOICES_DEPSTY = (
+        ('', 'Depository'),
+        ('Bourse Regionale','Bourse Regionale'),
+    )
+
+    CHOICES_BND_TYPE = (
+        ('', 'Bond Type'),
+        ('Redeemable in Shares', 'Redeemable in Share'),
+        ('Constant Redemption Bond', 'Constant Redemption Bond'),
+        ('Deferred Constant Redemption Bond', 'Deferred Constant Redemption Bond'),
+        ('In Fine Bond', 'In Fine Bond'),
+    )
+
+    CHOICES_DURATN_UNITS = (
+        ('', 'Duration Units'),
+        ('Monthly', 'Monthly'),
+        ('Quarterly', 'Quarterly'),
+        ('Semi-Annually', 'Semi-Annually'),
+        ('Annually', 'Annually'),
+    )
+    CHOICES_PPU = (
+        ('', 'Payment Period Units'),
+        ('Monthly', 'Monthly'),
+        ('Quarterly', 'Quarterly'),
+        ('Semi-Annually', 'Semi-Annually'),
+        ('Annually', 'Annually'),
+    )
+
+    CHOICES_DRPU = (
+        ('', 'Deferred Repayment Period Units'),
+        ('Monthly', 'Monthly'),
+        ('Quarterly', 'Quarterly'),
+        ('Semi-Annually', 'Semi-Annually'),
+        ('Annually', 'Annually'),
+    )
+
+    CHOICES_RPYMT_MTHD = (
+        ('', 'Repayment Method'),
+        ('Sur Valeur', 'Sur Valeur'),
+        ('Sur Valeur', 'Sur Valeur'),
+    )
+
+    CHOICES_RPYMT_TYPE = (
+        ('', 'Repayment Type'),
+        ('Fixed rate', 'Fixed rate'),
+        ('Variable rate', 'Variaible'),
+    )
+    CHOICES_USAGE = (
+        ('', 'Usage'),
+        ('360', '360'),
+        ('365', '365'),
+    )
+    CHOICES_SECTOR = (
+        ('', 'Activity Sector'),
+        ('Agriculture', 'Agriculture'),
+        ('Banking', 'Banking'),
+        ('Manufacture', 'Manufacture'),
+    )
+    # Combining Country and Company -> Issuer
+    # countries = merge_two_lists(list(countries)[:3], list(countries)[:3])
+    #list1 = [1, 2, 3]
+    #list2 = ['a', 'b', 'c']
+    #for code, name in list(countries)[:3]:
+    #    #print(f"{name} ({name})")
+    #    country_list = merge_two_lists(name, list1)
+    country_list = []
+    country_list_name = []
+
+    for code, name in list(countries):
+        country_list_name.append(name)
+
+    country_list = merge_two_lists(country_list_name, country_list_name)
+    country_list =  tuple(country_list)
+
+    #print(country_list)
+    company = CompanyModel.objects.values_list('company', flat=True).order_by('company')
+    company_list = list(company)
+    company_list = merge_company_lists(company_list, company_list)
+
+    #company_list = list(company)
+    #print(company_list)
+    country_company = tuple(country_list) + tuple(company_list)
+    #print(tuple(country_company))
+    CHOICES_ISSUER_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
+    #print(CHOICES_USAGE)
+    #print(CHOICES_ISSUER_LIST)
+    isin =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
+    ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
+    desc = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
+    # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
+    isu_dt =forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
+    # open_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
+    open_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
+    close_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
+    # close_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
+    listg_sts = forms.ChoiceField(choices=CHOICES_LISTG, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Listing Status'}))
+    nmnl_amt = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Nominal Value'}))
+    cntry = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
+    # cntry = # forms.ModelChoiceField(queryset=CountryField.objects.all(), empty_label='Country', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
+    currency = forms.CharField(max_length=5, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Currency'},))
+    min_lot = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Lot Minimum'}, ))
+    ttl_type = forms.ChoiceField(choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Title Type'}))
+    shr_class = forms.ChoiceField(choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Share Class'}))
+    isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Type'}))
+    # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
+    actvy_sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
+    issuer = forms.ChoiceField(choices=CHOICES_ISSUER_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
+    rgstrr = forms.ChoiceField(choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    exchg  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all(), empty_label='Exchange', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
+    depsty = forms.ChoiceField(choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))
+    cntry_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Country Tax'}))
+    invstr_cntry_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Invstmt Country Tax'}))
+    txtn_code = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    exchg_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Exchange Tax'}))
+    val_code = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    lwst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
+    hghst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
+    # stock_type = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
+    # under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
+    # secr_sts = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    # dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
     auth = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
     gr_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Gross Bond Interest Rate'}))
     net_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Net Bond Interest Rate'}))
@@ -629,7 +817,6 @@ class SecurityForm(forms.ModelForm):
         model = SecurityModel
         fields = '__all__'
         #fields = ['company', 'sector', 'rpt_period']
-
 
 
 # #///////////////////////// BalanceSheetSearchForm /////////////////////
