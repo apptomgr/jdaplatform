@@ -24,7 +24,6 @@ urlpatterns = [
     path('jdafinancialsapp/', include('jdafinancialsapp.urls')),
     path('jdaanalyticsapp/', include('jdaanalyticsapp.urls')),
     path('jdapublicationsapp/', include('jdapublicationsapp.urls')),
-    path('jdatester/', include('jdatester.urls')),
     path('jdawebsite/', include('jdawebsite.urls')),
     path('i18n/', include('django_translation_flags.urls')),
     path('accounts/', include('accounts.urls'), name='register'),
