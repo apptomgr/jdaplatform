@@ -39,9 +39,9 @@ urlpatterns = [
 
     path('financialStatementFactForm/', views.financialStatementFactForm, name='financialStatementFactForm'),
 
-    path('language_formset/', views.language_formset, name='language_formset'),
-    path('language_inline_formset/', views.language_inline_formset, name='language_inline_formset'),
-    path('shareholder_formset/', views.shareholder_formset, name='shareholder_formset'),
+    # path('language_formset/', views.language_formset, name='language_formset'),
+    # path('language_inline_formset/', views.language_inline_formset, name='language_inline_formset'),
+    # path('shareholder_formset/', views.shareholder_formset, name='shareholder_formset'),
 
 
     path('financial_fact_formset/', views.financial_fact_formset, name='financial_fact_formset'),

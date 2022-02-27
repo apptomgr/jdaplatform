@@ -3,9 +3,9 @@ from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from .models import SecurityPriceModel, IndexPriceModel
 # from django.forms.models import inlineformset_factory, formset_factory, modelform_factory, modelformset_factory
-from .models import Book
+# from .models import Book
 from django.forms.models import inlineformset_factory
-from .models import Author
+# from .models import Author
 
 def validate_excel(value):
     if value.name.split('.')[-1] not in ['xls', 'xlsx']:
@@ -33,21 +33,21 @@ class SecurityFilterForm(forms.ModelForm):
         model = IndexPriceModel
         fields = ['idx']
 
-# ////////////////////// Misc /////////////////////
-class BookForm(forms.ModelForm):
-    title = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Title'},))
-    number_of_pages = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'No. of Pages'},))
-    class Meta:
-        model = Book
-        fields = ('title','number_of_pages')
-
-
-BookFormSet = inlineformset_factory(
-    Author,
-    Book,
-    form=BookForm,
-    min_num=1,  # minimum number of forms that must be filled in
-    extra=0,  # number of empty forms to display
-    can_delete=False  # show a checkbox in each form to delete the row
-)
+# # ////////////////////// Misc /////////////////////
+# class BookForm(forms.ModelForm):
+#     title = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Title'},))
+#     number_of_pages = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'No. of Pages'},))
+#     class Meta:
+#         model = Book
+#         fields = ('title','number_of_pages')
+#
+#
+# BookFormSet = inlineformset_factory(
+#     Author,
+#     Book,
+#     form=BookForm,
+#     min_num=1,  # minimum number of forms that must be filled in
+#     extra=0,  # number of empty forms to display
+#     can_delete=False  # show a checkbox in each form to delete the row
+# )
 

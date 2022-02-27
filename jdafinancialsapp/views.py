@@ -783,7 +783,7 @@ def jdafinancialsapp_add_bond_security(request):
         #    messages.error(request, form.errors)
         #    return redirect('jdafinancialsapp_add_security')
     else:
-        print("756 : invalid")
+        #print("756 : invalid")
         form = SecurityBondForm()
 
     grp = get_user_grp(request)
@@ -812,100 +812,100 @@ def jdafinancialsapp_view_security_detail(request, pk):
     context = {'user_grp':grp,'security_detail':company_detail,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_security_detail.html', context)
 
-# ///////////////////////////// MISC ///////////////////////////////////////////
-""" model formset test """
-from .models import Programmer, Language
-from . forms import LanguageForm
-
-def language_formset(request):
-    programmer = Programmer.objects.get(name='Ibou')
-
-    if request.method == "POST":
-        print("361 - POST")
-
-        print(f"363: {programmer} {programmer.id}")
-        languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
-
-        formset = languageFormset(request.POST, queryset=Language.objects.filter(programmer_id=programmer.id))
-
-        if formset.is_valid():
-            print("368 formset is valid")
-            #data = request.POST.copy()
-            #print(f"247 form data: {data}")
-            instances=formset.save(commit=False)
-
-            for i in instances:
-                i.programmer_id= programmer.id
-                i.save()
-                print(f"374: i.programmer_id: {i.programmer_id}")
-
-            messages.success(request, f"successfully added ")
-            return redirect('language_formset')
-
-        else: #end if valid
-            messages.error(request, formset.errors)
-            print(f"155 form.errors {formset.errors} ///////")
-    else:
-        language_count = Language.objects.all().count()
-        if language_count >0:
-            languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
-        else:
-            languageFormset = modelformset_factory(Language, form=LanguageForm, extra=4)
-
-        #formset =languageFormset(queryset=Language.objects.filter(programmer__name='Ibou'))
-        formset = languageFormset(queryset=Language.objects.filter(programmer_id=programmer.id))
-
-    lang = Language.objects.all()
-    context={'formset':formset, 'bread_language_formset':'font-weight-bold', 'lang':lang}
-    return render(request, 'jdafinancialsapp/language_formset.html', context)
-
-
-""" inline model formset test """
-from .models import Programmer, Language
-from . forms import LanguageForm
-from django.forms import TextInput
-
-def language_inline_formset(request):
-    programmer = Programmer.objects.get(name='Ibou')
-    languageFormset = inlineformset_factory(Programmer, Language, fields=('name',), extra=1, widgets={'name': TextInput(attrs={'class': 'form-control-sm'})})
-
-    if request.method == "POST":
-        print("406 inline - POST")
-
-        print(f"i: {programmer} {programmer.id}")
-        #languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
-
-        formset = languageFormset(request.POST, instance=programmer)
-
-        if formset.is_valid():
+# # ///////////////////////////// MISC ///////////////////////////////////////////
+# """ model formset test """
+# from .models import Programmer, Language
+# from . forms import LanguageForm
+#
+# def language_formset(request):
+#     programmer = Programmer.objects.get(name='Ibou')
+#
+#     if request.method == "POST":
+#         print("361 - POST")
+#
+#         print(f"363: {programmer} {programmer.id}")
+#         languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
+#
+#         formset = languageFormset(request.POST, queryset=Language.objects.filter(programmer_id=programmer.id))
+#
+#         if formset.is_valid():
+#             print("368 formset is valid")
+#             #data = request.POST.copy()
+#             #print(f"247 form data: {data}")
+#             instances=formset.save(commit=False)
+#
+#             for i in instances:
+#                 i.programmer_id= programmer.id
+#                 i.save()
+#                 print(f"374: i.programmer_id: {i.programmer_id}")
+#
+#             messages.success(request, f"successfully added ")
+#             return redirect('language_formset')
+#
+#         else: #end if valid
+#             messages.error(request, formset.errors)
+#             print(f"155 form.errors {formset.errors} ///////")
+#     else:
+#         language_count = Language.objects.all().count()
+#         if language_count >0:
+#             languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
+#         else:
+#             languageFormset = modelformset_factory(Language, form=LanguageForm, extra=4)
+#
+#         #formset =languageFormset(queryset=Language.objects.filter(programmer__name='Ibou'))
+#         formset = languageFormset(queryset=Language.objects.filter(programmer_id=programmer.id))
+#
+#     lang = Language.objects.all()
+#     context={'formset':formset, 'bread_language_formset':'font-weight-bold', 'lang':lang}
+#     return render(request, 'jdafinancialsapp/language_formset.html', context)
 
 
-            formset.save()
-
-            messages.success(request, f"successfully added ")
-            return redirect('language_formset')
-            #return render(request, 'jdafinancialsapp/language_formset.html')
-
-        else: #end if valid
-            messages.error(request, formset.errors)
-            print(f"155 form.errors {formset.errors} ///////")
-    else:
-        print("424 Inline GET")
-        language_count = Language.objects.all().count()
-        print(language_count)
-        if language_count >0:
-            formset = languageFormset(instance=programmer)
-        #    languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
-        else:
-            #languageFormset = inlineformset_factory(Programmer, Language, fields=('name',), extra=4, widgets={'name': TextInput(attrs={'class': 'form-control-sm'})})
-            formset = languageFormset(instance=programmer)
-            print(f"481: {programmer}")
-
-    lang = Language.objects.all()
-
-    context={'formset':formset, 'bread_language_formset':'font-weight-bold', 'lang':lang}
-    return render(request, 'jdafinancialsapp/language_formset.html', context)
-
+# """ inline model formset test """
+# from .models import Programmer, Language
+# from . forms import LanguageForm
+# from django.forms import TextInput
+#
+# def language_inline_formset(request):
+#     programmer = Programmer.objects.get(name='Ibou')
+#     languageFormset = inlineformset_factory(Programmer, Language, fields=('name',), extra=1, widgets={'name': TextInput(attrs={'class': 'form-control-sm'})})
+#
+#     if request.method == "POST":
+#         print("406 inline - POST")
+#
+#         print(f"i: {programmer} {programmer.id}")
+#         #languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
+#
+#         formset = languageFormset(request.POST, instance=programmer)
+#
+#         if formset.is_valid():
+#
+#
+#             formset.save()
+#
+#             messages.success(request, f"successfully added ")
+#             return redirect('language_formset')
+#             #return render(request, 'jdafinancialsapp/language_formset.html')
+#
+#         else: #end if valid
+#             messages.error(request, formset.errors)
+#             print(f"155 form.errors {formset.errors} ///////")
+#     else:
+#         print("424 Inline GET")
+#         language_count = Language.objects.all().count()
+#         print(language_count)
+#         if language_count >0:
+#             formset = languageFormset(instance=programmer)
+#         #    languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
+#         else:
+#             #languageFormset = inlineformset_factory(Programmer, Language, fields=('name',), extra=4, widgets={'name': TextInput(attrs={'class': 'form-control-sm'})})
+#             formset = languageFormset(instance=programmer)
+#             print(f"481: {programmer}")
+#
+#     lang = Language.objects.all()
+#
+#     context={'formset':formset, 'bread_language_formset':'font-weight-bold', 'lang':lang}
+#     return render(request, 'jdafinancialsapp/language_formset.html', context)
+#
 
 
 
@@ -959,86 +959,86 @@ def financial_fact_formset(request):
     return render(request, 'jdafinancialsapp/financial_fact_formset.html', context)
 
 
-""" inline example"""
-def inline_financial_fact_formset(request):
-    company = CompanyModel.objects.get(company='Ford')
-    FinancialStatementFactFormset = inlineformset_factory(CompanyModel, FinancialStatementFactModel,  fields=('value_brut',), extra=2, widgets={'value': TextInput(attrs={'class': 'form-control-sm','placeholder':'0.00'})})
+# """ inline example"""
+# def inline_financial_fact_formset(request):
+#     company = CompanyModel.objects.get(company='Ford')
+#     FinancialStatementFactFormset = inlineformset_factory(CompanyModel, FinancialStatementFactModel,  fields=('value_brut',), extra=2, widgets={'value': TextInput(attrs={'class': 'form-control-sm','placeholder':'0.00'})})
+#
+#     if request.method == "POST":
+#         print(f"i: {company} {company.id}")
+#
+#         formset = FinancialStatementFactFormset(request.POST, instance=company)
+#
+#         if formset.is_valid():
+#             #formset.save()
+#             #for form in formset:
+#             #    print(form.value)
+#
+#             messages.success(request, f"successfully added  ")
+#             return redirect('financial_fact_formset')
+#             #return render(request, 'jdafinancialsapp/financial_fact_formset.html')
+#
+#         else: #end if valid
+#             messages.error(request, formset.errors)
+#
+#     else:
+#         print("424 Inline GET")
+#
+#     formset = FinancialStatementFactFormset(instance=company)
+#     line_items = FinancialStatementLineModel.objects.all()
+#     context = {'formset': formset, 'bread_language_formset': 'font-weight-bold', 'line_items': line_items}
+#
+#     #context={'formset':formset, 'bread_financial_fact_formset':'font-weight-bold'}
+#     return render(request, 'jdafinancialsapp/financial_fact_formset.html', context)
+#
 
-    if request.method == "POST":
-        print(f"i: {company} {company.id}")
-
-        formset = FinancialStatementFactFormset(request.POST, instance=company)
-
-        if formset.is_valid():
-            #formset.save()
-            #for form in formset:
-            #    print(form.value)
-
-            messages.success(request, f"successfully added  ")
-            return redirect('financial_fact_formset')
-            #return render(request, 'jdafinancialsapp/financial_fact_formset.html')
-
-        else: #end if valid
-            messages.error(request, formset.errors)
-
-    else:
-        print("424 Inline GET")
-
-    formset = FinancialStatementFactFormset(instance=company)
-    line_items = FinancialStatementLineModel.objects.all()
-    context = {'formset': formset, 'bread_language_formset': 'font-weight-bold', 'line_items': line_items}
-
-    #context={'formset':formset, 'bread_financial_fact_formset':'font-weight-bold'}
-    return render(request, 'jdafinancialsapp/financial_fact_formset.html', context)
-
-
-""" shareholder_formset test """
-#def language_formset(request):
-#    programmer = Programmer.objects.get(name='Ibou')
-def shareholder_formset(request):
-    programmer = Programmer.objects.get(name='Ibou')
-
-    if request.method == "POST":
-        print("361 - POST")
-
-        print(f"363: {programmer} {programmer.id}")
-        languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
-
-        formset = languageFormset(request.POST, queryset=Language.objects.filter(programmer_id=programmer.id))
-
-        if formset.is_valid():
-            print("368 formset is valid")
-            # data = request.POST.copy()
-            # print(f"247 form data: {data}")
-            instances = formset.save(commit=False)
-
-            for i in instances:
-                i.programmer_id = programmer.id
-                i.save()
-                print(f"374: i.programmer_id: {i.programmer_id}")
-
-            messages.success(request, f"successfully added ")
-            return redirect('language_formset')
-
-        else:  # end if valid
-            messages.error(request, formset.errors)
-            print(f"155 form.errors {formset.errors} ///////")
-    else:
-        language_count = ShareholderModel.objects.all().count()
-        if language_count > 0:
-            languageFormset = modelformset_factory(ShareholderModel, form=LanguageForm, extra=0)
-        else:
-            languageFormset = modelformset_factory(ShareholderModel, form=LanguageForm, extra=4)
-
-
-        formset = languageFormset(queryset=Language.objects.filter(programmer_id=programmer.id))
-
-    lang = Language.objects.all()
-    context = {'formset': formset, 'bread_language_formset': 'font-weight-bold', 'lang': lang}
-
-    return render(request, 'jdafinancialsapp/shareholder_formset.html', context)
-
-
+# """ shareholder_formset test """
+# #def language_formset(request):
+# #    programmer = Programmer.objects.get(name='Ibou')
+# def shareholder_formset(request):
+#     programmer = Programmer.objects.get(name='Ibou')
+#
+#     if request.method == "POST":
+#         print("361 - POST")
+#
+#         print(f"363: {programmer} {programmer.id}")
+#         languageFormset = modelformset_factory(Language, form=LanguageForm, extra=0)
+#
+#         formset = languageFormset(request.POST, queryset=Language.objects.filter(programmer_id=programmer.id))
+#
+#         if formset.is_valid():
+#             print("368 formset is valid")
+#             # data = request.POST.copy()
+#             # print(f"247 form data: {data}")
+#             instances = formset.save(commit=False)
+#
+#             for i in instances:
+#                 i.programmer_id = programmer.id
+#                 i.save()
+#                 print(f"374: i.programmer_id: {i.programmer_id}")
+#
+#             messages.success(request, f"successfully added ")
+#             return redirect('language_formset')
+#
+#         else:  # end if valid
+#             messages.error(request, formset.errors)
+#             print(f"155 form.errors {formset.errors} ///////")
+#     else:
+#         language_count = ShareholderModel.objects.all().count()
+#         if language_count > 0:
+#             languageFormset = modelformset_factory(ShareholderModel, form=LanguageForm, extra=0)
+#         else:
+#             languageFormset = modelformset_factory(ShareholderModel, form=LanguageForm, extra=4)
+#
+#
+#         formset = languageFormset(queryset=Language.objects.filter(programmer_id=programmer.id))
+#
+#     lang = Language.objects.all()
+#     context = {'formset': formset, 'bread_language_formset': 'font-weight-bold', 'lang': lang}
+#
+#     return render(request, 'jdafinancialsapp/shareholder_formset.html', context)
+#
+#
 
 #//////////////////////////////////// res/////////////////////
 def res(request):

@@ -1,6 +1,6 @@
 from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
-    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel, Language
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel
 from jdaanalyticsapp.models import ExchangeModel, SecurityModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
@@ -845,26 +845,26 @@ class SecurityBondForm(forms.ModelForm):
 #         return self.cleaned_data['name']
 #     """
 #///////////////////////// ContactForm test //////////////////
-class ContactForm(forms.Form):
-    name = forms.CharField(max_length=30)
-    email = forms.EmailField(max_length=254)
-    message = forms.CharField(
-        max_length=2000,
-        widget=forms.Textarea(),
-        help_text='Write here your message!'
-    )
-    source = forms.CharField(       # A hidden input for internal use
-        max_length=50,              # tell from which page the user sent the message
-        widget=forms.HiddenInput()
-    )
-
-    def clean(self):
-        cleaned_data = super(ContactForm, self).clean()
-        name = cleaned_data.get('name')
-        email = cleaned_data.get('email')
-        message = cleaned_data.get('message')
-        if not name and not email and not message:
-            raise forms.ValidationError('You have to write something!')
+# class ContactForm(forms.Form):
+#     name = forms.CharField(max_length=30)
+#     email = forms.EmailField(max_length=254)
+#     message = forms.CharField(
+#         max_length=2000,
+#         widget=forms.Textarea(),
+#         help_text='Write here your message!'
+#     )
+#     source = forms.CharField(       # A hidden input for internal use
+#         max_length=50,              # tell from which page the user sent the message
+#         widget=forms.HiddenInput()
+#     )
+#
+#     def clean(self):
+#         cleaned_data = super(ContactForm, self).clean()
+#         name = cleaned_data.get('name')
+#         email = cleaned_data.get('email')
+#         message = cleaned_data.get('message')
+#         if not name and not email and not message:
+#             raise forms.ValidationError('You have to write something!')
 
 
 """  Test """
@@ -896,13 +896,13 @@ class FinancialStatementFactForm(forms.ModelForm):
 
 
 
-class LanguageForm(forms.ModelForm):
-    #name = forms.ModelChoiceField(queryset=Language.objects.all(), label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Language Name'}))
-    name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Language Name'}))
-    #name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Sector...'}, ))
-    class Meta:
-        model = Language
-        fields =  ['name']
+# class LanguageForm(forms.ModelForm):
+#     #name = forms.ModelChoiceField(queryset=Language.objects.all(), label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Language Name'}))
+#     name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Language Name'}))
+#     #name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Sector...'}, ))
+#     class Meta:
+#         model = Language
+#         fields =  ['name']
 
 # class FinancialStatementFact(models.Model):
 #     company = models.ForeignKey(Company, on_delete=models.CASCADE)

@@ -83,55 +83,8 @@ class ExchangeModel(models.Model):
     class Meta:
         verbose_name_plural = 'ExchangeModel'
 
-"""
-GUI Field	            Column	Data Type	Length
-PK	                    id_company	        ForeignKey	
-Nome de l'actionnaire	shrhldr_name	    CharField	100
-Type d'actionnaire	    shrhldr_type	    CharField	35
-Part detenue	        shrs_hld	        DecimalField	
 
-"""
-
-#/////////////////////////////////// BalanceSheetModel ///////////////////////////////
-# class BalanceSheetModel(models.Model):
-#     CHOICES = (
-#         ('Active', 'Active'),
-#         ('Passive', 'Passive'),
-#     )
-#     bal_type = models.CharField(max_length=10, choices=CHOICES, null=False, blank=False)
-#     bal_company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE)
-#     bal_date = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
-#     bal_item_label_1 = models.CharField(max_length=100, default='Immobilisations incorporelles', editable=False)
-#     bal_item_label_2 = models.CharField(max_length=100, default='Frais de développement et de prospection', editable=False)
-#     bal_item_label_3 = models.CharField(max_length=100, default='Brevets, licences, logiciels et droits similaires',editable=False)
-#     bal_item_label_4 = models.CharField(max_length=100, default='Fonds commercial et droit au bail',editable=False)
-#     bal_item_label_5 = models.CharField(max_length=100, default='Autres immobilisations incorporelles', editable=False)
-#
-#     bal_item_amt_1 = models.DecimalField(max_digits=13, decimal_places=2)
-#     bal_item_amt_2 = models.DecimalField(max_digits=13, decimal_places=2)
-#     bal_item_amt_3 = models.DecimalField(max_digits=13, decimal_places=2)
-#     bal_item_amt_4 = models.DecimalField(max_digits=13, decimal_places=2)
-#     bal_item_amt_5 = models.DecimalField(max_digits=13, decimal_places=2)
-#
-#     @property
-#     def bal_period(self):
-#         return get_period(self.bal_date, self.bal_company.rpt_period)
-#
-#     @property
-#     def bal_summary_1(self):
-#         return self.bal_item_amt_2 + self.bal_item_amt_3 + + self.bal_item_amt_3 + self.bal_item_amt_3 +  self.bal_item_amt_3
-#
-#
-#     def __str__(self):
-#         return f'{self.bal_company} - {self.bal_date}'
-#
-#
-#     class Meta:
-#         unique_together = ("bal_company", "bal_date")
-#         verbose_name_plural ='BalanceSheetModel'
-#
-
-
+# /////////////////////////////////// FinancialStatementModel ///////////////////////////////
 class FinancialStatementModel(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -151,7 +104,7 @@ class FinancialStatementLineModel(models.Model):
     class Meta:
         verbose_name_plural ='FinancialStatementLineModel'
 
-
+# /////////////////////////////////// FinancialStatementLineSequenceModel ///////////////////////////////
 class FinancialStatementLineSequenceModel(models.Model):
     financial_statement = models.ForeignKey(FinancialStatementModel, on_delete=models.CASCADE)
     financial_statement_line = models.ForeignKey(FinancialStatementLineModel, on_delete=models.CASCADE)
@@ -167,6 +120,7 @@ class FinancialStatementLineSequenceModel(models.Model):
         verbose_name_plural ='FinancialStatementLineSequenceModel'
 
 
+# /////////////////////////////////// FinancialStatementFactModel ///////////////////////////////////////
 class FinancialStatementFactModel(models.Model):
     company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=False, blank=False)
     financial_statement_line = models.ForeignKey(FinancialStatementLineModel, on_delete=models.CASCADE, null=False, blank=False)
@@ -184,6 +138,7 @@ class FinancialStatementFactModel(models.Model):
         unique_together = ("company", "entry_date", "financial_statement_line")
 
 
+# /////////////////////////////////// FinancialStatementBalLinkModel ///////////////////////////////////////
 class FinancialStatementBalLinkModel(models.Model):
     company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=False, blank=False)
     entry_date  = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
@@ -379,8 +334,7 @@ class FinancialStatementBalLinkModel(models.Model):
         verbose_name_plural ='FinancialStatementBalLinkModel'
 
 
-#///////////////////////////////////// FinancialStatementIncLinkModel ////////////////////////////////
-
+# ///////////////////////////////////// FinancialStatementIncLinkModel ////////////////////////////////
 class FinancialStatementIncLinkModel(models.Model):
     company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=False, blank=False)
     entry_date  = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
@@ -437,7 +391,6 @@ class FinancialStatementIncLinkModel(models.Model):
 
 
 #///////////////////////////////////// FinancialStatementIncLinkModel ////////////////////////////////
-
 class FinancialStatementInvAcctLinkModel(models.Model):
     company = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=False, blank=False)
     entry_date  = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
@@ -470,29 +423,29 @@ class FinancialStatementInvAcctLinkModel(models.Model):
 
 
 
-class Programmer(models.Model):
-    name = models.CharField(max_length=100)
+# class Programmer(models.Model):
+#     name = models.CharField(max_length=100)
+#
+#     def __str__(self):
+#         return self.name
+#
+#
+# class Language(models.Model):
+#     name = models.CharField(max_length=100)
+#     programmer = models.ForeignKey(Programmer, on_delete=models.CASCADE)
+#
+#     def __str__(self):
+#         return self.name
 
-    def __str__(self):
-        return self.name
 
-
-class Language(models.Model):
-    name = models.CharField(max_length=100)
-    programmer = models.ForeignKey(Programmer, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
-"""
-select * 
-from Company c, FinancialStatementFact fsf, FinancialStatementLine fsl, FinancialStatementLineSequence fsls, FinancialStatement fs  
-where c.id=fsf.company_id                   [Company - Fact] 
-and fsf.financial_statement_line_id=fsl.id  [fact - line ]
-and fsl.id=fsls.financial_statement_line_id [line - seq]
-and fsls.financial_statement_id=fs.id [seq - stmt];
-"""
+# """
+# select *
+# from Company c, FinancialStatementFact fsf, FinancialStatementLine fsl, FinancialStatementLineSequence fsls, FinancialStatement fs
+# where c.id=fsf.company_id                   [Company - Fact]
+# and fsf.financial_statement_line_id=fsl.id  [fact - line ]
+# and fsl.id=fsls.financial_statement_line_id [line - seq]
+# and fsls.financial_statement_id=fs.id [seq - stmt];
+# """
 
 
 
