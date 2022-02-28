@@ -22,7 +22,7 @@
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header mb-0">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Security' %}</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Add {{header_title}} Security  {% endblocktrans %}</h5>
         </div>
 
         <div class="card-body">

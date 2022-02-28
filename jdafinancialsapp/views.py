@@ -4,8 +4,9 @@ from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
-from jdaanalyticsapp.models import SecurityModel
-from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm,InvestmentAccountForm, CompanyForm, FinancialStatementFactForm, SecurityStockForm, SecurityBondForm
+from jdaanalyticsapp.models import SecurityModel, StockModel
+from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
+    FinancialStatementFactForm, SecurityStockForm, SecurityBondForm, StockModelForm
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -738,18 +739,28 @@ def financialStatementFactForm(request):
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_add_stock_security(request):
+    #stock_model = StockModel.objects.all()
     if request.method == "POST":
         form = SecurityStockForm(request.POST)
+        stock_form = StockModelForm(request.POST)
+        security_ticker = request.POST.get('ticker')
+        #print(f"746 securty_ticker: {security_ticker}")
         #print(request.POST.get('issuer'))
         #data = request.POST.copy()
-        #print(f": 708 {data}") #{request.POST.get('company')}")
-        if form.is_valid():
-            form.save()
+        #print(f": 748 {data}") #{request.POST.get('company')}")
+        if form.is_valid() and stock_form.is_valid():
+            security = form.save()
+            stock = stock_form.save(commit=False)
+            stock.security = security
+            stock.save()
+
             messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
             return redirect('jdafinancialsapp_add_stock_security')
 
         if len(form.errors) < 4:
             messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
+
+        messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
         messages.error(request, f"Please complete filling all required fields before submitting")
         #else:
         #    messages.error(request, form.errors)
@@ -757,9 +768,10 @@ def jdafinancialsapp_add_stock_security(request):
     else:
         print("756 : invalid")
         form = SecurityStockForm()
+        stock_form = StockModelForm()
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+    context = {'user_grp': grp, 'form': form, 'stock_form': stock_form, 'header_title': 'Stock', 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_stock_security.html', context)
 
 #////////////////////////// jdafinancialsapp_add_bond_security ///////////////////////
@@ -787,7 +799,8 @@ def jdafinancialsapp_add_bond_security(request):
         form = SecurityBondForm()
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'bread_new_security': 'font-weight-bold'}
+    context = {'user_grp': grp, 'form': form,  'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
+    #context = {'user_grp': grp, 'form': form, 'stock_form': bond_form, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
 # //////////////////////////////////////// jdafinancialsapp_security_listing/////////////////////////////

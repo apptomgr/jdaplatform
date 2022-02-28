@@ -1,7 +1,7 @@
 from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel
-from jdaanalyticsapp.models import ExchangeModel, SecurityModel
+from jdaanalyticsapp.models import ExchangeModel, SecurityModel, StockModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
@@ -474,13 +474,6 @@ class SecurityStockForm(forms.ModelForm):
         ('Public', 'Public'),
     )
 
-    CHOICES_SECR_STS = (
-        ('', 'Security Status'),
-        ('Listed','Listed'),
-        ('Unquoted', 'Unquoted'),
-        ('Suspended', 'Suspended'),
-        ('Deleted', 'Deleted'),
-    )
     CHOICES_RGSTRR = (
         ('', 'Registrar'),
         ('Central Bank','Central Bank'),
@@ -571,7 +564,8 @@ class SecurityStockForm(forms.ModelForm):
     CHOICES_ISSUER_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
     #print(CHOICES_USAGE)
     #print(CHOICES_ISSUER_LIST)
-    isin =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
+    isin = forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
+    #name = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Name'}, ))
     ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
     desc = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
     # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
@@ -602,10 +596,10 @@ class SecurityStockForm(forms.ModelForm):
     val_code = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
     lwst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
     hghst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
-    stock_type = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
-    under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
-    secr_sts = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
-    dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
+    # stock_type = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
+    # under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
+    # secr_sts = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    # dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
     # auth = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
     # gr_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Gross Bond Interest Rate'}))
     # net_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Net Bond Interest Rate'}))
@@ -630,7 +624,23 @@ class SecurityStockForm(forms.ModelForm):
         fields = '__all__'
         #fields = ['company', 'sector', 'rpt_period']
 
+# ////////////////////////// StockModelForm /////////////////////////////
+class StockModelForm(forms.ModelForm):
+    CHOICES_SECR_STS = (
+        ('', 'Security Status'),
+        ('Listed','Listed'),
+        ('Unquoted', 'Unquoted'),
+        ('Suspended', 'Suspended'),
+        ('Deleted', 'Deleted'),
+    )
+    stock_type = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
+    under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
+    secr_sts = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
 
+    class Meta:
+        model = StockModel
+        fields = ('stock_type','under_stock_type', 'under_stock_type','dvdnd')
 #/////////////////////////// SecurityBondForm //////////////////////////
 class SecurityBondForm(forms.ModelForm):
     CHOICES_LISTG = (

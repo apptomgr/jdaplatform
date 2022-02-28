@@ -109,7 +109,7 @@ class SecurityModel(models.Model):
     isur_type = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_ISUR_TYPE)
     sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, null=True, blank=True)
     issue = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
-    cntry = CountryField(blank=True, null=True, unique=True)
+    cntry = CountryField(blank=True, null=True, unique=False)
     rgstrr = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_RGSTRR)
     exchg = models.ForeignKey(ExchangeModel, on_delete=models.CASCADE, null=True, blank=True)
     depsty = models.CharField(max_length=100, blank=True, null=True, choices=CHOICES_DEPSTY)
@@ -122,7 +122,7 @@ class SecurityModel(models.Model):
     hghst_appl_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.ticker} - {self.name}"
+        return self.ticker
 
     class Meta:
         verbose_name_plural = 'SecurityModel'

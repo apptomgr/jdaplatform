@@ -22,7 +22,7 @@
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header mb-0">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Security' %}</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Add {{header_title}} Security  {% endblocktrans %}</h5>
         </div>
 
         <div class="card-body">
@@ -111,16 +111,18 @@
             </ul>
 
             <!-- Stock fields -->
+
             <div class="collapse show" id="stock">
                 <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.stock_type|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.under_stock_type|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.secr_sts|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.dvdnd|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.stock_type|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.under_stock_type|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.secr_sts|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.dvdnd|as_crispy_field}}</div>
                     <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div-->
                 </div>
             </div>
+
 
             {% comment %}
             {% endcomment %}
