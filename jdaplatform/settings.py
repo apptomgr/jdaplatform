@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
+# SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -175,8 +175,7 @@ TIME_ZONE = 'America/New_York'
 # USE_I18N = True
 
 # USE_L10N = True
-
-USE_TZ = True
+USE_TZ = os.getenv("USE_TZ", "False") == "True"
 
 # LANGUAGE_CODE = 'en-us'
 USE_THOUSAND_SEPARATOR = True

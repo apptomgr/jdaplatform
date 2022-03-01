@@ -28,16 +28,15 @@
         <div class="card-body">
 
             <!-- Security info -->
+            <!-- Security info -->
             <div class="row">
                 <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
             </div>
             <div class="row mt-1">
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isin|as_crispy_field}}</div>
-
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ticker|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.desc |as_crispy_field}}</div>
-
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
@@ -50,7 +49,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.open_date| as_crispy_field}}
+                            {{form.open_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -58,7 +57,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.close_date| as_crispy_field}}
+                            {{form.close_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -66,20 +65,21 @@
             </div>
 
             <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.name |as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.listg_sts |as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.nmnl_amt|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry|as_crispy_field}}</div>
-
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.currency|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.min_lot|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
+
             </div>
 
             <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.actvy_sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.sector|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issue|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div>
             </div>
 
@@ -104,61 +104,62 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.hghst_appl_rate|as_crispy_field}}</div>
             </div>
 
-            <!-- tabs -->
-            <ul class="nav nav-tabs mb-3">
-                <li class="nav-item"><a class="nav-link" href="{% url 'jdafinancialsapp_add_stock_security' %}">Stock</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'jdafinancialsapp_add_bond_security' %}">Bond</a></li>
-            </ul>
-
             <!-- Bond fields -->
             <div class="collapse show" id="bond">
                 <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.gr_bnd_int_rate|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.net_bnd_int_rate|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.nbr_shrs_outstg|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.bnd_type|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.duratn_amt|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.duratn_units|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.gr_bnd_int_rate|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.net_bnd_int_rate|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.nbr_shrs_outstg|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.bnd_type|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.duratn_amt|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.duratn_units|as_crispy_field}}</div>
                 </div>
+
                 <div class="row">
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.pymt_perd|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.pymt_perd_units|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.dfrrd_rpymt_perd|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.dfrrd_rpymt_perd_units|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rpymt_mthd|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rpymt_type|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.pymt_perd|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.pymt_perd_units|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.dfrrd_rpymt_perd|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.dfrrd_rpymt_perd_units|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.rpymt_mthd|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.rpymt_type|as_crispy_field}}</div>
                 </div>
+
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                         <div class="input-group justify-content-right">
                             <div class="input-group-prepend">
-                                {{form.bnd_isu_dt| as_crispy_field}}
+                                {{bond_form.isu_dt| as_crispy_field}}
                                 <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                         <div class="input-group justify-content-right">
                             <div class="input-group-prepend">
-                                {{form.first_pay_date| as_crispy_field}}
+                                {{bond_form.first_pay_dt| as_crispy_field}}
                                 <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                         <div class="input-group justify-content-right">
                             <div class="input-group-prepend">
-                                {{form.last_pay_date| as_crispy_field}}
+                                {{bond_form.lst_pay_dt| as_crispy_field}}
                                 <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.usage|as_crispy_field}}</div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.usage|as_crispy_field}}</div>
+
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                         <span class="float-left form-control-sm mt-1 text-secondary mr-3">Authorized</span>
-                        <span class="float-left">{{form.auth| as_crispy_field}}</span>
+                        <span class="float-left">{{bond_form.auth| as_crispy_field}}</span>
+
                     </div>
-                    <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rpymt_type|as_crispy_field}}X</div-->
+                    <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{form.rpymt_type|as_crispy_field}X</div-->
                 </div>
             </div>
             {% comment %}

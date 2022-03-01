@@ -34,10 +34,8 @@
             <div class="row mt-1">
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isin|as_crispy_field}}</div>
-
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ticker|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.desc |as_crispy_field}}</div>
-
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
@@ -50,7 +48,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.open_date| as_crispy_field}}
+                            {{form.open_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -58,7 +56,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.close_date| as_crispy_field}}
+                            {{form.close_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -66,20 +64,21 @@
             </div>
 
             <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.name |as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.listg_sts |as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.nmnl_amt|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry|as_crispy_field}}</div>
-
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.currency|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.min_lot|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
+
             </div>
 
             <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.actvy_sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.sector|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issue|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div>
             </div>
 
@@ -105,10 +104,10 @@
             </div>
 
             <!-- tabs -->
-            <ul class="nav nav-tabs mb-3">
+            <!--ul class="nav nav-tabs mb-3">
                 <li class="nav-item"><a class="nav-link" href="{% url 'jdafinancialsapp_add_stock_security' %}">Stock</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'jdafinancialsapp_add_bond_security' %}">Bond</a></li>
-            </ul>
+            </ul-->
 
             <!-- Stock fields -->
 
@@ -116,10 +115,8 @@
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.stock_type|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.under_stock_type|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.secr_sts|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.secr_status|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.dvdnd|as_crispy_field}}</div>
-                    <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div-->
                 </div>
             </div>
 

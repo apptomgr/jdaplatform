@@ -52,12 +52,7 @@ class SecurityModel(models.Model):
     # class Meta:
     #     verbose_name_plural = 'SecurityModel'
 
-    CHOICES_INSTR_TYPE = (
-        ('', 'Security Status'),
-        ('Listed', 'Listed'),
-        ('Unquoted', 'Unquoted'),
-        ('Suspended', 'Suspended'),
-    )
+
     CHOICES_LISTG = (
         ('', 'Listing Status'),
         ('Listed', 'Listed'),
@@ -95,7 +90,6 @@ class SecurityModel(models.Model):
     ticker = models.CharField(max_length=12, blank=False, null=False)
     isin = models.CharField(max_length=20, blank=False, null=False)
     name = models.CharField(max_length=200, blank=True, null=True)
-    instr_type = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_INSTR_TYPE)
     isu_dt = models.DateTimeField(blank=True, null=True)
     open_dt = models.DateTimeField(blank=True, null=True)
     close_dt = models.DateTimeField(blank=True, null=True)
@@ -175,39 +169,32 @@ class StockModel(models.Model):
 class BondModel(models.Model):
     CHOICES_BND_TYPE = (
         ('', 'Bond Type'),
-        ('Redeemable in Share', 'Redeemable in Share'),
+        ('Redeemable in Shares', 'Redeemable in Shares'),
         ('Constant Redemption Bond', 'Constant Redemption Bond'),
         ('Deferred Constant Redemption Bond', 'Deferred Constant Redemption Bond'),
         ('In Fine Bond', 'In Fine Bond'),
     )
     CHOICES_DURATN_UNITS = (
         ('', 'Duration Units'),
-        ('Monthly', 'Monthyl'),
+        ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-annually', 'Semi-annually'),
         ('Annually', 'Annually'),
     )
-    PYMT_PERD = (
-        ('', 'Payment Period'),
-        ('Monthly', 'Monthyl'),
+
+    CHOICES_PYMT_PERDU =  (
+        ('', 'Payment Period Unit'),
+        ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-annually', 'Semi-annually'),
         ('Annually', 'Annually'),
-    )
-    CHOICES_PYMT_PERDU = (
-        ('', 'Payment Period Units'),
-        ('1', '1'),
-        ('5', '5'),
-        ('10', '10'),
-        ('20', '20'),
-        ('30', '30'),
     )
     CHOICES_DRPU = (
         ('', 'Deferred Repayment Period Units'),
-        ('0', '1'),
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
+        ('Monthly', 'Monthly'),
+        ('Quarterly', 'Quarterly'),
+        ('Semi-annually', 'Semi-annually'),
+        ('Annually', 'Annually'),
     )
     CHOICES_RPYMT_MTHD = (
         ('', 'Repayment Method'),
@@ -221,24 +208,26 @@ class BondModel(models.Model):
     )
     CHOICES_USAGE = (
         ('', 'Usage'),
-        ('360', '360'),
-        ('365', '365'),
+        (360, 360),
+        (365, 365),
     )
     security = models.ForeignKey(SecurityModel, on_delete=models.CASCADE, null=False, blank=False)
     auth = models.BooleanField()
-    security_date = models.DateTimeField(blank=False, null=False)
-    gr_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
-    net_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
+    #security_date = models.DateTimeField(blank=False, null=False)
+    gr_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    net_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    nbr_shrs_outstg = models.IntegerField(blank=True, null=True)
     bnd_type = models.CharField(max_length=50, choices=CHOICES_BND_TYPE)
     duratn_amt = models.IntegerField(blank=False, null=False)
     duratn_units = models.CharField(max_length=50, choices=CHOICES_DURATN_UNITS)
-    pymt_perd = models.CharField(max_length=50, choices=PYMT_PERD)
+    pymt_perd = models.IntegerField() #max_length=50, choices=PYMT_PERD)
     pymt_perd_units = models.CharField(max_length=50, choices=CHOICES_PYMT_PERDU)
+    dfrrd_rpymt_perd = models.IntegerField(blank=True, null=True)
     dfrrd_rpymt_perd_units = models.CharField(max_length=50, choices=CHOICES_DRPU)
     rpymt_mthd = models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD)
     rpymt_type = models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE)
-    bnd_isu_dt = models.DateField(auto_now=False)
-    first_pay_date = models.DateField(auto_now_add=False)
+    isu_dt = models.DateField(auto_now=False)
+    first_pay_dt = models.DateField(auto_now_add=False)
     lst_pay_dt = models.DateField(auto_now_add=False)
     usage = models.IntegerField(blank=False, null=False, choices=CHOICES_USAGE)
 
