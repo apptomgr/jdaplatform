@@ -109,7 +109,7 @@ class SecurityModel(models.Model):
     depsty = models.CharField(max_length=100, blank=True, null=True, choices=CHOICES_DEPSTY)
     cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     invstr_cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    txtn_code = models.BooleanField(blank=True, null=True)
+    txtn_code = models.BooleanField(blank=False, null=False)
     exchg_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     val_code = models.BooleanField(blank=True, null=True)
     lwst_appl_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -151,6 +151,7 @@ class StockModel(models.Model):
         ('Listed', 'Listed'),
         ('Unquoted', 'Unquoted'),
         ('Suspended', 'Suspended'),
+        ('Deleted', 'Deleted'),
     )
     security = models.ForeignKey(SecurityModel, on_delete=models.CASCADE, null=False, blank=False)
     stock_type = models. CharField(max_length=25, null=False, blank=False)
@@ -178,7 +179,7 @@ class BondModel(models.Model):
         ('', 'Duration Units'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
-        ('Semi-annually', 'Semi-annually'),
+        ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
 
@@ -186,14 +187,14 @@ class BondModel(models.Model):
         ('', 'Payment Period Unit'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
-        ('Semi-annually', 'Semi-annually'),
+        ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_DRPU = (
         ('', 'Deferred Repayment Period Units'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
-        ('Semi-annually', 'Semi-annually'),
+        ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_RPYMT_MTHD = (

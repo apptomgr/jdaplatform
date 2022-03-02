@@ -760,7 +760,7 @@ def jdafinancialsapp_add_stock_security(request):
         if len(form.errors) < 4:
             messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
 
-        #messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
+        # messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
         messages.error(request, f"Please complete filling all required fields before submitting")
         #else:
         #    messages.error(request, form.errors)
@@ -793,13 +793,13 @@ def jdafinancialsapp_add_bond_security(request):
         if len(form.errors) < 4:
             messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
 
-        messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
+        #messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
         messages.error(request, f"Please complete filling all required fields before submitting")
         #else:
         #    messages.error(request, form.errors)
         #    return redirect('jdafinancialsapp_add_security')
     else:
-        print("803 : invalid")
+        #print("803 : invalid")
         form = SecurityForm()
         bond_form = BondModelForm()
 
