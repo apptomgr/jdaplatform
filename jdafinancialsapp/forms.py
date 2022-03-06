@@ -1,10 +1,13 @@
 from django import forms
 from .models import CompanyModel, SectorModel, ShareholderModel, FinancialStatementModel,  \
-    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, FinancialStatementInvAcctLinkModel
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
+    FinancialStatementInvAcctLinkModel, ProductModel, ProductMetaModel
 from jdaanalyticsapp.models import ExchangeModel, SecurityModel, StockModel, BondModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
+from django.forms import inlineformset_factory
+
 # from jdafinancialsapp.utils import merge_two_lists
 
 # /////////////////////////// SectorForm //////////////////////////
@@ -920,4 +923,7 @@ class FinancialStatementFactForm(forms.ModelForm):
 #    company = CompanyModel.objects.filter(id=value)
 #    if not company: # check if any object exists
 #        raise ValidationError(f'{company} already exist in this {rpt_period}.')
+
+# class ProductForm(forms.ModelForm):
+#     class Meta:
 
