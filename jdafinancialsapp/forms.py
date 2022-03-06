@@ -924,6 +924,8 @@ class FinancialStatementFactForm(forms.ModelForm):
 #    if not company: # check if any object exists
 #        raise ValidationError(f'{company} already exist in this {rpt_period}.')
 
-# class ProductForm(forms.ModelForm):
-#     class Meta:
+class ProductForm(forms.ModelForm):
+     class Meta:
+         model = ProductModel
+         fields = ('prod_name','prod_price')
 
