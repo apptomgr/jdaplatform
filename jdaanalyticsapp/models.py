@@ -1,6 +1,8 @@
 from django.db import models
 from django_countries.fields import CountryField
 from jdafinancialsapp.models import CompanyModel, SectorModel
+from django_countries.fields import CountryField, countries
+from  jdafinancialsapp.utils import merge_two_lists, merge_company_lists
 
 
 # ///////////////////////////// ExchangeModel ///////////////////////////////
@@ -87,6 +89,23 @@ class SecurityModel(models.Model):
         ('Bourse Regionale', 'Bourse Regionale'),
     )
 
+    country_list = []
+    country_list_name = []
+
+    for code, name in list(countries):
+        country_list_name.append(name)
+
+    country_list = merge_two_lists(country_list_name, country_list_name)
+    country_list =  tuple(country_list)
+
+    company = CompanyModel.objects.values_list('company', flat=True).order_by('company')
+    company_list = list(company)
+    company_list = merge_company_lists(company_list, company_list)
+
+    country_company = tuple(country_list) + tuple(company_list)
+
+    CHOICES_ISSUE_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
+
     ticker = models.CharField(max_length=12, blank=False, null=False)
     isin = models.CharField(max_length=20, blank=False, null=False)
     name = models.CharField(max_length=200, blank=True, null=True)
@@ -102,7 +121,7 @@ class SecurityModel(models.Model):
     shr_class = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_SHR_CLASS)
     isur_type = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_ISUR_TYPE)
     sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, null=True, blank=True)
-    issue = models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
+    issue = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
     cntry = CountryField(blank=True, null=True, unique=False)
     rgstrr = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_RGSTRR)
     exchg = models.ForeignKey(ExchangeModel, on_delete=models.CASCADE, null=True, blank=True)

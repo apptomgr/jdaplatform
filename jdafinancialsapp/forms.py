@@ -538,9 +538,8 @@ class SecurityForm(forms.ModelForm):
     isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Type'}))
     # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
     sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
-    issue = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Issue', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
-
-    #issue = forms.ChoiceField(choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
+    #issue = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Issue', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
+    issue = forms.ChoiceField(choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
     rgstrr = forms.ChoiceField(choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
     exchg  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all(), empty_label='Exchange', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
     depsty = forms.ChoiceField(choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))

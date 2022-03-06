@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-# from django.http import HttpResponse
+from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, \
@@ -807,27 +807,68 @@ def jdafinancialsapp_add_bond_security(request):
     context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
+
+# #/////////////////////////////////////// jdafinancialsapp_security_rpt/ ////////////////////////
+# @login_required
+# @allowed_users(allowed_roles=['admins', 'managers','staffs'])
+# def jdafinancialsapp_security_rpt(request):
+#     now = datetime.now()
+#     security_listing = SecurityModel.objects.all().order_by('ticker', 'name')
+#     grp = get_user_grp(request)
+#     context = {'user_grp':grp,'security_listing':security_listing,'rpt_date': now}
+#     return render(request, 'jdafinancialsapp/jdafinancialsapp_security_listing.html', context)
+
 # //////////////////////////////////////// jdafinancialsapp_security_listing/////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins', 'managers','staffs'])
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdafinancialsapp_security_listing(request):
-    now = datetime.now()
-    security_listing = SecurityModel.objects.all()
+    now =datetime.now()
+    security_listing = SecurityModel.objects.all().order_by('ticker')
     grp = get_user_grp(request)
     context = {'user_grp':grp,'security_listing':security_listing,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_security_listing.html', context)
+
+# //////////////////////////////////////////jdafinancialsapp_hx_delete_security /////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
+def jdafinancialsapp_hx_delete_security(request, pk):
+    sec = SecurityModel.objects.get(pk=pk)
+    sec.delete()
+    messages.success(request, f"Successfully deleted security: '{sec}' ID #{pk}")
+    return HttpResponse('')
+
+# //////////////////////////////////////////jdafinancialsapp_hx_stock_detail /////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins', 'managers','staffs'])
+def jdafinancialsapp_hx_stock_detail(request, pk):
+    now =datetime.now()
+    security_detail = SecurityModel.objects.filter(pk=pk)
+
+    sec_type = None
+    assoc_sec_detail = None
+    stock_sec_detail = StockModel.objects.filter(security__id=pk)
+    bond_sec_detail = BondModel.objects.filter(security__id=pk)
+
+    if stock_sec_detail.exists():
+        sec_type = 'Stock'
+        assoc_sec_detail = stock_sec_detail
+        #print(f"854 stock assoc_sec_detail: {stock_sec_detail}")
+    if bond_sec_detail.exists():
+        sec_type = 'Bond'
+        assoc_sec_detail = bond_sec_detail
+        #print(f"854 bond assoc_sec_detail: {bond_sec_detail}")
+
+    #print(f"855 res assoc_sec_detail: {assoc_sec_detail}")
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type,'assoc_sec_detail':assoc_sec_detail, 'rpt_date': now}
+    #print(f'res 848: {security_detail}')
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_security_detail.html', context)
 
 # //////////////////////////////////////// jdafinancialsapp_view_security_detail/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_view_security_detail(request, pk):
-    #print(f"289 PK {pk}")
-    now = datetime.now()
-    company_detail = SecurityModel.objects.get(id=pk)
-    #print(f"company_detail: {company_detail}")
-    grp = get_user_grp(request)
-    context = {'user_grp':grp,'security_detail':company_detail,'rpt_date': now}
-    return render(request, 'jdafinancialsapp/jdafinancialsapp_view_security_detail.html', context)
+  pass
 
 # # ///////////////////////////// MISC ///////////////////////////////////////////
 # """ model formset test """

@@ -1,0 +1,252 @@
+{% load i18n %}
+
+<div id="security_details">
+    <table id="security_detail"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr>
+            <th class="col-md-2">{% trans 'Sec ID' %}</th>
+            <th class="col-md-2">{% trans 'ISIB' %}</th>
+            <th class="col-md-2">{% trans 'Ticker' %}</th>
+            <th class="col-md-2">{% trans 'Description' %}</th>
+            <th class="col-md-2">{% trans 'Issue Date' %}</th>
+            <th class="col-md-2">{% trans 'Open Date' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in security_detail %}
+        <tr>
+            <td class="col-md-2">{{ i.pk }}</td>
+            <td class="col-md-2">{{i.isin}}</td>
+            <td class="col-md-2">{{i.ticker}}</td>
+            <td class="col-md-2">{{i.desc}}</td>
+            <td class="col-md-2">{{i.isu_dt}}</td>
+            <td class="col-md-2">{{i.open_dt}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_detail2"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr class="rowX">
+            <th class="col-md-2">{% trans 'Close Date' %}</th>
+            <th class="col-md-2">{% trans 'Name' %}</th>
+            <th class="col-md-2">{% trans 'Listing Status' %}</th>
+            <th class="col-md-2">{% trans 'Nominal Value' %}</th>
+            <th class="col-md-2">{% trans 'Country' %}</th>
+            <th class="col-md-2">{% trans 'Currency' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in security_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.close_dt}}</td>
+            <td class="col-md-2">{{i.name}}</td>
+            <td class="col-md-2">{{i.listg_sts}}</td>
+            <td class="col-md-2">{{i.nmnl_amt}}</td>
+            <td class="col-md-2">{{i.cntry}}</td>
+            <td class="col-md-2">{{i.currency}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_detail3"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr class="rowX">
+            <th class="col-md-2">{% trans 'Title Type' %}</th>
+            <th class="col-md-2">{% trans 'Share Class' %}</th>
+            <th class="col-md-2">{% trans 'Issue Type' %}</th>
+            <th class="col-md-2">{% trans 'Sector' %}</th>
+            <th class="col-md-2">{% trans 'Issue' %}</th>
+            <th class="col-md-2">{% trans 'Registrar' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in security_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.ttl_type}}</td>
+            <td class="col-md-2">{{i.shr_class}}</td>
+            <td class="col-md-2">{{i.isur_type}}</td>
+            <td class="col-md-2">{{i.sector}}</td>
+            <td class="col-md-2">{{i.issue}}</td>
+            <td class="col-md-2">{{i.rgstrr}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_detail4"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr class="rowX">
+            <th class="col-md-2">{% trans 'Exchange' %}</th>
+            <th class="col-md-2">{% trans 'Depository' %}</th>
+            <th class="col-md-2">{% trans 'Country Tax' %}</th>
+            <th class="col-md-2">{% trans 'Invstmt Country Tax' %}</th>
+            <th class="col-md-2">{% trans 'Taxation Code' %}</th>
+            <th class="col-md-2">{% trans 'Exchange Tax' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in security_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.exchg}}</td>
+            <td class="col-md-2">{{i.depsty}}</td>
+            <td class="col-md-2">{{i.cntry_tax}}</td>
+            <td class="col-md-2">{{i.invstr_cntry_tax}}</td>
+            <td class="col-md-2">{{i.txtn_code}}</td>
+            <td class="col-md-2">{{i.exchg_tax}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_detail5"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr class="rowX">
+            <th class="col-md-2">{% trans 'Value Code' %}</th>
+            <th class="col-md-2">{% trans 'Lowest Applied Rate' %}</th>
+            <th class="col-md-2">{% trans 'Highest Applied Rate' %}</th>
+            <th class="col-md-2">&nbsp;</th>
+            <th class="col-md-2">&nbsp;</th>
+            <th class="col-md-2">&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in security_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.val_code}}</td>
+            <td class="col-md-2">{{i.lwst_appl_rate}}</td>
+            <td class="col-md-2">{{i.hghst_appl_rate}}</td>
+            <td class="col-md-2">&nbsp;</td>
+            <td class="col-md-2">&nbsp;</td>
+            <td class="col-md-2">&nbsp;</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- sec_type [Stock or Bond ] -->
+    {% if sec_type == 'Stock' %}
+    <table id="security_stock"
+           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
+           style="width:100%">
+        <thead>
+        <tr>
+            <th colspan="6" class="text-info text-small">Stock detail</th>
+        </tr>
+
+        <tr>
+            <th class="col-md-2">{% trans 'Security' %}</th>
+            <th class="col-md-2">{% trans 'Stock Type' %}</th>
+            <th class="col-md-2">{% trans 'Under Stock Type' %}</th>
+            <th class="col-md-2">{% trans 'Security Status' %}</th>
+            <th class="col-md-2">{% trans 'Dividend Per Share' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in assoc_sec_detail %}
+        <tr>
+            <td class="col-md-2">{{i.security}}</td>
+            <td class="col-md-2">{{i.stock_type}}</td>
+            <td class="col-md-2">{{i.under_stock_type}}</td>
+            <td class="col-md-2">{{i.secr_status}}</td>
+            <td class="col-md-2">{{i.dvdnd}}</td>
+            <td class="col-md-2">&nbsp;</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <table id="security_bond" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th colspan="6" class="text-info text-small">Bond detail</th>
+        </tr>
+        <tr>
+            <th class="col-md-2">{% trans 'Security' %}</th>
+            <th class="col-md-2">{% trans 'Gross Bond Interest Rate' %}</th>
+            <th class="col-md-2">{% trans 'Net Bond Interest Rate' %}</th>
+            <th class="col-md-2">{% trans 'Number Shares Outstanding' %}</th>
+            <th class="col-md-2">{% trans 'Bond Type' %}</th>
+            <th class="col-md-2">{% trans 'Duration' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in assoc_sec_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.security}}</td>
+            <td class="col-md-2">{{i.gr_bnd_int_rate}}</td>
+            <td class="col-md-2">{{i.net_bnd_int_rate}}</td>
+            <td class="col-md-2">{{i.nbr_shrs_outstg}}</td>
+            <td class="col-md-2">{{i.bnd_type}}</td>
+            <td class="col-md-2">{{i.duratn_amt}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_bond2" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th class="col-md-2">{% trans 'Duration Units' %}</th>
+            <th class="col-md-2">{% trans 'Payment Period' %}</th>
+            <th class="col-md-2">{% trans 'Payment Period Units' %}</th>
+            <th class="col-md-2">{% trans 'Deferred Repymnt Prd' %}</th>
+            <th class="col-md-2">{% trans 'Deferred Repymt Prd Units' %}</th>
+            <th class="col-md-2">{% trans 'Repayment Method' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in assoc_sec_detail %}
+        <tr class="rowX">
+            <td class="col-md-2">{{i.duratn_units}}</td>
+            <td class="col-md-2">{{i.pymt_perd}}</td>
+            <td class="col-md-2">{{i.pymt_perd_units}}</td>
+            <td class="col-md-2">{{i.dfrrd_rpymt_perd}}</td>
+            <td class="col-md-2">{{i.dfrrd_rpymt_perd_units}}</td>
+            <td class="col-md-2">{{i.rpymt_mthd}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="security_bond3" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th class="col-md-2">{% trans 'Repayment Type' %}</th>
+            <th class="col-md-2">{% trans 'Bond Issue Date' %}</th>
+            <th class="col-md-2">{% trans 'First Payment Date' %}</th>
+            <th class="col-md-2">{% trans 'Last Payment Date' %}</th>
+            <th class="col-md-2">{% trans 'Usage' %}</th>
+            <th class="col-md-2">{% trans 'Auth' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in assoc_sec_detail %}
+        <tr>
+            <td class="col-md-2">{{i.rpymt_type}}</td>
+            <td class="col-md-2">{{i.isu_dt}}</td>
+            <td class="col-md-2">{{i.first_pay_dt}}</td>
+            <td class="col-md-2">{{i.lst_pay_dt}}</td>
+            <td class="col-md-2">{{i.usage}}</td>
+            <td class="col-md-2">{{i.auth}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endif %}
+</div>
+
+<style>
+    .my_modal-lg {
+        max-width: 80% !important;
+}
+
+
+</style>

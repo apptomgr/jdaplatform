@@ -16,8 +16,14 @@
     </div>
 </div>
 
-{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
-
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_home' %}" class="text-light {{bread_home}}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_add_stock_security' %}" class="text-light {{bread_stmts}}">{% trans 'Add Stock' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_add_bond_security' %}" class="text-light {{bread_stmts}}">{% trans 'Add Bond' %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_security_rpt' %}" class="text-light {{bread_stmts}}">{% trans 'Security Report' %}</a></li>
+    </ol>
+</nav>
 <div class="card text-center mt-1">
     <form method="POST" novalidate>
         {% csrf_token %}
