@@ -929,3 +929,23 @@ class ProductForm(forms.ModelForm):
          model = ProductModel
          fields = ('prod_name','prod_price')
 
+
+class ProductMetaForm(forms.ModelForm):
+    class Meta:
+        model = ProductMetaModel
+        fields = ('prod_meta_name', 'prod_meta_value')
+
+ProductMetaInlineFormset = inlineformset_factory(
+    ProductModel,
+    ProductMetaModel,
+    form=ProductMetaForm,
+    extra=5,
+    # max_num=5,
+    # fk_name=None,
+    # fields=None, exclude=None, can_order=False,
+    # can_delete=True, max_num=None, formfield_callback=None,
+    # widgets=None, validate_max=False, localized_fields=None,
+    # labels=None, help_texts=None, error_messages=None,
+    # min_num=None, validate_min=False, field_classes=None
+)
+
