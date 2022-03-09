@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'jdaanalyticsapp.apps.JdaanalyticsappConfig',
     'jdapublicationsapp.apps.JdapublicationappsConfig',
     'jdawebsite.apps.JdawebsiteConfig',
-    'jdatester.apps.JdatesterConfig',
     'django.contrib.humanize',
     'crispy_forms',
     'storages',
@@ -62,8 +61,9 @@ INSTALLED_APPS = [
     'django_translation_flags',
     'accounts.apps.AccountsConfig',
     'preventconcurrentlogins',
-
+    'django_countries',
 ]
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'jdamainapp_home'
