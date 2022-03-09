@@ -419,20 +419,20 @@ class FinancialStatementInvAcctLinkModel(models.Model):
 
 
 
-class ProductModel(models.Model):
-    prod_name = models.CharField(max_length=250)
-    prod_price = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.prod_name
-
-class ProductMetaModel(models.Model):
-    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
-    prod_meta_name = models.CharField('Property', max_length=50)
-    prod_meta_value = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return f'ID: {self.pk}, {self.prod_meta_name} for ProdcutID: {self.product.pk}'
+# class ProductModel(models.Model):
+#     prod_name = models.CharField(max_length=250)
+#     prod_price = models.PositiveIntegerField()
+#
+#     def __str__(self):
+#         return self.prod_name
+#
+# class ProductMetaModel(models.Model):
+#     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+#     prod_meta_name = models.CharField('Property', max_length=50)
+#     prod_meta_value = models.CharField(max_length=200, blank=True, null=True)
+#
+#     def __str__(self):
+#         return f'ID: {self.pk}, {self.prod_meta_name} for ProdcutID: {self.product.pk}'
 
 
 
