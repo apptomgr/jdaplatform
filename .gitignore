@@ -8,5 +8,6 @@ db.sqlite3.sqbpro
 scratch.txt
 snippets.txt
 test.sqbpro
+.env
 
 pdfstuff/
