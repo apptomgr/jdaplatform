@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'jdamainapp.apps.JdamainappConfig',
-    'jdafinancialsapp.apps.JdafinancialsappConfig',
-    'jdaanalyticsapp.apps.JdaanalyticsappConfig',
+    #'jdafinancialsapp.apps.JdafinancialsappConfig',
+    #'jdaanalyticsapp.apps.JdaanalyticsappConfig',
     'jdapublicationsapp.apps.JdapublicationappsConfig',
     'jdawebsite.apps.JdawebsiteConfig',
     'django.contrib.humanize',
@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'django_translation_flags',
     'accounts.apps.AccountsConfig',
     'preventconcurrentlogins',
-    'django_countries',
+    #'django_countries',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
