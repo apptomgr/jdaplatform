@@ -258,6 +258,9 @@ class BondModel(models.Model):
         verbose_name_plural = 'BondModel'
 
 
+
+class ResTest(models.Model):
+    pass
 # ////////////////// Test models ///////////////////////////////////////////
 # class Author(models.Model):
 #     name = models.CharField(max_length=50)

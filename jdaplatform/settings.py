@@ -20,7 +20,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 from django.contrib.messages import constants as messages
-from django.core.management.utils import get_random_secret_key
+# from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
+# SECRET_KEY = 'g76$!dnui&kta#p_9h_&33b+#ebvs$5yl^0)vi-1#_$rwv_c*@'   # SWAP before prod deployment
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'jdamainapp.apps.JdamainappConfig',
-    #'jdafinancialsapp.apps.JdafinancialsappConfig',
-    #'jdaanalyticsapp.apps.JdaanalyticsappConfig',
+    'jdafinancialsapp.apps.JdafinancialsappConfig',
+    'jdaanalyticsapp.apps.JdaanalyticsappConfig',
     'jdapublicationsapp.apps.JdapublicationappsConfig',
     'jdawebsite.apps.JdawebsiteConfig',
     'django.contrib.humanize',
@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'django_translation_flags',
     'accounts.apps.AccountsConfig',
     'preventconcurrentlogins',
-    #'django_countries',
+    'django_countries',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

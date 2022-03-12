@@ -72,33 +72,33 @@
             <ul>
                 <li class="active"><a href="{% url 'jdamainapp_home' %}">{% trans 'JDA Platform' %}</a></li>
 
-                <li class="drop-down"><a href="{ url 'jdafinancialsapp_home' }"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
+                <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
                     {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
                    <ul>
-                       <li><a href="{ url 'jdafinancialsapp_stmts' }"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
+                       <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
                        <li><hr class="my_hr_divider"></li>
-                       <li><a href="{ url 'jdafinancialsapp_new_company' }"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Company' %}</a></li>
+                       <li><a href="{% url 'jdafinancialsapp_new_company' %}"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Company' %}</a></li>
                        <!--li><a href="{ url 'jdapublicationsapp_entry' }"><i class="fas fa-user-cog text-info"></i> Publication Entry </a></li-->
                         <!--li><a href="{ url 'jdapublicationsapp_listing' }"><i class="fas fa-edit"></i> Publication Edit </a></li-->
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{ url 'jdafinancialsapp_company_listing' }"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{ url 'jdafinancialsapp_add_stock_security' }"><i class="fa fa-plus-circle"></i> {% trans 'Add Stock' %}</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_add_stock_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Stock' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{ url 'jdafinancialsapp_add_bond_security' }"><i class="fa fa-plus-circle"></i> {% trans 'Add Bond' %}</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_add_bond_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Bond' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{ url 'jdafinancialsapp_security_listing' }"><i class="far fa-eye"></i> {% trans 'View Securities' %}</a></li>
+                        <li><a href="{% url 'jdafinancialsapp_security_listing' %}"><i class="far fa-eye"></i> {% trans 'View Securities' %}</a></li>
                     </ul>
                     {% endif%}
                 </li>
+                <!--li><a href="{% url 'jdaanalyticsapp_home' %}"><i class="fas fa-chart-line"></i> {% trans 'Analytics App' %}</a></li-->
 
-
-                <li class="drop-down"><a href="{ url 'jdaanalyticsapp_home' }"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
+                <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
                     {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
                     <ul>
-                        <li><a href="{ url 'jdaanalyticsapp_upload_form' }"><i class="fas fa-cloud-upload-alt"></i> {% trans 'Market Data Upload' %} </a></li>
+                        <li><a href="{% url 'jdaanalyticsapp_upload_form' %}"><i class="fas fa-cloud-upload-alt"></i> {% trans 'Market Data Upload' %} </a></li>
                         <li><hr class="my_hr_divider"></li>
-                        <li><a href="{ url 'jdaanalyticsapp_rpt' }"><i class="fas fa-file"></i> {% trans 'Market Data Report' %} </a></li>
+                        <li><a href="{% url 'jdaanalyticsapp_rpt' %}"><i class="fas fa-file"></i> {% trans 'Market Data Report' %} </a></li>
                         <!--li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> View Companies</a></li>
                         <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> Add Company</a></li-->

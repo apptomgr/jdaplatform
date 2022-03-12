@@ -417,7 +417,8 @@ class FinancialStatementInvAcctLinkModel(models.Model):
         verbose_name_plural ='FinancialStatementInvAcctLinkModel'
 
 
-
+class ResTest(models.Model):
+    pass
 
 # class ProductModel(models.Model):
 #     prod_name = models.CharField(max_length=250)

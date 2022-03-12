@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('jdamainapp.urls')),
-    #path('jdafinancialsapp/', include('jdafinancialsapp.urls')),
-    #path('jdaanalyticsapp/', include('jdaanalyticsapp.urls')),
+    path('jdafinancialsapp/', include('jdafinancialsapp.urls')),
+    path('jdaanalyticsapp/', include('jdaanalyticsapp.urls')),
     path('jdapublicationsapp/', include('jdapublicationsapp.urls')),
     path('jdawebsite/', include('jdawebsite.urls')),
     path('i18n/', include('django_translation_flags.urls')),
