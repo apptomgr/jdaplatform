@@ -259,8 +259,8 @@ class BondModel(models.Model):
 
 
 
-class ResTest(models.Model):
-    pass
+# class ResTest(models.Model):
+#     pass
 # ////////////////// Test models ///////////////////////////////////////////
 # class Author(models.Model):
 #     name = models.CharField(max_length=50)
