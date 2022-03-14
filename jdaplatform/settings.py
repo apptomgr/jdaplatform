@@ -22,9 +22,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
 
-import dj_database_url
-
-
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -105,7 +102,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jdaplatform.wsgi.application'
 
+
+
 # Database
+
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 if DEVELOPMENT_MODE is True:
     DATABASES = {
