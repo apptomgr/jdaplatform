@@ -7,6 +7,7 @@ from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
 from django.forms import inlineformset_factory
+from django.forms import modelformset_factory
 
 # from jdafinancialsapp.utils import merge_two_lists
 
@@ -43,7 +44,7 @@ class CompanyForm(forms.ModelForm):
     actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites economiques (CIV)'}, ))
     intrnl_actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
     othr_bus_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Autre secteur d\'activites'}, ))
-    shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
+    #shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
 
     #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown'}))
     #shrhldr_name_1 = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nom de l\'actionnaire'}, ))
@@ -67,7 +68,10 @@ class CompanyForm(forms.ModelForm):
 
 #///////////////////////////// ShareholderForm //////////////////////////////////////
 class ShareholderForm(forms.ModelForm):
-    shrhldr_name = forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_name = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nome de l\'actionnaire'}, ))
+    shrhldr_type = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
+    shrs_hld = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
+
     #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))
     #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control-sm'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
     #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
@@ -75,7 +79,11 @@ class ShareholderForm(forms.ModelForm):
 
     class Meta:
         model = CompanyModel
-        fields = ['shrhldr_name']
+        fields = ['shrhldr_name', 'shrhldr_type','shrs_hld']
+
+#///////////////////////////// ShareholderFormset /////////////////////////////
+ShareholderFormset = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=1)
+ShareholderFormset_edit = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=0, can_delete=True)
 
 #///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 

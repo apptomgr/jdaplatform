@@ -17,7 +17,6 @@
 </div>
 
 {% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
-
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
         <div class="float-left"><a href="{% url 'jdafinancialsapp_company_listing' %}"> <i class="fas fa-angle-left fa-2x my_info_txt"></i></a></div>
@@ -55,6 +54,36 @@
                 <th colspan="2" class="text-muted">Actionnariat</th>
             </tr>
             <tr>
+                <td>
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="text-muted">Secteur d'activite BRVM: </td>
+                            <td>{{company_detail.actvty_sctr}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Code activites economiques (CIV): </td>
+                            <td>{{company_detail.actvty_code}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Autre Secteur d'activites: </td>
+                            <td>{{company_detail.othr_bus_sctr}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <!-- Shareholders -->
+                <td colspan="2">
+                    <table class="table table-sm">
+                        {% for i in shareholders %}
+                        <tr>
+                            <td><span class="text-muted">Nom de l'actionnaire: </span>{{i.shrhldr_name}}</td>
+                            <td><span class="text-muted">Type d'actionnaire: </span>{{i.shrhldr_type}}</td>
+                            <td><span class="text-muted">Part Detenue: </span>{{i.shrs_hld}}</td>
+                        </tr>
+                        {% endfor%}
+                    </table>
+                </td>
+            </tr>
+            <!--tr>
                 <td><span class="text-muted">Secteur d'activite BRVM: </span>{{company_detail.actvty_sctr}}</td>
                 <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
                 <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
@@ -64,11 +93,20 @@
                 <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
                 <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
             </tr>
+
             <tr>
                 <td><span class="text-muted">Autre Secteur d'activites: </span>{{company_detail.othr_bus_sctr}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
-            </tr>
+                <td>
+                    <table class="table table-sm">
+                    {% for i in shareholders %}
+                     <tr>
+                         <td><span class="text-muted">Nom de l'actionnaire: </span>{{i.shrhldr_name}}</td>
+                     </tr>
+                        {% endfor%}
+                    </table>
+                </td>
+            </tr-->
+
             </tbody>
         </table>
     </div>

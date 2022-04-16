@@ -64,43 +64,24 @@
                     <div class="">{{form.intrnl_actvty_code | as_crispy_field}}</div>
                     <div class="">{{form.othr_bus_sctr | as_crispy_field}}</div>
                 </div>
+
+                {{formset.management_form}}
+                {% for form in formset %}
                 <div class="col-6"><!--Shareholder-->
-                    <div class="">{{form.shareholder|as_crispy_field}}</div>
-                    <!--div class="">{{form.shareholder|as_crispy_field}}</div>
-                    <div class="">{{form.shareholder|as_crispy_field}}</div-->
+                    <div class="row form-row">
+                        <div class="col-4">{{form.shrhldr_name|as_crispy_field}}</div>
+                        <div class="col-4">{{form.shrhldr_type|as_crispy_field}}</div>
+                        <div class="col-3">{{form.shrs_hld|as_crispy_field}}</div>
+                        <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                        {% comment %}
+                        <!--div class="">{{form.shareholder|as_crispy_field}}</div>
+                        <div class="">{{form.shareholder|as_crispy_field}}</div-->
+                        {% endcomment %}
+                    </div>
                 </div>
-            </div>
+                {% endfor %}
 
-            {% comment %}
-            <div class="row">
-                <div class="col-6">{{form.actvty_sctr|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_name|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_type|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrs_hld|as_crispy_field}}</div>
             </div>
-            {% endcomment %}
-            {% comment %}
-            <div class="row">
-                <div class="col-6">{{form.actvty_code|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_name_2|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_type_2|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrs_hld_2|as_crispy_field}}</div>
-            </div>
-            <div class="row">
-                <div class="col-6">{{form.intrnl_actvty_code | as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_name_3|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_type_3|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrs_hld_3|as_crispy_field}}</div>
-            </div>
-            <div class="row">
-                <div class="col-6">{{form.othr_bus_sctr | as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_name_4|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrhldr_type_4|as_crispy_field}}</div>
-                <div class="col-2">{{form.shrs_hld_4|as_crispy_field}}</div>
-            </div>
-            {% endcomment%}
-
-
         </div>
         <div class="card-footer text-muted">
             <input class="btn btn-info" role="button" type="submit" value="{% trans 'Add Company' %}">
