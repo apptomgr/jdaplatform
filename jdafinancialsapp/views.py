@@ -6,7 +6,7 @@ from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -614,28 +614,31 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 def jdafinancialsapp_new_company(request):
     #print(f"121///////// jdafinancialsapp_new_company")
     if request.method == "POST":
-        form =CompanyForm(request.POST)
-        #data = request.POST.copy()
-        #print(f"127: {request.POST.get('company')}")
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"{form.cleaned_data['company']} info successfully added ")
+        form = CompanyForm(request.POST)
+        formset = ShareholderFormset(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            # first save the company form, as its reference will be used in the shareholder formset
+            company= form.save()
+            for form in formset:
+                shareholder = form.save(commit=False) # so the company instance can be attached
+                shareholder.company = company
+                shareholder.save()
+            messages.success(request, f'Successfully saved {company} info') #f"{form.cleaned_data['company']} info successfully added ")
             return redirect('jdafinancialsapp_new_company')
+
         if len(form.errors) < 4:
             messages.error(request, form.errors)
-
         else:
             messages.error(request, f"Please complete all required fields before submitting")
-        #else:
-        #    messages.error(request, form.errors)
-        #    return redirect('jdafinancialsapp_new_company')
-        #messages.error(request, form.errors)
-        #messages.error(request, "Please complete filling all required fields before proceeding...")
+
+        #messages.error(request, f"Error saving new company: {form.errors} - Shareholder formset: {formset.errors}")
     else:
         form = CompanyForm()
+        formset = ShareholderFormset(queryset=ShareholderModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'bread_new_company':'font-weight-bold'}
+    context = {'user_grp':grp,'form':form, 'formset': formset, 'bread_new_company':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_new_company.html', context)
 
 
@@ -647,9 +650,10 @@ def jdafinancialsapp_view_company_detail(request, pk):
     #print(f"289 PK {pk}")
     now = datetime.now()
     company_detail =CompanyModel.objects.get(id=pk)
+    shareholders = ShareholderModel.objects.filter(company=pk)
     #print(f"company_detail: {company_detail}")
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'company_detail':company_detail,'rpt_date': now}
+    context = {'user_grp':grp,'company_detail':company_detail, 'shareholders':shareholders, 'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_company_detail.html', context)
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
