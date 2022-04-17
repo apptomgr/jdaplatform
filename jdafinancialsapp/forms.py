@@ -1,7 +1,7 @@
 from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
-    FinancialStatementInvAcctLinkModel #, ShareholderModel
+    FinancialStatementInvAcctLinkModel, ShareholderModel
 from jdaanalyticsapp.models import ExchangeModel, SecurityModel, StockModel, BondModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
@@ -82,8 +82,8 @@ class ShareholderForm(forms.ModelForm):
         fields = ['shrhldr_name', 'shrhldr_type','shrs_hld']
 
 #///////////////////////////// ShareholderFormset /////////////////////////////
-# ShareholderFormset = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=1)
-# ShareholderFormset_edit = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=0, can_delete=True)
+ShareholderFormset = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=1)
+ShareholderFormset_edit = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=0, can_delete=True)
 
 #///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 
