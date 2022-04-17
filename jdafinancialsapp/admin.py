@@ -16,4 +16,4 @@ admin.site.register(FinancialStatementInvAcctLinkModel)
 
 # admin.site.register(Programmer)
 # admin.site.register(Language)
-admin.site.register(ShareholderModel)
+# admin.site.register(ShareholderModel)
