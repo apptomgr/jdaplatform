@@ -46,21 +46,21 @@ class CompanyModel(models.Model):
         verbose_name_plural ='CompanyModel'
 
 #/////////////////////////////////// ShareholderModel ///////////////////////////////
-# class ShareholderModel(models.Model):
-#     company = models.ForeignKey(CompanyModel, related_name='shareholders', on_delete=models.CASCADE, blank=True, null=True)
-#     shrhldr_name = models.CharField(max_length=100, blank=True, null=True)
-#     shrhldr_type = models.CharField(max_length=50, blank=True, null=True)
-#     shrs_hld     = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
-#
-#     def __str__(self):
-#         return self.shrhldr_name
-#
-#     def get_shareholder(self):
-#         return ','.join(self.Shareholder.all().value_list('shrhldr_name'))
-#
-#     class Meta:
-#         verbose_name_plural ='ShareholderModel'
-#         db_table = 'ShareholderModel'
+class ShareholderModel(models.Model):
+    company = models.ForeignKey(CompanyModel, related_name='shareholders', on_delete=models.CASCADE, blank=True, null=True)
+    shrhldr_name = models.CharField(max_length=100, blank=True, null=True)
+    shrhldr_type = models.CharField(max_length=50, blank=True, null=True)
+    shrs_hld     = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return self.shrhldr_name
+
+    def get_shareholder(self):
+        return ','.join(self.Shareholder.all().value_list('shrhldr_name'))
+
+    class Meta:
+        verbose_name_plural ='ShareholderModel'
+        db_table = 'ShareholderModel'
 
 #///////////////////////////// ExchangeModel ///////////////////////////////
 class ExchangeModel(models.Model):
