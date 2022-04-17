@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
-    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel #, ShareholderModel,
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
     FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm #, ShareholderFormset, ShareholderFormset_edit
@@ -664,9 +664,10 @@ def jdafinancialsapp_view_company_detail(request, pk):
 def jdafinancialsapp_company_listing(request):
     now = datetime.now()
     company_listing =CompanyModel.objects.all()
+    shareholders = ShareholderModel.objects.all()
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
+    context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now, 'shareholders':shareholders}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
 
 
