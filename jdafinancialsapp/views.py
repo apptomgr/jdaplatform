@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
-from . models import CompanyModel, ShareholderModel, FinancialStatementFactModel, FinancialStatementLineModel, \
-    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel
+from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel #, ShareholderModel,
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm #, ShareholderFormset, ShareholderFormset_edit
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -615,15 +615,15 @@ def jdafinancialsapp_new_company(request):
     #print(f"121///////// jdafinancialsapp_new_company")
     if request.method == "POST":
         form = CompanyForm(request.POST)
-        formset = ShareholderFormset(request.POST)
+        #formset = ShareholderFormset(request.POST)
 
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid(): # and formset.is_valid():
             # first save the company form, as its reference will be used in the shareholder formset
             company= form.save()
-            for form in formset:
-                shareholder = form.save(commit=False) # so the company instance can be attached
-                shareholder.company = company
-                shareholder.save()
+            # for form in formset:
+            #     shareholder = form.save(commit=False) # so the company instance can be attached
+            #     shareholder.company = company
+            #     shareholder.save()
             messages.success(request, f'Successfully saved {company} info') #f"{form.cleaned_data['company']} info successfully added ")
             return redirect('jdafinancialsapp_new_company')
 
@@ -635,10 +635,11 @@ def jdafinancialsapp_new_company(request):
         #messages.error(request, f"Error saving new company: {form.errors} - Shareholder formset: {formset.errors}")
     else:
         form = CompanyForm()
-        formset = ShareholderFormset(queryset=ShareholderModel.objects.none())
+        #formset = ShareholderFormset(queryset=ShareholderModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'formset': formset, 'bread_new_company':'font-weight-bold'}
+    #context = {'user_grp':grp,'form':form, 'formset': formset, 'bread_new_company':'font-weight-bold'}
+    context = {'user_grp':grp,'form':form, 'bread_new_company':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_new_company.html', context)
 
 
@@ -650,10 +651,11 @@ def jdafinancialsapp_view_company_detail(request, pk):
     #print(f"289 PK {pk}")
     now = datetime.now()
     company_detail =CompanyModel.objects.get(id=pk)
-    shareholders = ShareholderModel.objects.filter(company=pk)
+    #shareholders = ShareholderModel.objects.filter(company=pk)
     #print(f"company_detail: {company_detail}")
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'company_detail':company_detail, 'shareholders':shareholders, 'rpt_date': now}
+    context = {'user_grp':grp,'company_detail':company_detail, 'rpt_date': now}
+    #context = {'user_grp':grp,'company_detail':company_detail, 'shareholders':shareholders, 'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_company_detail.html', context)
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
