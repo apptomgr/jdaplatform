@@ -2,7 +2,7 @@ from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
     FinancialStatementInvAcctLinkModel, ShareholderModel
-from jdaanalyticsapp.models import ExchangeModel, SecurityModel, StockModel, BondModel
+from jdaanalyticsapp.models import ExchangeModel, SecurityModel, StockModel, BondModel, GuarantorModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
@@ -654,6 +654,9 @@ class BondModelForm(forms.ModelForm):
     class Meta:
         model = BondModel
         fields = ('auth','gr_bnd_int_rate','net_bnd_int_rate', 'nbr_shrs_outstg','bnd_type','duratn_amt','duratn_units','pymt_perd','pymt_perd_units','dfrrd_rpymt_perd', 'dfrrd_rpymt_perd_units', 'rpymt_mthd', 'rpymt_type', 'isu_dt', 'first_pay_dt', 'lst_pay_dt', 'usage')
+
+
+
 # #/////////////////////////// SecurityBondForm //////////////////////////
 # class SecurityBondForm(forms.ModelForm):
 #     CHOICES_LISTG = (
@@ -905,8 +908,24 @@ class FinancialStatementFactForm(forms.ModelForm):
         model = FinancialStatementFactModel
         fields = ['value_brut']#, 'value_amort', 'value_net', 'value_net_prev_yr']
 
+#///////////////////////////// GuarantorForm /////////////////////////////
+class GuarantorForm(forms.ModelForm):
+    guarantor = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
+    guarantor_pctg = forms.DecimalField(max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
+    guarantor_val = forms.DecimalField(max_digits=13, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Valeur'}, ))
 
+    #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))
+    #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control-sm'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
+    #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
+    #value = forms.DecimalField(max_digits=13, decimal_places=2, label='Value', widget=forms.TextInput(attrs={'onBlur':'calc();', 'class': 'form-control-sm', 'placeholder':'0.00'}))#models.DecimalField(max_digits=13, decimal_places=2)
 
+    class Meta:
+        model = GuarantorModel
+        fields = ['guarantor', 'guarantor_pctg','guarantor_val']
+
+#///////////////////////////// GuarantorFormset /////////////////////////////
+GuarantorFormset = modelformset_factory(GuarantorModel, form=GuarantorForm, extra=1)
+GuarantorFormset_edit = modelformset_factory(GuarantorModel, form=GuarantorForm, extra=0, can_delete=True)
 
 # class LanguageForm(forms.ModelForm):
 #     #name = forms.ModelChoiceField(queryset=Language.objects.all(), label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Language Name'}))

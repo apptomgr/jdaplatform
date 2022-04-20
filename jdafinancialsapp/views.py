@@ -4,9 +4,9 @@ from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
-from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel
+from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -787,13 +787,21 @@ def jdafinancialsapp_add_bond_security(request):
     if request.method == "POST":
         form = SecurityForm(request.POST)
         bond_form = BondModelForm(request.POST)
+        formset = GuarantorFormset(request.POST)
+        ticker = request.POST.get('ticker')
 
-        if form.is_valid() and bond_form.is_valid():
+        if form.is_valid() and bond_form.is_valid() and formset.is_valid():
             security = form.save()
-            bond = bond_form.save(commit=False)
+            #once the security data is saved, its reference will be used to associated bond and  the guarantor formset
+            bond = bond_form.save(commit=False) # so the bond instance can be attached
             bond.security = security
             bond.save()
-            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+            #Now link the formset
+            for form in formset:
+                guarantor = form.save(commit=False) # so the bond instance can be attached
+                guarantor.security = security
+                guarantor.save()
+            messages.success(request, f"{ticker} info successfully added ")
             return redirect('jdafinancialsapp_add_bond_security')
 
         if len(form.errors) < 4:
@@ -805,12 +813,12 @@ def jdafinancialsapp_add_bond_security(request):
         #    messages.error(request, form.errors)
         #    return redirect('jdafinancialsapp_add_security')
     else:
-        #print("803 : invalid")
         form = SecurityForm()
         bond_form = BondModelForm()
+        formset = GuarantorFormset(queryset=GuarantorModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
+    context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
 
@@ -854,6 +862,11 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
     assoc_sec_detail = None
     stock_sec_detail = StockModel.objects.filter(security__id=pk)
     bond_sec_detail = BondModel.objects.filter(security__id=pk)
+    guarantor_sec_detail = GuarantorModel.objects.filter(security__id=pk)
+    print(f"GuarantorModel.objects.filter(security__id={pk}")
+    #print(pk)
+    #print(guarantor_sec_detail[0].guarantor_val)
+    #print(guarantor_sec_detail.guarantor)
 
     if stock_sec_detail.exists():
         sec_type = 'Stock'
@@ -863,10 +876,11 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
         sec_type = 'Bond'
         assoc_sec_detail = bond_sec_detail
         #print(f"854 bond assoc_sec_detail: {bond_sec_detail}")
+        #if guarantor_sec_detail.exists():
 
     #print(f"855 res assoc_sec_detail: {assoc_sec_detail}")
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type,'assoc_sec_detail':assoc_sec_detail, 'rpt_date': now}
+    context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type, 'assoc_sec_detail': assoc_sec_detail, 'guarantor_sec_detail':guarantor_sec_detail, 'rpt_date': now}
     #print(f'res 848: {security_detail}')
     return render(request, 'jdafinancialsapp/jdafinancialsapp_security_detail.html', context)
 

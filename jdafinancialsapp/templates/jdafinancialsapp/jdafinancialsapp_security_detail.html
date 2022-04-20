@@ -1,5 +1,9 @@
 {% load i18n %}
 
+{{guarantor_sec_detail}}
+{% for i in guarantor_sec_detail %}
+{{i.guarantor}}
+{% endfor%}
 <div id="security_details">
     <table id="security_detail"
            class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
@@ -235,6 +239,25 @@
             <td class="col-md-2">{{i.lst_pay_dt}}</td>
             <td class="col-md-2">{{i.usage}}</td>
             <td class="col-md-2">{{i.auth}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <table id="security_bond_guarantor" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th class="col-md-2">{% trans 'Guarantor' %}</th>
+            <th class="col-md-2">{% trans 'Guarantor Percentage' %}</th>
+            <th class="col-md-2">{% trans 'Guarantor Value' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in guarantor_sec_detail %}
+        <tr>
+            <td class="col-md-2">{{i.guarantor}}</td>
+            <td class="col-md-2">{{i.guarantor_pctg}}</td>
+            <td class="col-md-2">{{i.guarantor_val}}</td>
         </tr>
         {% endfor %}
         </tbody>
