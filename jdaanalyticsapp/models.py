@@ -257,10 +257,19 @@ class BondModel(models.Model):
     class Meta:
         verbose_name_plural = 'BondModel'
 
+# ///////////////////////// GuarantorModel ///////////////////////////////////////////
+class GuarantorModel(models.Model):
+    security =models.ForeignKey(SecurityModel, on_delete=models.CASCADE, blank=False, null=True)
+    guarantor = models.CharField(max_length=25, blank=True, null=True)
+    guarantor_pctg = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    guarantor_val = models.DecimalField(max_digits=100, decimal_places=2, blank=True, null=True)
 
+    def __str__(self):
+        return self.guarantor
 
-# class ResTest(models.Model):
-#     pass
+    class Meta:
+        verbose_name_plural = 'GuarantorModel'
+
 # ////////////////// Test models ///////////////////////////////////////////
 # class Author(models.Model):
 #     name = models.CharField(max_length=50)

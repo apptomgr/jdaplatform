@@ -159,11 +159,18 @@
                         <span class="float-left">{{bond_form.auth| as_crispy_field}}</span>
 
                     </div>
-                    <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{form.rpymt_type|as_crispy_field}X</div-->
                 </div>
+                <!-- Guarantor formset -->
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="row form-row">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor_pctg|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor_val|as_crispy_field}}</div>
+                    <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                </div>
+                {% endfor %}
             </div>
-            {% comment %}
-            {% endcomment %}
         </div>
         <div class="card-footer text-muted">
             <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Add Security' %}">
