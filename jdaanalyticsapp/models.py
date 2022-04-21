@@ -246,7 +246,7 @@ class BondModel(models.Model):
     dfrrd_rpymt_perd_units = models.CharField(max_length=50, choices=CHOICES_DRPU)
     rpymt_mthd = models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD)
     rpymt_type = models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE)
-    isu_dt = models.DateField(auto_now=False)
+    bnd_isu_dt = models.DateField(auto_now=False)
     first_pay_dt = models.DateField(auto_now_add=False)
     lst_pay_dt = models.DateField(auto_now_add=False)
     usage = models.IntegerField(blank=False, null=False, choices=CHOICES_USAGE)
@@ -261,7 +261,7 @@ class BondModel(models.Model):
 class GuarantorModel(models.Model):
     security =models.ForeignKey(SecurityModel, on_delete=models.CASCADE, blank=False, null=True)
     guarantor = models.CharField(max_length=25, blank=True, null=True)
-    guarantor_pctg = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    guarantor_pctg = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     guarantor_val = models.DecimalField(max_digits=100, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
