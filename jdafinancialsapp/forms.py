@@ -646,14 +646,14 @@ class BondModelForm(forms.ModelForm):
     dfrrd_rpymt_perd_units = forms.ChoiceField(choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Deferred Repayment Period Units'}))
     rpymt_mthd = forms.ChoiceField(choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
     rpymt_type = forms.ChoiceField(choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Type'}))
-    isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issue Date'}))
+    bnd_isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issue Date'}))
     first_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'First Payment Date'}))
     lst_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Last Payment Date'}))
     usage = forms.ChoiceField(choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Usage'}))
 
     class Meta:
         model = BondModel
-        fields = ('auth','gr_bnd_int_rate','net_bnd_int_rate', 'nbr_shrs_outstg','bnd_type','duratn_amt','duratn_units','pymt_perd','pymt_perd_units','dfrrd_rpymt_perd', 'dfrrd_rpymt_perd_units', 'rpymt_mthd', 'rpymt_type', 'isu_dt', 'first_pay_dt', 'lst_pay_dt', 'usage')
+        fields = ('auth','gr_bnd_int_rate','net_bnd_int_rate', 'nbr_shrs_outstg','bnd_type','duratn_amt','duratn_units','pymt_perd','pymt_perd_units','dfrrd_rpymt_perd', 'dfrrd_rpymt_perd_units', 'rpymt_mthd', 'rpymt_type', 'bnd_isu_dt', 'first_pay_dt', 'lst_pay_dt', 'usage')
 
 
 
@@ -911,7 +911,7 @@ class FinancialStatementFactForm(forms.ModelForm):
 #///////////////////////////// GuarantorForm /////////////////////////////
 class GuarantorForm(forms.ModelForm):
     guarantor = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
-    guarantor_pctg = forms.DecimalField(max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
+    guarantor_pctg = forms.DecimalField(max_digits=6, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
     guarantor_val = forms.DecimalField(max_digits=13, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Valeur'}, ))
 
     #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))

@@ -790,6 +790,9 @@ def jdafinancialsapp_add_bond_security(request):
         formset = GuarantorFormset(request.POST)
         ticker = request.POST.get('ticker')
 
+        isu_dt = request.POST.get('isu_dt')
+        bnd_isu_dt = request.POST.get('bnd_isu_dt')
+        print(f'isu_dt:{isu_dt} - bnd_isu_dt: {bnd_isu_dt}')
         if form.is_valid() and bond_form.is_valid() and formset.is_valid():
             security = form.save()
             #once the security data is saved, its reference will be used to associated bond and  the guarantor formset

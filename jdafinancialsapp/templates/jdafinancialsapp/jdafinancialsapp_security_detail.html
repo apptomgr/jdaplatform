@@ -1,9 +1,6 @@
 {% load i18n %}
 
-{{guarantor_sec_detail}}
-{% for i in guarantor_sec_detail %}
-{{i.guarantor}}
-{% endfor%}
+
 <div id="security_details">
     <table id="security_detail"
            class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
@@ -234,7 +231,7 @@
         {% for i in assoc_sec_detail %}
         <tr>
             <td class="col-md-2">{{i.rpymt_type}}</td>
-            <td class="col-md-2">{{i.isu_dt}}</td>
+            <td class="col-md-2">{{i.bnd_isu_dt}}</td>
             <td class="col-md-2">{{i.first_pay_dt}}</td>
             <td class="col-md-2">{{i.lst_pay_dt}}</td>
             <td class="col-md-2">{{i.usage}}</td>
