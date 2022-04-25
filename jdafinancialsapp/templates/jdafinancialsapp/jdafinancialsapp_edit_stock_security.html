@@ -38,16 +38,17 @@
             <div class="row">
                 <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
             </div>
+
             <div class="row mt-1">
 
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isin|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ticker|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.desc |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isin|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.ticker|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.desc |as_crispy_field}}</div>
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.isu_dt| as_crispy_field}}
+                            {{security_form.isu_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -55,7 +56,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.open_dt| as_crispy_field}}
+                            {{security_form.open_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -63,7 +64,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.close_dt| as_crispy_field}}
+                            {{security_form.close_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -71,43 +72,43 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.name |as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.listg_sts |as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.nmnl_amt|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.currency|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.min_lot|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.name |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.listg_sts |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.nmnl_amt|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.cntry|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.currency|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.min_lot|as_crispy_field}}</div>
 
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issue|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.ttl_type|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.shr_class|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isur_type|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.sector|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issue|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.rgstrr|as_crispy_field}}</div>
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.depsty|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry_tax|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.invstr_cntry_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.exchg|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.depsty|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.cntry_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.invstr_cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <span class="float-left form-control-sm mt-1 text-secondary mr-3">Taxation Code</span>
-                    <span class="float-left">{{form.txtn_code| as_crispy_field}}</span>
+                    <span class="float-left">{{security_form.txtn_code| as_crispy_field}}</span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.exchg_tax|as_crispy_field}}</div>
             </div>
 
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <span class="float-left form-control-sm mt-1 text-secondary mr-3">Value Code</span>
-                    <span class="float-left">{{form.val_code| as_crispy_field}}</span>
+                    <span class="float-left">{{security_form.val_code| as_crispy_field}}</span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.lwst_appl_rate|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.hghst_appl_rate|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.lwst_appl_rate|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.hghst_appl_rate|as_crispy_field}}</div>
             </div>
 
             <!-- tabs -->
@@ -117,7 +118,9 @@
             </ul-->
 
             <!-- Stock fields -->
-
+            <div class="row">
+                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="Stock Info" readonly></div>
+            </div>
             <div class="collapse show" id="stock">
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.stock_type|as_crispy_field}}</div>
@@ -132,7 +135,7 @@
             {% endcomment %}
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Add Security' %}">
+            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Edit Security' %}">
         </div>
     </form>
 </div>

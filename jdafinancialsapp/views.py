@@ -6,7 +6,7 @@ from . models import CompanyModel, FinancialStatementFactModel, FinancialStateme
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -792,7 +792,7 @@ def jdafinancialsapp_add_bond_security(request):
 
         isu_dt = request.POST.get('isu_dt')
         bnd_isu_dt = request.POST.get('bnd_isu_dt')
-        print(f'isu_dt:{isu_dt} - bnd_isu_dt: {bnd_isu_dt}')
+        #print(f'isu_dt:{isu_dt} - bnd_isu_dt: {bnd_isu_dt}')
         if form.is_valid() and bond_form.is_valid() and formset.is_valid():
             security = form.save()
             #once the security data is saved, its reference will be used to associated bond and  the guarantor formset
@@ -824,6 +824,89 @@ def jdafinancialsapp_add_bond_security(request):
     context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
+#////////////////////////// jdafinancialsapp_edit_stock_security ///////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_edit_stock_security(request, security_id):
+    security = SecurityModel.objects.get(pk=security_id)
+    stk_sec = StockModel.objects.get(security=security_id)
+
+    if request.method == 'POST':
+        security_form = SecurityForm(request.POST, instance=security)
+        stock_form = StockModelForm(request.POST, instance=stk_sec)
+        #formset = GuarantorFormset_edit(request.POST, queryset=GuarantorModel.objects.filter(security=security_id))
+
+        if security_form.is_valid() and stock_form.is_valid(): # and formset.is_valid():
+            security = security_form.save()
+            #once the security data is saved, its reference will be used to associated the bond info and the xxx formset
+            stock = stock_form.save(commit=False) # so the security instance can be attached
+            stock.security = security # bnd_sec
+            stock.save()
+            del_pk=[]
+            # for idx, form in enumerate(formset):
+            #     guarantor = form.save(commit=False) # so the security instatnce can be associated
+            #     if request.POST.get(f'form-{idx}-DELETE') == 'on':
+            #         gr=GuarantorModel.objects.filter(security=security_id)
+            #         del_pk.append(gr[idx].pk)
+            #
+            #     guarantor.security=security
+            #     guarantor.save()
+            # #now rm
+            # GuarantorModel.objects.filter(pk__in=del_pk).delete()
+            messages.success(request, f'Sucessfully saved {security} info.')
+            return redirect('jdafinancialsapp_security_listing')
+        messages.error(request, f'Error saving security {security_form.errors} stock info: {stock_form.errors}')
+        #messages.error(request, f'Error saving security formset info: {formset.errors}')
+    else:
+        security_form = SecurityForm(instance=security)
+        stock_form = StockModelForm(instance=stk_sec)
+        #formset = GuarantorFormset_edit(queryset=GuarantorModel.objects.filter(security=security_id))
+
+    context={'security_form':security_form,'stock_form':stock_form} #, 'formset':formset}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_stock_security.html', context)
+
+
+
+#////////////////////////// jdafinancialsapp_edit_bond_security ///////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_edit_bond_security(request, security_id):
+    security = SecurityModel.objects.get(pk=security_id)
+    bnd_sec = BondModel.objects.get(security=security_id)
+
+    if request.method == 'POST':
+        security_form = SecurityForm(request.POST, instance=security)
+        bond_form = BondModelForm(request.POST, instance=bnd_sec)
+        formset = GuarantorFormset_edit(request.POST, queryset=GuarantorModel.objects.filter(security=security_id))
+
+        if security_form.is_valid() and bond_form.is_valid() and formset.is_valid():
+            security = security_form.save()
+            #once the security data is saved, its reference will be used to associated the bond info and the guarantor formset
+            bond = bond_form.save(commit=False) # so the security instance can be attached
+            bond.security = security # bnd_sec
+            bond.save()
+            del_pk=[]
+            for idx, form in enumerate(formset):
+                guarantor = form.save(commit=False) # so the security instatnce can be associated
+                if request.POST.get(f'form-{idx}-DELETE') == 'on':
+                    gr=GuarantorModel.objects.filter(security=security_id)
+                    del_pk.append(gr[idx].pk)
+
+                guarantor.security=security
+                guarantor.save()
+            #now rm
+            GuarantorModel.objects.filter(pk__in=del_pk).delete()
+            messages.success(request, f'Sucessfully saved {security} info.')
+            return redirect('jdafinancialsapp_security_listing')
+        messages.error(request, f'Error saving security formset info: {formset.errors}')
+    else:
+        security_form = SecurityForm(instance=security)
+        bond_form = BondModelForm(instance=bnd_sec)
+        formset = GuarantorFormset_edit(queryset=GuarantorModel.objects.filter(security=security_id))
+
+    context={'security_form':security_form,'bond_form':bond_form, 'formset':formset}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_bond_security.html', context)
+
 
 # #/////////////////////////////////////// jdafinancialsapp_security_rpt/ ////////////////////////
 # @login_required
@@ -841,8 +924,18 @@ def jdafinancialsapp_add_bond_security(request):
 def jdafinancialsapp_security_listing(request):
     now =datetime.now()
     security_listing = SecurityModel.objects.all().order_by('ticker')
+    bond_data = BondModel.objects.all().order_by('security')
+    bond_lst=[]
+    for i in bond_data:
+        bond_lst.append(i.security_id)
+
+    stock_data = StockModel.objects.all().order_by('security')
+    stock_lst=[]
+    for i in stock_data:
+        stock_lst.append(i.security_id)
+
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'security_listing':security_listing,'rpt_date': now}
+    context = {'user_grp':grp,'security_listing':security_listing, 'bond_data':bond_data, 'bond_lst':bond_lst, 'stock_lst':stock_lst, 'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_security_listing.html', context)
 
 # //////////////////////////////////////////jdafinancialsapp_hx_delete_security /////////////////////
@@ -865,23 +958,38 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
     assoc_sec_detail = None
     stock_sec_detail = StockModel.objects.filter(security__id=pk)
     bond_sec_detail = BondModel.objects.filter(security__id=pk)
+    #else_sec_detail = SecurityModel.objects.exclude(security__id=pk)
     guarantor_sec_detail = GuarantorModel.objects.filter(security__id=pk)
-    print(f"GuarantorModel.objects.filter(security__id={pk}")
-    #print(pk)
-    #print(guarantor_sec_detail[0].guarantor_val)
-    #print(guarantor_sec_detail.guarantor)
+    #print(f"Bond: {bond_sec_detail}")
+    # bond_data = BondModel.objects.all().order_by('security')
+    # bond_lst=[]
+    # for i in bond_data:
+    #     bond_lst.append(i.security_id)
+    #
+    # stock_data = StockModel.objects.all().order_by('security')
+    # stock_lst=[]
+    # for i in stock_data:
+    #     stock_lst.append(i.security_id)
+
 
     if stock_sec_detail.exists():
+        print("Stock OK")
         sec_type = 'Stock'
         assoc_sec_detail = stock_sec_detail
         #print(f"854 stock assoc_sec_detail: {stock_sec_detail}")
-    if bond_sec_detail.exists():
+    elif bond_sec_detail.exists():
+        print("bond OK")
         sec_type = 'Bond'
         assoc_sec_detail = bond_sec_detail
+    else:
+        print("Else OK")
+        sec_type = None
+        #assoc_sec_detail = else_sec_detail
+        pass #assoc_sec_detail = other_sec_detail
         #print(f"854 bond assoc_sec_detail: {bond_sec_detail}")
         #if guarantor_sec_detail.exists():
 
-    #print(f"855 res assoc_sec_detail: {assoc_sec_detail}")
+    print(f"991 res assoc_sec_detail: {assoc_sec_detail} - Sec_type {sec_type}")
     grp = get_user_grp(request)
     context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type, 'assoc_sec_detail': assoc_sec_detail, 'guarantor_sec_detail':guarantor_sec_detail, 'rpt_date': now}
     #print(f'res 848: {security_detail}')

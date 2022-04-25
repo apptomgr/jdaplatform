@@ -15,7 +15,7 @@
         {%endif%}
     </div>
 </div>
-
+{{formset}}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
         <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_home' %}" class="text-light {{bread_home}}">{% trans 'Home' %}</a></li>
@@ -24,12 +24,11 @@
         <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_add_bond_security' %}" class="text-light {{bread_stmts}}">{% trans 'Add Bond' %}</a></li>
     </ol>
 </nav>
-
 <div class="card text-center mt-1">
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header mb-0">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Add {{header_title}} Security  {% endblocktrans %}</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Edit {{header_title}} Security  {% endblocktrans %}</h5>
         </div>
 
         <div class="card-body">
@@ -39,16 +38,17 @@
             <div class="row">
                 <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
             </div>
+
             <div class="row mt-1">
 
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isin|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ticker|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.desc |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isin|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.ticker|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.desc |as_crispy_field}}</div>
 
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.isu_dt| as_crispy_field}}
+                            {{security_form.isu_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.open_dt| as_crispy_field}}
+                            {{security_form.open_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
-                            {{form.close_dt| as_crispy_field}}
+                            {{security_form.close_dt| as_crispy_field}}
                             <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
                         </div>
                     </div>
@@ -72,49 +72,48 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.name |as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.listg_sts |as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.nmnl_amt|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.currency|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.min_lot|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.name |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.listg_sts |as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.nmnl_amt|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.cntry|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.currency|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.min_lot|as_crispy_field}}</div>
 
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.ttl_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issue|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.ttl_type|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.shr_class|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isur_type|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.sector|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issue|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.rgstrr|as_crispy_field}}</div>
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.depsty|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry_tax|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.invstr_cntry_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.exchg|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.depsty|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.cntry_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.invstr_cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <span class="float-left form-control-sm mt-1 text-secondary mr-3">Taxation Code</span>
-                    <span class="float-left">{{form.txtn_code| as_crispy_field}}</span>
+                    <span class="float-left">{{security_form.txtn_code| as_crispy_field}}</span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg_tax|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.exchg_tax|as_crispy_field}}</div>
             </div>
 
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <span class="float-left form-control-sm mt-1 text-secondary mr-3">Value Code</span>
-                    <span class="float-left">{{form.val_code| as_crispy_field}}</span>
+                    <span class="float-left">{{security_form.val_code| as_crispy_field}}</span>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.lwst_appl_rate|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.hghst_appl_rate|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.lwst_appl_rate|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.hghst_appl_rate|as_crispy_field}}</div>
             </div>
-
-            <!-- Bond fields -->
             <div class="row">
                 <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="Bond Info" readonly></div>
             </div>
+            <!-- Bond fields -->
             <div class="collapse show" id="bond">
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{bond_form.gr_bnd_int_rate|as_crispy_field}}</div>
@@ -173,17 +172,21 @@
                 <!-- Guarantor formset -->
                 {{ formset.management_form }}
                 {% for form in formset %}
+                {{form.id}}
                 <div class="row form-row">
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor_pctg|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.guarantor_val|as_crispy_field}}</div>
                     <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                    {% if formset.can_delete %}
+                    <div><i class="fas fa-times text-danger ml-2" ></i> {{form.DELETE}} </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Add Security' %}">
+            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Edit Security' %}">
         </div>
     </form>
 </div>
