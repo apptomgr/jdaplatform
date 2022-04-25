@@ -24,6 +24,7 @@
         <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_add_bond_security' %}" class="text-light {{bread_stmts}}">{% trans 'Add Bond' %}</a></li>
     </ol>
 </nav>
+
 <!-- end nav -->
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
@@ -42,6 +43,7 @@
                     <th scope="col">{% trans 'Name' %}</th>
                     <th scope="col">{% trans 'Issue Date' %}</th>
                     <th scope="col">{% trans 'Security Detail' %}</th>
+                    <th scope="col">{% trans 'Edit' %}</th>
                     <th scope="col">{% trans 'Remove' %}</th>
                 </tr>
                 </thead>
@@ -54,7 +56,17 @@
                     <td>{{i.name}}</td>
                     <td>{{i.isu_dt}}</td>
 
+
                     <td><a hx-get="{% url 'jdafinancialsapp_hx_stock_detail' i.pk %}" hx-target="#security_details" hx-swap="innerHTML swap:0.5s" type="button" data-toggle="modal" data-target="#security_detail_modal"><i class="far fa-eye fa-2x text-info"></i></a></td>
+                    <!-- check if stock of bond -->
+                    {% if i.pk in bond_lst %}
+                        <td><a href="{% url 'jdafinancialsapp_edit_bond_security' i.pk %}"><i class="fas fa-edit fa-2x text-warning"></i></a></td>
+                    {% elif i.pk in stock_lst %}
+                        <td><a href="{% url 'jdafinancialsapp_edit_stock_security' i.pk %}"><i class="fas fa-edit fa-2x text-warning"></i></a></td>
+                    {% else%}
+                        <td><a href="#"><i class="fas fa-edit fa-2x text-warning"></i></a></td>
+                    {% endif %}
+
                     <td><a hx-get="{% url 'jdafinancialsapp_hx_delete_security' i.pk %}" hx-target="closest tr" hx-swap="outerHTML swap:1s" class="pointer" role="button" hx-confirm="Are you sure you wish to delete your security ID:{{i.pk}}?"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td>
                 </tr>
                 {% endfor %}

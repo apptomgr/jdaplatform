@@ -133,7 +133,7 @@
         </tbody>
     </table>
 
-    <!-- sec_type [Stock or Bond ] -->
+    <!-- sec_type [Stock ] -->
     {% if sec_type == 'Stock' %}
     <table id="security_stock"
            class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
@@ -164,7 +164,8 @@
         {% endfor %}
         </tbody>
     </table>
-    {% else %}
+    <!-- sec_type [Bond ] -->
+    {% elif sec_type == 'Bond'  %}
     <table id="security_bond" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead>
         <tr>
@@ -259,7 +260,20 @@
         {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <table id="none" class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th class="col-md-2">{% trans 'Security not associated' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="col-md-2">Security not associated with a stock or bond </td>
+        </tr>
 
+        </tbody>
+    </table>
     {% endif %}
 </div>
 

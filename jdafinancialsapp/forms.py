@@ -914,11 +914,6 @@ class GuarantorForm(forms.ModelForm):
     guarantor_pctg = forms.DecimalField(max_digits=6, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
     guarantor_val = forms.DecimalField(max_digits=13, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Valeur'}, ))
 
-    #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))
-    #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control-sm'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
-    #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
-    #value = forms.DecimalField(max_digits=13, decimal_places=2, label='Value', widget=forms.TextInput(attrs={'onBlur':'calc();', 'class': 'form-control-sm', 'placeholder':'0.00'}))#models.DecimalField(max_digits=13, decimal_places=2)
-
     class Meta:
         model = GuarantorModel
         fields = ['guarantor', 'guarantor_pctg','guarantor_val']
