@@ -15,7 +15,7 @@
         {%endif%}
     </div>
 </div>
-{{formset}}
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
         <li class="breadcrumb-item"><a href="{% url 'jdafinancialsapp_home' %}" class="text-light {{bread_home}}">{% trans 'Home' %}</a></li>
@@ -86,7 +86,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.shr_class|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isur_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issue|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issuer|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.rgstrr|as_crispy_field}}</div>
             </div>
 

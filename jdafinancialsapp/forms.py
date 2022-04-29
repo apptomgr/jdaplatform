@@ -31,19 +31,19 @@ class CompanyForm(forms.ModelForm):
 
     corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Denomination Sociale'},))
     company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Non Usuel'},))
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
+    sector = forms.ModelChoiceField(required=False, queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #rpt_period = forms.ChoiceField(choices=CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'placeholder':'Reporting Period'}))
-    legl_form = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Forme Juridique'},))
-    creatn_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Date de creation'}))
-    rccm_nbr = forms.CharField(max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Numero RCCM'}, ))
+    legl_form = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Forme Juridique'},))
+    creatn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Date de creation'}))
+    rccm_nbr = forms.CharField(required=False, max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Numero RCCM'}, ))
     country = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
     #id_cntry = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Pays du siege social'}, ))
     #flag_pub_ctrl = forms.BooleanField(label='Societe sous control public', required=False, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm form-check-input checkbox-inline', 'id':'flag_pub_ctrl'})),
-    flag_pub_ctrl = forms.BooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm selectpicker'})),
-    actvty_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Secteur d\'activite BRVM'}, ))
-    actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites economiques (CIV)'}, ))
-    intrnl_actvty_code =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
-    othr_bus_sctr =forms.CharField(max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Autre secteur d\'activites'}, ))
+    flag_pub_ctrl = forms.BooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm selectpicker'})),
+    actvty_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Secteur d\'activite BRVM'}, ))
+    actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites economiques (CIV)'}, ))
+    intrnl_actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
+    othr_bus_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Autre secteur d\'activites'}, ))
     #shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
 
     #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown'}))
@@ -65,6 +65,21 @@ class CompanyForm(forms.ModelForm):
         model = CompanyModel
         fields = '__all__'
         #fields = ['company', 'sector', 'rpt_period']
+
+
+#///////////////////////////// ExchangeForm //////////////////////////////////////
+class ExchangeForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Exchange'}, ))
+    acronym = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Acronym'}, ))
+
+    class Meta:
+        model = ExchangeModel
+        fields = ['name', 'acronym']
+
+#///////////////////////////// ExchangeFormset /////////////////////////////
+ExchangeFormset = modelformset_factory(ExchangeModel, form=ExchangeForm, extra=1)
+ExchangeFormset_edit = modelformset_factory(ExchangeModel, form=ExchangeForm, extra=0, can_delete=True)
+
 
 #///////////////////////////// ShareholderForm //////////////////////////////////////
 class ShareholderForm(forms.ModelForm):
@@ -480,18 +495,52 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_ISUR_TYPE = (
-        ('','Issue Type'),
+        ('','Issuer Type'),
         ('Private', 'Private'),
         ('Public', 'Public'),
     )
 
     CHOICES_RGSTRR = (
         ('', 'Registrar'),
-        ('Central Bank','Central Bank'),
+        ('ABCO BOURSE','ABCO BOURSE'),
+        ('AFRICABOURSE','AFRICABOURSE'),
+        ('AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)','AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)'),
+        ('ATLANTIQUE FINANCE','ATLANTIQUE FINANCE'),
+        ('ATTIJARI SECURITIES WEST AFRICA (ASWA)','ATTIJARI SECURITIES WEST AFRICA (ASWA)'),
+        ('BICI BOURSE','BICI BOURSE'),
+        ('BIIC FINANCIAL SERVICES (BFS)','BIIC FINANCIAL SERVICES (BFS)'),
+        ('BNI FINANCES SA','BNI FINANCES SA'),
+        ('BOA CAPITAL SECURITIES','BOA CAPITAL SECURITIES'),
+        ('BRIDGE SECURITIES','BRIDGE SECURITIES'),
+        ('BSIC CAPITAL','BSIC CAPITAL'),
+        ('CIFA-BOURSE SA','CIFA-BOURSE SA'),
+        ('COMPAGNIE DE GESTION FINANCIÈRE ET DE BOURSE (CGF BOURSE)','COMPAGNIE DE GESTION FINANCIÈRE ET DE BOURSE (CGF BOURSE)'),
+        ('CORIS BOURSE','CORIS BOURSE'),
+        ('ECOBANK INVESTMENT CORPORATION (EIC)','ECOBANK INVESTMENT CORPORATION (EIC)'),
+        ('EVEREST FINANCE','EVEREST FINANCE'),
+        ('FINANCE GESTION ET INTERMÉDIATION (FGI)','FINANCE GESTION ET INTERMÉDIATION (FGI)'),
+        ('GLOBAL CAPITAL','GLOBAL CAPITAL'),
+        ('HUDSON & CIE','HUDSON & CIE'),
+        ('IMPAXIS SECURITIES','IMPAXIS SECURITIES'),
+        ('INVICTUS CAPITAL FINANCE','INVICTUS CAPITAL FINANCE'),
+        ('MAC - AFRICAN SGI','MAC - AFRICAN SGI'),
+        ('MATHA SECURITIES','MATHA SECURITIES'),
+        ('NSIA FINANCES','NSIA FINANCES'),
+        ('SGI BÉNIN SA','SGI BÉNIN SA'),
+        ('SGI MALI','SGI MALI'),
+        ('SGI NIGER','SGI NIGER'),
+        ('SGI TOGO','SGI TOGO'),
+        ('SGI-PHOENIX CAPITAL MANAGEMENT (PCM)','SGI-PHOENIX CAPITAL MANAGEMENT (PCM)'),
+        ('SIRIUS CAPITAL','SIRIUS CAPITAL'),
+        ('SOCIÉTÉ BURKINABÉ D\'INTERMÉDIATION FINANCIÈRE (SBIF)','SOCIÉTÉ BURKINABÉ D\'INTERMÉDIATION FINANCIÈRE (SBIF)'),
+        ('SOCIÉTÉ GÉNÉRALE CAPITAL SECURITIES WEST AFRICA (SG – CSWA)','SOCIÉTÉ GÉNÉRALE CAPITAL SECURITIES WEST AFRICA (SG – CSWA)'),
+        ('UNITED CAPITAL FOR AFRICA','UNITED CAPITAL FOR AFRICA'),
     )
+
     CHOICES_DEPSTY = (
         ('', 'Depository'),
-        ('Bourse Regionale','Bourse Regionale'),
+        ('BCEAO','BCEAO'),
+        ('DC/BR','DC/BR'),
     )
 
 
@@ -532,8 +581,8 @@ class SecurityForm(forms.ModelForm):
     name = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Name'}, ))
     ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
     desc = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
-    # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
-    isu_dt =forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
+    # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Date'}))
+    isu_dt =forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Date'}))
     # open_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
     open_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
     close_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
@@ -546,11 +595,11 @@ class SecurityForm(forms.ModelForm):
     min_lot = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Lot Minimum'}, ))
     ttl_type = forms.ChoiceField(choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Title Type'}))
     shr_class = forms.ChoiceField(choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Share Class'}))
-    isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Type'}))
+    isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Type'}))
     # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
     sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #issue = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Issue', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
-    issue = forms.ChoiceField(choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
+    issuer = forms.ChoiceField(choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
     rgstrr = forms.ChoiceField(choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
     exchg  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all(), empty_label='Exchange', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
     depsty = forms.ChoiceField(choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))
@@ -559,8 +608,8 @@ class SecurityForm(forms.ModelForm):
     txtn_code = forms.NullBooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
     exchg_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Exchange Tax'}))
     val_code = forms.NullBooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    lwst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
-    hghst_appl_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
+    lwst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
+    hghst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
 
 
     class Meta:
@@ -576,8 +625,8 @@ class StockModelForm(forms.ModelForm):
         ('Suspended', 'Suspended'),
         ('Deleted', 'Deleted'),
     )
-    stock_type = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
-    under_stock_type  = forms.CharField(max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
+    stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
+    under_stock_type  = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
     secr_status = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
     dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
 
@@ -646,7 +695,7 @@ class BondModelForm(forms.ModelForm):
     dfrrd_rpymt_perd_units = forms.ChoiceField(choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Deferred Repayment Period Units'}))
     rpymt_mthd = forms.ChoiceField(choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
     rpymt_type = forms.ChoiceField(choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Type'}))
-    bnd_isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issue Date'}))
+    bnd_isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issued Date'}))
     first_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'First Payment Date'}))
     lst_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Last Payment Date'}))
     usage = forms.ChoiceField(choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Usage'}))
@@ -910,9 +959,9 @@ class FinancialStatementFactForm(forms.ModelForm):
 
 #///////////////////////////// GuarantorForm /////////////////////////////
 class GuarantorForm(forms.ModelForm):
-    guarantor = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
-    guarantor_pctg = forms.DecimalField(max_digits=6, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
-    guarantor_val = forms.DecimalField(max_digits=13, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Valeur'}, ))
+    guarantor = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
+    guarantor_pctg = forms.DecimalField(required=False, max_digits=6, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))
+    guarantor_val = forms.DecimalField(required=False, max_digits=13, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Valeur'}, ))
 
     class Meta:
         model = GuarantorModel

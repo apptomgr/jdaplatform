@@ -85,7 +85,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.shr_class|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.isur_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issue|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.issuer|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.rgstrr|as_crispy_field}}</div>
             </div>
 
@@ -117,7 +117,9 @@
             </ul-->
 
             <!-- Stock fields -->
-
+            <div class="row">
+                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="Stock Info" readonly></div>
+            </div>
             <div class="collapse show" id="stock">
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.stock_type|as_crispy_field}}</div>

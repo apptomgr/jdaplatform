@@ -4,7 +4,6 @@ from .utils import get_rpt_range_period, get_period
 from django.core.exceptions import ValidationError
 from django_countries.fields import CountryField
 
-
 #///////////////////////////////// SectorModel /////////////////////////////////
 class SectorModel(models.Model):
     sector = models.CharField(max_length=50, blank=False, null=False, unique=True)
@@ -22,11 +21,11 @@ class CompanyModel(models.Model):
         ('Semi-annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
-    corp_name = models.CharField(max_length=100, blank=True, null=True)
+    corp_name = models.CharField(max_length=100, blank=False, null=False)
     company = models.CharField(max_length=200, blank=False, null=False, unique=True)
-    sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE)
+    sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, blank=True, null=True)
     #rpt_period = models.CharField(max_length=50, choices=CHOICES, blank=True, null=True)
-    legl_form = models.CharField(max_length=10, blank=False, null=False)
+    legl_form = models.CharField(max_length=10, blank=True, null=True)
     creatn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     rccm_nbr = models.CharField(max_length=15, blank=True, null=True)
     country = CountryField(blank=True, null=True)
@@ -62,17 +61,18 @@ class ShareholderModel(models.Model):
         verbose_name_plural ='ShareholderModel'
         db_table = 'ShareholderModel'
 
-#///////////////////////////// ExchangeModel ///////////////////////////////
-class ExchangeModel(models.Model):
-    name = models. CharField(max_length=25, null=False, blank=False)
-    acronym = models. CharField(max_length=10, null=False, blank=False)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = 'ExchangeModel'
-
+# #///////////////////////////// ExchangeModel ///////////////////////////////
+# class ExchangeModel(models.Model):
+#     #security = models.ForeignKey(SecurityModel, related_name='securities', on_delete=models.CASCADE, blank=True, null=True)
+#     name = models. CharField(max_length=225, null=False, blank=False)
+#     acronym = models. CharField(max_length=100, null=True, blank=True)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         verbose_name_plural = 'ExchangeModel'
+#
 
 # /////////////////////////////////// FinancialStatementModel ///////////////////////////////
 class FinancialStatementModel(models.Model):

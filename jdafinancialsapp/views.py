@@ -4,9 +4,9 @@ from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
-from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel
+from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit, ExchangeFormset, ExchangeFormset_edit
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -819,6 +819,7 @@ def jdafinancialsapp_add_bond_security(request):
         form = SecurityForm()
         bond_form = BondModelForm()
         formset = GuarantorFormset(queryset=GuarantorModel.objects.none())
+        #exchange_formset = ExchangeFormset(queryset=ExchangeModel.objects.none())
 
     grp = get_user_grp(request)
     context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
@@ -898,11 +899,13 @@ def jdafinancialsapp_edit_bond_security(request, security_id):
             GuarantorModel.objects.filter(pk__in=del_pk).delete()
             messages.success(request, f'Sucessfully saved {security} info.')
             return redirect('jdafinancialsapp_security_listing')
-        messages.error(request, f'Error saving security formset info: {formset.errors}')
+        messages.error(request, f'Error saving security formset info: security form: {security_form.errors} - formset: {formset.errors} - ')
     else:
         security_form = SecurityForm(instance=security)
         bond_form = BondModelForm(instance=bnd_sec)
         formset = GuarantorFormset_edit(queryset=GuarantorModel.objects.filter(security=security_id))
+        #Check for 'none' guarantor record in DB and remove before editing
+
 
     context={'security_form':security_form,'bond_form':bond_form, 'formset':formset}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_bond_security.html', context)

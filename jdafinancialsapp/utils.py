@@ -385,7 +385,7 @@ def yearsago(years, from_date=None):
 
 # ////////////////////// Merge_two_lists ////////////////////////////
 def merge_two_lists(list1, list2):
-    merge_list_head = [('', 'Issue')]
+    merge_list_head = [('', 'Issuer')]
     merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
     merged_list = merge_list_head + merged_list
     return merged_list
