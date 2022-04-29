@@ -186,7 +186,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
                 instance.save()
 
             if inc_data.count() > 0:
-                print(f"168 inc exists")
+                #print(f"168 inc exists")
                 # In existing inc stmt del item associated with company and entry_date
                 inc_data.delete()
                 # then Read data from jdatesterLinkModel and insert it into jdatesterBalanceSheetModel
@@ -305,7 +305,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_bal_rpt(request, sector, company_id, statement, entry_date):
-    print(f"95 jdafinancialsapp_bal_rpt: User {request.user}")
+    #print(f"95 jdafinancialsapp_bal_rpt: User {request.user}")
     company = CompanyModel.objects.get(pk=company_id)
 
     bal = FinancialStatementFactModel.objects.filter(company_id=company_id, entry_date=entry_date, financial_statement_line__financialstatementlinesequencemodel__financial_statement=1).order_by('id')
@@ -772,7 +772,7 @@ def jdafinancialsapp_add_stock_security(request):
         #    messages.error(request, form.errors)
         #    return redirect('jdafinancialsapp_add_security')
     else:
-        print("756 : invalid")
+        #print("756 : invalid")
         form = SecurityForm()
         stock_form = StockModelForm()
 
@@ -976,23 +976,23 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
 
 
     if stock_sec_detail.exists():
-        print("Stock OK")
+        #print("Stock OK")
         sec_type = 'Stock'
         assoc_sec_detail = stock_sec_detail
         #print(f"854 stock assoc_sec_detail: {stock_sec_detail}")
     elif bond_sec_detail.exists():
-        print("bond OK")
+        #print("bond OK")
         sec_type = 'Bond'
         assoc_sec_detail = bond_sec_detail
     else:
-        print("Else OK")
+        #print("Else OK")
         sec_type = None
         #assoc_sec_detail = else_sec_detail
         pass #assoc_sec_detail = other_sec_detail
         #print(f"854 bond assoc_sec_detail: {bond_sec_detail}")
         #if guarantor_sec_detail.exists():
 
-    print(f"991 res assoc_sec_detail: {assoc_sec_detail} - Sec_type {sec_type}")
+    #print(f"991 res assoc_sec_detail: {assoc_sec_detail} - Sec_type {sec_type}")
     grp = get_user_grp(request)
     context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type, 'assoc_sec_detail': assoc_sec_detail, 'guarantor_sec_detail':guarantor_sec_detail, 'rpt_date': now}
     #print(f'res 848: {security_detail}')
