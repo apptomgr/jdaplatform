@@ -5,16 +5,6 @@ from django_countries.fields import CountryField, countries
 from  jdafinancialsapp.utils import merge_two_lists, merge_company_lists
 
 
-# ///////////////////////////// ExchangeModel ///////////////////////////////
-class ExchangeModel(models.Model):
-    name = models. CharField(max_length=25, null=False, blank=False)
-    acronym = models. CharField(max_length=10, null=False, blank=False)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = 'ExchangeModel'
 
 
 # /////////////////////////////// IndexModel//////////////////////////////////////////////
@@ -42,18 +32,20 @@ class IndexPriceModel(models.Model):
         verbose_name_plural = 'IndexPriceModel'
 
 
+# ///////////////////////////// ExchangeModel ///////////////////////////////
+class ExchangeModel(models.Model):
+    #security =models.ForeignKey(SecurityModel, on_delete=models.CASCADE, blank=False, null=True)
+    name = models. CharField(max_length=225, null=True, blank=True)
+    acronym = models. CharField(max_length=225, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'ExchangeModel'
+
 # /////////////////////////////// SecurityModel//////////////////////////////////////////////
 class SecurityModel(models.Model):
-    # ticker = models.CharField(max_length=12, blank=False, null=False)
-    # isin = models.CharField(max_length=20, blank=False, null=False)
-    # name = models.CharField(max_length=200, blank=True, null=True)
-    #
-    # def __str__(self):
-    #     return f"{self.ticker} - {self.name}"
-    #
-    # class Meta:
-    #     verbose_name_plural = 'SecurityModel'
-
 
     CHOICES_LISTG = (
         ('', 'Listing Status'),
@@ -82,11 +74,45 @@ class SecurityModel(models.Model):
     )
     CHOICES_RGSTRR = (
         ('', 'Registrar'),
-        ('Central Bank', 'Central Bank'),
+        ('ABCO BOURSE','ABCO BOURSE'),
+        ('AFRICABOURSE','AFRICABOURSE'),
+        ('AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)','AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)'),
+        ('ATLANTIQUE FINANCE','ATLANTIQUE FINANCE'),
+        ('ATTIJARI SECURITIES WEST AFRICA (ASWA)','ATTIJARI SECURITIES WEST AFRICA (ASWA)'),
+        ('BICI BOURSE','BICI BOURSE'),
+        ('BIIC FINANCIAL SERVICES (BFS)','BIIC FINANCIAL SERVICES (BFS)'),
+        ('BNI FINANCES SA','BNI FINANCES SA'),
+        ('BOA CAPITAL SECURITIES','BOA CAPITAL SECURITIES'),
+        ('BRIDGE SECURITIES','BRIDGE SECURITIES'),
+        ('BSIC CAPITAL','BSIC CAPITAL'),
+        ('CIFA-BOURSE SA','CIFA-BOURSE SA'),
+        ('COMPAGNIE DE GESTION FINANCIÈRE ET DE BOURSE (CGF BOURSE)','COMPAGNIE DE GESTION FINANCIÈRE ET DE BOURSE (CGF BOURSE)'),
+        ('CORIS BOURSE','CORIS BOURSE'),
+        ('ECOBANK INVESTMENT CORPORATION (EIC)','ECOBANK INVESTMENT CORPORATION (EIC)'),
+        ('EVEREST FINANCE','EVEREST FINANCE'),
+        ('FINANCE GESTION ET INTERMÉDIATION (FGI)','FINANCE GESTION ET INTERMÉDIATION (FGI)'),
+        ('GLOBAL CAPITAL','GLOBAL CAPITAL'),
+        ('HUDSON & CIE','HUDSON & CIE'),
+        ('IMPAXIS SECURITIES','IMPAXIS SECURITIES'),
+        ('INVICTUS CAPITAL FINANCE','INVICTUS CAPITAL FINANCE'),
+        ('MAC - AFRICAN SGI','MAC - AFRICAN SGI'),
+        ('MATHA SECURITIES','MATHA SECURITIES'),
+        ('NSIA FINANCES','NSIA FINANCES'),
+        ('SGI BÉNIN SA','SGI BÉNIN SA'),
+        ('SGI MALI','SGI MALI'),
+        ('SGI NIGER','SGI NIGER'),
+        ('SGI TOGO','SGI TOGO'),
+        ('SGI-PHOENIX CAPITAL MANAGEMENT (PCM)','SGI-PHOENIX CAPITAL MANAGEMENT (PCM)'),
+        ('SIRIUS CAPITAL','SIRIUS CAPITAL'),
+        ('SOCIÉTÉ BURKINABÉ D\'INTERMÉDIATION FINANCIÈRE (SBIF)','SOCIÉTÉ BURKINABÉ D\'INTERMÉDIATION FINANCIÈRE (SBIF)'),
+        ('SOCIÉTÉ GÉNÉRALE CAPITAL SECURITIES WEST AFRICA (SG – CSWA)','SOCIÉTÉ GÉNÉRALE CAPITAL SECURITIES WEST AFRICA (SG – CSWA)'),
+        ('UNITED CAPITAL FOR AFRICA','UNITED CAPITAL FOR AFRICA'),
     )
+
     CHOICES_DEPSTY = (
         ('', 'Depository'),
-        ('Bourse Regionale', 'Bourse Regionale'),
+        ('BCEAO','BCEAO'),
+        ('DC/BR','DC/BR'),
     )
 
     country_list = []
@@ -121,9 +147,9 @@ class SecurityModel(models.Model):
     shr_class = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_SHR_CLASS)
     isur_type = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_ISUR_TYPE)
     sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, null=True, blank=True)
-    issue = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
+    issuer = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
     cntry = CountryField(blank=True, null=True, unique=False)
-    rgstrr = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_RGSTRR)
+    rgstrr = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_RGSTRR)
     exchg = models.ForeignKey(ExchangeModel, on_delete=models.CASCADE, null=True, blank=True)
     depsty = models.CharField(max_length=100, blank=True, null=True, choices=CHOICES_DEPSTY)
     cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -139,6 +165,8 @@ class SecurityModel(models.Model):
 
     class Meta:
         verbose_name_plural = 'SecurityModel'
+
+
 
 
 # /////////////////////////////// SecurityPriceModel//////////////////////////////////////////////
@@ -269,6 +297,10 @@ class GuarantorModel(models.Model):
 
     class Meta:
         verbose_name_plural = 'GuarantorModel'
+
+
+
+
 
 # ////////////////// Test models ///////////////////////////////////////////
 # class Author(models.Model):
