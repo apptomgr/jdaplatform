@@ -54,7 +54,7 @@
                     <td>{{i.isin}}</td>
                     <td>{{i.ticker}}</td>
                     <td>{{i.name}}</td>
-                    <td>{{i.isu_dt}}</td>
+                    <td>{{i.isu_dt |date:"Y-m-d"}}</td>
 
 
                     <td><a hx-get="{% url 'jdafinancialsapp_hx_stock_detail' i.pk %}" hx-target="#security_details" hx-swap="innerHTML swap:0.5s" type="button" data-toggle="modal" data-target="#security_detail_modal"><i class="far fa-eye fa-2x text-info"></i></a></td>

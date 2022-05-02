@@ -682,10 +682,12 @@ $(document).on('click', '.remove-form-row', function(e){
 </script>
 
 <script>
-    function tes()
-    {
-     alert('tes');
-    }
+document.body.addEventListener('htmx:configRequest', (e) => {
+    e.detail.headers['X-CSRFToken'] = '{{ csrf_token}}';
+})
+
 </script>
+
+
 </body>
 </html>

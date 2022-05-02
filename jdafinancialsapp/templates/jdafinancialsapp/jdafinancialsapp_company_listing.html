@@ -32,18 +32,20 @@
                 <th>#</th>
                 <th>{% trans 'Company Name' %}</th>
                 <th>{% trans 'Company Short Name' %}</th>
-                <!--th>{% trans 'Company Detail' %}</th-->
+                <th>{% trans 'Company Detail' %}</th>
                 <th>{% trans 'Remove Company' %}</th>
             </tr>
         </thead>
         <tbody>
             {% for i in company_listing %}
-            <tr>
+            <tr id="removed_row">
                 <td>{{ forloop.counter }}</td>
                 <td>{{i.corp_name}}</td>
                 <td>{{i.company}}</td>
                 <td><a href="{% url 'jdafinancialsapp_view_company_detail' i.pk %}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
-                <td><a href="{% url 'jdafinancialsapp_delete_company_confirm' i.pk %}"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td>
+
+                <td hx-delete="{% url 'jdafinancialsapp_delete_company_confirm' i.pk %}" hx-confirm="Are you sure you wish to delete company {{i.company}}?" hx-swap="outerHTML" hx-target="#removed_row"><i class="far fa-trash-alt fa-2x text-danger" style="cursor:pointer;"></i></td>
+                <!--td><a href="{ url 'jdafinancialsapp_delete_company_confirm' i.pk }"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td-->
             </tr>
             {% endfor %}
         </tbody>
