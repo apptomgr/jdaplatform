@@ -22,8 +22,8 @@
             <td class="col-md-2">{{i.isin}}</td>
             <td class="col-md-2">{{i.ticker}}</td>
             <td class="col-md-2">{{i.desc}}</td>
-            <td class="col-md-2">{{i.isu_dt}}</td>
-            <td class="col-md-2">{{i.open_dt}}</td>
+            <td class="col-md-2">{{i.isu_dt |date:"Y-m-d"}}</td>
+            <td class="col-md-2">{{i.open_dt |date:"Y-m-d"}}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -44,7 +44,7 @@
         <tbody>
         {% for i in security_detail %}
         <tr class="rowX">
-            <td class="col-md-2">{{i.close_dt}}</td>
+            <td class="col-md-2">{{i.close_dt |date:"Y-m-d"}}</td>
             <td class="col-md-2">{{i.name}}</td>
             <td class="col-md-2">{{i.listg_sts}}</td>
             <td class="col-md-2">{{i.nmnl_amt}}</td>

@@ -670,19 +670,24 @@ def jdafinancialsapp_company_listing(request):
     return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
 
 
-
+#from django.http import HttpResponseRedirect
 #//////////////////////////////////////// jdafinancialsapp_delete_company_confirm/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_delete_company_confirm(request, pk):
-    #print(f"387://////{pk}")
+    print(f"387://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
-    comp = CompanyModel.objects.get(pk=pk)
-    messages.warning(request, f"Deletion of company '{comp}' is permanent'?")
+    comp = CompanyModel.objects.get(pk=pk)#.delete()
+    now = datetime.now()
+    company_listing =CompanyModel.objects.all()
+    messages.success(request, f"Successfully deleted company: '{comp}' ID #{pk}")
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}
-    return render(request, 'jdafinancialsapp/jdafinancialsapp_delete_company_confirm.html', context)
-
+    context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
+    #return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
+    #return redirect('jdafinancialsapp_company_listing', context)
+    #return HttpResponseRedirect("jdafinancialsapp/jdafinancialsapp_company_listing.html")
+    #return redirect('jdafinancialsapp_company_listing')
+    return HttpResponse("")
 
 #//////////////////////////////////////// jdafinancialsapp_delete_company_yes/////////////////////////////
 @login_required
