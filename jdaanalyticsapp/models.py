@@ -31,18 +31,19 @@ class IndexPriceModel(models.Model):
     class Meta:
         verbose_name_plural = 'IndexPriceModel'
 
-
 # ///////////////////////////// ExchangeModel ///////////////////////////////
 class ExchangeModel(models.Model):
-    #security =models.ForeignKey(SecurityModel, on_delete=models.CASCADE, blank=False, null=True)
-    name = models. CharField(max_length=225, null=True, blank=True)
-    acronym = models. CharField(max_length=225, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
+    exchg_name = models.CharField(max_length=225, null=True, blank=True)
+    exchg_acronym = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
+        db_table = 'ExchangeModel'
         verbose_name_plural = 'ExchangeModel'
+
+    def __str__(self):
+        return self.exchg_acronym
+
+
 
 # /////////////////////////////// SecurityModel//////////////////////////////////////////////
 class SecurityModel(models.Model):
@@ -150,7 +151,7 @@ class SecurityModel(models.Model):
     issuer = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
     cntry = CountryField(blank=True, null=True, unique=False)
     rgstrr = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_RGSTRR)
-    exchg = models.ForeignKey(ExchangeModel, on_delete=models.CASCADE, null=True, blank=True)
+    exchg = models.ManyToManyField(ExchangeModel, related_name='exchanges', null=True, blank=True)
     depsty = models.CharField(max_length=100, blank=True, null=True, choices=CHOICES_DEPSTY)
     cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     invstr_cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -189,7 +190,6 @@ class SecurityPriceModel(models.Model):
 
     class Meta:
         verbose_name_plural = 'SecurityPriceModel'
-
 
 # ///////////////////////////// StockModel ///////////////////////////////
 class StockModel(models.Model):

@@ -61,18 +61,6 @@ class ShareholderModel(models.Model):
         verbose_name_plural ='ShareholderModel'
         db_table = 'ShareholderModel'
 
-# #///////////////////////////// ExchangeModel ///////////////////////////////
-# class ExchangeModel(models.Model):
-#     #security = models.ForeignKey(SecurityModel, related_name='securities', on_delete=models.CASCADE, blank=True, null=True)
-#     name = models. CharField(max_length=225, null=False, blank=False)
-#     acronym = models. CharField(max_length=100, null=True, blank=True)
-#
-#     def __str__(self):
-#         return self.name
-#
-#     class Meta:
-#         verbose_name_plural = 'ExchangeModel'
-#
 
 # /////////////////////////////////// FinancialStatementModel ///////////////////////////////
 class FinancialStatementModel(models.Model):
