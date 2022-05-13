@@ -1,6 +1,5 @@
 {% load i18n %}
 
-
 <div id="security_details">
     <table id="security_detail"
            class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap"
@@ -96,7 +95,13 @@
         <tbody>
         {% for i in security_detail %}
         <tr class="rowX">
-            <td class="col-md-2">{{i.exchg}}</td>
+            <td class="col-md-2">
+                <ul class="list-inline">
+                {% for k in i.exchg.all%}
+                    <li class="list-inline-item">{{k}}</li>
+                {% endfor %}
+                </ul>
+            </td>
             <td class="col-md-2">{{i.depsty}}</td>
             <td class="col-md-2">{{i.cntry_tax}}</td>
             <td class="col-md-2">{{i.invstr_cntry_tax}}</td>

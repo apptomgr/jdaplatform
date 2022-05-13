@@ -6,7 +6,7 @@ from . models import CompanyModel, FinancialStatementFactModel, FinancialStateme
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit, ExchangeFormset, ExchangeFormset_edit
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -683,6 +683,7 @@ def jdafinancialsapp_delete_company_confirm(request, pk):
     messages.success(request, f"Successfully deleted company: '{comp}' ID #{pk}")
     grp = get_user_grp(request)
     context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
+    comp.delete() # finally delete the company
     #return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
     #return redirect('jdafinancialsapp_company_listing', context)
     #return HttpResponseRedirect("jdafinancialsapp/jdafinancialsapp_company_listing.html")
@@ -746,26 +747,23 @@ def financialStatementFactForm(request):
     context = {'user_grp':grp,'form': form, 'fact':fact}
     return render(request, 'jdafinancialsapp/FinancialStatementFactForm.html', context)
 
+
 #////////////////////////// jdafinancialsapp_add_stock_security ///////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_add_stock_security(request):
-    #stock_model = StockModel.objects.all()
     if request.method == "POST":
         form = SecurityForm(request.POST)
         stock_form = StockModelForm(request.POST)
-        #security_ticker = request.POST.get('ticker')
-        #print(f"747: name: {request.POST.get('name')}")
-        #print(f"748: Open_date: {request.POST.get('open_date')}")
-        #data = request.POST.copy()
-        #print(f": 748 {data}") #{request.POST.get('company')}")
+
         if form.is_valid() and stock_form.is_valid():
             security = form.save()
+            # Link stock_form to security saved
             stock = stock_form.save(commit=False)
             stock.security = security
             stock.save()
 
-            messages.success(request, f"{form.cleaned_data['ticker']} info successfully added ")
+            messages.success(request, f"{security} info successfully added ")
             return redirect('jdafinancialsapp_add_stock_security')
 
         if len(form.errors) < 4:
@@ -773,13 +771,10 @@ def jdafinancialsapp_add_stock_security(request):
 
         # messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
         messages.error(request, f"Please complete filling all required fields before submitting")
-        #else:
-        #    messages.error(request, form.errors)
-        #    return redirect('jdafinancialsapp_add_security')
     else:
-        #print("756 : invalid")
         form = SecurityForm()
         stock_form = StockModelForm()
+        #exchg_formset = ExchangeFormset(queryset=ExchangeModel.objects.none())
 
     grp = get_user_grp(request)
     context = {'user_grp': grp, 'form': form, 'stock_form': stock_form, 'header_title': 'Stock', 'bread_new_security': 'font-weight-bold'}
@@ -824,7 +819,7 @@ def jdafinancialsapp_add_bond_security(request):
         form = SecurityForm()
         bond_form = BondModelForm()
         formset = GuarantorFormset(queryset=GuarantorModel.objects.none())
-        #exchange_formset = ExchangeFormset(queryset=ExchangeModel.objects.none())
+
 
     grp = get_user_grp(request)
     context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
@@ -840,33 +835,22 @@ def jdafinancialsapp_edit_stock_security(request, security_id):
     if request.method == 'POST':
         security_form = SecurityForm(request.POST, instance=security)
         stock_form = StockModelForm(request.POST, instance=stk_sec)
-        #formset = GuarantorFormset_edit(request.POST, queryset=GuarantorModel.objects.filter(security=security_id))
 
-        if security_form.is_valid() and stock_form.is_valid(): # and formset.is_valid():
+        if security_form.is_valid() and stock_form.is_valid():
             security = security_form.save()
             #once the security data is saved, its reference will be used to associated the bond info and the xxx formset
             stock = stock_form.save(commit=False) # so the security instance can be attached
             stock.security = security # bnd_sec
             stock.save()
             del_pk=[]
-            # for idx, form in enumerate(formset):
-            #     guarantor = form.save(commit=False) # so the security instatnce can be associated
-            #     if request.POST.get(f'form-{idx}-DELETE') == 'on':
-            #         gr=GuarantorModel.objects.filter(security=security_id)
-            #         del_pk.append(gr[idx].pk)
-            #
-            #     guarantor.security=security
-            #     guarantor.save()
-            # #now rm
-            # GuarantorModel.objects.filter(pk__in=del_pk).delete()
+
             messages.success(request, f'Sucessfully saved {security} info.')
             return redirect('jdafinancialsapp_security_listing')
+        #else
         messages.error(request, f'Error saving security {security_form.errors} stock info: {stock_form.errors}')
-        #messages.error(request, f'Error saving security formset info: {formset.errors}')
     else:
         security_form = SecurityForm(instance=security)
         stock_form = StockModelForm(instance=stk_sec)
-        #formset = GuarantorFormset_edit(queryset=GuarantorModel.objects.filter(security=security_id))
 
     context={'security_form':security_form,'stock_form':stock_form} #, 'formset':formset}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_stock_security.html', context)
@@ -961,6 +945,7 @@ def jdafinancialsapp_hx_delete_security(request, pk):
 def jdafinancialsapp_hx_stock_detail(request, pk):
     now =datetime.now()
     security_detail = SecurityModel.objects.filter(pk=pk)
+    #print(f"978: {security_detail.get(pk=pk).exchanges.all()}")
 
     sec_type = None
     assoc_sec_detail = None
@@ -968,17 +953,6 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
     bond_sec_detail = BondModel.objects.filter(security__id=pk)
     #else_sec_detail = SecurityModel.objects.exclude(security__id=pk)
     guarantor_sec_detail = GuarantorModel.objects.filter(security__id=pk)
-    #print(f"Bond: {bond_sec_detail}")
-    # bond_data = BondModel.objects.all().order_by('security')
-    # bond_lst=[]
-    # for i in bond_data:
-    #     bond_lst.append(i.security_id)
-    #
-    # stock_data = StockModel.objects.all().order_by('security')
-    # stock_lst=[]
-    # for i in stock_data:
-    #     stock_lst.append(i.security_id)
-
 
     if stock_sec_detail.exists():
         #print("Stock OK")
@@ -997,7 +971,6 @@ def jdafinancialsapp_hx_stock_detail(request, pk):
         #print(f"854 bond assoc_sec_detail: {bond_sec_detail}")
         #if guarantor_sec_detail.exists():
 
-    #print(f"991 res assoc_sec_detail: {assoc_sec_detail} - Sec_type {sec_type}")
     grp = get_user_grp(request)
     context = {'user_grp':grp,'security_detail':security_detail, 'sec_type':sec_type, 'assoc_sec_detail': assoc_sec_detail, 'guarantor_sec_detail':guarantor_sec_detail, 'rpt_date': now}
     #print(f'res 848: {security_detail}')

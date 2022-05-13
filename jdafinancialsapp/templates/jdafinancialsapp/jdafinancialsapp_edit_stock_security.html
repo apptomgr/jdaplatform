@@ -53,6 +53,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
@@ -61,6 +62,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
@@ -78,7 +80,6 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.cntry|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.currency|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.min_lot|as_crispy_field}}</div>
-
             </div>
 
             <div class="row">
@@ -86,7 +87,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.shr_class|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.isur_type|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.sector|as_crispy_field}}</div>
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issue|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.issuer|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{security_form.rgstrr|as_crispy_field}}</div>
             </div>
 
@@ -135,8 +136,7 @@
             {% endcomment %}
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Edit
-             Security' %}">
+            <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Edit Security' %}">
         </div>
     </form>
 </div>

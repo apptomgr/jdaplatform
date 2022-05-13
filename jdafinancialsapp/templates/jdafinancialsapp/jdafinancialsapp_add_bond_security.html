@@ -35,7 +35,7 @@
         <div class="card-body">
 
             <!-- Security info -->
-            <!-- Security info -->
+
             <div class="row">
                 <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
             </div>
@@ -61,6 +61,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
                     <div class="input-group justify-content-right">
                         <div class="input-group-prepend">
@@ -78,7 +79,6 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.currency|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.min_lot|as_crispy_field}}</div>
-
             </div>
 
             <div class="row">
@@ -91,7 +91,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg|as_crispy_field}}</div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{form.exchg|as_crispy_field}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.depsty|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.invstr_cntry_tax|as_crispy_field}}</div>
@@ -185,6 +185,8 @@
         <div class="card-footer text-muted">
             <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Add Security' %}">
         </div>
+
+
     </form>
 </div>
 
