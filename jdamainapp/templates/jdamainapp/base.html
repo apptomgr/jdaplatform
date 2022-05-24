@@ -313,7 +313,7 @@
 <script src="{% static 'jdamainapp/assets/vendor/venobox/venobox.min.js'%}"></script>
 <!--script src="{% static 'jdamainapp/assets/js/res.js'%}"></script-->
 <!-- formset js -->
-<!--script src="{% static 'jdamainapp/assets/js/dynamic_formset.js' %}"></script-->
+<!--script src="{% static 'jdamainapp/assets/js/dynamic_formset.old.js' %}"></script-->
 
 
 
@@ -420,7 +420,6 @@ $(document).ready(function() {
     $('#security_listing').DataTable( {
         language : {
             url: getLanguage()
-
         },
         responsive: true,
         "order": [[ 0, "desc" ]]
@@ -428,6 +427,16 @@ $(document).ready(function() {
 
 } );
 
+$(document).ready(function() {
+    $('#company_listing').DataTable( {
+        language : {
+            url: getLanguage()
+        },
+        responsive: true,
+        "order": [[ 0, "desc" ]]
+    } );
+
+} );
 </script>
 
 <!-- Datepicker -->
@@ -575,6 +584,17 @@ $(document).ready(function() {
       };
       date_input.datepicker(options);
     })
+    $(document).ready(function(){
+      var date_input=$('input[name="creatn_dt"]'); //our date input has the name "creatn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
 
 </script>
 
@@ -681,13 +701,115 @@ $(document).on('click', '.remove-form-row', function(e){
 });
 </script>
 
-<script>
-document.body.addEventListener('htmx:configRequest', (e) => {
-    e.detail.headers['X-CSRFToken'] = '{{ csrf_token}}';
-})
 
+<!-- (2) Move this into static file once you fix collect static issues -->
+<script>
+    function updateElementIndex_2(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore_2(selector, prefix) {
+    var newElement_2 = $(selector).clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement_2.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement_2.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement_2);
+    var conditionRow = $('.form-row_2:not(:last)');
+    conditionRow.find('.btn.add-form-row_2')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row_2').addClass('remove-form-row_2')
+    .html('-');
+    return false;
+}
+function deleteForm_2(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest('.form-row_2').remove();
+        var forms = $('.form-row_2');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex_2(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row_2', function(e){
+    e.preventDefault();
+    cloneMore_2('.form-row_2:last', 'form');
+    return false;
+});
+$(document).on('click', '.remove-form-row_2', function(e){
+    e.preventDefault();
+    deleteForm_2('form', $(this));
+    return false;
+});
 </script>
 
+<style>
+    .form-row_2 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
 
+.form-row_2 > .col,
+.form-row_2 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+  .form-row_3 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row_3 > .col,
+.form-row_3 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+  .form-row_4 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row_4 > .col,
+.form-row_4 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+</style>
 </body>
 </html>

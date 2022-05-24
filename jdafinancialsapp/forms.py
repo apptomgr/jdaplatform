@@ -1,13 +1,14 @@
 from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
-    FinancialStatementInvAcctLinkModel, ShareholderModel
+    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
 from django.forms import inlineformset_factory
 from django.forms import modelformset_factory
+from phone_field import PhoneField
 
 # from jdafinancialsapp.utils import merge_two_lists
 
@@ -29,21 +30,21 @@ class CompanyForm(forms.ModelForm):
         ('Annually', 'Annually'),
     )
 
-    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Denomination Sociale'},))
-    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Non Usuel'},))
+    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Corporate Name')},))
+    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Company')},))
     sector = forms.ModelChoiceField(required=False, queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #rpt_period = forms.ChoiceField(choices=CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'placeholder':'Reporting Period'}))
-    legl_form = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Forme Juridique'},))
-    creatn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Date de creation'}))
-    rccm_nbr = forms.CharField(required=False, max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Numero RCCM'}, ))
-    country = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
+    legl_form = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': ugettext_lazy('Legal Form')},))
+    creatn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Creation Date')}))
+    rccm_nbr = forms.CharField(required=False, max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': ugettext_lazy('RCCM Number')}, ))
+    country = CountryField(blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
     #id_cntry = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Pays du siege social'}, ))
     #flag_pub_ctrl = forms.BooleanField(label='Societe sous control public', required=False, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm form-check-input checkbox-inline', 'id':'flag_pub_ctrl'})),
     flag_pub_ctrl = forms.BooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm selectpicker'})),
-    actvty_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Secteur d\'activite BRVM'}, ))
-    actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites economiques (CIV)'}, ))
-    intrnl_actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Code activites Joseph & Daniel Adv.'}, ))
-    othr_bus_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Autre secteur d\'activites'}, ))
+    actvty_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activite Sector BRVM')}, ))
+    actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activity Code (CIV)')}, ))
+    intrnl_actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activity Code Joseph & Daniel Adv.')}, ))
+    othr_bus_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Other Business Sectors')}, ))
     #shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
 
     #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown'}))
@@ -67,39 +68,98 @@ class CompanyForm(forms.ModelForm):
         #fields = ['company', 'sector', 'rpt_period']
 
 
-# #///////////////////////////// ExchangeForm ///////////////////////////////////// exclude(exchg_name=None)/
-# class ExchangeForm(forms.ModelForm):
-#     exchg_acronym  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all().distinct(), label='', empty_label='Exchange', widget=forms.Select(attrs={'class': 'form-control-sm show-tick text-secondary', 'data-live-search=': 'true', 'multiple':'multiple','placeholder': 'Exchange'}))
-#     #exchg_name  = forms.ModelChoiceField(queryset=ExchangeModel.objects.all(), label='', empty_label='Exchange',  widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true', 'placeholder': 'Exchange'}))
-#     #acronym = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Acronym'}, ))
-#
-#     class Meta:
-#         model = ExchangeModel
-#         fields = ['exchg_acronym',]# 'acronym']
+#///////////////////////////// AddressForm /////////////////////////////////////
+class AddressForm(forms.ModelForm):
+    addr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Address')}, ))
+    phone_nbr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Phone Number')}, ))
+    fax_nbr = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Fax Number')}, ))
+    email = forms.EmailField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Email')}, ))
+    website = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Website')}, ))
 
-#///////////////////////////// ExchangeFormset /////////////////////////////
-#ExchangeFormset = modelformset_factory(ExchangeModel, form=ExchangeForm, extra=1)
-#ExchangeFormset_edit = modelformset_factory(ExchangeModel, form=ExchangeForm, extra=0, can_delete=True)
+    class Meta:
+        model = AddressModel
+        fields = ['addr','phone_nbr', 'fax_nbr','email','website']
 
 
 #///////////////////////////// ShareholderForm //////////////////////////////////////
 class ShareholderForm(forms.ModelForm):
-    shrhldr_name = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Nome de l\'actionnaire'}, ))
-    shrhldr_type = forms.CharField(max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Type d\'actionnaire'}, ))
-    shrs_hld = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Part detenue'}, ))
-
-    #stmt_type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'form-control-sm-sm'}))
-    #company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), widget=forms.Select(attrs={'class': 'form-control-sm'}))#models.ForeignKey(Company, on_delete=models.CASCADE)
-    #financial_statement_line = forms.ModelChoiceField(queryset=FinancialStatementLine.objects.all(), label='', widget=forms.Select(attrs={'class': 'form-control-sm-sm'})) #models.ForeignKey(FinancialStatementLine, on_delete=models.CASCADE)
-    #value = forms.DecimalField(max_digits=13, decimal_places=2, label='Value', widget=forms.TextInput(attrs={'onBlur':'calc();', 'class': 'form-control-sm', 'placeholder':'0.00'}))#models.DecimalField(max_digits=13, decimal_places=2)
+    shrhldr_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Name')}, ))
+    shrhldr_type = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Type')}, ))
+    shrs_hld = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shares Held')}, ))
 
     class Meta:
-        model = CompanyModel
+        model = ShareholderModel
         fields = ['shrhldr_name', 'shrhldr_type','shrs_hld']
 
 #///////////////////////////// ShareholderFormset /////////////////////////////
-ShareholderFormset = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=1)
+ShareholderFormset = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=4)
 ShareholderFormset_edit = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=0, can_delete=True)
+ShareholderFormset_edit_1 = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=3, can_delete=True)
+ShareholderFormset_edit_2 = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=2, can_delete=True)
+ShareholderFormset_edit_3 = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=1, can_delete=True)
+ShareholderFormset_edit_4 = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=0, can_delete=True)
+ShareholderFormset_edit_0 = modelformset_factory(ShareholderModel, form=ShareholderForm, extra=4, can_delete=False)
+
+#///////////////////////////// LeadersForm //////////////////////////////////////
+class LeadersForm(forms.ModelForm):
+    lst_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Last Name & First Name')}, ))
+    func = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Function')}, ))
+    phone_nbr = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Phone Number')}, ))
+    email = forms.EmailField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Email')}, ))
+
+    class Meta:
+        model = LeadersModel
+        fields = ['lst_name', 'func','phone_nbr', 'email']
+
+#///////////////////////////// LeadersFormset /////////////////////////////
+LeadersFormset = modelformset_factory(LeadersModel, form=LeadersForm, extra=5)
+LeadersFormset_edit = modelformset_factory(LeadersModel, form=LeadersForm, extra=0, can_delete=True)
+LeadersFormset_edit_1 = modelformset_factory(LeadersModel, form=LeadersForm, extra=4, can_delete=True)
+LeadersFormset_edit_2 = modelformset_factory(LeadersModel, form=LeadersForm, extra=3, can_delete=True)
+LeadersFormset_edit_3 = modelformset_factory(LeadersModel, form=LeadersForm, extra=2, can_delete=True)
+LeadersFormset_edit_4 = modelformset_factory(LeadersModel, form=LeadersForm, extra=1, can_delete=True)
+LeadersFormset_edit_5 = modelformset_factory(LeadersModel, form=LeadersForm, extra=0, can_delete=True)
+LeadersFormset_edit_0 = modelformset_factory(LeadersModel, form=LeadersForm, extra=5, can_delete=False)
+
+#///////////////////////////// ParentCompanyForm //////////////////////////////////////
+class ParentCompanyForm(forms.ModelForm):
+    legl_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Legal Name')}, ))
+    comm_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Company Name')}, ))
+    cntry = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+
+    class Meta:
+        model = ParentCompanyModel
+        fields = ['legl_name', 'comm_name','cntry']
+
+#///////////////////////////// ParentCompanyFormset /////////////////////////////
+ParentCompanyFormset = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=4)
+ParentCompanyFormset_edit = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=0, can_delete=True)
+ParentCompanyFormset_edit_1 = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=3, can_delete=True)
+ParentCompanyFormset_edit_2 = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=2, can_delete=True)
+ParentCompanyFormset_edit_3 = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=1, can_delete=True)
+ParentCompanyFormset_edit_4 = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=0, can_delete=True)
+ParentCompanyFormset_edit_0 = modelformset_factory(ParentCompanyModel, form=ParentCompanyForm, extra=4, can_delete=False)
+
+
+#///////////////////////////// SubsidiaryForm //////////////////////////////////////
+class SubsidiaryForm(forms.ModelForm):
+    company_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Company Name')}, ))
+    share_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Share Amount')}, ))
+    url = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Website')}, ))
+
+
+    class Meta:
+        model = ParentCompanyModel
+        fields = ['company_name', 'share_amt','url']
+
+#///////////////////////////// SubsidiaryFormset /////////////////////////////
+SubsidiaryFormset = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=4)
+SubsidiaryFormset_edit = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=0, can_delete=True)
+SubsidiaryFormset_edit_1 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=3, can_delete=True)
+SubsidiaryFormset_edit_2 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=2, can_delete=True)
+SubsidiaryFormset_edit_3 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=1, can_delete=True)
+SubsidiaryFormset_edit_4 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=0, can_delete=True)
+SubsidiaryFormset_edit_0 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=4, can_delete=False)
 
 #///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 

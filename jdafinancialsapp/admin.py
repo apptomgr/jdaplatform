@@ -3,6 +3,8 @@ from .models import *
 
 admin.site.register(SectorModel)
 admin.site.register(CompanyModel)
+admin.site.register(AddressModel)
+admin.site.register(LeadersModel)
 
 
 
