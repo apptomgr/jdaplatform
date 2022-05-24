@@ -151,7 +151,7 @@ class SecurityModel(models.Model):
     issuer = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
     cntry = CountryField(blank=True, null=True, unique=False)
     rgstrr = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_RGSTRR)
-    exchg = models.ManyToManyField(ExchangeModel, related_name='exchanges', null=True, blank=True)
+    exchg = models.ManyToManyField(ExchangeModel, related_name='exchanges')
     depsty = models.CharField(max_length=100, blank=True, null=True, choices=CHOICES_DEPSTY)
     cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     invstr_cntry_tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
