@@ -3,7 +3,7 @@ import datetime
 from .utils import get_rpt_range_period, get_period
 from django.core.exceptions import ValidationError
 from django_countries.fields import CountryField
-from phone_field import PhoneField
+
 
 #///////////////////////////////// SectorModel /////////////////////////////////
 class SectorModel(models.Model):

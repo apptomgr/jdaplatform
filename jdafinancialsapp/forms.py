@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
 from django.forms import inlineformset_factory
 from django.forms import modelformset_factory
-from phone_field import PhoneField
+
 
 # from jdafinancialsapp.utils import merge_two_lists
 
