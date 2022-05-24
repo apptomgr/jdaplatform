@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import phone_field.models
+
 
 
 class Migration(migrations.Migration):
@@ -17,8 +17,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('addr', models.CharField(blank=True, max_length=250, null=True)),
-                ('phone_nbr', phone_field.models.PhoneField(blank=True, help_text='Contact phone number', max_length=31)),
-                ('fax_nbr', phone_field.models.PhoneField(blank=True, help_text='Contact fax number', max_length=31)),
+                ('phone_nbr', models.CharField(max_length=100, blank=True, help_text='Contact phone number')),
+                ('fax_nbr', models.CharField(max_length=100, blank=True, help_text='Contact fax number')),
                 ('email', models.EmailField(blank=True, max_length=240, null=True)),
                 ('website', models.URLField(blank=True, null=True)),
                 ('company', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='addresses', to='jdafinancialsapp.companymodel')),
