@@ -3,10 +3,15 @@ from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
-    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel
+    FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
-    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderFormset, ShareholderFormset_edit, GuarantorForm, GuarantorFormset, GuarantorFormset_edit
+    FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderForm, ShareholderFormset, ShareholderFormset_edit, \
+    GuarantorFormset, GuarantorFormset_edit, AddressForm, LeadersForm, LeadersFormset, ParentCompanyForm, ParentCompanyFormset, ParentCompanyFormset_edit, SubsidiaryForm, SubsidiaryFormset, SubsidiaryFormset_edit, \
+    ShareholderFormset_edit_0, ShareholderFormset_edit_1, ShareholderFormset_edit_2, ShareholderFormset_edit_3, ShareholderFormset_edit_4,\
+    LeadersFormset_edit_0, LeadersFormset_edit_1, LeadersFormset_edit_2, LeadersFormset_edit_3, LeadersFormset_edit_4, LeadersFormset_edit_5, \
+    ParentCompanyFormset_edit_0, ParentCompanyFormset_edit_1, ParentCompanyFormset_edit_2, ParentCompanyFormset_edit_3, ParentCompanyFormset_edit_4, \
+    SubsidiaryFormset_edit_0, SubsidiaryFormset_edit_1, SubsidiaryFormset_edit_2, SubsidiaryFormset_edit_3, SubsidiaryFormset_edit_4
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -606,25 +611,51 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
 #     context={'bal_data':bal_data, 'company_id':company_id, 'stmt':statement, 'entry_date':entry_date, 'rpt_date': now, 'bold_list': bold_list}
 #     return render(request, 'jdafinancialsapp/jdafinancialsapp_statement_rpt.html', context)
 
-
-
 #////////////////////// jdafinancialsapp_new_company /////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_new_company(request):
-    #print(f"121///////// jdafinancialsapp_new_company")
     if request.method == "POST":
         form = CompanyForm(request.POST)
         formset = ShareholderFormset(request.POST)
+        addr_form = AddressForm(request.POST)
+        leaders_formset = LeadersFormset(request.POST)
+        parent_company_formset = ParentCompanyFormset(request.POST)
+        subsidary_formset = SubsidiaryFormset(request.POST)
 
-        if form.is_valid(): # and formset.is_valid():
+        if form.is_valid() and formset.is_valid() and addr_form.is_valid() and leaders_formset.is_valid() and parent_company_formset.is_valid() and subsidary_formset.is_valid():
             # first save the company form, as its reference will be used in the shareholder formset
-            company= form.save()
+            company = form.save()
+            # Link Shareholder formset to company saved
             for form in formset:
-                shareholder = form.save(commit=False) # so the company instance can be attached
-                shareholder.company = company
-                shareholder.save()
-            messages.success(request, f'Successfully saved {company} info') #f"{form.cleaned_data['company']} info successfully added ")
+                if form.cleaned_data != {}:
+                    shareholder = form.save(commit=False)  # so the company instance can be attached
+                    shareholder.company = company
+                    shareholder.save()
+            # Link company addr_form to company saved
+            addr = addr_form.save(commit=False)
+            addr.company = company
+            addr.save()
+            # Link Leaders formset to company saved
+            for form in leaders_formset:
+                if form.cleaned_data != {}:
+                    leader = form.save(commit=False)  # so the company instance can be attached
+                    leader.company = company
+                    leader.save()
+            # Link parentcompany formset to company saved
+            for form in parent_company_formset:
+                if form.cleaned_data != {}:
+                    parentcompany = form.save(commit=False)  # so the company instance can be attached
+                    parentcompany.company = company
+                    parentcompany.save()
+            # Link subsdary formset to company saved
+            for form in subsidary_formset:
+                if form.cleaned_data != {}:
+                    subsdary = form.save(commit=False)  # so the company instance can be attached
+                    subsdary.company = company
+                    subsdary.save()
+
+            messages.success(request, f'Successfully saved {company} info')
             return redirect('jdafinancialsapp_new_company')
 
         if len(form.errors) < 4:
@@ -632,30 +663,40 @@ def jdafinancialsapp_new_company(request):
         else:
             messages.error(request, f"Please complete all required fields before submitting")
 
-        #messages.error(request, f"Error saving new company: {form.errors} - Shareholder formset: {formset.errors}")
+        messages.error(request, f"Error saving new company - {form.errors} - Shareholder: {formset.errors} - Address: {addr_form.errors} - Leaders: {leaders_formset.errors}")
     else:
+        # company form
         form = CompanyForm()
+        # Shareholder formset
         formset = ShareholderFormset(queryset=ShareholderModel.objects.none())
+        # Address Form
+        addr_form = AddressForm()
+        # Leaders formset
+        leaders_formset = LeadersFormset(queryset=LeadersModel.objects.none())
+        # Parent_Company_formset
+        parent_company_formset = ParentCompanyFormset(queryset=ParentCompanyModel.objects.none())
+        # Subsidary_formset
+        subsidary_formset = SubsidiaryFormset(queryset=SubsidiaryModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'formset': formset, 'bread_new_company':'font-weight-bold'}
-    #context = {'user_grp':grp,'form':form, 'bread_new_company':'font-weight-bold'}
+    context = {'user_grp':grp,'form':form, 'formset': formset, 'addr_form':addr_form, 'leaders_formset': leaders_formset, 'parent_company_formset':parent_company_formset, 'subsidary_formset':subsidary_formset,'bread_new_company':'font-weight-bold'}
+    #context = {'user_grp':grp,'form':form, 'formset': formset, 'addr_form':addr_form, 'leaders_formset': leaders_formset} #, 'parent_company_formset':parent_company_formset, 'subsidary_formset':subsidary_formset,'bread_new_company':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_new_company.html', context)
-
-
 
 #//////////////////////////////////////// jdafinancialsapp_view_company_detail/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_view_company_detail(request, pk):
-    #print(f"289 PK {pk}")
     now = datetime.now()
     company_detail =CompanyModel.objects.get(id=pk)
     shareholders = ShareholderModel.objects.filter(company=pk)
-    #print(f"company_detail: {company_detail}")
+    address = company_detail.addresses.all()
+    leaders = LeadersModel.objects.filter(company=pk)
+    parent_company = ParentCompanyModel.objects.filter(company=pk)
+    subsidary = SubsidiaryModel.objects.filter(company=pk)
+
     grp = get_user_grp(request)
-    #context = {'user_grp':grp,'company_detail':company_detail, 'rpt_date': now}
-    context = {'user_grp':grp,'company_detail':company_detail, 'shareholders':shareholders, 'rpt_date': now}
+    context = {'user_grp':grp,'company_detail':company_detail, 'shareholders':shareholders,'address': address, 'leaders': leaders, 'parent_company':parent_company, 'subsidary':subsidary, 'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_company_detail.html', context)
 
 #//////////////////////////////////////// jdafinancialsapp_company_listing/////////////////////////////
@@ -669,8 +710,167 @@ def jdafinancialsapp_company_listing(request):
     context = {'user_grp':grp,'company_listing':company_listing,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_company_listing.html', context)
 
+#////////////////////// jdafinancialsapp_edit_company ////////////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdafinancialsapp_edit_company(request, company_id):
+    company = CompanyModel.objects.get(pk=company_id)
 
-#from django.http import HttpResponseRedirect
+    if request.method == 'POST':
+        form = CompanyForm(request.POST, instance=company)
+        # Shareholder formset
+        formset = ShareholderFormset(request.POST, queryset=ShareholderModel.objects.filter(company=company_id), prefix='shareholders')
+        # addr form
+        addr_comp = AddressModel.objects.get(company=company_id)
+        addr_form = AddressForm(instance=addr_comp)
+        # Leaders formset
+        leaders_formset = LeadersFormset(request.POST, queryset=LeadersModel.objects.filter(company=company_id), prefix='leaders')
+        # Leaders formset
+        parent_company_formset = ParentCompanyFormset(request.POST, queryset=ParentCompanyModel.objects.filter(company=company_id), prefix='parentcompany')
+        # subsidary_formset
+        subsidary_formset = SubsidiaryFormset(request.POST, queryset=SubsidiaryModel.objects.filter(company=company_id), prefix='subsidary')
+
+        if form.is_valid(): # and formset.is_valid() and addr_form.is_valid() and leaders_formset.is_valid():
+            #Save company instance
+            company = form.save()
+            # Save Shareholder formset changes
+            if formset.is_valid():
+                del_pk=[]
+                for idx, form in enumerate(formset):
+                    if form.cleaned_data != {}:
+                        shareholder = form.save(commit=False) # so the company instatnce can be associated
+                        if request.POST.get(f'shareholders-{idx}-DELETE') == 'on': #shareholders comes from the prefix name
+                            sh=ShareholderModel.objects.filter(company=company_id)
+                            del_pk.append(sh[idx].pk)
+
+                        shareholder.company=company
+                        shareholder.save()
+                #now rm the checked box
+                ShareholderModel.objects.filter(pk__in=del_pk).delete()
+
+            # Save Address form changes
+            addr = addr_form.save(commit=False)
+            addr.company = company
+            addr.save()
+
+            # Save Leaders formset changes
+            if leaders_formset.is_valid():
+                del_pk=[]
+                for idx, form in enumerate(leaders_formset):
+                    if form.cleaned_data != {}:
+                        leader = form.save(commit=False) # so the company instatnce can be associated
+                        if request.POST.get(f'leaders-{idx}-DELETE') == 'on': #Leaders comes from the prefix name
+                            ld=LeadersModel.objects.filter(company=company_id)
+                            del_pk.append(ld[idx].pk)
+
+                        leader.company=company
+                        leader.save()
+                #now rm the checked box
+                LeadersModel.objects.filter(pk__in=del_pk).delete()
+
+            # Save parencompany formset changes
+            if parent_company_formset.is_valid():
+                del_pk=[]
+                for idx, form in enumerate(parent_company_formset):
+                    if form.cleaned_data != {}:
+                        parent_company = form.save(commit=False) # so the company instatnce can be associated
+                        if request.POST.get(f'parentcompany-{idx}-DELETE') == 'on': #Leaders comes from the prefix name
+                            pc=ParentCompanyModel.objects.filter(company=company_id)
+                            del_pk.append(pc[idx].pk)
+
+                        parent_company.company=company
+                        parent_company.save()
+                #now rm the checked box
+                ParentCompanyModel.objects.filter(pk__in=del_pk).delete()
+
+            # Save subsidary formset changes
+            if subsidary_formset.is_valid():
+                del_pk=[]
+                for idx, form in enumerate(subsidary_formset):
+                    if form.cleaned_data != {}:
+                        subsidary = form.save(commit=False) # so the company instatnce can be associated
+                        if request.POST.get(f'subsidary-{idx}-DELETE') == 'on': #subsidary comes from the prefix name
+                            su=SubsidiaryModel.objects.filter(company=company_id)
+                            del_pk.append(su[idx].pk)
+
+                        subsidary.company=company
+                        subsidary.save()
+                #now rm the checked box
+                SubsidiaryModel.objects.filter(pk__in=del_pk).delete()
+
+            messages.success(request, f'Sucessfully saved {company} info.')
+            return redirect('jdafinancialsapp_company_listing')
+        messages.error(request, f'Error saving company formset info: company form: {form.errors} - formset: {formset.errors} - leaders_formset: {leaders_formset.errors} - subsidary_formset: {subsidary_formset}')
+    else:
+        # Company form
+        form = CompanyForm(instance=company)
+
+        # Shareholder formset
+        shc= ShareholderModel.objects.filter(company=company_id)
+        if shc.exists():
+            if shc.count() == 1:
+                formset = ShareholderFormset_edit_1(queryset=ShareholderModel.objects.filter(company=company), prefix='shareholders')
+            elif shc.count() ==2:
+                formset = ShareholderFormset_edit_2(queryset=ShareholderModel.objects.filter(company=company), prefix='shareholders')
+            elif shc.count() ==3:
+                formset = ShareholderFormset_edit_3(queryset=ShareholderModel.objects.filter(company=company), prefix='shareholders')
+            elif shc.count() ==4:
+                formset = ShareholderFormset_edit_4(queryset=ShareholderModel.objects.filter(company=company), prefix='shareholders')
+        else:
+            formset = ShareholderFormset_edit_0(queryset=ShareholderModel.objects.filter(company=company), prefix='shareholders')
+
+        # Address formset
+        addr_comp = AddressModel.objects.get(company=company_id)
+        addr_form = AddressForm(instance=addr_comp) # Show instance addr
+
+        # Leaders form
+        ldc= LeadersModel.objects.filter(company=company_id)
+        if ldc.exists():
+            if ldc.count() == 1:
+                leaders_formset = LeadersFormset_edit_1(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+            elif ldc.count() ==2:
+                leaders_formset = LeadersFormset_edit_2(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+            elif ldc.count() ==3:
+                leaders_formset = LeadersFormset_edit_3(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+            elif ldc.count() ==4:
+                leaders_formset = LeadersFormset_edit_4(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+            elif ldc.count() ==5:
+                leaders_formset = LeadersFormset_edit_5(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+        else:
+            leaders_formset = LeadersFormset_edit_0(queryset=LeadersModel.objects.filter(company=company), prefix='leaders')
+
+        # ParentCompany formset
+        pcc= ParentCompanyModel.objects.filter(company=company_id)
+        if pcc.exists():
+            if pcc.count() == 1:
+                parent_company_formset = ParentCompanyFormset_edit_1(queryset=ParentCompanyModel.objects.filter(company=company), prefix='parentcompany')
+            elif pcc.count() ==2:
+                parent_company_formset = ParentCompanyFormset_edit_2(queryset=ParentCompanyModel.objects.filter(company=company), prefix='parentcompany')
+            elif pcc.count() ==3:
+                parent_company_formset = ParentCompanyFormset_edit_3(queryset=ParentCompanyModel.objects.filter(company=company), prefix='parentcompany')
+            elif pcc.count() ==4:
+                parent_company_formset = ParentCompanyFormset_edit_4(queryset=ParentCompanyModel.objects.filter(company=company), prefix='parentcompany')
+        else:
+            parent_company_formset = ParentCompanyFormset_edit_0(queryset=ParentCompanyModel.objects.filter(company=company), prefix='parentcompany')
+
+        # subsidary_formset formset
+        sub= SubsidiaryModel.objects.filter(company=company_id)
+        if sub.exists():
+            if sub.count() == 1:
+                subsidary_formset = SubsidiaryFormset_edit_1(queryset=SubsidiaryModel.objects.filter(company=company), prefix='subsidary')
+            elif sub.count() ==2:
+                subsidary_formset = SubsidiaryFormset_edit_2(queryset=SubsidiaryModel.objects.filter(company=company), prefix='subsidary')
+            elif sub.count() ==3:
+                subsidary_formset = SubsidiaryFormset_edit_3(queryset=SubsidiaryModel.objects.filter(company=company), prefix='subsidary')
+            elif sub.count() ==4:
+                subsidary_formset = SubsidiaryFormset_edit_4(queryset=SubsidiaryModel.objects.filter(company=company), prefix='subsidary')
+        else:
+            subsidary_formset = SubsidiaryFormset_edit_0(queryset=SubsidiaryModel.objects.filter(company=company), prefix='subsidary')
+
+    grp = get_user_grp(request)
+    context = {'user_grp':grp,'form':form, 'formset': formset, 'addr_form':addr_form,'leaders_formset': leaders_formset,'parent_company_formset': parent_company_formset, 'subsidary_formset':subsidary_formset, 'bread_new_company':'font-weight-bold'}
+    return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_company.html', context)
+
 #//////////////////////////////////////// jdafinancialsapp_delete_company_confirm/////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])

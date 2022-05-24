@@ -17,7 +17,6 @@
 </div>
 
 {% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
-<!--input type="button" onclick="return res();" value="Click Test"-->
 <div class="card text-center Xmt-3">
     <form method="POST" novalidate>
         {% csrf_token %}
@@ -26,6 +25,7 @@
         </div>
 
         <div class="card-body">
+
             <!-- Raison Social -->
             <div class="row">
                 <div class="col-12"><input class="form-control" type="text" placeholder="Raison Sociale" readonly></div>
@@ -36,6 +36,7 @@
             </div>
             <div class="row">
                 <div class="col-4">{{form.company|as_crispy_field}}</div>
+                <!--div class="col-4">{{form.creatn_dt | as_crispy_field}}</div-->
                 <div class="col-4">
                     <div class="input-group-prepend">
                         {{form.creatn_dt| as_crispy_field}}
@@ -48,65 +49,73 @@
                 <div class="col-4">{{form.legl_form | as_crispy_field}}</div>
                 <div class="col-4">{{form.rccm_nbr | as_crispy_field}}</div>
                 <div class="col-3 float-left">
-                    <label class="form-check-label float-left ml-2"> {% trans 'Company under public control' %}</label></div>
+                    <label class="form-check-label float-left ml-2"> Societe sous control public</label></div>
                 <div class="col-1">{{form.flag_pub_ctrl| as_crispy_field}}</div>
             </div>
 
-            <!-- activite / Shareholder-->
+            <!-- activite -->
             <div class="row">
                 <div class="col-6"><input class="form-control" type="text" placeholder="Activite" readonly></div>
                 <div class="col-6"><input class="form-control" type="text" placeholder="Actionnariat" readonly></div>
             </div>
-
             <div class="row">
-                <!--activity-->
-                <div class="col-6">
+                <div class="col-6"><!--activity-->
                     <div class="">{{form.actvty_sctr|as_crispy_field}}</div>
                     <div class="">{{form.actvty_code|as_crispy_field}}</div>
                     <div class="">{{form.intrnl_actvty_code | as_crispy_field}}</div>
                     <div class="">{{form.othr_bus_sctr | as_crispy_field}}</div>
                 </div>
-                <!--Shareholder-->
+                <!--Shareholder formset-->
                 <div class="col-6">
                     {{formset.management_form}}
                     {% for form in formset %}
+                    {{form.id}}
                     <div class="row form-row">
                         <div class="col-4">{{form.shrhldr_name|as_crispy_field}}</div>
                         <div class="col-4">{{form.shrhldr_type|as_crispy_field}}</div>
-                        <div class="col-4">{{form.shrs_hld|as_crispy_field}}</div>
+                        <div class="col-3">{{form.shrs_hld|as_crispy_field}}</div>
+                        {% if formset.can_delete %}
+                        <div> {{form.DELETE}}<i class="fas fa-times text-danger ml-1" ></i></div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
-            </div>
 
-            <!-- Address / Leaders-->
+            </div>
+            <!-- Address -->
             <div class="row">
                 <div class="col-6"><input class="form-control" type="text" placeholder="Address" readonly></div>
-                <div class="col-6"><input class="form-control" type="text" placeholder="Dirigeants" readonly></div>
+                <div class="col-6"><input class="form-control" type="text" placeholder="Leaders" readonly></div>
             </div>
-            <!--Address-->
+
             <div class="row">
-                <div class="col-6">
+                <div class="col-6"><!--Address-->
                     <div class="">{{addr_form.addr|as_crispy_field}}</div>
                     <div class="">{{addr_form.phone_nbr|as_crispy_field}}</div>
                     <div class="">{{addr_form.fax_nbr | as_crispy_field}}</div>
                     <div class="">{{addr_form.email | as_crispy_field}}</div>
                     <div class="">{{addr_form.website | as_crispy_field}}</div>
                 </div>
+
                 <!--leaders-->
                 <div class="col-6">
                     {{leaders_formset.management_form}}
                     {% for form in leaders_formset %}
+                    {{form.id}}
                     <div class="row form-row">
                         <div class="col-3">{{form.lst_name|as_crispy_field}}</div>
                         <div class="col-3">{{form.func|as_crispy_field}}</div>
                         <div class="col-3">{{form.phone_nbr|as_crispy_field}}</div>
-                        <div class="col-3">{{form.email|as_crispy_field}}</div>
+                        <div class="col-2">{{form.email|as_crispy_field}}</div>
+                        {% if leaders_formset.can_delete %}
+                        <div> {{form.DELETE}}<i class="fas fa-times text-danger ml-1" ></i></div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
+                {% comment %}
+                {% endcomment %}
             </div>
-
             <!-- Parent Company/Subsidary -->
             <div class="row">
                 <div class="col-6"><input class="form-control" type="text" placeholder="Parent Company" readonly></div>
@@ -116,23 +125,30 @@
                 <div class="col-6"><!--Parent Company-->
                     {{parent_company_formset.management_form}}
                     {% for form in parent_company_formset %}
+                    {{form.id}}
                     <div class="row form-row_3">
                         <div class="col-4">{{form.legl_name|as_crispy_field}}</div>
                         <div class="col-4">{{form.comm_name|as_crispy_field}}</div>
-                        <div class="col-4">{{form.cntry|as_crispy_field}}</div>
+                        <div class="col-3">{{form.cntry|as_crispy_field}}</div>
+                        {% if parent_company_formset.can_delete %}
+                        <div> {{form.DELETE}}<i class="fas fa-times text-danger ml-1" ></i></div>
+                        {% endif %}
                         <!--div class="btn btn-sm btn-success add-form-row_3" style="height:30px; border-radius:20%">+</div-->
                     </div>
                     {% endfor %}
                 </div>
-                <!--subsidaries-->
-                <div class="col-6">
+                <div class="col-6"><!--Subsidary Company-->
                     {{subsidary_formset.management_form}}
                     {% for form in subsidary_formset %}
-                    <div class="row form-row_4">
+                    {{form.id}}
+                    <div class="row form-row_3">
                         <div class="col-4">{{form.company_name|as_crispy_field}}</div>
                         <div class="col-4">{{form.share_amt|as_crispy_field}}</div>
-                        <div class="col-4">{{form.url|as_crispy_field}}</div>
-                        <!--div class="btn btn-sm btn-success add-form-row_4" style="height:30px; border-radius:20%">+</div-->
+                        <div class="col-3">{{form.url|as_crispy_field}}</div>
+                        {% if subsidary_formset.can_delete %}
+                        <div> {{form.DELETE}}<i class="fas fa-times text-danger ml-1" ></i></div>
+                        {% endif %}
+                        <!--div class="btn btn-sm btn-success add-form-row_3" style="height:30px; border-radius:20%">+</div-->
                     </div>
                     {% endfor %}
                 </div>
@@ -140,37 +156,11 @@
 
         </div>
         <div class="card-footer text-muted">
-            <input class="btn btn-info" role="button" type="submit" value="{% trans 'Add Company' %}">
+            <input class="btn btn-info" role="button" type="submit" value="{% trans 'Edit Company' %}">
         </div>
     </form>
 </div>
 
-<!--div class="card text-center mt-5">
-    <form method="POST" novalidate>
-        <div class="card-header">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Add New Company</h5>
-        </div>
-        <div class="card-body">
-            {% csrf_token %}
-            <div class="row">
-
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    { form.sector|as_crispy_field }
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    {form.company | as_crispy_field}
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    {form.rpt_period | as_crispy_field}
-                </div>
-
-            </div>
-        </div>
-        <div class="card-footer text-muted">
-            <input class="btn btn-info"  role="button" type="submit" value="Add New Company">
-        </div>
-    </form>
-</div-->
 
 <style>
     .my_header_gray
@@ -268,3 +258,72 @@ table td input {
 
 
 
+<!-- (2) Move this into static file once you fix collect static issues -->
+<script>
+    function updateElementIndex_2(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore_2(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+    var conditionRow = $('.form-row_2:not(:last)');
+    conditionRow.find('.btn.add-form-row_2')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row_2').addClass('remove-form-row_2')
+    .html('-');
+    return false;
+}
+function deleteForm_2(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest('.form-row_2').remove();
+        var forms = $('.form-row_2');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex_2(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row_2', function(e){
+    e.preventDefault();
+    cloneMore_2('.form-row_2:last', 'form');
+    return false;
+});
+$(document).on('click', '.remove-form-row_2', function(e){
+    e.preventDefault();
+    deleteForm_2('form', $(this));
+    return false;
+});
+</script>
+
+<script>
+document.body.addEventListener('htmx:configRequest', (e) => {
+    e.detail.headers['X-CSRFToken'] = '{{ csrf_token}}';
+})
+
+</script>

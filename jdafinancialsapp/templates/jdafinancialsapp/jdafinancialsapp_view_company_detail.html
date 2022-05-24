@@ -42,18 +42,20 @@
             <tr>
                 <td><span class="text-muted">Non Usuel: </span>{{company_detail.company}}</td>
                 <td><span class="text-muted">Date de creation: </span>{{company_detail.creatn_dt}}</td>
-                <td><span class="text-muted">Pays du siege: </span>{{company_detail.id_cntry}}</td>
+                <td><span class="text-muted">Pays du siege: </span>{{company_detail.country.name}}</td>
             </tr>
             <tr>
                 <td><span class="text-muted">Forme Juridique: </span>{{company_detail.legl_form}}</td>
                 <td><span class="text-muted">Numero de RCCM: </span>{{company_detail.rccm_nbr}}</td>
                 <td><span class="text-muted">Societe sous control public: </span>{{company_detail.flag_pub_ctrl}}</td>
             </tr>
+            <!-- Activites/Shareholders -->
             <tr>
                 <th colspan="1" class="text-muted">Activites</th>
                 <th colspan="2" class="text-muted">Actionnariat</th>
             </tr>
             <tr>
+                <!-- Activities -->
                 <td>
                     <table class="table table-sm">
                         <tr>
@@ -83,29 +85,82 @@
                     </table>
                 </td>
             </tr>
-            <!--tr>
-                <td><span class="text-muted">Secteur d'activite BRVM: </span>{{company_detail.actvty_sctr}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
+            <!-- Address/Dirigeants -->
+            <tr>
+                <th colspan="1" class="text-muted">Address</th>
+                <th colspan="2" class="text-muted">Dirigeants</th>
             </tr>
             <tr>
-                <td><span class="text-muted">Code activites economiques (CIV): </span>{{company_detail.actvty_code}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
-                <td><span class="text-muted">Nom de l'actionnaire: </span>{{company_detail.shareholder.shrhldr_name_1}}</td>
-            </tr>
-
-            <tr>
-                <td><span class="text-muted">Autre Secteur d'activites: </span>{{company_detail.othr_bus_sctr}}</td>
+                <!-- Addresses -->
                 <td>
                     <table class="table table-sm">
-                    {% for i in shareholders %}
-                     <tr>
-                         <td><span class="text-muted">Nom de l'actionnaire: </span>{{i.shrhldr_name}}</td>
-                     </tr>
+                        <tr>
+                            <td class="text-muted">Address: </td>
+                            <td>{{address.0.addr}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Phone: </td>
+                            <td>{{address.0.phone_nbr}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Fax: </td>
+                            <td>{{address.0.fax_nbr}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Email: </td>
+                            <td>{{address.0.email}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Website: </td>
+                            <td>{{address.0.website}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <!-- Leaders -->
+                <td colspan="2">
+                    <table class="table table-sm">
+                        {% for i in leaders %}
+                        <tr>
+                            <td><span class="text-muted">Nom & Prenom: </span>{{i.lst_name}}</td>
+                            <td><span class="text-muted">Function: </span>{{i.func}}</td>
+                            <td><span class="text-muted">Telephone: </span>{{i.phone_nbr}}</td>
+                            <td><span class="text-muted">Email: </span>{{i.email}}</td>
+                        </tr>
                         {% endfor%}
                     </table>
                 </td>
-            </tr-->
+            </tr>
+            <!-- ParentCompany /Subsidaries -->
+            <tr>
+                <th colspan="1" class="text-muted">Parent Company</th>
+                <th colspan="2" class="text-muted">Subsidaries</th>
+            </tr>
+            <tr>
+                <!-- Parent Company -->
+                <td>
+                    <table class="table table-sm">
+                        {% for i in parent_company %}
+                        <tr>
+                            <td><span class="text-muted">Legal Name: </span>{{i.legl_name}}</td>
+                            <td><span class="text-muted">Name: </span>{{i.comm_name}}</td>
+                            <td><span class="text-muted">cntry: </span>{{i.cntry.name}}</td>
+                        </tr>
+                        {% endfor%}
+                    </table>
+                </td>
+                <!-- Subsidaries -->
+                <td colspan="2">
+                    <table class="table table-sm">
+                        {% for i in subsidary %}
+                        <tr>
+                            <td><span class="text-muted">Company Name: </span>{{i.company_name}}</td>
+                            <td><span class="text-muted">Share Amount: </span>{{i.share_amt}}</td>
+                            <td><span class="text-muted">Website: </span>{{i.url}}</td>
+                        </tr>
+                        {% endfor%}
+                    </table>
+                </td>
+            </tr>
 
             </tbody>
         </table>

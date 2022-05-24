@@ -3,6 +3,7 @@ import datetime
 from .utils import get_rpt_range_period, get_period
 from django.core.exceptions import ValidationError
 from django_countries.fields import CountryField
+from phone_field import PhoneField
 
 #///////////////////////////////// SectorModel /////////////////////////////////
 class SectorModel(models.Model):
@@ -25,17 +26,17 @@ class CompanyModel(models.Model):
     company = models.CharField(max_length=200, blank=False, null=False, unique=True)
     sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, blank=True, null=True)
     #rpt_period = models.CharField(max_length=50, choices=CHOICES, blank=True, null=True)
-    legl_form = models.CharField(max_length=10, blank=True, null=True)
+    legl_form = models.CharField(max_length=100, blank=True, null=True)
     creatn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    rccm_nbr = models.CharField(max_length=15, blank=True, null=True)
+    rccm_nbr = models.CharField(max_length=50, blank=True, null=True)
     country = CountryField(blank=True, null=True)
     #country =models.CharField(max_length=300, blank=False, null=False)
     #id_cntry = models.IntegerField(blank=False, null=True)
     flag_pub_ctrl = models.BooleanField(default=True)
-    actvty_sctr = models.CharField(max_length=30, blank=True, null=True)
-    actvty_code = models.CharField(max_length=30, blank=True, null=True)
-    intrnl_actvty_code = models.CharField(max_length=30, blank=True, null=True)
-    othr_bus_sctr = models.CharField(max_length=30, blank=True, null=True)
+    actvty_sctr = models.CharField(max_length=50, blank=True, null=True)
+    actvty_code = models.CharField(max_length=50, blank=True, null=True)
+    intrnl_actvty_code = models.CharField(max_length=50, blank=True, null=True)
+    othr_bus_sctr = models.CharField(max_length=50, blank=True, null=True)
     #shareholder = models.ForeignKey(ShareholderModel, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
@@ -48,18 +49,75 @@ class CompanyModel(models.Model):
 class ShareholderModel(models.Model):
     company = models.ForeignKey(CompanyModel, related_name='shareholders', on_delete=models.CASCADE, blank=True, null=True)
     shrhldr_name = models.CharField(max_length=100, blank=True, null=True)
-    shrhldr_type = models.CharField(max_length=50, blank=True, null=True)
+    shrhldr_type = models.CharField(max_length=100, blank=True, null=True)
     shrs_hld     = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return self.shrhldr_name
 
-    def get_shareholder(self):
-        return ','.join(self.Shareholder.all().value_list('shrhldr_name'))
-
     class Meta:
         verbose_name_plural ='ShareholderModel'
         db_table = 'ShareholderModel'
+
+
+#/////////////////////////////////// AddressModel ///////////////////////////////
+class AddressModel(models.Model):
+    company = models.ForeignKey(CompanyModel, related_name='addresses', on_delete=models.CASCADE, blank=True, null=True)
+    addr = models.CharField(max_length=250, blank=True, null=True)
+    phone_nbr =  models.CharField(max_length=30, blank=True, null=True)
+    fax_nbr = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(max_length=240, blank=True, null=True)
+    website = models.URLField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return self.addr
+
+    class Meta:
+        verbose_name_plural ='AddressModel'
+        db_table = 'AddressModel'
+
+#/////////////////////////////////// LeadersModel ///////////////////////////////
+class LeadersModel(models.Model):
+    company = models.ForeignKey(CompanyModel, related_name='leaders', on_delete=models.CASCADE, blank=True, null=True)
+    lst_name = models.CharField(max_length=100, blank=False, null=False)
+    func =  models.CharField(max_length=50, blank=True, null=True)
+    phone_nbr = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(max_length=240, blank=True, null=True)
+
+    def __str__(self):
+        return self.lst_name
+
+    class Meta:
+        verbose_name_plural ='LeadersModel'
+        db_table = 'LeadersModel'
+
+#/////////////////////////////////// ParentCompanyModel ///////////////////////////////
+class ParentCompanyModel(models.Model):
+    company = models.ForeignKey(CompanyModel, related_name='parentcompany', on_delete=models.CASCADE, blank=True, null=True)
+    legl_name = models.CharField(max_length=200, blank=False, null=False)
+    comm_name =  models.CharField(max_length=200, blank=True, null=True)
+    cntry = CountryField(blank=True, null=True)
+
+    def __str__(self):
+        return self.legl_name
+
+    class Meta:
+        verbose_name_plural ='ParentCompanyModel'
+        db_table = 'ParentCompanyModel'
+
+#/////////////////////////////////// SubsidiaryModel ///////////////////////////////
+class SubsidiaryModel(models.Model):
+    company = models.ForeignKey(CompanyModel, related_name='subsidaries', on_delete=models.CASCADE, blank=True, null=True)
+    company_name = models.CharField(max_length=200, blank=False, null=False)
+    share_amt =  models.IntegerField(blank=True, null=True)
+    url = models.URLField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.company_name
+
+    class Meta:
+        verbose_name_plural ='SubsidiaryModel'
+        db_table = 'SubsidiaryModel'
 
 
 # /////////////////////////////////// FinancialStatementModel ///////////////////////////////
@@ -93,8 +151,6 @@ class FinancialStatementLineSequenceModel(models.Model):
 
     class Meta:
         unique_together = ('financial_statement', 'financial_statement_line', 'sequence')
-
-    class Meta:
         verbose_name_plural ='FinancialStatementLineSequenceModel'
 
 
