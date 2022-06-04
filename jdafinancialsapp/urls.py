@@ -5,11 +5,19 @@ from . import views
 urlpatterns = [
     path('', views.jdafinancialsapp_home, name='jdafinancialsapp_home'),
     path('jdafinancialsapp_stmts', views.jdafinancialsapp_stmts, name='jdafinancialsapp_stmts'),
+
     path('jdafinancialsapp_new_company', views.jdafinancialsapp_new_company, name='jdafinancialsapp_new_company'),
     path('jdafinancialsapp_company_listing', views.jdafinancialsapp_company_listing, name='jdafinancialsapp_company_listing'),
     path('jdafinancialsapp_view_company_detail/<int:pk>', views.jdafinancialsapp_view_company_detail, name='jdafinancialsapp_view_company_detail'),
     path('jdafinancialsapp_edit_company/<int:company_id>', views.jdafinancialsapp_edit_company, name='jdafinancialsapp_edit_company'),
     path('jdafinancialsapp_delete_company_confirm/<int:pk>', views.jdafinancialsapp_delete_company_confirm, name='jdafinancialsapp_delete_company_confirm'),
+
+    path('jdafinancialsapp_new_country', views.jdafinancialsapp_new_country, name='jdafinancialsapp_new_country'),
+    path('jdafinancialsapp_hx_country_data', views.jdafinancialsapp_hx_country_data, name='jdafinancialsapp_hx_country_data'),
+    path('jdafinancialsapp_country_listing', views.jdafinancialsapp_country_listing, name='jdafinancialsapp_country_listing'),
+    path('jdafinancialsapp_view_country_detail/<int:pk>', views.jdafinancialsapp_view_country_detail, name='jdafinancialsapp_view_country_detail'),
+    path('jdafinancialsapp_edit_country/<int:country_id>', views.jdafinancialsapp_edit_country, name='jdafinancialsapp_edit_country'),
+    #path('jdafinancialsapp_delete_company_confirm/<int:pk>', views.jdafinancialsapp_delete_company_confirm, name='jdafinancialsapp_delete_company_confirm'),
 
     path('jdafinancialsapp_bal_entry_form/<str:sector>/<int:company_id>/<str:statement>/<str:entry_date>', views.jdafinancialsapp_bal_entry_form, name='jdafinancialsapp_bal_entry_form'),
     path('jdafinancialsapp_bal_edit_form/<str:sector>/<int:company_id>/<str:statement>/<str:entry_date>',views.jdafinancialsapp_bal_edit_form, name='jdafinancialsapp_bal_edit_form'),

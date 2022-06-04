@@ -1,14 +1,21 @@
 from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
-    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel
+    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
 from django.forms import inlineformset_factory
 from django.forms import modelformset_factory
-
+from countries_plus.models import Country
+from django.urls import reverse_lazy
+from languages_plus.utils import associate_countries_and_languages
+from languages_plus.models import Language, CultureCode
+import datetime
+#from bootstrap_datepicker_plus.widgets import DatePickerInput
+#from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+#from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 
 # from jdafinancialsapp.utils import merge_two_lists
 
@@ -85,7 +92,7 @@ class AddressForm(forms.ModelForm):
 class ShareholderForm(forms.ModelForm):
     shrhldr_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Name')}, ))
     shrhldr_type = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Type')}, ))
-    shrs_hld = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shares Held')}, ))
+    shrs_hld = forms.CharField(initial=0.00, required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shares Held')}, ))
 
     class Meta:
         model = ShareholderModel
@@ -110,6 +117,16 @@ class LeadersForm(forms.ModelForm):
     class Meta:
         model = LeadersModel
         fields = ['lst_name', 'func','phone_nbr', 'email']
+
+    def clean(self):
+        cleaned_data = super(LeadersForm, self).clean()
+        lst_name = cleaned_data.get('lst_name')
+        func = cleaned_data.get('func')
+        phone_nbr = cleaned_data.get('phone_nbr')
+        email = cleaned_data.get('email')
+
+        if lst_name and not func and not phone_nbr and not email:
+            raise forms.ValidationError('Please complete leader form before proceeding!')
 
 #///////////////////////////// LeadersFormset /////////////////////////////
 LeadersFormset = modelformset_factory(LeadersModel, form=LeadersForm, extra=5)
@@ -161,8 +178,115 @@ SubsidiaryFormset_edit_3 = modelformset_factory(SubsidiaryModel, form=Subsidiary
 SubsidiaryFormset_edit_4 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=0, can_delete=True)
 SubsidiaryFormset_edit_0 = modelformset_factory(SubsidiaryModel, form=SubsidiaryForm, extra=4, can_delete=False)
 
-#///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
+# /////////////////////////// CountryForm //////////////////////////
+class CountryForm(forms.ModelForm):
+    country = CountryField(blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'hx-get':reverse_lazy('jdafinancialsapp_hx_country_data'), 'hx-trigger':'change', 'hx-target':'#country_data', 'hx-swap':'outerHTML','data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    #name = forms.ModelChoiceField(queryset=Country.objects.order_by('name').values_list('name', flat='True').distinct(), empty_label=ugettext_lazy('Country Name'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    crncy = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Currency Code')}, ))
+    #forms.ModelChoiceField(queryset=Country.objects.order_by('currency_code').values_list('currency_code', flat='True').distinct(), empty_label=ugettext_lazy('Currency'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    prsdnt_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('President Name')}, ))
+    area = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Area')}, ))
+    #area = forms.ModelChoiceField(queryset=Country.objects.order_by('area').values_list('area', flat='True').all(), empty_label=ugettext_lazy('Area'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    ofcl_lang = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Official Language')}, ))
+    #ofcl_lang = forms.ModelChoiceField(queryset= Language.objects.all().distinct(), empty_label=ugettext_lazy('Language'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    #continent = forms.ModelChoiceField(required=False, queryset=Country.objects.order_by('continent').values_list('continent', flat='True').distinct(), empty_label=ugettext_lazy('Continent'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    continent = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Continent')}, ))
+    #area = CountryField(blank_label=ugettext_lazy('area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Area')}))
+    #crncy = CountryField(blank_label=ugettext_lazy('Currency')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Currency')}))
+    #area = CountryField(blank_label=ugettext_lazy('Area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Area')}))
+    #world_region = forms.ModelChoiceField(queryset=Country.objects.values_list('capital', flat='True').all(), empty_label=ugettext_lazy('World Region'), label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    #capl_city = forms.ModelChoiceField(queryset=Country.objects.order_by('capital').values_list('capital', flat='True').all(), empty_label=ugettext_lazy('Capital'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    capl_city = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Capital City')}, ))
+    #ph_code = forms.ModelChoiceField(queryset=Country.objects.values_list('phone', flat='True').distinct(), empty_label=ugettext_lazy('Country Code'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    ph_code = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Country Code')}, ))
 
+    class Meta:
+        model = CountryModel
+        fields = '__all__'
+        #fields = ['company', 'sector', 'rpt_period']
+
+
+# /////////////////////////// EconomicDataForm //////////////////////////
+class EconomicDataForm(forms.ModelForm):
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Year')}))
+    popltn = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Population'}, ))
+    popltn_grth_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Population Growth Rate'}))
+    actv_popltn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Active Population'}))
+    lf_exprn = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Life Expectancy'}, ))
+    unemplmt_rate = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Unemployment Rate'}, ))
+    poverty_rate = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Poverty Rate'}, ))
+    rnkg_bus  = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Business Ranking'}, ))
+    hsehold_cnsmptn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Household Consumption'}))
+    idh = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'IDH'}))
+
+    class Meta:
+        model = EconomicDataModel
+        fields = '__all__'
+
+#///////////////////////////// EconomicDataFormset /////////////////////////////
+EconomicDataFormset= modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=10)
+EconomicDataFormset_edit = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=0, can_delete=True)
+EconomicDataFormset_edit_0 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=10, can_delete=False)
+EconomicDataFormset_edit_1 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=9, can_delete=True)
+EconomicDataFormset_edit_2 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=8, can_delete=True)
+EconomicDataFormset_edit_3 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=7, can_delete=True)
+EconomicDataFormset_edit_4 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=6, can_delete=True)
+EconomicDataFormset_edit_5 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=5, can_delete=True)
+EconomicDataFormset_edit_6 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=4, can_delete=True)
+EconomicDataFormset_edit_7 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=3, can_delete=True)
+EconomicDataFormset_edit_8 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=2, can_delete=True)
+EconomicDataFormset_edit_9 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=1, can_delete=True)
+EconomicDataFormset_edit_10 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=0, can_delete=True)
+
+# /////////////////////////// ElectionForm //////////////////////////
+class ElectionForm(forms.ModelForm):
+    elecn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Election Date')}))
+    elecn_type = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Election Type'}, ))
+    cmnts = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Comments'}, ))
+
+    class Meta:
+        model = ElectionModel
+        fields = '__all__'
+
+#///////////////////////////// ElectionFormset /////////////////////////////
+ElectionFormset= modelformset_factory(ElectionModel, form=ElectionForm, extra=10)
+ElectionFormset_edit = modelformset_factory(ElectionModel, form=ElectionForm, extra=0, can_delete=True)
+ElectionFormset_edit_0 = modelformset_factory(ElectionModel, form=ElectionForm, extra=10, can_delete=False)
+ElectionFormset_edit_1 = modelformset_factory(ElectionModel, form=ElectionForm, extra=9, can_delete=True)
+ElectionFormset_edit_2 = modelformset_factory(ElectionModel, form=ElectionForm, extra=8, can_delete=True)
+ElectionFormset_edit_3 = modelformset_factory(ElectionModel, form=ElectionForm, extra=7, can_delete=True)
+ElectionFormset_edit_4 = modelformset_factory(ElectionModel, form=ElectionForm, extra=6, can_delete=True)
+ElectionFormset_edit_5 = modelformset_factory(ElectionModel, form=ElectionForm, extra=5, can_delete=True)
+ElectionFormset_edit_6 = modelformset_factory(ElectionModel, form=ElectionForm, extra=4, can_delete=True)
+ElectionFormset_edit_7 = modelformset_factory(ElectionModel, form=ElectionForm, extra=3, can_delete=True)
+ElectionFormset_edit_8 = modelformset_factory(ElectionModel, form=ElectionForm, extra=2, can_delete=True)
+ElectionFormset_edit_9 = modelformset_factory(ElectionModel, form=ElectionForm, extra=1, can_delete=True)
+ElectionFormset_edit_10 = modelformset_factory(ElectionModel, form=ElectionForm, extra=0, can_delete=True)
+
+
+# /////////////////////////// EconomicZoneForm //////////////////////////
+class EconomicZoneForm(forms.ModelForm):
+    econ_zone = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Economic Zone')}, ))
+
+    class Meta:
+        model = EconomicZoneModel
+        fields = '__all__'
+
+#///////////////////////////// economicZoneFormset /////////////////////////////
+EconomicZoneFormset= modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=10)
+EconomicZoneFormset_edit = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=0, can_delete=True)
+EconomicZoneFormset_edit_0 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=10, can_delete=False)
+EconomicZoneFormset_edit_1 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=9, can_delete=True)
+EconomicZoneFormset_edit_2 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=8, can_delete=True)
+EconomicZoneFormset_edit_3 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=7, can_delete=True)
+EconomicZoneFormset_edit_4 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=6, can_delete=True)
+EconomicZoneFormset_edit_5 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=5, can_delete=True)
+EconomicZoneFormset_edit_6 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=4, can_delete=True)
+EconomicZoneFormset_edit_7 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=3, can_delete=True)
+EconomicZoneFormset_edit_8 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=2, can_delete=True)
+EconomicZoneFormset_edit_9 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=1, can_delete=True)
+EconomicZoneFormset_edit_10 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=0, can_delete=True)
+#///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 class FinStmtDashForm(forms.Form):
 
     PERIODS = (

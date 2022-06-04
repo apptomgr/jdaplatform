@@ -5,7 +5,8 @@ admin.site.register(SectorModel)
 admin.site.register(CompanyModel)
 admin.site.register(AddressModel)
 admin.site.register(LeadersModel)
-
+admin.site.register(CountryModel)
+admin.site.register(EconomicDataModel)
 
 
 admin.site.register(FinancialStatementModel)

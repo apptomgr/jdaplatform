@@ -78,11 +78,13 @@
                        <li><a href="{% url 'jdafinancialsapp_stmts' %}"><i class="far fa-compass text-info"></i> {% trans 'Our Statements' %}</a></li>
                        <li><hr class="my_hr_divider"></li>
                        <li><a href="{% url 'jdafinancialsapp_new_company' %}"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Company' %}</a></li>
-                       <!--li><a href="{ url 'jdapublicationsapp_entry' }"><i class="fas fa-user-cog text-info"></i> Publication Entry </a></li-->
-                        <!--li><a href="{ url 'jdapublicationsapp_listing' }"><i class="fas fa-edit"></i> Publication Edit </a></li-->
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdafinancialsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
+                       <li><a href="{% url 'jdafinancialsapp_new_country' %}"><i class="fa fa-plus-circle text-info"></i> {% trans 'Add Country' %}</a></li>
+                       <li><hr class="my_hr_divider"></li>
+                       <li><a href="{% url 'jdafinancialsapp_country_listing' %}"><i class="far fa-eye"></i> {% trans 'View Country' %}</a></li>
+                       <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdafinancialsapp_add_stock_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Stock' %}</a></li>
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdafinancialsapp_add_bond_security' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Bond' %}</a></li>
@@ -595,7 +597,17 @@ $(document).ready(function() {
       };
       date_input.datepicker(options);
     })
-
+    $(document).ready(function(){
+      var date_input=$('input[name="elecn_dt"]'); //our date input has the name "elecn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
 </script>
 
 </script>
@@ -811,5 +823,6 @@ $(document).on('click', '.remove-form-row_2', function(e){
   padding-left: 5px;
 }
 </style>
+
 </body>
 </html>
