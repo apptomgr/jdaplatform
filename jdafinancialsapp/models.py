@@ -120,6 +120,72 @@ class SubsidiaryModel(models.Model):
         db_table = 'SubsidiaryModel'
 
 
+#/////////////////////////////////// CountryModel ///////////////////////////////
+class CountryModel(models.Model):
+    country = CountryField(blank=True, null=True, unique=True)
+    crncy = models.CharField(max_length=3, blank=True, null=True)#CountryField(blank=True, null=True)
+    prsdnt_name = models.CharField(max_length=200, blank=True, null=True)
+    area = models.CharField(max_length=100, blank=True, null=True) # models.IntegerField(blank=True, null=True)
+    ofcl_lang = models.CharField(max_length=50, blank=False, null=False)
+    continent = models.CharField(max_length=20, blank=True, null=True)
+    capl_city = models.CharField(max_length=100, blank=False, null=False)
+    ph_code = models.CharField(max_length=25, blank=False, null=False)
+
+    def __str__(self):
+        return self.country.name
+
+    class Meta:
+        verbose_name_plural ='CountryModel'
+        db_table = 'CountryModel'
+
+#/////////////////////////////////// EconomicDataModel ///////////////////////////////
+class EconomicDataModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='econs', on_delete=models.CASCADE, blank=True, null=True)
+    yr = models.IntegerField(blank=True, null=True)
+    popltn = models.IntegerField(blank=True, null=True)
+    popltn_grth_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    actv_popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    lf_exprn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    unemplmt_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    poverty_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    rnkg_bus = models.IntegerField(default=0.00, blank=True, null=True)
+    hsehold_cnsmptn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    idh = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.country}"
+
+    class Meta:
+        verbose_name_plural ='EconomicDataModel'
+        db_table = 'EconomicDataModel'
+
+#/////////////////////////////////// ElectionModel ///////////////////////////////
+class ElectionModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='elections', on_delete=models.CASCADE, blank=True, null=True)
+    elecn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
+    elecn_type = models.CharField(max_length=15, blank=True, null=True)
+    cmnts = models.CharField(max_length=250, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.country} election type {self.elecn_type}"
+
+    class Meta:
+        verbose_name_plural ='ElectionModel'
+        db_table = 'ElectionModel'
+
+#/////////////////////////////////// EconomicZoneModel ///////////////////////////////
+class EconomicZoneModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='econ_zones', on_delete=models.CASCADE, blank=True, null=True)
+    econ_zone = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.econ_zone
+
+    class Meta:
+        verbose_name_plural ='EconomicZoneModel'
+        db_table = 'EconomicZoneModel'
+        unique_together = [['country', 'econ_zone']]
+
 # /////////////////////////////////// FinancialStatementModel ///////////////////////////////
 class FinancialStatementModel(models.Model):
     name = models.CharField(max_length=50, unique=True)

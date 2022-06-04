@@ -1,0 +1,259 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% block content %}
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-sm-12">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+            <a class="close" data-dismiss="alert">x</a>
+            <i class="text-muted mr-5">{{message|safe}}</i>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{% include "jdafinancialsapp/jdafinancialsapp_breadcrumbs.html" %}
+
+<div class="card text-center Xmt-3">
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="card-header">
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Country' %}</h5>
+        </div>
+
+        <div class="card-body">
+            <!-- description -->
+            <div>
+                <div class="row">
+                    <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Country Reference" readonly></div>
+                </div>
+                <div class="row">
+                    <div class="col-3">{{form.country|as_crispy_field}}</div>
+                </div>
+            </div>
+            <!-- country Ref data -->
+            <div id="country_data">
+                <div class="row">
+                    <div class="col">{{form.crncy|as_crispy_field}}</div>
+                    <div class="col">{{form.prsdnt_name |as_crispy_field}}</div>
+                    <div class="col">{{form.area|as_crispy_field}}</div>
+                    <div class="col">{{form.ofcl_lang|as_crispy_field}}</div>
+                    <div class="col">{{form.continent|as_crispy_field}}</div>
+                    <div class="col">{{form.capl_city |as_crispy_field}}</div>
+                    <div class="col">{{form.ph_code|as_crispy_field}}</div>
+                </div>
+            </div>
+
+            <!-- Socio-Economic Data-->
+            <div class="row">
+                <div class="col-12">
+                    <ul id="tabs" class="nav nav-tabs">
+                        <li class="nav-item"><a href="" data-target="#description" data-toggle="tab" class="nav-link text-info active">Socio-Economic Data / Election / Economic Zones</a></li>
+                        <li class="nav-item"><a href="" data-target="#econ_data_1" data-toggle="tab" class="nav-link text-info">GDP and Investments / Trade Balance / Other Indicators</a></li>
+                        <!--li class="nav-item"><a href="" data-target="#messages1" data-toggle="tab" class="nav-link text-info">Messages</a></li-->
+                    </ul>
+                    <br>
+                    <!-- tab content soci-economic data -->
+                    <div id="tabsContent" class="tab-content">
+                        <div id="description" class="tab-pane fade active show">
+                            <div class="scroll_div">
+                                {{economicData_formset.management_form}}
+                                {% for form in economicData_formset %}
+                                <div class="row form-row">
+                                    <div class="col">{{form.yr|as_crispy_field}}</div>
+                                    <div class="col">{{form.popltn|as_crispy_field}}</div>
+                                    <div class="col">{{form.popltn_grth_rate|as_crispy_field}}</div>
+                                    <div class="col">{{form.actv_popltn|as_crispy_field}}</div>
+                                    <div class="col">{{form.lf_exprn|as_crispy_field}}</div>
+                                    <div class="col">{{form.unemplmt_rate|as_crispy_field}}</div>
+                                    <div class="col">{{form.poverty_rate|as_crispy_field}}</div>
+                                    <div class="col">{{form.rnkg_bus|as_crispy_field}}</div>
+                                    <div class="col">{{form.hsehold_cnsmptn|as_crispy_field}}</div>
+                                    <div class="col">{{form.idh|as_crispy_field}}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- tab content election/Economic Zones -->
+                            <div class="row">
+                                <div class="col-6"><input class="form-control my_readonly_input" type="text" placeholder="Election Dealines" readonly></div>
+                                <div class="col-6"><input class="form-control my_readonly_input" type="text" placeholder="Economic Zones" readonly></div>
+                            </div>
+                            <div class="row">
+                                <!-- Elections -->
+                                <div class="col-6">
+                                    <div class="scroll_div">
+                                        {{election_formset.management_form}}
+                                        {% for form in election_formset %}
+                                        <div class="row form-row">
+                                            <div class="col">{{form.elecn_dt|as_crispy_field}}</div>
+                                            <div class="col">{{form.elecn_type|as_crispy_field}}</div>
+                                            <div class="col">{{form.cmnts|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Economic Zones -->
+                                <div class="col-6">
+                                    <div class="scroll_div">
+                                        {{econ_zone_formset.management_form}}
+                                        {% for form in econ_zone_formset %}
+                                        <div class="row form-row">
+                                            <div class="col">{{form.econ_zone|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div id="econ_data_1" class="tab-pane fade">
+                            GDP and Investments / Trade Balance / Other Indicators
+                        </div>
+                        <!--div id="messages1" class="tab-pane fade">
+                            tab3
+                        </div-->
+
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+<div class="card-footer text-muted">
+    <input class="btn btn-info" role="button" type="submit" value="{% trans 'Add Country' %}">
+</div>
+</div>
+
+</form>
+
+</div>
+
+
+
+<style>
+.my_header_gray
+{
+margin-bottom:1px;
+border: 1px solid #dcdcdc;
+background-color:#f8f9fa;
+font-weight: bold;
+font-size: 16px;
+text-align: left;
+}
+
+.my_div_border_gray
+{
+margin-bottom:1px;
+border: 1px solid #dcdcdc;
+background-color:#f8f9fa;
+margin-bottom:2px;
+font-weight: bold;
+}
+
+.my_div_border_blk
+{
+margin-bottom:1px;
+border: 1px solid #dcdcdc;
+
+margin-bottom:2px;
+font-weight: bold;
+}
+
+table td {
+position: relative;
+}
+
+table td input {
+position: absolute;
+display: block;
+top:0;
+left:0;
+margin: 0;
+height: 100%;
+width: 100%;
+border: none;
+padding: 10px;
+box-sizing: border-box;
+}
+
+.my_checkbox{
+width:20px;
+height:20px;
+vertical-align: right;
+padding:10px;
+margin-top:10px;
+
+
+}
+
+.my_dropdown{
+width:20px;
+height:20px;
+vertical-align: middle;
+padding: 0 !important;
+margin: 0 !important;
+border-collapse: collapse;
+margin-bottom:0 !important;
+}
+
+.asteriskField {
+display: none;
+}
+
+.move-left {
+width: auto;
+box-shadow: none;
+}
+
+form label
+{
+color: #435E66;
+font-size: 16px;
+align:right;
+margin-top:20px;
+margin-right:10px;
+}
+.tab-pane {
+padding:1px;
+
+}
+
+.tab-bg
+{
+background-color: #e9ecef;
+}
+
+.scroll_div {
+  height:140px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.my_readonly_input {
+  height: 28px;
+}
+
+</style>
+
+<script>
+function company_check_box()
+{
+document.getElementById('div_id_flag_pub_ctrl').className = 'float-left';
+}
+
+</script>
+
+
+{% endblock %}
+
+
+

@@ -19,8 +19,11 @@ django-appconf==1.0.4
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==2.3.1
 django-countries==7.2.1
+django-countries-plus==2.1.0
 django-crispy-forms==1.9.2
 django-import-export==2.4.0
+django-languages-plus==1.1.1
+django-phone-field==1.8.1
 django-preventconcurrentlogins==0.8.2
 django-storages==1.11.1
 django-translation-flags==1.0.6

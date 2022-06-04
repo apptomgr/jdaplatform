@@ -2,6 +2,7 @@ from datetime import datetime
 from django.utils.dateparse import parse_date
 from django.db import models
 from dateutil.relativedelta import relativedelta
+from countries_plus.models import Country
 
 def get_rpt_range_period(date, rpt_date):
     #print(f"utils5: date:{date} - rpt_date {rpt_date} date.month: {date.month} ")
@@ -394,6 +395,27 @@ def merge_company_lists(list1, list2):
     merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
     merged_list = merged_list
     return merged_list
+
+#/////////////////////////// set_country_name //////////////////////
+def set_country_name(country):
+    country_data = Country.objects.get(iso=country)
+    print(country_data.continent)
+    if country_data.continent == 'AF':
+        country_data.continent = 'Africa'
+    elif country_data.continent == 'AN':
+        country_data.continent = 'Antarctica'
+    elif country_data.continent == 'AS':
+        country_data.continent = 'Asia'
+    elif country_data.continent == 'EU':
+        country_data.continent = 'Europe'
+    elif country_data.continent == 'NA':
+        country_data.continent = 'North america'
+    elif country_data.continent == 'OC':
+        country_data.continent = 'Oceania'
+    elif country_data.continent == 'SA':
+        country_data.continent = 'South america'
+
+    #print(country_data.continent)
 #date = datetime.now()
 #print(get_publication_period(date))
 
