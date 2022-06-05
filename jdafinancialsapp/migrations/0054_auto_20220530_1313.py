@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='countrymodel',
             name='crncy',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.PROTECT, related_name='countries', to='countries_plus.country'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='countries', to='countries_plus.country'),
             preserve_default=False,
         ),
     ]
