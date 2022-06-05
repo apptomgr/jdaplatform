@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='countrymodel',
             name='ph_code',
-            field=models.CharField(default=django.utils.timezone.now, max_length=25),
+            field=models.CharField(max_length=25),
             preserve_default=False,
         ),
     ]
