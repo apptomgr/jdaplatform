@@ -127,9 +127,9 @@ class CountryModel(models.Model):
     prsdnt_name = models.CharField(max_length=200, blank=True, null=True)
     area = models.CharField(max_length=100, blank=True, null=True) # models.IntegerField(blank=True, null=True)
     ofcl_lang = models.CharField(max_length=50, blank=False, null=False)
-    continent = models.CharField(max_length=20, blank=True, null=True)
+    continent = models.CharField(max_length=50, blank=True, null=True)
     capl_city = models.CharField(max_length=100, blank=False, null=False)
-    ph_code = models.CharField(max_length=25, blank=False, null=False)
+    ph_code = models.CharField(max_length=50, blank=False, null=False)
 
     def __str__(self):
         return self.country.name
