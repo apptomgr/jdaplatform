@@ -142,15 +142,33 @@ class CountryModel(models.Model):
 class EconomicDataModel(models.Model):
     country = models.ForeignKey(CountryModel, related_name='econs', on_delete=models.CASCADE, blank=True, null=True)
     yr = models.IntegerField(blank=True, null=True)
-    popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    popltn_grth_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    actv_popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    lf_exprn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    unemplmt_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    poverty_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    rnkg_bus = models.IntegerField(default=0.00, blank=True, null=True)
-    hsehold_cnsmptn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    idh = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    popltn = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    popltn_grth_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    actv_popltn = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    lf_exprn = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    unemplmt_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    poverty_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    rnkg_bus = models.IntegerField(blank=True, null=True)
+    hsehold_cnsmptn = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    idh = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    yr_gdp = models.IntegerField(blank=True, null=True)
+    gdp_amt	= models.IntegerField(blank=True, null=True)
+    gdp_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    gdp_prim_sctr = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    gdp_secy_sctr = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    gdp_tertry_sctr = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    gr_ntnl_prodt = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    mrgnl_lndg_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    fixd_capl_invstmt = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    ide = models.IntegerField(blank=True, null=True)
+    yr_dbt = models.IntegerField(blank=True, null=True)
+    infltn_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    pub_dbt = models.IntegerField(blank=True, null=True)
+    forgn_dbt = models.IntegerField(blank=True, null=True)
+    dmstc_dbt = models.IntegerField(blank=True, null=True)
+    trd_bal = models.IntegerField(blank=True, null=True)
+    exp_amt = models.IntegerField(blank=True, null=True)
+    imp_amt = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.country}"
@@ -187,7 +205,51 @@ class EconomicZoneModel(models.Model):
         unique_together = [['country', 'econ_zone']]
 
 
+#/////////////////////////////////// OtherIndicatorsModel ///////////////////////////////
+class OtherIndicatorsModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='other_indicators', on_delete=models.CASCADE, blank=True, null=True)
+    yr = models.IntegerField(blank=True, null=True)
+    ind_name = models.CharField(max_length=35, blank=True, null=True)
+    ind_val = models.IntegerField(blank=True, null=True)
+    cmnts = models.CharField(max_length=250, blank=True, null=True)
 
+    def __str__(self):
+        return self.ind_name
+
+    class Meta:
+        verbose_name_plural ='OtherIndicatorsModel'
+        db_table = 'OtherIndicatorsModel'
+
+
+# #/////////////////////////////////// GdpModel ///////////////////////////////
+# class GdpModel(models.Model):
+#     country = models.ForeignKey(CountryModel, related_name='econs', on_delete=models.CASCADE, blank=True, null=True)
+#     yr = models.IntegerField(blank=True, null=True)
+#     popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     popltn_grth_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     actv_popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     lf_exprn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     unemplmt_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     poverty_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     rnkg_bus = models.IntegerField(default=0.00, blank=True, null=True)
+#     hsehold_cnsmptn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#     idh = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+#
+#     def __str__(self):
+#         return f"{self.country}"
+#
+#     class Meta:
+#         verbose_name_plural ='EconomicDataModel'
+#         db_table = 'EconomicDataModel'
+# PIB en montant	gdp_amt	IntegerField		TRUE	TRUE	gdp_amt=models.IntegerField(blank=TRUE, null=TRUE)
+# Croissance du PIB	gdp_rate	DecimalField		TRUE	TRUE	gdp_rate=models.DecimalField(decimal_places=2)
+# PIB-Secteur primaire	gdp_prim_sctr	DecimalField		TRUE	TRUE	gdp_prim_sctr=models.DecimalField(decimal_places=2)
+# PIB-Secteur secondaire	gdp_secy_sctr	DecimalField		TRUE	TRUE	gdp_secy_sctr=models.DecimalField(decimal_places=2)
+# PIB-Secteur tertiaire	gdp_tertry_sctr	DecimalField		TRUE	TRUE	gdp_tertry_sctr=models.DecimalField(decimal_places=2)
+# Produit National Brut	gr_ntnl_prodt	DecimalField		TRUE	TRUE	gr_ntnl_prodt=models.DecimalField(decimal_places=2)
+# Taux de pret marginal	mrgnl_lndg_rate	DecimalField		TRUE	TRUE	mrgnl_lndg_rate=models.DecimalField(decimal_places=2)
+# Investissement en capital fixe	fixd_capl_invstmt	DecimalField		TRUE	TRUE	fixd_capl_invstmt=models.DecimalField(decimal_places=2)
+# IDE	ide	IntegerField		TRUE	TRUE	ide=models.IntegerField(blank=TRUE, null=TRUE)
 #////////////////////////// TestModel ///////////////////
 class ResModel(models.Model):
     name= models.CharField(max_length=20)

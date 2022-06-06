@@ -54,15 +54,15 @@
                     <ul id="tabs" class="nav nav-tabs">
                         <li class="nav-item"><a href="" data-target="#description" data-toggle="tab" class="nav-link text-info active">Description</a></li>
                         <li class="nav-item"><a href="" data-target="#econ_data_1" data-toggle="tab" class="nav-link text-info">Economic Data 1</a></li>
-                        <!--li class="nav-item"><a href="" data-target="#messages1" data-toggle="tab" class="nav-link text-info">Messages</a></li-->
+                        <li class="nav-item"><a href="" data-target="#econ_data_2" data-toggle="tab" class="nav-link text-info">Economic Data 2</a></li>
                     </ul>
                     <br>
-                    <div class="row">
-                        <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Socio economic Data" readonly></div>
-                    </div>
                     <!-- tab content soci-economic data -->
                     <div id="tabsContent" class="tab-content">
                         <div id="description" class="tab-pane fade active show">
+                            <div class="row">
+                                <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Socio economic Data" readonly></div>
+                            </div>
                             <div class="scroll_div">
                                 {{economicData_formset.management_form}}
                                 {% for form in economicData_formset %}
@@ -111,16 +111,84 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-
+                        <!-- GDP and Investments -->
                         <div id="econ_data_1" class="tab-pane fade">
-                            GDP and Investments / Trade Balance / Other Indicators
+                            <div class="row">
+                                <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="GDP and Investments" readonly></div>
+                            </div>
+                            <div class="scroll_div_2">
+                                <div class="row form-row">
+                                    <div class="col-1">&nbsp;</div>
+                                    <div class="col-6"><input class="form-control my_readonly_input_sub" type="text" placeholder="Gross Domestic Products" readonly></div>
+                                    <div class="col-4">&nbsp;</div>
+                                </div>
+                                {{economicData_formset.management_form}}
+                                {% for form in economicData_formset %}
+                                <div class="row form-row">
+                                    <div class="col-1">{{form.yr_gdp|as_crispy_field}}</div>
+                                    <div class="col-1">{{form.gdp_amt|as_crispy_field}}</div>
+                                    <div class="col-1">{{form.gdp_rate|as_crispy_field}}</div>
+                                    <div class="col">{{form.gdp_prim_sctr|as_crispy_field}}</div>
+                                    <div class="col">{{form.gdp_secy_sctr|as_crispy_field}}</div>
+                                    <div class="col">{{form.gdp_tertry_sctr|as_crispy_field}}</div>
+                                    <div class="col">{{form.gr_ntnl_prodt|as_crispy_field}}</div>
+                                    <div class="col">{{form.mrgnl_lndg_rate|as_crispy_field}}</div>
+                                    <div class="col">{{form.fixd_capl_invstmt|as_crispy_field}}</div>
+                                    <div class="col-1">{{form.ide|as_crispy_field}}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- tab Debt and Trade Balance /Other indicators -->
+                            <div class="row">
+                                <div class="col-8"><input class="form-control my_readonly_input" type="text" placeholder="Debt and Trade Balance" readonly></div>
+                                <div class="col-4"><input class="form-control my_readonly_input" type="text" placeholder="Other indicators" readonly></div>
+                            </div>
+                            <div class="row">
+                                <!-- Debt and Trade Balance -->
+                                <div class="col-8">
+                                    <div class="scroll_div_3">
+                                        <div class="row form-row">
+                                            <div class="col-2"></div>
+                                            <div class="col-2"></div>
+                                            <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Debt" readonly></div>
+                                            <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Trade Balance" readonly></div>
+                                        </div>
+                                        {{economicData_formset.management_form}}
+                                        {% for form in economicData_formset %}
+                                        <div class="row form-row">
+                                            <div class="col-2">{{form.yr_dbt|as_crispy_field}}</div>
+                                            <div class="col-2">{{form.infltn_rate|as_crispy_field}}</div>
+                                            <div class="col">{{form.pub_dbt|as_crispy_field}}</div>
+                                            <div class="col">{{form.forgn_dbt|as_crispy_field}}</div>
+                                            <div class="col">{{form.dmstc_dbt|as_crispy_field}}</div>
+                                            <div class="col">{{form.trd_bal|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.imp_amt|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Other indicators -->
+                                <div class="col-4">
+                                    <div class="scroll_div">
+                                        {{other_indicators_formset.management_form}}
+                                        {% for form in other_indicators_formset %}
+                                        <div class="row form-row">
+                                            <div class="col">{{form.yr|as_crispy_field}}</div>
+                                            <div class="col">{{form.ind_name|as_crispy_field}}</div>
+                                            <div class="col">{{form.ind_val|as_crispy_field}}</div>
+                                            <div class="col">{{form.cmnts|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!--div id="messages1" class="tab-pane fade">
-                            tab3
-                        </div-->
+
+                        <div id="econ_data_2" class="tab-pane fade">
+                            Trade Partners
+                        </div>
 
                     </div>
 
@@ -240,11 +308,32 @@ background-color: #e9ecef;
   overflow-x: hidden;
   overflow-y: auto;
 }
+.scroll_div_2 {
+  height:160px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.scroll_div_3 {
+  height:155px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
 .my_readonly_input {
   height: 28px;
 }
+.my_readonly_input_sub {
+  height: 20px;
+  background-color:#f8f9fa;
+  font-size: 12px;
+}
 
+.my_readonly_input_sub_2 {
+  height: 28px;
+  background-color:#f8f9fa;
+  font-size: 12px;
+}
 </style>
 
 <script>
