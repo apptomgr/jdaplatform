@@ -1049,7 +1049,7 @@ def jdafinancialsapp_edit_country(request, country_id):
 
             messages.success(request, f'Sucessfully saved {country} info.')
             return redirect('jdafinancialsapp_country_listing')
-        messages.error(request, f'Error saving country info: form: {form.errors} - formset: {economicData_formset.errors} - election_formset: election_formset.errors - econ_zone_formset: {econ_zone_formset}')
+        messages.error(request, f'Error saving country info: form: {form.errors} - formset: {economicData_formset.errors} - election_formset: election_formset.errors - econ_zone_formset: {econ_zone_formset.errors}')
     else:
         # Country form
         form = CountryForm(instance=country)
