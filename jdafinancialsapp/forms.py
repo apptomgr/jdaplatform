@@ -1,7 +1,7 @@
 from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
-    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel
+    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel, OtherIndicatorsModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
@@ -219,12 +219,32 @@ class EconomicDataForm(forms.ModelForm):
     hsehold_cnsmptn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Household Consumption'}))
     idh = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'IDH'}))
 
+    yr_gdp = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('GDP Year')}))
+    gdp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'GDP (XOF billion)'}))
+    gdp_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'GDP Rate'}))
+    gdp_prim_sctr = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Primary GDP Sector'}))
+    gdp_secy_sctr = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Secondary GDP Sector'}))
+    gdp_tertry_sctr = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Tertiary GDP Sector'}))
+    gr_ntnl_prodt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Gross National Product'}))
+    mrgnl_lndg_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Marginal Index Rate'}))
+    fixd_capl_invstmt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Fixed Capital Investment'}))
+    ide = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'IDE'}))
+
+    yr_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Debt Year')}))
+    infltn_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Inflation Rate'}))
+    pub_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Public Debt')}))
+    forgn_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Foreign Debt')}))
+    dmstc_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Domestic Debt')}))
+    trd_bal = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Trade Balance')}))
+    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Export Amount')}))
+    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Import Amount')}))
+
     class Meta:
         model = EconomicDataModel
         fields = '__all__'
 
 #///////////////////////////// EconomicDataFormset /////////////////////////////
-EconomicDataFormset= modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=10)
+EconomicDataFormset = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=10)
 EconomicDataFormset_edit = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=0, can_delete=True)
 EconomicDataFormset_edit_0 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=10, can_delete=False)
 EconomicDataFormset_edit_1 = modelformset_factory(EconomicDataModel, form=EconomicDataForm, extra=9, can_delete=True)
@@ -263,7 +283,6 @@ ElectionFormset_edit_8 = modelformset_factory(ElectionModel, form=ElectionForm, 
 ElectionFormset_edit_9 = modelformset_factory(ElectionModel, form=ElectionForm, extra=1, can_delete=True)
 ElectionFormset_edit_10 = modelformset_factory(ElectionModel, form=ElectionForm, extra=0, can_delete=True)
 
-
 # /////////////////////////// EconomicZoneForm //////////////////////////
 class EconomicZoneForm(forms.ModelForm):
     econ_zone = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Economic Zone')}, ))
@@ -286,6 +305,34 @@ EconomicZoneFormset_edit_7 = modelformset_factory(EconomicZoneModel, form=Econom
 EconomicZoneFormset_edit_8 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=2, can_delete=True)
 EconomicZoneFormset_edit_9 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=1, can_delete=True)
 EconomicZoneFormset_edit_10 = modelformset_factory(EconomicZoneModel, form=EconomicZoneForm, extra=0, can_delete=True)
+
+# /////////////////////////// OtherIndicatorsForm //////////////////////////
+class OtherIndicatorsForm(forms.ModelForm):
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
+    ind_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Index')}, ))
+    ind_val = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Valeur')}, ))
+    cmnts = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Comments')}, ))
+
+    class Meta:
+        model = OtherIndicatorsModel
+        fields = '__all__'
+
+#///////////////////////////// OtherIndicatorsFormset /////////////////////////////
+OtherIndicatorsFormset= modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=10)
+OtherIndicatorsFormset_edit = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=0, can_delete=True)
+OtherIndicatorsFormset_edit_0 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=10, can_delete=False)
+OtherIndicatorsFormset_edit_1 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=9, can_delete=True)
+OtherIndicatorsFormset_edit_2 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=8, can_delete=True)
+OtherIndicatorsFormset_edit_3 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=7, can_delete=True)
+OtherIndicatorsFormset_edit_4 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=6, can_delete=True)
+OtherIndicatorsFormset_edit_5 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=5, can_delete=True)
+OtherIndicatorsFormset_edit_6 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=4, can_delete=True)
+OtherIndicatorsFormset_edit_7 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=3, can_delete=True)
+OtherIndicatorsFormset_edit_8 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=2, can_delete=True)
+OtherIndicatorsFormset_edit_9 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=1, can_delete=True)
+OtherIndicatorsFormset_edit_10 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=0, can_delete=True)
+
+
 #///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 class FinStmtDashForm(forms.Form):
 

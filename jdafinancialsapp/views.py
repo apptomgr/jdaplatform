@@ -1,10 +1,11 @@
+import requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
 from . models import CompanyModel, FinancialStatementFactModel, FinancialStatementLineModel, \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementInvAcctLinkModel, ShareholderModel, \
-    AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel
+    AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel, OtherIndicatorsModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, InvestmentAccountForm, CompanyForm, \
     FinancialStatementFactForm, SecurityForm, StockModelForm, BondModelForm, ShareholderForm, ShareholderFormset, ShareholderFormset_edit, \
@@ -16,7 +17,8 @@ from . forms import FinStmtDashForm, BalanceSheetForm, IncomeStatementForm, Inve
     EconomicDataForm, EconomicDataFormset, EconomicDataFormset_edit, EconomicDataFormset_edit_0, EconomicDataFormset_edit_1, EconomicDataFormset_edit_2, \
     EconomicDataFormset_edit_3, EconomicDataFormset_edit_4, EconomicDataFormset_edit_5, EconomicDataFormset_edit_6,EconomicDataFormset_edit_7, EconomicDataFormset_edit_8, EconomicDataFormset_edit_9, EconomicDataFormset_edit_10, \
     ElectionFormset, ElectionFormset_edit, ElectionFormset_edit_0, ElectionFormset_edit_1, ElectionFormset_edit_2, ElectionFormset_edit_3, ElectionFormset_edit_4, ElectionFormset_edit_5, ElectionFormset_edit_6, ElectionFormset_edit_7, ElectionFormset_edit_8, ElectionFormset_edit_9, ElectionFormset_edit_10, \
-    EconomicZoneFormset, EconomicZoneFormset_edit_0, EconomicZoneFormset_edit_1, EconomicZoneFormset_edit_2, EconomicZoneFormset_edit_3, EconomicZoneFormset_edit_4, EconomicZoneFormset_edit_5, EconomicZoneFormset_edit_6, EconomicZoneFormset_edit_7, EconomicZoneFormset_edit_8, EconomicZoneFormset_edit_9, EconomicZoneFormset_edit_10
+    EconomicZoneFormset, EconomicZoneFormset_edit_0, EconomicZoneFormset_edit_1, EconomicZoneFormset_edit_2, EconomicZoneFormset_edit_3, EconomicZoneFormset_edit_4, EconomicZoneFormset_edit_5, EconomicZoneFormset_edit_6, EconomicZoneFormset_edit_7, EconomicZoneFormset_edit_8, EconomicZoneFormset_edit_9, EconomicZoneFormset_edit_10, \
+    OtherIndicatorsFormset, OtherIndicatorsFormset_edit_0, OtherIndicatorsFormset_edit_1, OtherIndicatorsFormset_edit_2, OtherIndicatorsFormset_edit_3, OtherIndicatorsFormset_edit_4, OtherIndicatorsFormset_edit_5, OtherIndicatorsFormset_edit_6, OtherIndicatorsFormset_edit_7, OtherIndicatorsFormset_edit_8, OtherIndicatorsFormset_edit_9, OtherIndicatorsFormset_edit_10
 from django.forms import modelformset_factory, inlineformset_factory
 from django.contrib import messages
 # from django.utils.dateparse import parse_date
@@ -929,8 +931,9 @@ def jdafinancialsapp_new_country(request):
         economicData_formset = EconomicDataFormset(request.POST)
         election_formset = ElectionFormset(request.POST)
         econ_zone_formset = EconomicZoneFormset(request.POST)
+        other_indicators_formset = OtherIndicatorsFormset(request.POST)
 
-        if form.is_valid() and economicData_formset.is_valid() and election_formset.is_valid() and econ_zone_formset.is_valid(): # and addr_form.is_valid() and leaders_formset.is_valid() and parent_company_formset.is_valid() and subsidary_formset.is_valid():
+        if form.is_valid() and economicData_formset.is_valid() and election_formset.is_valid() and econ_zone_formset.is_valid() and other_indicators_formset.is_valid(): # and leaders_formset.is_valid() and parent_company_formset.is_valid() and subsidary_formset.is_valid():
             # first save the company form, as its reference will be used in the shareholder formset
             country = form.save()
             # Link EconDatFormset formset to country instance
@@ -951,7 +954,12 @@ def jdafinancialsapp_new_country(request):
                     eco_zone = form.save(commit=False)  # so the country instance can be attached
                     eco_zone.country = country
                     eco_zone.save()
-
+            # Link OtherIndicators  formset to country instance
+            for form in other_indicators_formset:
+                if form.cleaned_data != {}:
+                    other_indicators = form.save(commit=False)  # so the country instance can be attached
+                    other_indicators.country = country
+                    other_indicators.save()
             messages.success(request, f'Successfully saved {country} info')
             return redirect('jdafinancialsapp_new_country')
 
@@ -973,10 +981,11 @@ def jdafinancialsapp_new_country(request):
         election_formset = ElectionFormset(queryset=ElectionModel.objects.none())
         # Economic Zone formset
         econ_zone_formset = EconomicZoneFormset(queryset=EconomicZoneModel.objects.none())
-
+        # Other indicators formset
+        other_indicators_formset = OtherIndicatorsFormset(queryset=OtherIndicatorsModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'economicData_formset':economicData_formset, 'election_formset': election_formset, 'econ_zone_formset': econ_zone_formset,'bread_new_country':'font-weight-bold'}
+    context = {'user_grp':grp,'form':form, 'economicData_formset':economicData_formset, 'election_formset': election_formset, 'econ_zone_formset': econ_zone_formset,'other_indicators_formset':other_indicators_formset,'bread_new_country':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_new_country.html', context)
 
 
@@ -995,7 +1004,10 @@ def jdafinancialsapp_edit_country(request, country_id):
         election_formset = ElectionFormset(request.POST, queryset=ElectionModel.objects.filter(country=country_id), prefix='election')
         # Economic Zone formset
         econ_zone_formset = EconomicZoneFormset(request.POST, queryset=EconomicZoneModel.objects.filter(country=country_id), prefix='econ_zone')
-        if form.is_valid() and economicData_formset.is_valid() and econ_zone_formset.is_valid():
+        # Other Indicators formset
+        other_indicators_formset = OtherIndicatorsFormset(request.POST, queryset=OtherIndicatorsModel.objects.filter(country=country_id), prefix='other_indicators')
+
+        if form.is_valid() and economicData_formset.is_valid() and econ_zone_formset.is_valid() and other_indicators_formset.is_valid():
             #Save country instance
             country = form.save()
             # Save EconomicData formset changes
@@ -1003,7 +1015,8 @@ def jdafinancialsapp_edit_country(request, country_id):
                 del_pk=[]
                 for idx, form in enumerate(economicData_formset):
                     if form.cleaned_data != {}:
-                        #econ_data_yr = form.cleaned_data['econ_data_yr']
+                        #yr_gdp = form.cleaned_data['yr_gdp']
+                        #print(yr_gdp)
                         #popltn = form.cleaned_data['popltn']
                         #print(f"econ_data_yr:{econ_data_yr} - popltn: {popltn}")
                         economicData = form.save(commit=False) # so the country instatnce can be associated
@@ -1046,10 +1059,24 @@ def jdafinancialsapp_edit_country(request, country_id):
                 #now rm the checked box
                 EconomicZoneModel.objects.filter(pk__in=del_pk).delete()
 
+            # Save Other Indicators formset changes
+            if other_indicators_formset.is_valid():
+                del_pk=[]
+                for idx, form in enumerate(other_indicators_formset):
+                    if form.cleaned_data != {}:
+                        other_indicators = form.save(commit=False) # so the country instance can be associated
+                        if request.POST.get(f'other_indicators-{idx}-DELETE') == 'on':# other_indicators comes from the prefix name
+                            oin = OtherIndicatorsModel.objects.filter(country=country_id)
+                            del_pk.append(oin[idx].pk)
+
+                        other_indicators.country=country
+                        other_indicators.save()
+                #now rm the checked box
+                OtherIndicatorsModel.objects.filter(pk__in=del_pk).delete()
 
             messages.success(request, f'Sucessfully saved {country} info.')
             return redirect('jdafinancialsapp_country_listing')
-        messages.error(request, f'Error saving country info: form: {form.errors} - formset: {economicData_formset.errors} - election_formset: election_formset.errors - econ_zone_formset: {econ_zone_formset.errors}')
+        messages.error(request, f'Error saving country info: form: {form.errors} - formset: {economicData_formset.errors} - election_formset: election_formset.errors - econ_zone_formset: {econ_zone_formset.errors} - other_indicators_formset: {other_indicators_formset.errors}')
     else:
         # Country form
         form = CountryForm(instance=country)
@@ -1132,8 +1159,34 @@ def jdafinancialsapp_edit_country(request, country_id):
         else:
             econ_zone_formset = EconomicZoneFormset_edit_0(queryset=EconomicZoneModel.objects.filter(country=country), prefix='econ_zone')
 
+        # Other Indicators formset
+        oin = OtherIndicatorsModel.objects.filter(country=country_id)
+        if oin.exists():
+            if oin.count() == 1:
+                other_indicators_formset = OtherIndicatorsFormset_edit_1(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==2:
+                other_indicators_formset = OtherIndicatorsFormset_edit_2(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==3:
+                other_indicators_formset = OtherIndicatorsFormset_edit_3(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==4:
+                other_indicators_formset = OtherIndicatorsFormset_edit_4(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==5:
+                other_indicators_formset = OtherIndicatorsFormset_edit_5(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==6:
+                other_indicators_formset = OtherIndicatorsFormset_edit_6(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==7:
+                other_indicators_formset = OtherIndicatorsFormset_edit_7(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==8:
+                other_indicators_formset = OtherIndicatorsFormset_edit_8(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==9:
+                other_indicators_formset = OtherIndicatorsFormset_edit_9(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+            elif oin.count() ==10:
+                other_indicators_formset = OtherIndicatorsFormset_edit_10(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+        else:
+            other_indicators_formset = OtherIndicatorsFormset_edit_0(queryset=OtherIndicatorsModel.objects.filter(country=country), prefix='other_indicators')
+
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'form':form, 'economicData_formset': economicData_formset, 'election_formset':election_formset,'econ_zone_formset': econ_zone_formset, 'bread_new_country':'font-weight-bold'}
+    context = {'user_grp':grp,'form':form, 'economicData_formset': economicData_formset, 'election_formset':election_formset,'econ_zone_formset': econ_zone_formset,'other_indicators_formset':other_indicators_formset, 'bread_new_country':'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_edit_country.html', context)
 
 
@@ -1192,9 +1245,10 @@ def jdafinancialsapp_view_country_detail(request, pk):
     economic_data_detail = EconomicDataModel.objects.filter(country=pk)
     election_detail = ElectionModel.objects.filter(country=pk)
     econ_zone = EconomicZoneModel.objects.filter(country=pk)
+    other_indicators = OtherIndicatorsModel.objects.filter(country=pk)
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'country_detail':country_detail, 'economic_data_detail':economic_data_detail, 'election_detail':election_detail,'econ_zone':econ_zone,'rpt_date': now} #, 'shareholders':shareholders,'address': address, 'leaders': leaders, 'parent_company':parent_company, 'subsidary':subsidary, 'rpt_date': now}
+    context = {'user_grp':grp,'country_detail':country_detail, 'economic_data_detail':economic_data_detail, 'election_detail':election_detail,'econ_zone':econ_zone,'other_indicators':other_indicators,'rpt_date': now}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_view_country_detail.html', context)
 
 #////////////////////////// jdafinancialsapp_bal_all_rpt ///////////////////////
