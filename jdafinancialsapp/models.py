@@ -142,7 +142,7 @@ class CountryModel(models.Model):
 class EconomicDataModel(models.Model):
     country = models.ForeignKey(CountryModel, related_name='econs', on_delete=models.CASCADE, blank=True, null=True)
     yr = models.IntegerField(blank=True, null=True)
-    popltn = models.IntegerField(blank=True, null=True)
+    popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     popltn_grth_rate = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     actv_popltn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     lf_exprn = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)

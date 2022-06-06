@@ -209,7 +209,7 @@ class CountryForm(forms.ModelForm):
 # /////////////////////////// EconomicDataForm //////////////////////////
 class EconomicDataForm(forms.ModelForm):
     yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Year')}))
-    popltn = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Population'}, ))
+    popltn = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Population'}, ))
     popltn_grth_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Population Growth Rate'}))
     actv_popltn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Active Population'}))
     lf_exprn = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Life Expectancy'}, ))
