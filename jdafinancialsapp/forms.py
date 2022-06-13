@@ -1,7 +1,8 @@
 from django import forms
 from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementBalLinkModel, FinancialStatementIncLinkModel, FinancialStatementFactModel, \
-    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel, OtherIndicatorsModel
+    FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, \
+    SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel, OtherIndicatorsModel, TradePartnersModel, EnergyModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
 from django_countries.fields import CountryField, countries, country_to_text
 from django.utils.translation import ugettext_lazy
@@ -332,6 +333,75 @@ OtherIndicatorsFormset_edit_8 = modelformset_factory(OtherIndicatorsModel, form=
 OtherIndicatorsFormset_edit_9 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=1, can_delete=True)
 OtherIndicatorsFormset_edit_10 = modelformset_factory(OtherIndicatorsModel, form=OtherIndicatorsForm, extra=0, can_delete=True)
 
+# /////////////////////////// TradePartnersForm //////////////////////////
+class TradePartnersForm(forms.ModelForm):
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
+    exp_cntry = CountryField(blank_label=ugettext_lazy('Country')).formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Export Amount')}, ))
+    exp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Export Rate')}, ))
+    exp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Product')}))
+    imp_cntry = CountryField(blank_label=ugettext_lazy('Country')).formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Import Amount')}, ))
+    imp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Import Rate')}, ))
+    imp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Product')}))
+
+    class Meta:
+        model = TradePartnersModel
+        fields = '__all__'
+
+#///////////////////////////// TradePartnersFormset /////////////////////////////
+TradePartnersFormset= modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=10)
+TradePartnersFormset_edit = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=0, can_delete=True)
+TradePartnersFormset_edit_0 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=10, can_delete=False)
+TradePartnersFormset_edit_1 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=9, can_delete=True)
+TradePartnersFormset_edit_2 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=8, can_delete=True)
+TradePartnersFormset_edit_3 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=7, can_delete=True)
+TradePartnersFormset_edit_4 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=6, can_delete=True)
+TradePartnersFormset_edit_5 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=5, can_delete=True)
+TradePartnersFormset_edit_6 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=4, can_delete=True)
+TradePartnersFormset_edit_7 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=3, can_delete=True)
+TradePartnersFormset_edit_8 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=2, can_delete=True)
+TradePartnersFormset_edit_9 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=1, can_delete=True)
+TradePartnersFormset_edit_10 = modelformset_factory(TradePartnersModel, form=TradePartnersForm, extra=0, can_delete=True)
+
+
+# /////////////////////////// EnergyForm //////////////////////////
+class EnergyForm(forms.ModelForm):
+    energy_yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
+    elec_hydro_dam_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Hydroelectric Dams')}, ))
+    elec_pwr_sttn_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Central Electric')}, ))
+    elec_otr_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Others')}, ))
+    crude_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
+    crude_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
+    crude_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
+    crude_rsrvs_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Reserves')}, ))
+    refined_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
+    refined_cnsmptn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Consumption')}, ))
+    refined_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
+    refined_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
+    gas_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
+    gas_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
+    gas_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
+    gas_rsrv_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Reserves')}, ))
+
+    class Meta:
+        model = EnergyModel
+        fields = '__all__'
+
+#///////////////////////////// EnergyFormset /////////////////////////////
+EnergyFormset= modelformset_factory(EnergyModel, form=EnergyForm, extra=10)
+EnergyFormset_edit = modelformset_factory(EnergyModel, form=EnergyForm, extra=0, can_delete=True)
+EnergyFormset_edit_0 = modelformset_factory(EnergyModel, form=EnergyForm, extra=10, can_delete=False)
+EnergyFormset_edit_1 = modelformset_factory(EnergyModel, form=EnergyForm, extra=9, can_delete=True)
+EnergyFormset_edit_2 = modelformset_factory(EnergyModel, form=EnergyForm, extra=8, can_delete=True)
+EnergyFormset_edit_3 = modelformset_factory(EnergyModel, form=EnergyForm, extra=7, can_delete=True)
+EnergyFormset_edit_4 = modelformset_factory(EnergyModel, form=EnergyForm, extra=6, can_delete=True)
+EnergyFormset_edit_5 = modelformset_factory(EnergyModel, form=EnergyForm, extra=5, can_delete=True)
+EnergyFormset_edit_6 = modelformset_factory(EnergyModel, form=EnergyForm, extra=4, can_delete=True)
+EnergyFormset_edit_7 = modelformset_factory(EnergyModel, form=EnergyForm, extra=3, can_delete=True)
+EnergyFormset_edit_8 = modelformset_factory(EnergyModel, form=EnergyForm, extra=2, can_delete=True)
+EnergyFormset_edit_9 = modelformset_factory(EnergyModel, form=EnergyForm, extra=1, can_delete=True)
+EnergyFormset_edit_10 = modelformset_factory(EnergyModel, form=EnergyForm, extra=0, can_delete=True)
 
 #///////////////////////////// fin_stmt_dash_form //////////////////////////////////////
 class FinStmtDashForm(forms.Form):

@@ -43,7 +43,7 @@
                 <td>{{i.country.name}}</td>
                 <td><a href="{% url 'jdafinancialsapp_view_country_detail' i.pk %}"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
                 <td><a href="{% url 'jdafinancialsapp_edit_country' i.pk %}"><i class="fas fa-edit fa-2x text-warning"></i></a></td>
-                <td hx-delete="{% url 'jdafinancialsapp_delete_company_confirm' i.pk %}" hx-confirm="Are you sure you wish to delete company {{i.company}}?" hx-target="closest tr" hx-swap="outerHTML swap:2s" class="pointer" role="button"><i class="far fa-trash-alt fa-2x text-danger" style="cursor:pointer;"></i></td>
+                <td hx-delete="{% url 'jdafinancialsapp_delete_country_confirm' i.pk %}" hx-confirm="Are you sure you wish to delete country info {{i.country.name}}?" hx-target="closest tr" hx-swap="outerHTML swap:2s" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="pointer" role="button"><i class="far fa-trash-alt fa-2x text-danger" style="cursor:pointer;"></i></td>
                 <!--td><a href="{ url 'jdafinancialsapp_delete_company_confirm' i.pk }"><i class="far fa-trash-alt fa-2x text-danger"></i></a></td-->
             </tr>
             {% endfor %}

@@ -17,7 +17,7 @@ urlpatterns = [
     path('jdafinancialsapp_country_listing', views.jdafinancialsapp_country_listing, name='jdafinancialsapp_country_listing'),
     path('jdafinancialsapp_view_country_detail/<int:pk>', views.jdafinancialsapp_view_country_detail, name='jdafinancialsapp_view_country_detail'),
     path('jdafinancialsapp_edit_country/<int:country_id>', views.jdafinancialsapp_edit_country, name='jdafinancialsapp_edit_country'),
-    #path('jdafinancialsapp_delete_company_confirm/<int:pk>', views.jdafinancialsapp_delete_company_confirm, name='jdafinancialsapp_delete_company_confirm'),
+    path('jdafinancialsapp_delete_country_confirm/<int:pk>', views.jdafinancialsapp_delete_country_confirm, name='jdafinancialsapp_delete_country_confirm'),
 
     path('jdafinancialsapp_bal_entry_form/<str:sector>/<int:company_id>/<str:statement>/<str:entry_date>', views.jdafinancialsapp_bal_entry_form, name='jdafinancialsapp_bal_entry_form'),
     path('jdafinancialsapp_bal_edit_form/<str:sector>/<int:company_id>/<str:statement>/<str:entry_date>',views.jdafinancialsapp_bal_edit_form, name='jdafinancialsapp_bal_edit_form'),

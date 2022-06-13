@@ -185,9 +185,171 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Econ_data_2 tab -->
+                        <!-- Trading partners -->
                         <div id="econ_data_2" class="tab-pane fade">
-                            Trade Partners
+                            <div class="row">
+                                <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Trading Partners" readonly></div>
+                            </div>
+                            <!-- Exports / Imports -->
+                            <div class="row">
+                                <div class="col-1">&nbsp;</div>
+                                <div class="col-5"><input class="form-control my_readonly_input_sub" type="text" placeholder="Exports" readonly></div>
+                                <div class="col-6"><input class="form-control my_readonly_input_sub" type="text" placeholder="Imports" readonly></div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Trading Partners -->
+                                <div class="col-6">
+                                    <!-- Exports -->
+                                    <div class="scroll_div">
+                                        {{trade_partners_formset.management_form}}
+                                        {% for form in trade_partners_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col-2 ml-1">{{form.yr|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_cntry|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_rate|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Imports -->
+                                <div class="col-6">
+                                    <div class="scroll_div">
+                                        {{trade_partners_formset.management_form}}
+                                        {% for form in trade_partners_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.imp_cntry|as_crispy_field}}</div>
+                                            <div class="col">{{form.imp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.imp_rate|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Import Export Products -->
+                            <div class="row">
+                                <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Import Export Products" readonly></div>
+                            </div>
+                            <!-- Exports / Imports -->
+                            <div class="row">
+                                <div class="col-1">&nbsp;</div>
+                                <div class="col-5"><input class="form-control my_readonly_input_sub" type="text" placeholder="Principal Products Exported" readonly></div>
+                                <div class="col-6"><input class="form-control my_readonly_input_sub" type="text" placeholder="Principal Products Imported" readonly></div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Import Export Products -->
+                                <div class="col-6">
+                                    <!-- Exports -->
+                                    <div class="scroll_div">
+                                        {{trade_partners_formset.management_form}}
+                                        {% for form in trade_partners_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col-2 ml-1">{{form.yr|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_prodt_name|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.exp_rate|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Imports -->
+                                <div class="col-6">
+                                    <div class="scroll_div">
+                                        {{trade_partners_formset.management_form}}
+                                        {% for form in trade_partners_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.exp_prodt_name|as_crispy_field}}</div>
+                                            <div class="col">{{form.imp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.imp_rate|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Energy -->
+                            <div class="row">
+                                <div class="col-12"><input class="form-control my_readonly_input" type="text" placeholder="Energy" readonly></div>
+                            </div>
+                            <!-- Electric Production/Crud Oil/Refinery/Natural Gas -->
+                            <div class="row">
+                                <div class="col-1"><input class="form-control my_readonly_input_sub" type="text" placeholder="Year" readonly></div>
+                                <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Electricity Production" readonly></div>
+                                <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Crud Oil" readonly></div>
+                                <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Refinery" readonly></div>
+                                <div class="col"><input class="form-control my_readonly_input_sub" type="text" placeholder="Natural Gas" readonly></div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Year -->
+                                <div class="col-1">
+                                    <div class="scroll_div">
+                                        {{energy_formset.management_form}}
+                                        {% for form in energy_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.energy_yr|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Electricity Production -->
+                                <div class="col">
+                                    <div class="scroll_div">
+                                        {{energy_formset.management_form}}
+                                        {% for form in energy_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.elec_hydro_dam_nbr|as_crispy_field}}</div>
+                                            <div class="col">{{form.elec_pwr_sttn_nbr|as_crispy_field}}</div>
+                                            <div class="col">{{form.elec_otr_nbr|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Grud Oil -->
+                                <div class="col">
+                                    <div class="scroll_div">
+                                        {{energy_formset.management_form}}
+                                        {% for form in energy_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.crude_prodtn_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.crude_exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.crude_imp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.crude_rsrvs_amt|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Refinery -->
+                                <div class="col">
+                                    <div class="scroll_div">
+                                        {{energy_formset.management_form}}
+                                        {% for form in energy_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.refined_prodtn_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.refined_cnsmptn_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.refined_exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.refined_imp_amt|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- Natural Gas -->
+                                <div class="col">
+                                    <div class="scroll_div">
+                                        {{energy_formset.management_form}}
+                                        {% for form in energy_formset %}
+                                        <div class="row Xform-row">
+                                            <div class="col">{{form.gas_prodtn_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.gas_exp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.gas_imp_amt|as_crispy_field}}</div>
+                                            <div class="col">{{form.gas_rsrv_amt|as_crispy_field}}</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                        </div>
                         </div>
 
                     </div>

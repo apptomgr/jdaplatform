@@ -180,7 +180,7 @@ class EconomicDataModel(models.Model):
 #/////////////////////////////////// ElectionModel ///////////////////////////////
 class ElectionModel(models.Model):
     country = models.ForeignKey(CountryModel, related_name='elections', on_delete=models.CASCADE, blank=True, null=True)
-    elecn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=False, null=False)
+    elecn_dt = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     elecn_type = models.CharField(max_length=15, blank=True, null=True)
     cmnts = models.CharField(max_length=250, blank=True, null=True)
 
@@ -210,7 +210,7 @@ class OtherIndicatorsModel(models.Model):
     country = models.ForeignKey(CountryModel, related_name='other_indicators', on_delete=models.CASCADE, blank=True, null=True)
     yr = models.IntegerField(blank=True, null=True)
     ind_name = models.CharField(max_length=35, blank=True, null=True)
-    ind_val = models.IntegerField(blank=True, null=True)
+    ind_val = models.IntegerField(default=0, blank=True, null=True)
     cmnts = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
@@ -221,6 +221,67 @@ class OtherIndicatorsModel(models.Model):
         db_table = 'OtherIndicatorsModel'
 
 
+#/////////////////////////////////// TradePartnersModel ///////////////////////////////
+class TradePartnersModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='business_partners', on_delete=models.CASCADE, blank=True, null=True)
+    yr = models.IntegerField(blank=True, null=True)
+    exp_cntry = CountryField(blank=True, null=True)
+    exp_amt = models.IntegerField(blank=True, null=True)
+    exp_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    exp_prodt_name = models.CharField(max_length=150, blank=True, null=True)
+    imp_cntry = CountryField(blank=True, null=True)
+    imp_amt = models.IntegerField(blank=True, null=True)
+    imp_rate = models.DecimalField(max_digits=18, decimal_places=2, blank=True, null=True)
+    imp_prodt_name = models.CharField(max_length=150, blank=True, null=True)
+
+    def __str__(self):
+        return f'Trading Partners: Export country: {self.exp_cntry.name} - Import country {self.imp_cntry.name}'
+
+    class Meta:
+        verbose_name_plural ='TradePartnersModel'
+        db_table = 'TradePartnersModel'
+
+#/////////////////////////////////// EnergyModel ///////////////////////////////
+class EnergyModel(models.Model):
+    country = models.ForeignKey(CountryModel, related_name='energies', on_delete=models.CASCADE, blank=True, null=True)
+    energy_yr = models.IntegerField(blank=True, null=True)
+    elec_hydro_dam_nbr = models.IntegerField(blank=True, null=True)
+    elec_pwr_sttn_nbr = models.IntegerField(blank=True, null=True)
+    elec_otr_nbr = models.IntegerField(blank=True, null=True)
+    crude_prodtn_amt = models.IntegerField(blank=True, null=True)
+    crude_exp_amt = models.IntegerField(blank=True, null=True)
+    crude_imp_amt = models.IntegerField(blank=True, null=True)
+    crude_rsrvs_amt=models.IntegerField(blank=True, null=True)
+    refined_prodtn_amt=models.IntegerField(blank=True, null=True)
+    refined_cnsmptn_amt=models.IntegerField(blank=True, null=True)
+    refined_exp_amt=models.IntegerField(blank=True, null=True)
+    refined_imp_amt=models.IntegerField(blank=True, null=True)
+    gas_prodtn_amt=models.IntegerField(blank=True, null=True)
+    gas_exp_amt=models.IntegerField(blank=True, null=True)
+    gas_imp_amt=models.IntegerField(blank=True, null=True)
+    gas_rsrv_amt=models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return f'Trading Partners: Export country: {self.country.name} - Year: {self.energy_yr}'
+
+    class Meta:
+        verbose_name_plural ='EnergyModel'
+        db_table = 'EnergyModel'
+
+# #/////////////////////////////////// ImportExportModel ///////////////////////////////
+# class ImportExportModel(models.Model):
+#     country = models.ForeignKey(CountryModel, related_name='import_export', on_delete=models.CASCADE, blank=True, null=True)
+#     yr = models.IntegerField(blank=True, null=True)
+#     prodt_name = models.CharField(max_length=35, blank=True, null=True)
+#     ind_val = models.IntegerField(blank=True, null=True)
+#     cmnts = models.CharField(max_length=250, blank=True, null=True)
+#
+#     def __str__(self):
+#         return self.ind_name
+#
+#     class Meta:
+#         verbose_name_plural ='ImportExportModel'
+#         db_table = 'ImportExportModel'
 # #/////////////////////////////////// GdpModel ///////////////////////////////
 # class GdpModel(models.Model):
 #     country = models.ForeignKey(CountryModel, related_name='econs', on_delete=models.CASCADE, blank=True, null=True)
