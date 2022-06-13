@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('yr', models.IntegerField(blank=True, null=True)),
                 ('ind_name', models.CharField(blank=True, max_length=35, null=True)),
-                ('ind_val', models.IntegerField(blank=True, null=True)),
+                ('ind_val', models.IntegerField(blank=True, null=True, default=0)),
                 ('cmnts', models.CharField(blank=True, max_length=250, null=True)),
                 ('country', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='other_indicators', to='jdafinancialsapp.countrymodel')),
             ],
