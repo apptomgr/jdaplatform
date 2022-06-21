@@ -29,14 +29,14 @@
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header mb-0">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Add {{header_title}} Security  {% endblocktrans %}</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Stock' %}</h5>
         </div>
 
         <div class="card-body">
 
             <!-- Security info -->
             <div class="row">
-                <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
+                <div class="col-12"><input class="form-control" type="text" placeholder="{% trans 'Security Info' %}" readonly></div>
             </div>
             <div class="row mt-1">
 
@@ -95,7 +95,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.invstr_cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
-                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">Taxation Code</span>
+                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">{% trans 'Taxation Code' %}</span>
                     <span class="float-left">{{form.txtn_code| as_crispy_field}}</span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg_tax|as_crispy_field}}</div>
@@ -103,7 +103,7 @@
 
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
-                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">Value Code</span>
+                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">{% trans 'Value Code' %}</span>
                     <span class="float-left">{{form.val_code| as_crispy_field}}</span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.lwst_appl_rate|as_crispy_field}}</div>
@@ -118,15 +118,21 @@
 
             <!-- Stock fields -->
             <div class="row">
-                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="Stock Info" readonly></div>
+                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="{% trans 'Stock Info' %}" readonly></div>
             </div>
             <div class="collapse show" id="stock">
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.stock_type|as_crispy_field}}</div>
                     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.under_stock_type|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.secr_status|as_crispy_field}}</div>
-                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{stock_form.dvdnd|as_crispy_field}}</div>
-                </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{stock_form.secr_status|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{stock_form.dvdnd|as_crispy_field}}</div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 input-group justify-content-right">
+                        <div class="input-group-prepend">
+                            {{stock_form.lstn_dt| as_crispy_field}}
+                            <i class="far fa-calendar-alt fa-fw fa-2x text-info"></i>
+                        </div>
+                    </div>
+                   </div>
             </div>
 
 
@@ -238,11 +244,6 @@ table td input {
    min-width: 232px;
    background-color:red;
   }
-
-
-
-
-
 
 </style>
 

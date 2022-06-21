@@ -133,8 +133,8 @@ class SecurityModel(models.Model):
 
     CHOICES_ISSUE_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
 
-    ticker = models.CharField(max_length=12, blank=False, null=False)
-    isin = models.CharField(max_length=20, blank=False, null=False)
+    ticker = models.CharField(max_length=12, blank=True, null=True)
+    isin = models.CharField(max_length=20, blank=True, null=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     isu_dt = models.DateTimeField(blank=True, null=True)
     open_dt = models.DateTimeField(blank=True, null=True)
@@ -205,6 +205,7 @@ class StockModel(models.Model):
     under_stock_type = models. CharField(max_length=25, null=False, blank=False)
     secr_status = models.CharField(max_length=30, choices=CHOICES_SECR_STS)
     dvdnd = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    lstn_dt = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.security.ticker
@@ -265,18 +266,18 @@ class BondModel(models.Model):
     gr_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     net_bnd_int_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     nbr_shrs_outstg = models.IntegerField(blank=True, null=True)
-    bnd_type = models.CharField(max_length=50, choices=CHOICES_BND_TYPE)
+    bnd_type = models.CharField(max_length=50, choices=CHOICES_BND_TYPE, blank=True, null=True)
     duratn_amt = models.IntegerField(blank=False, null=False)
-    duratn_units = models.CharField(max_length=50, choices=CHOICES_DURATN_UNITS)
+    duratn_units = models.CharField(max_length=50, choices=CHOICES_DURATN_UNITS, blank=True, null=True)
     pymt_perd = models.IntegerField() #max_length=50, choices=PYMT_PERD)
-    pymt_perd_units = models.CharField(max_length=50, choices=CHOICES_PYMT_PERDU)
+    pymt_perd_units = models.CharField(max_length=50, choices=CHOICES_PYMT_PERDU, blank=True, null=True)
     dfrrd_rpymt_perd = models.IntegerField(blank=True, null=True)
-    dfrrd_rpymt_perd_units = models.CharField(max_length=50, choices=CHOICES_DRPU)
-    rpymt_mthd = models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD)
-    rpymt_type = models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE)
-    bnd_isu_dt = models.DateField(auto_now=False)
-    first_pay_dt = models.DateField(auto_now_add=False)
-    lst_pay_dt = models.DateField(auto_now_add=False)
+    dfrrd_rpymt_perd_units = models.CharField(max_length=50, choices=CHOICES_DRPU, blank=True, null=True)
+    rpymt_mthd = models.CharField(max_length=50, choices=CHOICES_RPYMT_MTHD, blank=True, null=True)
+    rpymt_type = models.CharField(max_length=50, choices=CHOICES_RPYMT_TYPE, blank=True, null=True)
+    bnd_isu_dt = models.DateField(auto_now=False, blank=True, null=True)
+    first_pay_dt = models.DateField(auto_now_add=False, blank=True, null=True)
+    lst_pay_dt = models.DateField(auto_now_add=False, blank=True, null=True)
     usage = models.IntegerField(blank=False, null=False, choices=CHOICES_USAGE)
 
     def __str__(self):

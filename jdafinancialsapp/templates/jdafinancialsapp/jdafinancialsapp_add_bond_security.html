@@ -29,7 +29,7 @@
     <form method="POST" novalidate>
         {% csrf_token %}
         <div class="card-header mb-0">
-            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% blocktrans %} Add {{header_title}} Security  {% endblocktrans %}</h5>
+            <h5 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {% trans 'Add Bond' %}</h5>
         </div>
 
         <div class="card-body">
@@ -37,7 +37,7 @@
             <!-- Security info -->
 
             <div class="row">
-                <div class="col-12"><input class="form-control" type="text" placeholder="Security Info" readonly></div>
+                <div class="col-12"><input class="form-control" type="text" placeholder="{% trans 'Security Info' %}" readonly></div>
             </div>
             <div class="row mt-1">
 
@@ -96,7 +96,7 @@
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.invstr_cntry_tax|as_crispy_field}}</div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
-                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">Taxation Code</span>
+                    <span class="float-left form-control-sm mt-1 text-secondary mr-3">{% trans 'Taxation Code' %}</span>
                     <span class="float-left">{{form.txtn_code| as_crispy_field}}</span>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{form.exchg_tax|as_crispy_field}}</div>
@@ -113,7 +113,7 @@
 
             <!-- Bond fields -->
             <div class="row">
-                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="Bond Info" readonly></div>
+                <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="{% trans 'Bond Info' %}" readonly></div>
             </div>
             <div class="collapse show" id="bond">
                 <div class="row">
