@@ -564,6 +564,17 @@ $(document).ready(function() {
       };
       date_input.datepicker(options);
     })
+    $(document).ready(function(){
+      var date_input=$('input[name="lstn_dt"]'); //our date input has the name "lstn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
       $(document).ready(function(){
       var date_input=$('input[name="first_pay_dt"]'); //our date input has the name "to_date"
       var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";

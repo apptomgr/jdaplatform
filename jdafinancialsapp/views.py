@@ -32,7 +32,7 @@ from accounts .decorators import allowed_users
 from countries_plus.models import Country
 from languages_plus.models import Language, CultureCode
 from languages_plus.utils import associate_countries_and_languages
-
+from django.utils.translation import gettext as _
 
 def get_user_grp(request):
     grp = None
@@ -94,7 +94,8 @@ def jdafinancialsapp_stmts(request):
 
     else: # end if POST
         #print(f"67//// request is GET")
-        form = FinStmtDashForm()
+        #initial_data = {'name': 'Student1','roll': 123}
+        form = FinStmtDashForm() #initial=initial_data)
 
     #print(f"67///// taking us to fin_dash request {request}")
     grp = get_user_grp(request)
@@ -161,7 +162,8 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
             #show bal rpt
             return redirect('jdafinancialsapp_bal_rpt', sector, company.id, statement, entry_date)
         else:
-            form = BalanceSheetForm()
+            #initial_data = {'brut_0': 900, 'brut_1': 901, 'brut_2': 902}
+            form = BalanceSheetForm() #initial=initial_data)
 
     link = FinancialStatementBalLinkModel.objects.all()
     bal  = FinancialStatementFactModel.objects.all()
@@ -1455,17 +1457,19 @@ def jdafinancialsapp_add_stock_security(request):
             return redirect('jdafinancialsapp_add_stock_security')
 
         if len(form.errors) < 4:
-            messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
+            msg_1 = _('Please complete filling all required fields before submitting')
+            messages.error(request, f"{msg_1}: {form.errors} ")
 
         # messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
-        messages.error(request, f"Please complete filling all required fields before submitting")
+        msg_2 = _('Please complete filling all required fields before submitting')
+        messages.error(request, f"{msg_2}")
     else:
         form = SecurityForm()
         stock_form = StockModelForm()
         #exchg_formset = ExchangeFormset(queryset=ExchangeModel.objects.none())
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'stock_form': stock_form, 'header_title': 'Stock', 'bread_new_security': 'font-weight-bold'}
+    context = {'user_grp': grp, 'form': form, 'stock_form': stock_form, 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_stock_security.html', context)
 
 #////////////////////////// jdafinancialsapp_add_bond_security ///////////////////////
@@ -1496,10 +1500,14 @@ def jdafinancialsapp_add_bond_security(request):
             return redirect('jdafinancialsapp_add_bond_security')
 
         if len(form.errors) < 4:
-            messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
+            msg_1 = _('Please complete filling all required fields before submitting')
+            messages.error(request, f"{msg_1}: {form.errors} ")
+            #messages.error(request, f"Please complete filling all required fields before submitting: {form.errors} ")
 
         #messages.error(request, f"Test info remove b4 prod 768: {form.errors} ")
-        messages.error(request, f"Please complete filling all required fields before submitting")
+        msg_2 = _('Please complete filling all required fields before submitting')
+        messages.error(request, f"{msg_2} ")
+        #messages.error(request, f"Please complete filling all required fields before submitting")
         #else:
         #    messages.error(request, form.errors)
         #    return redirect('jdafinancialsapp_add_security')
@@ -1510,7 +1518,7 @@ def jdafinancialsapp_add_bond_security(request):
 
 
     grp = get_user_grp(request)
-    context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': 'Bond', 'bread_new_security': 'font-weight-bold'}
+    context = {'user_grp': grp, 'form': form, 'bond_form': bond_form, 'formset': formset, 'header_title': _('Bond'), 'bread_new_security': 'font-weight-bold'}
     return render(request, 'jdafinancialsapp/jdafinancialsapp_add_bond_security.html', context)
 
 #////////////////////////// jdafinancialsapp_edit_stock_security ///////////////////////

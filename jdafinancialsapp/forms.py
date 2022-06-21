@@ -443,186 +443,186 @@ class FinStmtDashForm(forms.Form):
 #///////////////////////// BalanceSheetForm /////////////////////
 class BalanceSheetForm(forms.ModelForm):
     brut_0 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    brut_1 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    brut_2 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_3 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_4 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_5 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_6 = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_7 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_8 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_9 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_10 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_11 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_12 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_13 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_14 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_15 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_16 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_17 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_18 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_19 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_20 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_21 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_22 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_23 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_24 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_25 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_26 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_27 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_28 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_29 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_30 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_31 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_32 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_33 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_34 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_35 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_36 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_37 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_38 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_39 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_40 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_41 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_42 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_43 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_44 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_45 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_46 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_47 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_48 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_49 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_50 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_51 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_52 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_53 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_54 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_55 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_56 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_57 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    brut_58 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_1 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
+    brut_2 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_3 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_4 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_5 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_6 = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_7 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_8 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_9 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_10 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_11 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_12 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_13 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_14 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_15 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_16 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_17 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_18 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_19 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_20 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_21 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_22 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_23 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_24 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_25 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_26 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_27 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_28 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_29 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_30 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_31 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_32 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_33 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_34 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_35 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_36 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_37 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_38 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_39 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_40 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_41 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_42 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_43 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_44 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_45 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_46 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_47 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_48 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_49 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_50 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_51 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_52 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_53 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_54 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_55 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_56 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_57 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    brut_58 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
     #brut_59 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
 
-    amort_0 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    amort_1 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    amort_2 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_3 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_4 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_5 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_6 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_7 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_8 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_9 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_10 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_11 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_12 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_13 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_14 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_15 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_16 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_17 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_18 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_19 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_20 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_21 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_22 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_23 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_24 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_25 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_26 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_27 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_28 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_29 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_30 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_31 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_32 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_33 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_34 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_35 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_36 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_37 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_38 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_39 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_40 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_41 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_42 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_43 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_44 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_45 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_46 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_47 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_48 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_49 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_50 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_51 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_52 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_53 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_54 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_55 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_56 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_57 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    amort_58 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_0 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
+    amort_1 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
+    amort_2 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_3 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_4 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_5 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_6 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_7 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_8 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_9 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_10 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_11 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_12 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_13 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_14 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_15 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_16 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_17 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_18 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_19 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_20 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_21 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_22 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_23 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_24 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_25 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_26 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_27 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_28 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_29 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_30 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_31 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_32 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_33 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_34 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_35 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_36 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_37 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_38 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_39 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_40 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_41 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_42 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_43 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_44 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_45 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_46 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_47 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_48 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_49 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_50 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_51 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_52 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_53 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_54 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_55 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_56 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_57 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    amort_58 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
     #amort_59 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur': 'calc();', 'class': 'form-control form-control-sm', 'placeholder': '0.00'}))
 
-    net_0 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    net_1 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
-    net_2 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_3 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_4 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_5 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_6 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_7 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_8 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_9 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_10 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_11 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_12 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_13 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_14 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_15 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_16 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_17 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_18 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_19 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_20 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_21 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_22 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_23 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_24 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_25 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_26 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_27 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_28 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_29 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_30 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_31 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_32 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_33 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_34 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_35 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_36 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_37 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_38 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_39 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_40 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_41 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_42 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_43 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_44 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_45 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_46 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_47 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_48 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_49 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_50 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_51 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_52 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_53 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_54 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_55 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_56 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_57 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
-    net_58 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_0 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
+    net_1 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder':'0.00'}))
+    net_2 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_3 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_4 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_5 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_6 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_7 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_8 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_9 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_10 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_11 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_12 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_13 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_14 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_15 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_16 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_17 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_18 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_19 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_20 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_21 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_22 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_23 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_24 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_25 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_26 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_27 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_28 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_29 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_30 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_31 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_32 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_33 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_34 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_35 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_36 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_37 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_38 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_39 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_40 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_41 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_42 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_43 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_44 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_45 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_46 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_47 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_48 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_49 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_50 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_51 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_52 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_53 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_54 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_55 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_56 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_57 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
+    net_58 = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
     #net_59 = forms.DecimalField(max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'onBlur':'calc();','class': 'form-control form-control-sm', 'placeholder': '0.00'}))
 
     class Meta:
@@ -782,7 +782,7 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_TITLE_TYPE = (
-        ('','Title Type'),
+        ('', ugettext_lazy('Title Type')),
         ('Listed Share', 'Listed Share'),
         ('Listed Bond', 'Listed Bond'),
         ('Unlisted Share', 'Unlisted Share'),
@@ -790,20 +790,20 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_SHR_CLASS = (
-        ('','Share Class'),
+        ('', ugettext_lazy('Share Class')),
         ('A', 'A'),
         ('B', 'B'),
         ('C', 'C'),
     )
 
     CHOICES_ISUR_TYPE = (
-        ('','Issuer Type'),
+        ('',ugettext_lazy('Issuer Type')),
         ('Private', 'Private'),
         ('Public', 'Public'),
     )
 
     CHOICES_RGSTRR = (
-        ('', 'Registrar'),
+        ('', ugettext_lazy('Registrar')),
         ('ABCO BOURSE','ABCO BOURSE'),
         ('AFRICABOURSE','AFRICABOURSE'),
         ('AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)','AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)'),
@@ -840,7 +840,7 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_DEPSTY = (
-        ('', 'Depository'),
+        ('', ugettext_lazy('Depository')),
         ('BCEAO','BCEAO'),
         ('DC/BR','DC/BR'),
     )
@@ -850,7 +850,7 @@ class SecurityForm(forms.ModelForm):
 
 
     CHOICES_SECTOR = (
-        ('', 'Activity Sector'),
+        ('', ugettext_lazy('Activity Sector')),
         ('Agriculture', 'Agriculture'),
         ('Banking', 'Banking'),
         ('Manufacture', 'Manufacture'),
@@ -879,38 +879,38 @@ class SecurityForm(forms.ModelForm):
 
     CHOICES_ISSUE_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
     isin = forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
-    name = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Name'}, ))
-    ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
-    desc = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
+    name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Name'}, ))
+    ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Ticker')}, ))
+    desc = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
     # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Date'}))
-    isu_dt =forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Date'}))
+    isu_dt =forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Issue Date')}))
     # open_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
-    open_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
-    close_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
+    open_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Open Date')}))
+    close_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Close Date')}))
     # close_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
-    listg_sts = forms.ChoiceField(choices=CHOICES_LISTG, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Listing Status'}))
-    nmnl_amt = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Nominal Value'}))
-    cntry = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
+    listg_sts = forms.ChoiceField(required=False, choices=CHOICES_LISTG, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Listing Status')}))
+    nmnl_amt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Nominal Value')}))
+    cntry = CountryField(blank=True, blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
     # cntry = # forms.ModelChoiceField(queryset=CountryField.objects.all(), empty_label='Country', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
-    currency = forms.CharField(max_length=5, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Currency'},))
-    min_lot = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Lot Minimum'}, ))
-    ttl_type = forms.ChoiceField(choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Title Type'}))
-    shr_class = forms.ChoiceField(choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Share Class'}))
-    isur_type = forms.ChoiceField(choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Type'}))
+    currency = forms.CharField(required=False, max_length=5, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Currency')},))
+    min_lot = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Lot Minimum')}, ))
+    ttl_type = forms.ChoiceField(required=False, choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Title Type')}))
+    shr_class = forms.ChoiceField(required=False, choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Share Class')}))
+    isur_type = forms.ChoiceField(required=False, choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Issuer Type')}))
     # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
+    sector = forms.ModelChoiceField(required=False, queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #issue = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Issue', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
-    issuer = forms.ChoiceField(choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
-    rgstrr = forms.ChoiceField(choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
-    exchg  = forms.ModelMultipleChoiceField(queryset=ExchangeModel.objects.all(), label='', widget=forms.SelectMultiple(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'multiple':'multiple', 'data-live-search=': 'true', 'title':'Exchange'})) # Drop down values from Exchange table
-    depsty = forms.ChoiceField(choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))
-    cntry_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Country Tax'}))
-    invstr_cntry_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Invstmt Country Tax'}))
-    txtn_code = forms.NullBooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    exchg_tax = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Exchange Tax'}))
-    val_code = forms.NullBooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    lwst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
-    hghst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
+    issuer = forms.ChoiceField(required=False, choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Issuer')}))
+    rgstrr = forms.ChoiceField(required=False, choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Security Status')}))
+    exchg  = forms.ModelMultipleChoiceField(required=False, queryset=ExchangeModel.objects.all(), label='', widget=forms.SelectMultiple(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'multiple':'multiple', 'data-live-search=': 'true', 'title':ugettext_lazy('Exchange')})) # Drop down values from Exchange table
+    depsty = forms.ChoiceField(required=False, choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Depository')}))
+    cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Country Tax')}))
+    invstr_cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Local Tax')}))
+    txtn_code = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    exchg_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Exchange Tax')}))
+    val_code = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    lwst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Lowest Applied Rate')}))
+    hghst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Highest Applied Rate')}))
 
 
     class Meta:
@@ -920,16 +920,17 @@ class SecurityForm(forms.ModelForm):
 # ////////////////////////// StockModelForm /////////////////////////////
 class StockModelForm(forms.ModelForm):
     CHOICES_SECR_STS = (
-        ('', 'Security Status'),
+        ('', ugettext_lazy('Security Status')),
         ('Listed','Listed'),
         ('Unquoted', 'Unquoted'),
         ('Suspended', 'Suspended'),
         ('Deleted', 'Deleted'),
     )
-    stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Stock Type'},))
-    under_stock_type  = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Under Stock Type'},))
-    secr_status = forms.ChoiceField(choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
-    dvdnd = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Dividend Per Share'}))
+    stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Stock Type')},))
+    under_stock_type  = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Under Stock Type')},))
+    secr_status = forms.ChoiceField(required=False, choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Security Status')}))
+    dvdnd = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Dividend Per Share')}))
+    lstn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Listing Date')}))
 
     class Meta:
         model = StockModel
@@ -938,7 +939,7 @@ class StockModelForm(forms.ModelForm):
 # ////////////////////////// BondModelForm /////////////////////////////
 class BondModelForm(forms.ModelForm):
     CHOICES_BND_TYPE = (
-        ('', 'Bond Type'),
+        ('', ugettext_lazy('Bond Type')),
         ('Redeemable in Shares', 'Redeemable in Shares'),
         ('Constant Redemption Bond', 'Constant Redemption Bond'),
         ('Deferred Constant Redemption Bond', 'Deferred Constant Redemption Bond'),
@@ -946,14 +947,14 @@ class BondModelForm(forms.ModelForm):
     )
 
     CHOICES_DURATN_UNITS = (
-        ('', 'Duration Units'),
+        ('', ugettext_lazy('Duration Units')),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_PPU = (
-        ('', 'Payment Period Units'),
+        ('', ugettext_lazy('Payment Period Units')),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
@@ -961,45 +962,45 @@ class BondModelForm(forms.ModelForm):
     )
 
     CHOICES_DRPU = (
-        ('', 'Deferred Repayment Period Units'),
+        ('', ugettext_lazy('Deferred Repayment Period Units')),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_RPYMT_MTHD = (
-        ('', 'Repayment Method'),
+        ('', ugettext_lazy('Repayment Method')),
         ('Sur Valeur', 'Sur Valeur'),
         ('Sur Valeur', 'Sur Valeur'),
     )
 
     CHOICES_RPYMT_TYPE = (
-        ('', 'Repayment Type'),
+        ('', ugettext_lazy('Repayment Type')),
         ('Fixed rate', 'Fixed rate'),
         ('Variable rate', 'Variaible'),
     )
     CHOICES_USAGE = (
-        ('', 'Usage'),
+        ('', ugettext_lazy('Usage')),
         ('360', '360'),
         ('365', '365'),
     )
-    auth = forms.NullBooleanField(initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    gr_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Gross Bond Interest Rate'}))
-    net_bnd_int_rate = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Net Bond Interest Rate'}))
-    nbr_shrs_outstg = forms.DecimalField(max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number Shares Outstanding'}))
-    bnd_type = forms.ChoiceField(choices=CHOICES_BND_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Type'}))
-    duratn_amt = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Duration'}, ))
-    duratn_units = forms.ChoiceField(choices=CHOICES_DURATN_UNITS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Duration Units'}))
-    pymt_perd = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Payment Period'}, ))
-    pymt_perd_units = forms.ChoiceField(choices=CHOICES_PPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Payment Period Units'}))
-    dfrrd_rpymt_perd = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Deferred Repayment Period'}, ))
-    dfrrd_rpymt_perd_units = forms.ChoiceField(choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Deferred Repayment Period Units'}))
-    rpymt_mthd = forms.ChoiceField(choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
-    rpymt_type = forms.ChoiceField(choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Type'}))
-    bnd_isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issued Date'}))
-    first_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'First Payment Date'}))
-    lst_pay_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Last Payment Date'}))
-    usage = forms.ChoiceField(choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Usage'}))
+    auth = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
+    gr_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Gross Bond Interest Rate')}))
+    net_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Net Bond Interest Rate')}))
+    nbr_shrs_outstg = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Number Shares Outstanding')}))
+    bnd_type = forms.ChoiceField(required=False, choices=CHOICES_BND_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Bond Type')}))
+    duratn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Duration')}, ))
+    duratn_units = forms.ChoiceField(required=False, choices=CHOICES_DURATN_UNITS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Duration Units')}))
+    pymt_perd = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Payment Period'}, ))
+    pymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_PPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Payment Period Units')}))
+    dfrrd_rpymt_perd = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Deferred Repayment Period')}, ))
+    dfrrd_rpymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Deferred Repayment Period Units')}))
+    rpymt_mthd = forms.ChoiceField(required=False, choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
+    rpymt_type = forms.ChoiceField(required=False, choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Repayment Type')}))
+    bnd_isu_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Bond Issued Date')}))
+    first_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('First Payment Date')}))
+    lst_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Last Payment Date')}))
+    usage = forms.ChoiceField(required=False, choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Usage')}))
 
     class Meta:
         model = BondModel

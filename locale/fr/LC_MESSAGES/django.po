@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-23 21:25-0400\n"
+"POT-Creation-Date: 2022-06-20 10:48-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,8 +59,8 @@ msgid "Home"
 msgstr "Acceuil"
 
 #: accounts/templates/registration/account_admin.html:30
-#: jdamainapp/templates/jdamainapp/base.html:146
 #: jdamainapp/templates/jdamainapp/base.html:148
+#: jdamainapp/templates/jdamainapp/base.html:150
 msgid "Account Activation"
 msgstr "Activation de comptes"
 
@@ -87,7 +87,7 @@ msgstr "Modifier le nom d'utilisateur"
 #: accounts/templates/registration/admin_tasks_breadcrum.html:6
 #: accounts/templates/registration/admin_tasks_breadcrum.html:7
 #: accounts/templates/registration/admin_tasks_edit.html:27
-#: jdamainapp/templates/jdamainapp/base.html:145
+#: jdamainapp/templates/jdamainapp/base.html:147
 msgid "Admin Tasks"
 msgstr "Tâches administratives"
 
@@ -105,7 +105,7 @@ msgstr "Modifier mot de passe"
 # msgid "Change Password"
 # msgstr "Modifier mot de passe"
 #: accounts/templates/registration/admin_tasks.html:39
-#: jdafinancialsapp/forms.py:76 jdafinancialsapp/forms.py:108
+#: jdafinancialsapp/forms.py:84 jdafinancialsapp/forms.py:116
 msgid "Email"
 msgstr "Email"
 
@@ -178,7 +178,7 @@ msgstr "Nos Applications"
 
 #: accounts/templates/registration/login.html:45
 #: accounts/templates/registration/login.html:51
-#: jdamainapp/templates/jdamainapp/base.html:172
+#: jdamainapp/templates/jdamainapp/base.html:174
 msgid "Login"
 msgstr "Connexion"
 
@@ -203,7 +203,7 @@ msgstr "App Financiére"
 #: accounts/templates/registration/register.html:123
 #: accounts/templates/registration/signup.html:97
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:48
-#: jdamainapp/templates/jdamainapp/base.html:95
+#: jdamainapp/templates/jdamainapp/base.html:97
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:78
 msgid "Analytics App"
 msgstr "App Boursiére"
@@ -211,7 +211,7 @@ msgstr "App Boursiére"
 #: accounts/templates/registration/login.html:112
 #: accounts/templates/registration/register.html:142
 #: accounts/templates/registration/signup.html:116
-#: jdamainapp/templates/jdamainapp/base.html:108
+#: jdamainapp/templates/jdamainapp/base.html:110
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:97
 msgid "Publications App"
 msgstr "Publications"
@@ -228,13 +228,13 @@ msgstr "Type de fichier invalide: %(value)s"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:6
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:69
-#: jdamainapp/templates/jdamainapp/base.html:98
+#: jdamainapp/templates/jdamainapp/base.html:100
 msgid "Market Data Upload"
 msgstr "Télécharger les données du marché"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:7
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:108
-#: jdamainapp/templates/jdamainapp/base.html:100
+#: jdamainapp/templates/jdamainapp/base.html:102
 msgid "Market Data Report"
 msgstr "Rapport des données du marché"
 
@@ -302,6 +302,7 @@ msgid "Market Listing as of"
 msgstr "Liste des cours du"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:36
+#: jdafinancialsapp/forms.py:313
 msgid "Index"
 msgstr "Indice"
 
@@ -366,13 +367,13 @@ msgstr "Le"
 msgid "Market data upload"
 msgstr "Télécharger les données du marché"
 
-#: jdafinancialsapp/forms.py:33
+#: jdafinancialsapp/forms.py:41
 msgid "Corporate Name"
 msgstr "Denomination Sociale"
 
 # msgid "Corporate Name"
 # msgstr "Nom de la Soci&eacute;t&eacute;"
-#: jdafinancialsapp/forms.py:34 jdafinancialsapp/forms.py:179
+#: jdafinancialsapp/forms.py:42 jdafinancialsapp/forms.py:420
 #: jdapublicationsapp/forms.py:56 jdapublicationsapp/forms.py:114
 #: jdapublicationsapp/forms.py:128
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:106
@@ -380,105 +381,469 @@ msgstr "Denomination Sociale"
 msgid "Company"
 msgstr "Société"
 
-#: jdafinancialsapp/forms.py:37
+#: jdafinancialsapp/forms.py:45
 msgid "Legal Form"
 msgstr "Forme juridique"
 
-#: jdafinancialsapp/forms.py:38
+#: jdafinancialsapp/forms.py:46
 #, fuzzy
 #| msgid "Publication Date"
 msgid "Creation Date"
 msgstr "Date de<br>Publication"
 
-#: jdafinancialsapp/forms.py:39
+#: jdafinancialsapp/forms.py:47
 msgid "RCCM Number"
 msgstr "Numéro RCCM"
 
-#: jdafinancialsapp/forms.py:40 jdafinancialsapp/forms.py:128
+#: jdafinancialsapp/forms.py:48 jdafinancialsapp/forms.py:146
+#: jdafinancialsapp/forms.py:184 jdafinancialsapp/forms.py:339
+#: jdafinancialsapp/forms.py:343 jdafinancialsapp/forms.py:893
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:39
 msgid "Country"
 msgstr "Pays"
 
-#: jdafinancialsapp/forms.py:44
+#: jdafinancialsapp/forms.py:52
 msgid "Activite Sector BRVM"
 msgstr "Secteur d'activité BRVM"
 
-#: jdafinancialsapp/forms.py:45
+#: jdafinancialsapp/forms.py:53
 msgid "Activity Code (CIV)"
 msgstr "Code activités economiques (CIV)"
 
-#: jdafinancialsapp/forms.py:46
+#: jdafinancialsapp/forms.py:54
 msgid "Activity Code Joseph & Daniel Adv."
 msgstr "Code activités Joseph & Daniel Adv."
 
-#: jdafinancialsapp/forms.py:47
+#: jdafinancialsapp/forms.py:55
 msgid "Other Business Sectors"
 msgstr "Autre secteur d'activités"
 
-#: jdafinancialsapp/forms.py:73
+#: jdafinancialsapp/forms.py:81
 msgid "Address"
 msgstr "Adresse"
 
-#: jdafinancialsapp/forms.py:74 jdafinancialsapp/forms.py:107
+#: jdafinancialsapp/forms.py:82 jdafinancialsapp/forms.py:115
 msgid "Phone Number"
 msgstr "Téléphone"
 
-#: jdafinancialsapp/forms.py:75
+#: jdafinancialsapp/forms.py:83
 msgid "Fax Number"
 msgstr "Télécopie"
 
-#: jdafinancialsapp/forms.py:77 jdafinancialsapp/forms.py:148
+#: jdafinancialsapp/forms.py:85 jdafinancialsapp/forms.py:166
 msgid "Website"
 msgstr "Site web"
 
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"
-#: jdafinancialsapp/forms.py:86
+#: jdafinancialsapp/forms.py:94
 msgid "Shareholder Name"
 msgstr "Nom de l'actionnaire"
 
 # msgid "Annual Reports"
 # msgstr "Rapports Annuels"
-#: jdafinancialsapp/forms.py:87
+#: jdafinancialsapp/forms.py:95
 msgid "Shareholder Type"
 msgstr "Type d'actionnaire"
 
-#: jdafinancialsapp/forms.py:88
+#: jdafinancialsapp/forms.py:96
 msgid "Shares Held"
 msgstr "Part detenue"
 
-#: jdafinancialsapp/forms.py:105
+#: jdafinancialsapp/forms.py:113
 msgid "Last Name & First Name"
 msgstr "Noms & Prenoms"
 
-#: jdafinancialsapp/forms.py:106
+#: jdafinancialsapp/forms.py:114
 #, fuzzy
 #| msgid "Publication"
 msgid "Function"
 msgstr "Publications"
 
-#: jdafinancialsapp/forms.py:126
+#: jdafinancialsapp/forms.py:144
 msgid "Legal Name"
 msgstr "Nom légal"
 
-#: jdafinancialsapp/forms.py:127 jdafinancialsapp/forms.py:146
+#: jdafinancialsapp/forms.py:145 jdafinancialsapp/forms.py:164
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_company_listing.html:33
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:41
 msgid "Company Name"
 msgstr "Non Usuel"
 
-#: jdafinancialsapp/forms.py:147
+#: jdafinancialsapp/forms.py:165
 msgid "Share Amount"
 msgstr "Part detenue"
 
-#: jdafinancialsapp/forms.py:175
+#: jdafinancialsapp/forms.py:186
+#, fuzzy
+#| msgid "Value"
+msgid "Currency Code"
+msgstr "Valeur"
+
+#: jdafinancialsapp/forms.py:188
+#, fuzzy
+#| msgid "File Name"
+msgid "President Name"
+msgstr "Nom du Fichier"
+
+#: jdafinancialsapp/forms.py:189
+msgid "Area"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:191
+#, fuzzy
+#| msgid "Language"
+msgid "Official Language"
+msgstr "Langue"
+
+#: jdafinancialsapp/forms.py:194
+msgid "Continent"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:200
+msgid "Capital City"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:202
+#, fuzzy
+#| msgid "Country"
+msgid "Country Code"
+msgstr "Pays"
+
+#: jdafinancialsapp/forms.py:212 jdafinancialsapp/forms.py:312
+#: jdafinancialsapp/forms.py:338 jdafinancialsapp/forms.py:370
+msgid "Year"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:223
+msgid "GDP Year"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:234
+msgid "Debt Year"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:236
+#, fuzzy
+#| msgid "Publication Desc"
+msgid "Public Debt"
+msgstr "Desc. Publication"
+
+#: jdafinancialsapp/forms.py:237
+msgid "Foreign Debt"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:238
+msgid "Domestic Debt"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:239
+#, fuzzy
+#| msgid "Traded Value"
+msgid "Trade Balance"
+msgstr "Valeur Transige"
+
+#: jdafinancialsapp/forms.py:240 jdafinancialsapp/forms.py:340
+#, fuzzy
+#| msgid "Share Amount"
+msgid "Export Amount"
+msgstr "Part detenue"
+
+#: jdafinancialsapp/forms.py:241 jdafinancialsapp/forms.py:344
+#, fuzzy
+#| msgid "Share Amount"
+msgid "Import Amount"
+msgstr "Part detenue"
+
+#: jdafinancialsapp/forms.py:264
+#, fuzzy
+#| msgid "Publication Date"
+msgid "Election Date"
+msgstr "Date de<br>Publication"
+
+#: jdafinancialsapp/forms.py:289
+#, fuzzy
+#| msgid "Economic Notes"
+msgid "Economic Zone"
+msgstr "Notes Economiques"
+
+#: jdafinancialsapp/forms.py:314
+msgid "Valeur"
+msgstr ""
+
+# msgid "Newsletters"
+# msgstr "Note de Recherche"
+#: jdafinancialsapp/forms.py:315
+#, fuzzy
+#| msgid "Commentaries"
+msgid "Comments"
+msgstr "Commentaires"
+
+#: jdafinancialsapp/forms.py:341
+msgid "Export Rate"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:342 jdafinancialsapp/forms.py:346
+msgid "Product"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:345
+msgid "Import Rate"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:371
+msgid "Hydroelectric Dams"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:372
+msgid "Central Electric"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:373
+msgid "Others"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:374 jdafinancialsapp/forms.py:378
+#: jdafinancialsapp/forms.py:382
+#, fuzzy
+#| msgid "Publication"
+msgid "Production"
+msgstr "Publications"
+
+#: jdafinancialsapp/forms.py:375 jdafinancialsapp/forms.py:380
+#: jdafinancialsapp/forms.py:383
+#, fuzzy
+#| msgid "Reports"
+msgid "Exports"
+msgstr "Rapports"
+
+#: jdafinancialsapp/forms.py:376 jdafinancialsapp/forms.py:381
+#: jdafinancialsapp/forms.py:384
+#, fuzzy
+#| msgid "Reports"
+msgid "Imports"
+msgstr "Rapports"
+
+# msgid "Research Type"
+# msgstr "Type de Recherche"
+#: jdafinancialsapp/forms.py:377 jdafinancialsapp/forms.py:385
+#, fuzzy
+#| msgid "Research Notes"
+msgid "Reserves"
+msgstr "Note de Recherche"
+
+#: jdafinancialsapp/forms.py:379
+msgid "Consumption"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:416
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:64
 msgid "Sector"
 msgstr "Secteur"
 
-#: jdafinancialsapp/forms.py:183
+#: jdafinancialsapp/forms.py:424
 msgid "Statement"
 msgstr "Etats"
+
+#: jdafinancialsapp/forms.py:785 jdafinancialsapp/forms.py:897
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:61
+msgid "Title Type"
+msgstr "Type de Titre"
+
+#: jdafinancialsapp/forms.py:793 jdafinancialsapp/forms.py:898
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:62
+msgid "Share Class"
+msgstr "Classe Bourse"
+
+#: jdafinancialsapp/forms.py:800 jdafinancialsapp/forms.py:899
+msgid "Issuer Type"
+msgstr "Type d'emission"
+
+#: jdafinancialsapp/forms.py:806
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:66
+msgid "Registrar"
+msgstr "Registraire"
+
+#: jdafinancialsapp/forms.py:843 jdafinancialsapp/forms.py:906
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:88
+msgid "Depository"
+msgstr "Depositaire"
+
+#: jdafinancialsapp/forms.py:853
+#, fuzzy
+#| msgid "Activite Sector BRVM"
+msgid "Activity Sector"
+msgstr "Secteur d'activité BRVM"
+
+#: jdafinancialsapp/forms.py:883
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:11
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:42
+msgid "Ticker"
+msgstr "Symbole"
+
+#: jdafinancialsapp/forms.py:886
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:13
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:44
+msgid "Issue Date"
+msgstr "Date d'emission"
+
+#: jdafinancialsapp/forms.py:888
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:14
+msgid "Open Date"
+msgstr "Date Ouverture"
+
+#: jdafinancialsapp/forms.py:889
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:35
+msgid "Close Date"
+msgstr "Date Fermeture"
+
+#: jdafinancialsapp/forms.py:891
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:37
+msgid "Listing Status"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:892
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:38
+msgid "Nominal Value"
+msgstr "Valeur Nominale"
+
+#: jdafinancialsapp/forms.py:895
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:40
+msgid "Currency"
+msgstr "Monnaie"
+
+#: jdafinancialsapp/forms.py:896
+msgid "Lot Minimum"
+msgstr "Lot Minimum"
+
+#: jdafinancialsapp/forms.py:903
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:65
+msgid "Issuer"
+msgstr "Emetteur"
+
+#: jdafinancialsapp/forms.py:904 jdafinancialsapp/forms.py:923
+#: jdafinancialsapp/forms.py:931
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:155
+msgid "Security Status"
+msgstr "P.E.R"
+
+#: jdafinancialsapp/forms.py:905
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:87
+msgid "Exchange"
+msgstr "Echange"
+
+#: jdafinancialsapp/forms.py:907
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:89
+msgid "Country Tax"
+msgstr "Fisc. Pays"
+
+#: jdafinancialsapp/forms.py:908
+msgid "Local Tax"
+msgstr "Fisc. local"
+
+#: jdafinancialsapp/forms.py:910
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:92
+msgid "Exchange Tax"
+msgstr "IRVM"
+
+#: jdafinancialsapp/forms.py:912
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:120
+msgid "Lowest Applied Rate"
+msgstr "Borne Inf. fluc."
+
+#: jdafinancialsapp/forms.py:913
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:121
+msgid "Highest Applied Rate"
+msgstr "Borne Sup. fluc."
+
+#: jdafinancialsapp/forms.py:929
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:153
+msgid "Stock Type"
+msgstr "Type Action"
+
+#: jdafinancialsapp/forms.py:930
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:154
+msgid "Under Stock Type"
+msgstr "Sous Type Action"
+
+#: jdafinancialsapp/forms.py:932
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:156
+msgid "Dividend Per Share"
+msgstr "Nominal Non Verse"
+
+#: jdafinancialsapp/forms.py:941 jdafinancialsapp/forms.py:990
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:184
+msgid "Bond Type"
+msgstr "Type d'obligation"
+
+#: jdafinancialsapp/forms.py:949 jdafinancialsapp/forms.py:992
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:204
+msgid "Duration Units"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:956 jdafinancialsapp/forms.py:994
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:206
+msgid "Payment Period Units"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:964 jdafinancialsapp/forms.py:996
+msgid "Deferred Repayment Period Units"
+msgstr ""
+
+#: jdafinancialsapp/forms.py:971
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:209
+msgid "Repayment Method"
+msgstr "Mode Amort."
+
+#: jdafinancialsapp/forms.py:977 jdafinancialsapp/forms.py:998
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:228
+msgid "Repayment Type"
+msgstr "Type Amortissement"
+
+#: jdafinancialsapp/forms.py:982 jdafinancialsapp/forms.py:1002
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:232
+msgid "Usage"
+msgstr "Usance"
+
+#: jdafinancialsapp/forms.py:987
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:181
+msgid "Gross Bond Interest Rate"
+msgstr "T. Brut"
+
+#: jdafinancialsapp/forms.py:988
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:182
+msgid "Net Bond Interest Rate"
+msgstr "T. Net"
+
+#: jdafinancialsapp/forms.py:989
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:183
+msgid "Number Shares Outstanding"
+msgstr "NB Tit."
+
+#: jdafinancialsapp/forms.py:991
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:185
+msgid "Duration"
+msgstr "Duree"
+
+#: jdafinancialsapp/forms.py:995
+msgid "Deferred Repayment Period"
+msgstr "Differe"
+
+#: jdafinancialsapp/forms.py:999
+msgid "Bond Issued Date"
+msgstr "Date d'emission"
+
+# msgid "Issue Date"
+# msgstr "Date d'emission"
+#: jdafinancialsapp/forms.py:1000
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:230
+msgid "First Payment Date"
+msgstr "Date 1er Paie"
+
+#: jdafinancialsapp/forms.py:1001
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:231
+msgid "Last Payment Date"
+msgstr "Date Der. Paie"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:22
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:22
@@ -487,42 +852,47 @@ msgstr "Etats"
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:22
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:32
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:22
-#, fuzzy
-#| msgid "Security Filter"
 msgid "Security Listing"
-msgstr "Filtre des Codes"
+msgstr "Liste des titres"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_security.html:22
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:23
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:32
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_bond_security.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:23
-#: jdamainapp/templates/jdamainapp/base.html:86
+#: jdamainapp/templates/jdamainapp/base.html:88
 msgid "Add Stock"
-msgstr ""
+msgstr "Ajouter une Action"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:24
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:32
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_security.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_bond_security.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:24
-#: jdamainapp/templates/jdamainapp/base.html:88
-#, fuzzy
-#| msgid "Add Company"
+#: jdamainapp/templates/jdamainapp/base.html:90
 msgid "Add Bond"
-msgstr "Ajouter Soci&eacute;t&eacute;"
+msgstr "Ajouter une Obligation"
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:32
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:32
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:32
-#: jdafinancialsapp/templates/jdafinancialsapp/res.html:32
-#, python-format
-msgid " Add %(header_title)s Security  "
-msgstr ""
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:40
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:39
+msgid "Security Info"
+msgstr "L'info du Titre"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:99
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:98
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:91
+msgid "Taxation Code"
+msgstr "FISC. LOC"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:116
+msgid "Bond Info"
+msgstr "L'info de l'obligation"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_bond_security.html:186
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_security.html:31
@@ -530,7 +900,7 @@ msgstr ""
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:147
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:60
 msgid "Add Security"
-msgstr ""
+msgstr "Ajouter un Titre"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_security.html:24
 #, fuzzy
@@ -538,10 +908,26 @@ msgstr ""
 msgid "Security Report"
 msgstr "Rapports Sectoriels"
 
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:106
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:119
+msgid "Value Code"
+msgstr "Assimil&eacute"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_add_stock_security.html:121
+msgid "Stock Info"
+msgstr "L'info de l'action"
+
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:5
-#: jdamainapp/templates/jdamainapp/base.html:78
-msgid "Our Statements"
-msgstr "Etats Financiers"
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_country.html:25
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_country.html:365
+#: jdamainapp/templates/jdamainapp/base.html:84
+msgid "Add Country"
+msgstr "Ajouter Pays"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:6
+#: jdamainapp/templates/jdamainapp/base.html:86
+msgid "View Country"
+msgstr "Afficher les Pays"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_company_listing.html:24
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:25
@@ -572,6 +958,38 @@ msgstr "Ajouter Soci&eacute;t&eacute;"
 msgid "Remove Company"
 msgstr "Supprimer la Société"
 
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_country_listing.html:24
+#, fuzzy
+#| msgid "Company Listing"
+msgid "Country Listing"
+msgstr "Soci&eacute;t&eacute; Cot&eacute;e"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_country_listing.html:33
+#, fuzzy
+#| msgid "Company Name"
+msgid "Country Name"
+msgstr "Non Usuel"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_country_listing.html:34
+#, fuzzy
+#| msgid "Company Detail"
+msgid "Country Detail"
+msgstr "Details sur la Soci&eacute;t&eacute;"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_country_listing.html:35
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_country.html:25
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_country.html:420
+#, fuzzy
+#| msgid "Edit Pub Entry"
+msgid "Edit Country"
+msgstr "Modifier Pub. Entree"
+
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_country_listing.html:36
+#, fuzzy
+#| msgid "Remove Company"
+msgid "Remove Country"
+msgstr "Supprimer la Société"
+
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_bond_security.html:31
 #, python-format
 msgid " Edit %(header_title)s Security  "
@@ -580,17 +998,25 @@ msgstr ""
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_bond_security.html:189
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:140
 msgid "Edit Security"
-msgstr ""
+msgstr "Modifier le Title"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_company.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:143
 #: jdamainapp/templates/jdamainapp/base.html:80
-#: jdamainapp/templates/jdamainapp/base.html:118
+#: jdamainapp/templates/jdamainapp/base.html:120
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:36
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:57
 msgid "Add Company"
 msgstr "Ajouter Soci&eacute;t&eacute;"
+
+# msgid "Add Company"
+# msgstr "Ajouter Soci&eacute;t&eacute;"
+#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:32
+#: jdafinancialsapp/templates/jdafinancialsapp/res.html:32
+#, python-format
+msgid " Add %(header_title)s Security  "
+msgstr ""
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_home.html:44
 msgid "Our Financial statements"
@@ -622,33 +1048,11 @@ msgstr ""
 msgid "ISIB"
 msgstr ""
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:11
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:42
-msgid "Ticker"
-msgstr ""
-
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:12
 #, fuzzy
 #| msgid "Publication Description"
 msgid "Description"
 msgstr "Description de la publication"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:13
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:44
-msgid "Issue Date"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:14
-#, fuzzy
-#| msgid "To Date"
-msgid "Open Date"
-msgstr "A"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:35
-#, fuzzy
-#| msgid "To Date"
-msgid "Close Date"
-msgstr "A"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:36
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:43
@@ -657,81 +1061,17 @@ msgstr "A"
 msgid "Name"
 msgstr "Nom du Fichier"
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:37
-msgid "Listing Status"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:38
-msgid "Nominal Value"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:40
-msgid "Currency"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:61
-msgid "Title Type"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:62
-msgid "Share Class"
-msgstr ""
-
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:63
 #, fuzzy
 #| msgid "Research Type"
 msgid "Issue Type"
 msgstr "Recherche<br> par Type"
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:65
-msgid "Issuer"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:66
-#, fuzzy
-#| msgid "Register"
-msgid "Registrar"
-msgstr "S'inscrire"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:87
-msgid "Exchange"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:88
-msgid "Depository"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:89
-msgid "Country Tax"
-msgstr ""
-
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:90
 #, fuzzy
 #| msgid "Investment Account"
 msgid "Invstmt Country Tax"
 msgstr "Tableaux des Flux de Tr&eacute;sorier"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:91
-msgid "Taxation Code"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:92
-msgid "Exchange Tax"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:119
-#, fuzzy
-#| msgid "Value"
-msgid "Value Code"
-msgstr "Valeur"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:120
-msgid "Lowest Applied Rate"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:121
-msgid "Highest Applied Rate"
-msgstr ""
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:152
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:180
@@ -740,97 +1080,23 @@ msgstr ""
 msgid "Security"
 msgstr "Filtre des Codes"
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:153
-msgid "Stock Type"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:154
-msgid "Under Stock Type"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:155
-#, fuzzy
-#| msgid "Security Filter"
-msgid "Security Status"
-msgstr "Filtre des Codes"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:156
-msgid "Dividend Per Share"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:181
-msgid "Gross Bond Interest Rate"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:182
-msgid "Net Bond Interest Rate"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:183
-msgid "Number Shares Outstanding"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:184
-#, fuzzy
-#| msgid "Type"
-msgid "Bond Type"
-msgstr "Recherche par Type"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:185
-#, fuzzy
-#| msgid "Publication"
-msgid "Duration"
-msgstr "Publications"
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:204
-#, fuzzy
-#| msgid "Publication Edit"
-msgid "Duration Units"
-msgstr "Modifier"
-
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:205
 msgid "Payment Period"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:206
-msgid "Payment Period Units"
-msgstr ""
+msgstr "Periodicite"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:207
 msgid "Deferred Repymnt Prd"
-msgstr ""
+msgstr "Differe"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:208
 msgid "Deferred Repymt Prd Units"
 msgstr ""
 
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:209
-msgid "Repayment Method"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:228
-msgid "Repayment Type"
-msgstr ""
-
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:229
 msgid "Bond Issue Date"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:230
-msgid "First Payment Date"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:231
-msgid "Last Payment Date"
-msgstr ""
-
-#: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:232
-msgid "Usage"
-msgstr ""
+msgstr "Date Jouiss"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_detail.html:233
-#, fuzzy
-#| msgid "Author"
 msgid "Auth"
 msgstr "Auteur"
 
@@ -884,23 +1150,35 @@ msgstr "Etats Financiers"
 msgid "Retrieve Statement"
 msgstr "Récupérer Etat financier"
 
+#: jdafinancialsapp/views.py:1458 jdafinancialsapp/views.py:1462
+#: jdafinancialsapp/views.py:1501 jdafinancialsapp/views.py:1506
+msgid "Please complete filling all required fields before submitting"
+msgstr "Veuillez remplir tous les champs obligatoires avant de soumettre"
+
+#: jdafinancialsapp/views.py:1519
+#, fuzzy
+msgid "Bond"
+msgstr "Ajouter une Obligation"
+
 #: jdamainapp/templates/jdamainapp/base.html:73
 msgid "JDA Platform"
 msgstr "Plateforme JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:84
-#: jdamainapp/templates/jdamainapp/base.html:117
+#: jdamainapp/templates/jdamainapp/base.html:78
+msgid "Our Statements"
+msgstr "Etats Financiers"
+
+#: jdamainapp/templates/jdamainapp/base.html:82
+#: jdamainapp/templates/jdamainapp/base.html:119
 msgid "View Companies"
 msgstr "Consulter Soci&eacute;t&eacute;"
 
-#: jdamainapp/templates/jdamainapp/base.html:90
-#, fuzzy
-#| msgid "Security Filter"
+#: jdamainapp/templates/jdamainapp/base.html:92
 msgid "View Securities"
-msgstr "Filtre des Codes"
+msgstr "Afficher les titres"
 
-#: jdamainapp/templates/jdamainapp/base.html:111
 #: jdamainapp/templates/jdamainapp/base.html:113
+#: jdamainapp/templates/jdamainapp/base.html:115
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:22
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:25
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:24
@@ -915,32 +1193,32 @@ msgstr "Filtre des Codes"
 msgid "Our Publications"
 msgstr "Nos Publications"
 
-#: jdamainapp/templates/jdamainapp/base.html:114
+#: jdamainapp/templates/jdamainapp/base.html:116
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:34
 msgid "Publication Entry"
 msgstr "T&eacute;l&eacute;charger"
 
-#: jdamainapp/templates/jdamainapp/base.html:115
+#: jdamainapp/templates/jdamainapp/base.html:117
 msgid "Publication Edit"
 msgstr "Modifier"
 
-#: jdamainapp/templates/jdamainapp/base.html:142
+#: jdamainapp/templates/jdamainapp/base.html:144
 msgid "My Account"
 msgstr "Mon Compte"
 
-#: jdamainapp/templates/jdamainapp/base.html:147
+#: jdamainapp/templates/jdamainapp/base.html:149
 msgid "Ref Data Management"
 msgstr ""
 
-#: jdamainapp/templates/jdamainapp/base.html:149
+#: jdamainapp/templates/jdamainapp/base.html:151
 msgid "Change Password"
 msgstr "Modifier mot de passe"
 
-#: jdamainapp/templates/jdamainapp/base.html:152
+#: jdamainapp/templates/jdamainapp/base.html:154
 msgid "Logout"
 msgstr "Déconnecter"
 
-#: jdamainapp/templates/jdamainapp/base.html:220
+#: jdamainapp/templates/jdamainapp/base.html:222
 msgid ""
 "The first independent research and investment advisory agency in the UEMOA "
 "financial market, Joseph & Daniel Advisory is located in the Ivorian capital "
@@ -951,15 +1229,15 @@ msgstr ""
 "dans la capitale ivoirienne Abidjan, plus précisément au rond-point de la "
 "Riviera II dans la commune de Cocody."
 
-#: jdamainapp/templates/jdamainapp/base.html:251
+#: jdamainapp/templates/jdamainapp/base.html:253
 msgid "Working Hours"
 msgstr "Horaires"
 
-#: jdamainapp/templates/jdamainapp/base.html:260
+#: jdamainapp/templates/jdamainapp/base.html:262
 msgid "JDA Web Platform"
 msgstr "Service WEB de JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:262
+#: jdamainapp/templates/jdamainapp/base.html:264
 msgid ""
 "JDA Platform and web services is designed to help facilite the distribution "
 "of its domain specific content or select third-party data."
@@ -971,12 +1249,12 @@ msgstr ""
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:163 jdapublicationsapp/forms.py:39
+#: jdaplatform/settings.py:166 jdapublicationsapp/forms.py:39
 #: jdapublicationsapp/forms.py:96
 msgid "French"
 msgstr "Francais"
 
-#: jdaplatform/settings.py:164 jdapublicationsapp/forms.py:38
+#: jdaplatform/settings.py:167 jdapublicationsapp/forms.py:38
 #: jdapublicationsapp/forms.py:95
 msgid "English"
 msgstr "Anglais"
@@ -1158,7 +1436,7 @@ msgstr "Entr&eacute;e Par"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:52
 msgid "View File"
-msgstr "Voir Fichier"
+msgstr "Afficher le Fichier"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:53
 msgid "Edit Pub Entry"
@@ -1170,7 +1448,7 @@ msgstr "Supprimer Pub. Entr&eacute;e"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:71
 msgid "View"
-msgstr "Voir"
+msgstr "Afficher"
 
 # msgid "Our Publications"
 # msgstr "Nos Publications"
@@ -1199,6 +1477,19 @@ msgstr "Date de<br>Publication"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:112
 msgid "Expand"
 msgstr "Agrandir"
+
+#, fuzzy
+#~| msgid "Issuer"
+#~ msgid "XIssuer"
+#~ msgstr "Emetteur"
+
+#~ msgid "Issuer Date"
+#~ msgstr "A"
+
+#, fuzzy
+#~| msgid "Add Security"
+#~ msgid "Add Stock Security"
+#~ msgstr "Ajouter un Titre"
 
 #, fuzzy
 #~| msgid "Company Name"
