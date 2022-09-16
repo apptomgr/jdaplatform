@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import IndexForm, UploadExcelForm, SecurityFilterForm
-from .models import IndexModel, IndexPriceModel, SecurityModel, SecurityPriceModel
+from .models import IndexModel, IndexPriceModel, SecurityModel, SecurityPriceModel, StockModel, BondModel
 import xlrd
 from datetime import datetime
 import pytz
@@ -126,21 +126,46 @@ def jdaanalyticsapp_upload_form(request):
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_upload_form.html', context)
 
 
-
+#//////////////////////////////////////////////jdaanalyticsapp_rpt///////////////////////////////////////////////
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdaanalyticsapp_rpt(request):
     now = datetime.now()
+    #print(f"now: {now}")
     if IndexPriceModel.objects.all():
-        max_index_dt = IndexPriceModel.objects.latest('index_date').index_date
+        max_index_dt = IndexPriceModel.objects.latest('index_date').index_date # latest file loaded
         idx = IndexPriceModel.objects.filter(index_date=max_index_dt)
         security_price = SecurityPriceModel.objects.filter(security_date = max_index_dt)
+
+        #now checking if Stock or Bond
+        sec_type = None
+        assoc_sec_detail = None
+        for pk in security_price:
+            #print(pk.id)
+            stock_sec_detail = StockModel.objects.filter(security__id=pk.id)
+            #print(f"{StockModel.objects.filter(security__id=pk.id)}")
+            bond_sec_detail = BondModel.objects.filter(security__id=pk.id)
+
+        if stock_sec_detail.exists():
+            #print("Stock OK")
+            sec_type = 'Stock'
+            assoc_sec_detail = stock_sec_detail
+            print(f"152 stock assoc_sec_detail: {stock_sec_detail}")
+        elif bond_sec_detail.exists():
+            #print("bond OK")
+            sec_type = 'Bond'
+            assoc_sec_detail = bond_sec_detail
+            print(f"157 stock assoc_sec_detail: {stock_sec_detail}")
+        else:
+            print("Else none exists")
+            sec_type = None
 
     else:
         idx= IndexPriceModel.objects.all()
         #security = SecurityModel.objects.all()
         security_price = SecurityPriceModel.objects.all()
 
+    print(f"assoc_sec_detail: {assoc_sec_detail}")
     filterForm = SecurityFilterForm()
 
     grp = get_user_grp(request)
