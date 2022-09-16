@@ -32,6 +32,7 @@ django3-watermark==0.2.0
 docopt==0.6.2
 et-xmlfile==1.0.1
 etelemetry==0.2.2
+ez-setup==0.9
 filelock==3.0.12
 fitz==0.0.1.dev2
 future==0.18.2
