@@ -1,0 +1,48 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Upload Excel {% endblock %}
+
+{% block content %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+<div class="row">
+
+
+  <div class="col-md-12">
+    <h6 class="text-secondary text-center">Daily stock data as of {{stocks.0.entry_date}}</h6>
+    <table id="company_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Daily Value</th>
+        <th>Target Value</th>
+        <th>Entry Date</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {% for stock in stocks %}
+      <tr>
+
+        <td>{{ stock.ticker }}</td>
+        {% if stock.daily_value == 0 or stock.target_value == 0 %}
+        <td class="text-warning">{{ stock.daily_value }}</td>
+        <td class="text-warning">{{ stock.target_value }}</td>
+        {% else%}
+        <td>{{ stock.daily_value }}</td>
+        <td>{{ stock.target_value }}</td>
+        {% endif%}
+        <td>{{ stock.entry_date }}</td>
+
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,62 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Upload Excel {% endblock %}
+
+{% block content %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+<div class="row">
+
+
+  <div class="col-md-12">
+    <h6 class="text-secondary text-center">Bond Data as of {% now "Y-m-d" %}</h6>
+    <table class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Bond Name</th>
+        <th>Original Value</th>
+        <th>Coupon</th>
+        <th>Current Value</th>
+        <th>Number of Share</th>
+        <th>Total Value</th>
+        <th>Institution Type</th>
+        <th>Entry Date</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {% for bond in bonds %}
+      <tr>
+
+        <td>{{ bond.symbol }}</td>
+        <td>{{ bond.bond_name }}</td>
+
+        <td>{{ bond.original_value }}</td>
+        <td>{{ bond.coupon }}</td>
+        <td>{{ bond.current_value }}</td>
+        {% if bond.nbr_of_shares == 0 %}
+        <td class="text-warning">{{ bond.nbr_of_shares }}</td>
+        {% else%}
+        <td>{{ bond.nbr_of_shares }}</td>
+        {% endif%}
+        {% if bond.total_value == 0 %}
+        <td class="text-warning">{{ bond.total_value }}</td>
+        {% else%}
+        <td>{{ bond.total_value }}</td>
+        {% endif%}
+        <td>{{ bond.institution_type }}</td>
+        <td>{{ bond.entry_date }}</td>
+
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+

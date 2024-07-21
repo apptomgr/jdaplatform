@@ -1,0 +1,196 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+<div class="card-body" xmlns="http://www.w3.org/1999/html">
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="row mt-1">
+            <div class="col-lg-2 col-md-2 col-sm col-xs-12">{{ form.mutual_funds|as_crispy_field }}</div>
+        </div>
+        <!-- Mututal_fund formset -->
+        <div class="collapse show" id="mutual_fund_id">
+            {{ mutual_funds_formset.management_form }}
+            <div id="formset-container">
+            {% for form in mutual_funds_formset %}
+            {{ form.id }}
+            <div class="row form-row">
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.sociate_de_gession |as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.depositaire|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.opcvm|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_original_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_current_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_nbr_of_share|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_total_current_value|as_crispy_field}}</div>
+                <!--div class="ml-1">{{ form.DELETE }}</div-->
+                <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-sm btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+        </div>
+    </form>
+    </div>
+
+
+<script type="text/javascript">
+let opcvm_text = "OPCVM";  //label value nothing selected
+let id_opcvm = "";
+   function mu_triggerHtmxGet(id)
+   {
+     //alert("id: "+id);  //id_form-0-sociate_de_gession
+     var e = document.getElementById(id);
+     var soc_text = e.options[e.selectedIndex].text;
+     opcvm_text=soc_text;
+     id_opcvm=id;
+     if(id.endsWith('sociate_de_gession'))
+     {
+      var soc_val = document.getElementById(id).value;
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('sociate_de_gession', 'depositaire');
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+      var url ='{% url "reload_depositaire" 'soc_text' %}'.replace('soc_text', soc_text);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'innerHTML'});
+     }
+     else if(id.endsWith('depositaire'))
+     {
+      var soc_val = document.getElementById(id).value;
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('depositaire', 'opcvm');
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+      var url ='{% url "reload_opcvm" 'soc_text' %}'.replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'innerHTML'});
+     }
+     else if(id.endsWith('opcvm')) //When opcvm is selected refresh mu original value
+     {
+      //alert("Selected opcvm: about to process original value");
+      var soc_val = document.getElementById(id).value;
+      var id_int = id.replace("id_form-","").replace("-opcvm","");
+      //alert("id_int"+id_int);
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('opcvm', 'mu_original_value'); //id_form-0-mu_original_value
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+
+      var url ='{% url "reload_mu_original_value" 'id_int' 'soc_text' %}'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'outerHTML'});
+     }
+     else
+     {
+      alert('Unknown request type')
+     }
+    }
+
+
+    function mu_triggerHtmxGet_current_value(id)
+    {
+     //alert("click on orig value id: "+id);//id_form-0-mu_original_value
+     var id_int = id.replace("id_form-","").replace("-mu_original_value","");
+     //alert("id_inst: "+id_int);
+     opvcm=document.getElementById("id_form-"+id_int+"-opcvm").value;
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert("opvcm_text: "+opvcm);
+     var soc_text = opvcm; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM" && soc_text != "")
+     {
+      //alert("curr_val id_int: "+id_int);
+
+      var id_form_nbr_soc_curr_val = id.replace('opcvm', 'mu_current_value'); //id_form-0-mu_current_value
+      //alert("id_form_nbr_soc_curr_val: "+id_form_nbr_soc_curr_val);
+
+      var url ='{% url "reload_mu_current_value" 'id_int' 'soc_text' %}'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_curr_val, swap:'outerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+
+    function mu_triggerHtmxGet_nbr_of_share(id)
+    {
+     //alert("Getting # of shares id: "+id);//id_form-0-mu_current_value
+     var id_int = id.replace("id_form-","").replace("-mu_current_value","");
+     //alert("id_inst: "+id_int);
+     opvcm=document.getElementById("id_form-"+id_int+"-opcvm").value;
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert("opvcm_text: "+opvcm);
+     var soc_text = opvcm; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM" && soc_text != "")
+     {
+      //alert("nbr_shr_val id_int: "+id_int);
+
+      var id_form_nbr_soc_nbr_shr_val = id.replace('opcvm', 'mu_nbr_of_share'); //id_form-1-mu_nbr_of_share
+      //alert("id_form_nbr_soc_nbr_shr_val: "+id_form_nbr_soc_nbr_shr_val);
+
+      var url ='{% url "reload_mu_nbr_of_share" 'id_int' 'soc_text' %}'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_nbr_shr_val, swap:'outerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+
+    function mu_triggerHtmxGet_tot_curr_val(id)
+    {
+     //alert("id: "+id);// id_form-0-mu_nbr_of_share
+     var id_int = id.replace("id_form-","").replace("-mu_nbr_of_share","");
+     //alert("id_inst: "+id_int);
+     opvcm=document.getElementById("id_form-"+id_int+"-opcvm").value;
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert("opvcm_text: "+opvcm);
+     var soc_text = opvcm; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM" && soc_text != "")
+     {
+      //alert("mu_total_current_value id_int: "+id_int);
+
+      var id_form_total_current_value = id.replace('opcvm', 'mu_total_current_value'); //id_form-0-mu_total_current_value
+      //alert("id_form_total_current_value: "+id_form_total_current_value);
+      cv=document.getElementById('id_form-'+id_int+'-mu_current_value').value;
+      ns=document.getElementById('id_form-'+id_int+'-mu_nbr_of_share').value;
+      total_current_value = cv*ns;
+      //alert("cv: "+cv);
+      //alert("ns: "+ns);
+      //alert("total_current_value: "+total_current_value);
+      soc_text=total_current_value;//document.getElementById('id_form-'+id_int+'-mu_total_current_value').value = total_current_value;
+      var url ='{% url "reload_mu_total_current_value" 'id_int' 'soc_text' %}'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert('url: '+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_total_current_value, swap:'outerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+</script>
+
+
+
+
+
+
+{% endblock %}
+
+
+

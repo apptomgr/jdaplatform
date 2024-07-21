@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+
+<option value selected>OPCVM</option>
+{% for i in opcvm %}
+<option value="{{ i.id }}">{{i}}</option>
+{% endfor %}

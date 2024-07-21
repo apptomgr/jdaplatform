@@ -1,0 +1,5 @@
+<select name="form-{{ form_index }}-symbol" class="form-control form-control-sm bonds_symbol_id show-tick">
+    {% for symbol in symbols %}
+    <option value="{{ symbol.id }}">{{ symbol.name }}</option>
+    {% endfor %}
+</select>

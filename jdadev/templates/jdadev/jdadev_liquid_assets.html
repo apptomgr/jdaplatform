@@ -1,0 +1,24 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+    <div class="card-body">
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <!--div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 text-secondary">Liquid Assets</small></div>
+        </div-->
+        <div class="row mt-1">
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{ form.liquid_assets|as_crispy_field }}</div>
+            <!--div class="col-lg col-md col-sm col-xs-12">{ form.equity_and_rights|as_crispy_field }}</div>
+            <div class="col-lg col-md col-sm col-xs-12">{ form.bonds|as_crispy_field }}</div-->
+        </div>
+
+        <div class="card-footer text-muted">
+            <input class="btn btn-sm btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

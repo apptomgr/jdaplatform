@@ -1,0 +1,17 @@
+{% load crispy_forms_tags %}
+
+<div class="collapse show" id="equity_and_rights">
+    <!-- stock formset -->
+    {{ stock_formset.management_form }}
+    {% for form in stock_formset %}
+    {{ form.id }}
+    <div class="row form-row">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.stocks|as_crispy_field}}</div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.nbr_of_stocks|as_crispy_field}}</div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.avg_weighted_cost|as_crispy_field}}</div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.daily_value|as_crispy_field}}</div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{form.current_total_value|as_crispy_field}}</div>
+        <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+    </div>
+    {% endfor %}
+</div>

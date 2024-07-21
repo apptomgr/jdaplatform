@@ -1,0 +1,52 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+    <div class="card-body">
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <!--div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 text-secondary">Liquid Assets</small></div>
+        </div-->
+        <div class="row mt-1">
+            <!--div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">{{ form.liquid_assets|as_crispy_field }}</div-->
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">{{ form.equity_and_rights|as_crispy_field }}</div>
+            <!--div class="col-lg col-md col-sm col-xs-12">{ form.bonds|as_crispy_field }}</div-->
+        </div>
+        <!-- labels -->
+        <!--div class="row mt-1">
+            <div class="col text-secondary Xfont-weight-bold Xtext-left">Ticker</div>
+            <div class="col text-secondary Xfont-weight-bold Xtext-left"># of Stocks</div>
+            <div class="col text-secondary Xfont-weight-bold Xtext-left">Original Cost</div>
+            <div class="col text-secondary Xfont-weight-bold Xtext-left">Current Price</div>
+            <div class="col text-secondary Xfont-weight-bold text-left">Total Current Value</div>
+            <div class="col text-secondary Xfont-weight-bold text-left">Purchase Price</div>
+            <div class="col text-secondary Xfont-weight-bold text-left">Total Gain or Loss</div>
+        </div-->
+        <!-- stock formset -->
+
+        <div class="collapse show" id="equity_and_rights">
+            {{ stock_formset.management_form }}
+            {% for form in stock_formset %}
+            {{ form.id }}
+            <div class="row form-row">
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.stocks|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.nbr_of_stocks|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.avg_weighted_cost|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.daily_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_current_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_purchase_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12 positive-value">{{form.total_gain_or_loss|as_crispy_field}}</div>
+                <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card-footer text-muted">
+            <input class="btn btn-sm btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

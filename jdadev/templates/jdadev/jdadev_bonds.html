@@ -1,0 +1,107 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_bonds.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+<div class="card-body" xmlns="http://www.w3.org/1999/html">
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <div class="row mt-1">
+            <div class="col-lg-2 col-md-2 col-sm col-xs-12">{{ form.bonds|as_crispy_field }}</div>
+        </div>
+        <!-- Bond formset -->
+        <div class="collapse show" id="bonds_id">
+            {{ bonds_formset.management_form }}
+            <div id="formset-container">
+            {% for form in bonds_formset %}
+            {{ form.id }}
+            <div class="row form-row">
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{ form.institution_type |as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.symbol|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.bond_name|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.original_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.nbr_of_bonds|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_current_value|as_crispy_field}}</div>
+                <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <input class="btn btn-sm btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+        </div>
+    </form>
+    </div>
+
+
+<script type="text/javascript">
+    function triggerHtmxGet(id)
+    {
+     //alert("id: "+id);
+     if(id.endsWith('institution_type'))
+     {
+      var inst_val = document.getElementById(id).value;
+      var id_form_nbr_symbol = id.replace('institution_type', 'symbol');
+      var url ='{% url "reload_symbols" 'inst_val' %}'.replace('inst_val', inst_val);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_symbol, swap:'innerHTML'});
+     }
+     else if(id.endsWith('symbol'))
+     {
+      //alert("symb");
+      var sym_val = document.getElementById(id).value;
+      var id_form_nbr_bond_name = id.replace('symbol', 'bond_name');
+      var url ='{% url "reload_bond_names" 'sym_val' %}'.replace('sym_val', sym_val);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_bond_name, swap:'innerHTML'}); //id_form-2-original_value
+     }
+     else
+     {
+      alert('Unknown request type')
+     }
+    }
+</script>
+
+
+<script type="text/javascript">
+    function triggerHtmxGet_original_value(id)
+    {
+     //alert("id: "+id);
+     var id_int = id.replace("id_form-","").replace("-symbol","");
+     //alert("id_int: "+id_int);
+     //alert("symb for orig val");
+     var sym_val = document.getElementById(id).value;
+     //alert("sym_val: "+sym_val);
+     var id_form_nbr_original_value = id.replace('symbol', 'original_value');
+     //alert("id_form_nbr_original_value: "+id_form_nbr_original_value);
+     var url ='{% url "reload_original_value" 'id_int' 'sym_val' %}'.replace('id_int', id_int).replace('sym_val', sym_val);
+     //alert("url"+url);
+     htmx.ajax('GET', url, {target: '#'+id_form_nbr_original_value, swap:'outerHTML'}); //id_form-2-original_value
+     //reset tot_curr_val calulation
+     // get_bond_tot_curr_val(id);
+    }
+</script>
+
+
+<script type="text/javascript">
+  function get_bond_tot_curr_val(id)
+  {
+   //alert("id"+id); //id_form-0-nbr_of_bonds
+   var id_int = id.replace("id_form-","").replace("-nbr_of_bonds","");
+   //alert("id_int: "+id_int);
+   var nbr_of_bonds_val=document.getElementById("id_form-"+id_int+"-nbr_of_bonds").value;  //id_form-0-nbr_of_bonds
+   var original_value_val=document.getElementById("id_form-"+id_int+"-original_value").value; //id_form-0-original_value
+
+   //alert("nbr_of_bonds_val: "+nbr_of_bonds_val);
+   //alert("original_value_val"+original_value_val);
+
+   if (nbr_of_bonds_val != null && original_value_val!=null)
+   {
+    document.getElementById("id_form-"+id_int+"-total_current_value").value=nbr_of_bonds_val*original_value_val;
+   }
+  }
+
+</script>
+{% endblock %}
+
+
+
