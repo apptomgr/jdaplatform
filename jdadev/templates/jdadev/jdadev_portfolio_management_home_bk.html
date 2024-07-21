@@ -1,0 +1,254 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load i18n %}
+{% load tz %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+
+
+<div class="row justify-content-center align-items-center mb-0">
+  <div class="col-sm-12">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+      <a class="close" data-dismiss="alert">x</a>
+      <i class="text-muted mr-5">{{message|safe}}</i>
+    </div>
+    {%endfor%}
+    {%endif%}
+  </div>
+</div>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">Liquid Assets</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Equity & Rights</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Bonds</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+  </li>
+</ul>
+<div class="card text-center mt-1">
+  <form method="POST" novalidate>
+    {% csrf_token %}
+    <div class="card-header mb-0">
+      <h6 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {{client|capfirst }} {% trans "Portfolio" %}</h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12"><input class="form-control" type="text" placeholder='{{client|capfirst }} {% trans "Portfolio Summary" %}' readonly></div>
+      </div>
+      <div class="row">
+        <div class="col-lg col-md col-sm col-xs-12 text-secondary">Liquid Assets</small></div>
+        <div class="col-lg col-md col-sm col-xs-12 text-secondary">Equity And Rights</div>
+        <div class="col-lg col-md col-sm col-xs-12 text-secondary">Bonds</div>
+      </div>
+      <div class="row mt-1">
+        <div class="col-lg col-md col-sm col-xs-12">{{ form.liquid_assets|as_crispy_field }}</div>
+        <div class="col-lg col-md col-sm col-xs-12">{{ form.equity_and_rights|as_crispy_field }}</div>
+        <div class="col-lg col-md col-sm col-xs-12">{{ form.bonds|as_crispy_field }}</div>
+      </div>
+      <!-- Equity and Rights -->
+      {% include "jdadev/partials/jdadev_equity_and_rights_partial.html" %}
+      <!-- Bonds -->
+      {% include "jdadev/partials/jdadev_bonds_partial.html" %}
+
+
+<!--      &lt;!&ndash; Client Equity and Rights &ndash;&gt;-->
+<!--      <div class="row">-->
+<!--        <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="{% trans 'Equity and Rights' %}" readonly></div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; stock formset &ndash;&gt;-->
+
+<!--      <div class="collapse show" id="equity_and_rights">-->
+<!--        {{ stock_formset.management_form }}-->
+<!--        {% for form in stock_formset %}-->
+<!--        {{ form.id }}-->
+<!--        <div class="row form-row">-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.stocks|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.nbr_of_stocks|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.avg_weighted_cost|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.daily_value|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_current_value|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_purchase_value|as_crispy_field}}</div>-->
+<!--          <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_gain_or_loss|as_crispy_field}}</div>-->
+<!--          <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>-->
+<!--        </div>-->
+<!--        {% endfor %}-->
+<!--      </div>-->
+    </div>
+    <div class="card-footer text-muted">
+      <input class="btn btn-md btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+    </div>
+  </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.equity_right_id').change(function() {
+        var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        if (stockId) {
+            $.ajax({
+                url: '{% url "fetch_stock_data" %}', // URL to the AJAX view
+                data: {
+                    'stock_id': stockId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    // Alert to check if data is received correctly
+                    //alert("Received data: " + JSON.stringify(data));
+
+                    // Update daily_value field within the formset
+                    $('#id_form-' + formIndex + '-daily_value').val(data.daily_value);
+
+                    //get_tot_curr_val(formIndex);
+                },
+                error: function(xhr, status, error) {
+                    // Alert to check if there's an error
+                    alert("AJAX Error: " + error);
+                }
+            });
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.nbr_of_stocks_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update daily_value field within the formset
+        get_tot_curr_val(formIndex);
+
+    });
+});
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.tot_purchase_value_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_tot_purchase_val(formIndex);
+    });
+});
+
+</script>
+
+
+<script type="text/javascript">
+  function get_tot_curr_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && daily_stock_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_current_value").value=nbr_of_stocks_val*daily_stock_val;
+   }
+  }
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.total_gain_or_loss_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_gain_or_loss(formIndex);
+    });
+});
+
+</script>
+<script type="text/javascript">
+  function get_tot_purchase_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && avg_weighted_cost_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_purchase_value").value=nbr_of_stocks_val*avg_weighted_cost_val;
+   }
+  }
+</script>
+
+<script type="text/javascript">
+  function get_gain_or_loss(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (total_purchase_val != null && total_current_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_gain_or_loss").value=total_current_val-total_purchase_val;
+   }
+  }
+</script>
+
+{% endblock %}
+
+
+
+
+

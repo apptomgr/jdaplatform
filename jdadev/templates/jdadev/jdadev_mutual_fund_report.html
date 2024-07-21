@@ -1,0 +1,56 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Upload Excel {% endblock %}
+
+{% block content %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+<div class="row">
+  <div class="col-md-12">
+    <h6 class="text-secondary text-center">Mutual Fund Data as of {% now "Y-m-d" %}</h6>
+    <table class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <thead>
+      <tr>
+        <th>Sociate De Gessions</th>
+        <th>Depositaire</th>
+        <th>OPCVM</th>
+        <th>Original Value</th>
+        <th>Current Value</th>
+        <th>Number of Share</th>
+        <th>Entry Date</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {% for i in mutual_funds %}
+      <tr>
+
+        <td>{{ i.sociate_de_gession }}</td>
+        <td>{{ i.depositaire }}</td>
+        <td>{{ i.opcvm }}</td>
+        <td>{{ i.original_value }}</td>
+        {% if i.current_value == 0 %}
+        <td class="text-warning">{{ i.current_value }}</td>
+        {% else%}
+        <td>{{ i.current_value }}</td>
+        {% endif%}
+        {% if i.nbr_of_shares == 0 %}
+        <td class="text-warning">{{ i.nbr_of_share }}</td>
+        {% else%}
+        <td>{{ i.nbr_of_share }}</td>
+        {% endif%}
+
+        <td>{{ i.entry_date }}</td>
+
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+

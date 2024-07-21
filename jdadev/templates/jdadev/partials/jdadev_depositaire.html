@@ -1,0 +1,5 @@
+{% load crispy_forms_tags %}
+<option value selected>Depositaire</option>
+{% for i in depositaire %}
+<option value="{{ i.id }}">{{i.depositaire}}</option>
+{% endfor %}

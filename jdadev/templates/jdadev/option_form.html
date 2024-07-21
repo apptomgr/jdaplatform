@@ -1,0 +1,12 @@
+<!-- templates/option_form.html -->
+{% for form in formset %}
+<div class="form-row">
+    {{ form.as_p }}
+    <select name="form-0-name" hx-get="{% url 'get_selected_value' %}" hx-trigger="change" hx-target="#select-result">
+        <option value="">Select an option</option>
+        {% for choice in form.fields.name.choices %}
+        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endfor %}

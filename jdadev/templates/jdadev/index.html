@@ -1,0 +1,52 @@
+{% extends 'jdadev/base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% comment %}
+<script src="https://unpkg.com/htmx.org"></script>
+<form method="post">
+    {% csrf_token %}
+    <div>{{ form.country }}</div>
+    <div>{{ form.city }}</div>
+    <button type="submit">Submit</button>
+</form>
+<h6>Country -City List</h6>
+<div class="row">
+    {% for i in country_city %}
+    Country: {{i.country}} - City: {{i.city}}</br>
+    {% endfor%}
+</div>
+<div class="row">
+    <a href="{% url 'index' %}">Home</a>
+
+</div>
+{% endcomment%}
+
+<!-- ////////////////////////////////// -->
+
+<div class="card-body">
+    <div class="row">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="row mt-1">
+                <div class="col-lg-4 col-md-4 col-sm col-xs-12">{{ form.country|as_crispy_field }}</div>
+                <div class="col-lg-4 col-md-4 col-sm col-xs-12">{{ form.city }}</div>
+            </div>
+
+
+            <div class="card-footer text-muted">
+                <input class="btn btn-sm btn-info" role="button" type="submit" value="{% trans 'Save' %}">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <a href="{% url 'index' %}">Home</a>
+
+</div>
+{% endblock%}
+
+
+
+

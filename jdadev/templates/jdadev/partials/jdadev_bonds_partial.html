@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load tz %}
+
+<!-- Client Bonds -->
+<div class="row">
+  <div class="col-12 mb-1"><input class="form-control" type="text" placeholder="{% trans 'Bonds' %}" readonly></div>
+</div>
+<!-- Bond formset -->
+<div class="collapse show" id="equity_and_rights">
+  {{ bonds_formset.management_form }}
+  {% for form in bonds_formset %}
+  {{ form.id }}
+  <div class="row form-row">
+    <div class="col-lg col-md col-sm-2 col-xs-12">{{form.institution_type|as_crispy_field}}</div>
+    <div class="col-lg col-md col-sm-2 col-xs-12">{{form.symbol|as_crispy_field}}</div>
+    <!--div class="col-lg col-md col-sm-2 col-xs-12">{form.avg_weighted_cost|as_crispy_field}</div>
+    <div class="col-lg col-md col-sm-2 col-xs-12">{form.daily_value|as_crispy_field}</div>
+    <div class="col-lg col-md col-sm-2 col-xs-12">{form.total_current_value|as_crispy_field}</div>
+    <div class="col-lg col-md col-sm-2 col-xs-12">{form.total_purchase_value|as_crispy_field}</div>
+    <div class="col-lg col-md col-sm-2 col-xs-12">{form.total_gain_or_loss|as_crispy_field}</div-->
+    <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+  </div>
+  {% endfor %}
+</div>

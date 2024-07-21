@@ -1,0 +1,24 @@
+<!-- myapp/templates/myapp/portfolio_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create or Update Portfolio</title>
+</head>
+<body>
+<h1>Create or Update Client Portfolio</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+
+<script type="text/javascript">
+        document.getElementById('id_stock').onchange = function() {
+            this.form.submit();
+        };
+        document.getElementById('id_number_of_stocks').oninput = function() {
+            this.form.submit();
+        };
+    </script>
+</body>
+</html>

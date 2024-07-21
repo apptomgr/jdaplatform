@@ -27,6 +27,7 @@ urlpatterns = [
     path('jdawebsite/', include('jdawebsite.urls')),
     path('i18n/', include('django_translation_flags.urls')),
     path('accounts/', include('accounts.urls'), name='register'),
+    path('jdadev/', include('jdadev.urls')),
 ]
 
 if settings.DEBUG:

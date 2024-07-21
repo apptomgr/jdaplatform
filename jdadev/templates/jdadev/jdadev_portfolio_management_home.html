@@ -1,0 +1,269 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load i18n %}
+{% load tz %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+
+
+<div class="row justify-content-center align-items-center mb-0">
+  <h6 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> {{client|capfirst }} {% trans "Portfolio" %}</h6>
+  <div class="col-sm-12">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show text-center" id="msg_alert" role="alert">
+      <a class="close" data-dismiss="alert">x</a>
+      <i class="text-muted mr-5">{{message|safe}}</i>
+    </div>
+    {%endfor%}
+    {%endif%}
+  </div>
+</div>
+
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-tabs">
+      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_liquid_assets' %}">Liquid Assets</a></li>
+      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_equity_and_rights' %}">Equity & Rights</a></li>
+      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_bonds' %}">Bonds</a></li>
+      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_mutual_funds' %}">Mutual Funds</a></li>
+      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_overall_portfolio' 'overall_portfolio' %}">Overall Portfolio</a></li>
+    </ul>
+  </div>
+  {% block assets %}
+  {% endblock %}
+</div>
+
+<style>
+  .res{
+  font-size: 8px;
+  }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.equity_right_id').change(function() {
+        var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        if (stockId) {
+            $.ajax({
+                url: '{% url "fetch_stock_data" %}', // URL to the AJAX view
+                data: {
+                    'stock_id': stockId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    // Alert to check if data is received correctly
+                    //alert("Received data: " + JSON.stringify(data));
+
+                    // Update daily_value field within the formset
+                    $('#id_form-' + formIndex + '-daily_value').val(data.daily_value);
+
+                    //get_tot_curr_val(formIndex);
+                },
+                error: function(xhr, status, error) {
+                    // Alert to check if there's an error
+                    alert("AJAX Error: " + error);
+                }
+            });
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.nbr_of_stocks_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update daily_value field within the formset
+        get_tot_curr_val(formIndex);
+
+    });
+});
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.tot_purchase_value_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_tot_purchase_val(formIndex);
+    });
+});
+
+</script>
+
+
+<script type="text/javascript">
+  function get_tot_curr_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && daily_stock_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_current_value").value=nbr_of_stocks_val*daily_stock_val;
+   }
+  }
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.total_gain_or_loss_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_gain_or_loss(formIndex);
+    });
+});
+
+</script>
+<script type="text/javascript">
+  function get_tot_purchase_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && avg_weighted_cost_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_purchase_value").value=nbr_of_stocks_val*avg_weighted_cost_val;
+   }
+  }
+</script>
+
+<script type="text/javascript">
+  function get_gain_or_loss(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (total_purchase_val != null && total_current_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_gain_or_loss").value=total_current_val-total_purchase_val;
+   }
+  }
+</script>
+
+{% endblock %}
+
+<!--////////////////////////// bonds_institution_type_id ////////////////////////////////////////-->
+<!--script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
+<script>
+    document.addEventListener('htmx:load', function() {
+        document.querySelectorAll('.bonds_institution_type_id').forEach(function(element) {
+            element.addEventListener('change', function() {
+                var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+                var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+                var e = document.getElementById(formId);
+                var dspText = e.options[e.selectedIndex].text;
+
+                var institutionTypeId = this.value;
+                var form = this.closest('form');
+
+                form.querySelector('#formset-container').setAttribute('hx-get', `{ url 'reload_bonds_formset' %}?institution_type_id=${institutionTypeId}&form_index=${formIndex}`);
+                form.querySelector('#formset-container').dispatchEvent(new Event('change'));
+            });
+        });
+    });
+</script-->
+
+<!--script type="text/javascript">
+$(document).ready(function() {
+    $('.bonds_institution_type_id').change(function() {
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        var e = document.getElementById(formId);
+        var dspText = e.options[e.selectedIndex].text;
+        alert("Form index: " + formIndex);
+        //alert("FormId: " + formId)
+        //alert("dspText "+dspText);
+        // Dynamically set HTMX attributes for symbol field
+        //id_form-0-symbol
+        var symbolField = document.getElementById('id_form-'+formIndex+'-symbol').value;
+        //alert("symbolField:"+symbolField);
+        symbolField.setAttribute('hx-get', 'jdadev_bonds/load-symbols/?symb_text=dspText');
+        symbolField.setAttribute('hx-target', '#id_form-${formIndex}-symbol');
+
+                // Trigger the HTMX request manually
+        symbolField.dispatchEvent(new Event('htmx:configRequest'));
+
+        // Add an event listener for the symbol field to update the bond_name field
+        $(symbolField).change(function() {
+            var bondNameField = document.getElementById(`id_form-${formIndex}-bond_name`);
+            bondNameField.setAttribute('hx-get', `/load-bond-names/?index=${formIndex}&symbol=${symbolField.value}`);
+            bondNameField.setAttribute('hx-target', `#id_form-${formIndex}-bond_name`);
+
+            // Trigger the HTMX request manually
+            bondNameField.dispatchEvent(new Event('htmx:configRequest'));
+        });
+
+        // Trigger the initial change event to load symbols
+        $(symbolField).trigger('change');
+
+    });
+});
+</script-->
+
+
+
+
+
+
+
+

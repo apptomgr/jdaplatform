@@ -1,0 +1,60 @@
+{% load i18n %}
+<style>
+        .dropdown-item:hover {
+            background-color: #3ec1d5; /* Change this to your desired color */
+            color: #fff; /* Change this to your desired text color */
+        }
+
+</style>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb my_breadcrumb_bg">
+        <li class="breadcrumb-item"><a href="{% url 'jdadev_home' %}" class="text-light {{bread_home}}">Home</a></li>
+
+        <!-- Uploads Dropdown -->
+        <li class="breadcrumb-item dropdown">
+            <a class="dropdown-toggle text-light" href="#" id="uploadsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Uploads</a>
+            <div class="dropdown-menu" aria-labelledby="uploadsDropdown">
+                <a class="dropdown-item" href="{% url 'upload_excel' %}"> {% trans 'Daily Stock Data Upload' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'upload_bond_excel' %}"> {% trans 'Bond Data Upload' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'upload_mutual_fund_excel' %}"> {% trans 'Mutual Fund Upload' %}</a>
+            </div>
+        </li>
+
+        <!-- Reports Dropdown -->
+        <li class="breadcrumb-item dropdown">
+            <a class="dropdown-toggle text-light" href="#" id="reportsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+            <div class="dropdown-menu" aria-labelledby="reportsDropdown">
+                <a class="dropdown-item" href="{% url 'jdadev_stock_report' %}"> {% trans 'Daily Stock Data' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'jdadev_bond_report' %}"> {% trans 'View Daily Bond Data' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'jdadev_mutual_fund_report' %}"> {% trans 'View Mutual Fund Data' %}</a>
+            </div>
+        </li>
+
+        <!-- Reports Dropdown -->
+        <li class="breadcrumb-item dropdown">
+            <a class="dropdown-toggle text-light" href="#" id="DataUpdateDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Data Updates</a>
+            <div class="dropdown-menu" aria-labelledby="DataUpdateDropdown">
+                <a class="dropdown-item" href="{% url 'insert_distinct_institution_types' %}"> {% trans 'Populate Bond Institution Types' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'insert_distinct_depositaire' %}"> {% trans 'Populate Mutual Fund Depositaires' %}</a>
+                <div class="my_hr_divider"></div>
+                <a class="dropdown-item" href="{% url 'insert_distinct_sociate_de_gession' %}"> {% trans 'Populate Mutual Fund Societes de Gession' %}</a>
+            </div>
+        </li>
+        <!-- Other Links -->
+        <!--li class="breadcrumb-item"><a href="{ url 'insert_distinct_institution_types' %}" class="text-light {{bread_stmts}}"> { trans 'Populate Bond Institution Types' %}</a></li>
+        <li class="breadcrumb-item"><a href="{ url 'insert_distinct_depositaire' %}" class="text-light {{bread_stmts}}"> { trans 'Populate Mutual Fund Depositaires' %}</a></li>
+        <li class="breadcrumb-item"><a href="{ url 'insert_distinct_sociate_de_gession' %}" class="text-light {{bread_stmts}}"> { trans 'Populate Mutual Fund Societes de Gession' %}</a></li-->
+    </ol>
+</nav>
+
+<style>
+  .dropdown-menu .dropdown-item {
+    font-size: 0.785rem; /* Adjust the font size as needed */
+  }
+</style>

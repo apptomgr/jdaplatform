@@ -1,0 +1,25 @@
+/* custom.css */
+
+/* Add your custom styles here */
+
+/* Example: Center align text */
+.center-align {
+    text-align: center;
+}
+
+/* Example: Add margin to the top and bottom of elements */
+.margin-top-bottom {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Example: Change background color */
+.custom-bg-color {
+    background-color: #f0f0f0;
+}
+
+/* Example: Customize font size and color */
+.custom-font {
+    font-size: 18px;
+    color: #333333;
+}

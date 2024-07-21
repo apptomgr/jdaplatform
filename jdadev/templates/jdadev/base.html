@@ -1,0 +1,57 @@
+<!-- base.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django App{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <!--link href="{% static 'css/custom.css' %}" rel="stylesheet"-->
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'jdadev_home' %}">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!--li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'jdadev_home' %}">Home2</a>
+                </li-->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'upload_excel' %}">Upload Daily Stock Values </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'upload_bond_excel' %}">Upload Bond Information </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jdadev_stock_report' %}">Daily Stock Report</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jdadev_bond_report' %}">Bond Report</a>
+                </li>
+            </ul>
+            <!-- Add your login/signup buttons or other navigation items here -->
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

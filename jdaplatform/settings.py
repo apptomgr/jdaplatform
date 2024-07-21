@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'countries_plus',
     'languages_plus',
     'bootstrap_datepicker_plus',
+    'jdadev',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

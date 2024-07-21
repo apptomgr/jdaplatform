@@ -1,0 +1,1741 @@
+
+<!DOCTYPE html>
+
+
+
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>JDA Platform</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="/static/jdamainapp/assets/img/Joseph-%26-Daniel-ADVISORY-logo.png" rel="icon">
+  <link href="/static/jdamainapp/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <!--link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Raleway:300,400,400i,500,500i,700,800,900" rel="stylesheet"-->
+
+  <!-- Vendor CSS Files -->
+  <link href="/static/jdamainapp/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/nivo-slider/css/nivo-slider.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/css/awesome_pro.css" rel="stylesheet">
+  <!--link rel="stylesheet" href="https://fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/-->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+  <!-- Template Main CSS File -->
+  <link href="/static/jdamainapp/assets/css/style.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/css/style_pub.css" rel="stylesheet">
+  <link href="/static/jdamainapp/assets/css/style_pub2.css" rel="stylesheet">
+
+
+  <!-- Latest compiled and minified CSS -->
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css"-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+  <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"-->
+
+  <!-- datatable -->
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"-->
+  <!--link rel="stylesheet" href="/static/jdamainapp/assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css"-->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css">
+
+  <!-- HTMX -->
+  <!--script src="https://unpkg.com/htmx.org@1.6.1" integrity="sha384-tvG/2mnCFmGQzYC1Oh3qxQ7CkQ9kMzYjWZSNtrRZygHPDDqottzEJsqS4oUVodhW" crossorigin="anonymous"></script-->
+  <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+
+</head>
+
+<body data-spy="scroll" data-target="#navbar-example">
+
+<!-- ======= Header ======= -->
+<header class="fixed-top" id="header">
+  <div class="container-custom d-flex"> <!-- container-fluid -->
+
+    <!--div class="logo mr-auto">
+        <h1 class="text-light"><a href="/"><span>J&D </span>Platform</a></h1>
+    </div-->
+    <div class="logo mr-auto">
+      <h1 class="text-light"><a href="/"><span>J&D </span>Advisory </a></h1>
+    </div>
+
+    <nav class="nav-menu d-none d-lg-block">
+
+      <ul>
+        <li class="active"><a href="/">JDA Platform</a></li>
+
+        <li class="drop-down"><a href="/jdafinancialsapp/"><i class="far fa-compass"></i> Financials App</a>
+
+        </li>
+
+        <li class="drop-down"><a href="/jdaanalyticsapp/"><i class="far fa-newspaper"></i> Analytics App</a>
+
+        </li>
+
+        <li class="drop-down"><a href="/jdapublicationsapp/"><i class="far fa-newspaper"></i> Publications App</a>
+          <ul>
+
+            <li><a href="/jdapublicationsapp/jdapublicationsapp_pubs/"><i class="fas fa-user-cog"></i> Our Publications </a></li>
+            <li><a href="/jdapublicationsapp/jdapublicationsapp_entry/"><i class="fas fa-user-cog"></i> Publication Entry </a></li>
+            <li><a href="/jdapublicationsapp/jdapublicationsapp_listing/"><i class="fas fa-edit"></i>  Publication Edit </a></li>
+            <li><hr class="my_hr_divider"></li>
+            <li><a href="/jdapublicationsapp/jdapublicationsapp_company_listing/"><i class="far fa-eye"></i> View Companies</a></li>
+            <li><a href="/jdapublicationsapp/jdapublicationsapp_new_company/"><i class="fa fa-plus-circle"></i> Add Company</a></li>
+
+
+          </ul>
+        </li>
+        <!--li class="drop-down"><a href="#"><i class="fa fa-file-text"></i> Report</a>
+            <ul>
+                <li><a href="{ url 'jdamainapp_company_listing' %">Company Listing</a></li>
+                <li><a href="{ url 'jdamainapp_contact_list' }">Contact List</a></li>
+            </ul>
+        </li-->
+        <!--li class="drop-down"><a href="#"><i class="fas fa-users-cog"></i> Admin Functions</a>
+            <ul>
+                <li><a href="{ url 'jdamainapp_new_company' }"><i class="fas fa-building"></i> &nbsp;New
+                    Company</a></li>
+                <li><a href="{ url 'jdapublications_entry' %"><i class="fas fa-user-cog"></i>
+                    Publication Entry </a></li>
+                <li><a href="{ url 'jdamainapp_publication_listing' %"><i class="fad fa-file-spreadsheet"></i>
+                    Publication Listing </a></li>
+
+
+            </ul>
+        </li-->
+
+        <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> admin</b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/accounts/profile/"><i class="fas fa-user-circle"></i> My Account</a></li>
+
+            <li><hr class="my_hr_divider"></li>
+            <li><a href="/accounts/logout/"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          </ul>
+        </li>
+
+
+        <li onclick="return getLang('square');">
+
+
+
+
+
+
+          <link rel="stylesheet" type="text/css" href="/static/css/django-translation-flags.min.css">
+
+
+        <li >
+          <a href="#fr"
+             onclick="set_language('fr')"
+
+             title="français">
+            <span class="flag-icon flag-icon-fr flag-icon-square"></span>
+          </a>
+        </li>
+
+        <li >
+          <a href="#en"
+             onclick="set_language('en')"
+
+             title="English">
+            <span class="flag-icon flag-icon-en flag-icon-square"></span>
+          </a>
+        </li>
+
+
+        <form action="/i18n/setlang/" method="post" id="setlang">
+          <input type="hidden" name="csrfmiddlewaretoken" value="VHSieqz09ENYyhzsGT4adYOiL92ZmvNpvRgPmsPnm3UWOXJNSiyl70ip5PG2EuHW">
+          <input name="next" type="hidden" value="/jdadev/jdadev_mutual_funds/">
+          <input type="hidden" name="language" id="language">
+        </form>
+
+        <script type="text/javascript">
+        if (window.location.hash){
+            var hash = window.location.hash;
+            document.getElementById('language').value = hash.replace('#', '');
+            document.getElementById('setlang').submit()
+        }
+    function set_language(language) {
+        $('input[name="language"]').val(language);
+        $('form#setlang').submit();
+    }
+</script></li>
+        <!--li class="login"><a href="#"><i aria-hidden="true" class="fa fa-user text-secondary"></i> Members</a></li-->
+      </ul>
+
+    </nav><!-- .nav-menu -->
+
+
+  </div>
+</header><!-- End Header -->
+
+
+<main id="main">
+
+  <!-- ======= About Section ======= -->
+  <div class="about-area main_container_area-padding" id="about">
+    <div class="container-custom wow"> <!-- container-fluid -->
+      <!--div class="layer-1-1 hidden-xs wow animate__slideInDown animate__animated" data-wow-delay=".2s"
+           data-wow-duration="2s"-->
+
+
+
+
+
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb my_breadcrumb_bg">
+          <li class="breadcrumb-item"><a href="/jdadev/" class="text-light ">Home</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/upload/" class="text-light "> Daily Stock Data Upload</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/insert_distinct_institution_types" class="text-light "> Populate Bond Institution Types</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/upload_bond/" class="text-light "> Bond Data Upload</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/jdadev_stock_report/" class="text-light "> Daily Stock Data</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/jdadev_bond_report/" class="text-light "> View Daily Bond Data</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/upload_mutual_fund_excel/" class="text-light "> Mutual Fund Upload</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/jdadev_mutual_fund_report/" class="text-light "> View Mutual Fund Data</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/insert_distinct_depositaire" class="text-light "> Populate Mutual Fund Depositaires</a></li>
+          <li class="breadcrumb-item"><a href="/jdadev/insert_distinct_sociate_de_gession" class="text-light "> Populate Mutual Fund Societes de Gession</a></li>
+        </ol>
+      </nav>
+
+
+
+      <div class="row justify-content-center align-items-center mb-0">
+        <h6 class="text-muted"><i class="fas fa-compass  my_info_txt"></i> Admin Portfolio</h6>
+        <div class="col-sm-12">
+
+        </div>
+      </div>
+
+      <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="/jdadev/jdadev_liquid_assets/">Liquid Assets</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/jdadev/jdadev_equity_and_rights/">Equity & Rights</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/jdadev/jdadev_bonds/">Bonds</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/jdadev/jdadev_mutual_funds/">Mutual Funds</a></li>
+          </ul>
+        </div>
+
+
+        <div class="card-body" xmlns="http://www.w3.org/1999/html">
+
+          <form method="POST" novalidate>
+            <input type="hidden" name="csrfmiddlewaretoken" value="VHSieqz09ENYyhzsGT4adYOiL92ZmvNpvRgPmsPnm3UWOXJNSiyl70ip5PG2EuHW">
+            <div class="row mt-1">
+              <div class="col-lg-2 col-md-2 col-sm col-xs-12">
+
+
+
+                <div id="div_id_mutual_funds" class="form-group">
+
+
+
+
+
+
+
+
+                  <div class="">
+                    <input type="text" name="mutual_funds" class="form-control-sm textinput textInput form-control" readonly="readonly" placeholder="Mutual Funds" maxlength="50" id="id_mutual_funds">
+
+
+
+
+
+
+
+
+
+
+
+
+                  </div>
+
+
+                </div>
+
+
+              </div>
+            </div>
+            <!-- Mututal_fund formset -->
+            <div class="collapse show" id="mutual_fund_id">
+              <input type="hidden" name="form-TOTAL_FORMS" value="1" id="id_form-TOTAL_FORMS"><input type="hidden" name="form-INITIAL_FORMS" value="0" id="id_form-INITIAL_FORMS"><input type="hidden" name="form-MIN_NUM_FORMS" value="0" id="id_form-MIN_NUM_FORMS"><input type="hidden" name="form-MAX_NUM_FORMS" value="1000" id="id_form-MAX_NUM_FORMS">
+              <div id="formset-container">
+
+                <input type="hidden" name="form-0-id" id="id_form-0-id">
+                <div class="row form-row">
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-sociate_de_gession" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <select name="form-0-sociate_de_gession" class="form-control form-control-sm show-tick select form-control" onchange="return mu_triggerHtmxGet(id);" id="id_form-0-sociate_de_gession">
+                          <option value="" selected>Societe De Gessions</option>
+
+                          <option value="1">AFRICABOURSE ASSET MANAGEMENT</option>
+
+                          <option value="3">AFRICAINE DE GESTION D&#x27;ACTIFS</option>
+
+                          <option value="2">AFRICAM SA</option>
+
+                          <option value="4">ATLANTIC ASSET MANAGEMENT</option>
+
+                          <option value="22">ATTIJARI ASSET MANAGEMENT</option>
+
+                          <option value="20">BAOBAB ASSET MANAGEMENT</option>
+
+                          <option value="5">BNI GESTION</option>
+
+                          <option value="6">BOA ASSET MANAGEMENT</option>
+
+                          <option value="14">BRIDGE ASSET MANAGEMENT</option>
+
+                          <option value="7">BRM ASSET MANAGEMENT</option>
+
+                          <option value="8">CGF GESTION</option>
+
+                          <option value="9">CORIS ASSET MANAGEMENT</option>
+
+                          <option value="21">EDC Asset Management</option>
+
+                          <option value="15">ENKO CAPITAL WEST AFRICA</option>
+
+                          <option value="10">NSIA AM</option>
+
+                          <option value="11">OAM S.A</option>
+
+                          <option value="19">PhoenixAfrica Asset Management</option>
+
+                          <option value="16">SAPHIR ASSET MANAGEMENT</option>
+
+                          <option value="18">SGO MALI FINANCES</option>
+
+                          <option value="13">SOAGA-SA</option>
+
+                          <option value="12">SOGESPAR</option>
+
+                          <option value="17">WAFI CAPITAL S.A.</option>
+
+                        </select>
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-depositaire" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <select name="form-0-depositaire" class="form-control form-control-sm show-tick select form-control" onchange="return mu_triggerHtmxGet(id);" id="id_form-0-depositaire">
+                          <option value="" selected>Depositaire</option>
+
+                          <option value="1">AFRICABOURSE SA</option>
+
+                          <option value="4">ATLANTIQUE FINANCE</option>
+
+                          <option value="5">BNI FINANCES</option>
+
+                          <option value="6">BOA CAPITAL SECURITIES</option>
+
+                          <option value="15">BRIDGE SECURITIES</option>
+
+                          <option value="7">BRM</option>
+
+                          <option value="8">CGF BOURSE</option>
+
+                          <option value="9">CORIS BOURSE</option>
+
+                          <option value="24">EDC Investment Corporation</option>
+
+                          <option value="21">FGI</option>
+
+                          <option value="22">IMPAXIS</option>
+
+                          <option value="23">IMPAXIS SECURITIES</option>
+
+                          <option value="11">NSIA BANQUE CI</option>
+
+                          <option value="20">Phoenix Capital Management</option>
+
+                          <option value="2">SBIF</option>
+
+                          <option value="25">SGI AFRICAINE DE BOURSE</option>
+
+                          <option value="3">SGI AGI</option>
+
+                          <option value="18">SGI AGI BENIN</option>
+
+                          <option value="17">SGI BENIN</option>
+
+                          <option value="19">SGI MALI SA</option>
+
+                          <option value="12">SGI TOGO</option>
+
+                          <option value="14">SGI-BOA CAPITAL SECURITIES</option>
+
+                          <option value="16">SOCIETE GENERALE COTE</option>
+
+                          <option value="13">SOGEBOURSE</option>
+
+                          <option value="10">UBA CI</option>
+
+                        </select>
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-opcvm" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <select name="form-0-opcvm" class="form-control form-control-sm  show-tick select form-control" onchange="mu_triggerHtmxGet(id)" id="id_form-0-opcvm">
+                          <option value="" selected>OPCVM</option>
+
+                          <option value="1">FCP AAM CAPITAL SUR</option>
+
+                          <option value="2">FCP AAM EPARGNE CROISSANCE</option>
+
+                          <option value="3">FCP AAM OBLIGATIS</option>
+
+                          <option value="4">FCP AAM EPARGNE ACTION</option>
+
+                          <option value="5">FCP EXPANSIO</option>
+
+                          <option value="6">FCP SECURITAS</option>
+
+                          <option value="7">FCP VALORIS</option>
+
+                          <option value="8">FCP CAPITAL PLUS</option>
+
+                          <option value="9">FCP CONFORT PLUS</option>
+
+                          <option value="10">FCP ATLANTIQUE CROISSANCE</option>
+
+                          <option value="11">FCP ATLANTIQUE LIQUIDITE</option>
+
+                          <option value="12">FCP ATLANTIQUE ACTIONS</option>
+
+                          <option value="13">FCP ATLANTIQUE SERENITE</option>
+
+                          <option value="14">FCP ATLANTIQUE HORIZON</option>
+
+                          <option value="15">FCP ATLANTIQUE SECURITE</option>
+
+                          <option value="16">FCP CAPITAL CROISSANCE</option>
+
+                          <option value="17">OBLIG SECURITE</option>
+
+                          <option value="18">FCP DYNAMIC SAVINGS</option>
+
+                          <option value="19">FCP Emergence</option>
+
+                          <option value="20">FCP Treso Monea</option>
+
+                          <option value="21">FCP &quot;BRM DYNAMIQUE&quot;</option>
+
+                          <option value="22">FCP &quot;BRM OBLIGATAIRE&quot;</option>
+
+                          <option value="23">FCP ACTIONS PHARMACIE</option>
+
+                          <option value="24">FCP AL BARAKA</option>
+
+                          <option value="25">FCP AL BARAKA 2</option>
+
+                          <option value="26">FCP ASSUR SENEGAL</option>
+
+                          <option value="27">FCP PLACEMENT AVANTAGE</option>
+
+                          <option value="28">FCP PLACEMENT CROISSANCE</option>
+
+                          <option value="29">FCP POSTEFINANCES HORIZON</option>
+
+                          <option value="30">FCP PLACEMENT QUIETUDE</option>
+
+                          <option value="31">FCP LIQUIDITE-OPTIMUM</option>
+
+                          <option value="32">FCP BNDE VALEURS</option>
+
+                          <option value="33">FCP CORIS ACTIONS</option>
+
+                          <option value="34">FCP ASSURANCES</option>
+
+                          <option value="35">FCP CORIS PERFORMANCE</option>
+
+                          <option value="36">NSIA FONDS DIVERSIFIE</option>
+
+                          <option value="37">AURORE OPPORTUNITES</option>
+
+                          <option value="38">AURORE SECURITE</option>
+
+                          <option value="39">NSIA ASSURANCES OPTIMUM</option>
+
+                          <option value="40">FCP-1 OPTI PLACEMENT</option>
+
+                          <option value="41">FCP-2 OPTI REVENU</option>
+
+                          <option value="42">FCP-3 OPTI CAPITAL</option>
+
+                          <option value="43">FCP SOGEAVENIR</option>
+
+                          <option value="44">FCP SOGEDEFI</option>
+
+                          <option value="45">FCP SOGEDYNAMIQUE</option>
+
+                          <option value="46">FCP SOGELIQUID</option>
+
+                          <option value="47">FCP SOGEPRIVILEGE</option>
+
+                          <option value="48">FCP SOGESECURITE</option>
+
+                          <option value="49">FCP SOGEVALOR</option>
+
+                          <option value="50">FCP SOAGA EPARGNE ACTIVE</option>
+
+                          <option value="51">SICAV Abdou DIOUF</option>
+
+                          <option value="52">FCP BOAD CAPITAL RETRAITE</option>
+
+                          <option value="53">FCP SOAGA EPARGNE OBLIGATIONS</option>
+
+                          <option value="54">FCP SOAGA EPARGNE ACTIONS</option>
+
+                          <option value="55">FCP SOAGA EPARGNE SERENITE</option>
+
+                          <option value="56">FCP BRIDGE EQUILIBRE</option>
+
+                          <option value="57">FCP BRIDGE DIVERSIFIE CROISSANCE</option>
+
+                          <option value="58">FCP BRIDGE OBLIGATIONS</option>
+
+                          <option value="59">FCP ENKO CAPITAL GARANTI</option>
+
+                          <option value="60">FCP PATRIMOINE</option>
+
+                          <option value="61">FCP ENKO CAPITAL OBLIGATIONS</option>
+
+                          <option value="62">FCP SAPHIR DYNAMIQUE</option>
+
+                          <option value="63">FCP SAPHIR QUIETUDE</option>
+
+                          <option value="64">SICAV WAFI CAPITAL</option>
+
+                          <option value="65">FCP NYESIGUI</option>
+
+                          <option value="66">FCP INITIATIVES SOLIDARITE</option>
+
+                          <option value="67">FCPE SODEFOR</option>
+
+                          <option value="68">FCP PAM ACTIONS</option>
+
+                          <option value="69">FCP PAM DIVERSIFIE EQUILIBRE</option>
+
+                          <option value="70">FCP PAM DIVERSIFIE OBLIGATIONS</option>
+
+                          <option value="71">FCP Global Investors</option>
+
+                          <option value="72">FCP Boa Obligations</option>
+
+                          <option value="73">FCP Boa Sécurité</option>
+
+                          <option value="74">FCP Boa Actions</option>
+
+                          <option value="75">FCP Boa Rendement</option>
+
+                          <option value="76">EVOLUTIS</option>
+
+                          <option value="77">FCP BAM TRESOR</option>
+
+                          <option value="78">FCP &quot;SDE&quot;</option>
+
+                          <option value="79">FCPCR SONATEL</option>
+
+                          <option value="80">FCPE FORCE PAD</option>
+
+                          <option value="81">FCPE SINI GNESIGUI</option>
+
+                          <option value="82">FCP EXPAT</option>
+
+                          <option value="83">FCP CAPITAL RETRAITE</option>
+
+                          <option value="84">FCP RENTE PERPETUELLE</option>
+
+                          <option value="85">FCP WALO</option>
+
+                          <option value="86">FCP DJOLOF</option>
+
+                          <option value="87">FCP DIASPORA</option>
+
+                          <option value="88">FCP IFC-BOAD</option>
+
+                          <option value="89">FCPE DP WORLD DAKAR</option>
+
+                          <option value="90">FCP ECOBANK UEMOA DIVERSIFIE</option>
+
+                          <option value="91">FCP ECOBANK UEMOA OBLIGATAIRE</option>
+
+                          <option value="92">FCP ECOBANK UEMOA RENDEMENT</option>
+
+                          <option value="93">FCP ECOBANK ACTIONS UEMOA</option>
+
+                          <option value="94">FCPE ORANGE MALI</option>
+
+                          <option value="95">FCP TOUNKARANKE</option>
+
+                          <option value="96">ATTIJARI OBLIG</option>
+
+                          <option value="97">ATTIJARI LIQUIDITE</option>
+
+                          <option value="98">ATTIJARI HORIZON</option>
+
+                          <option value="99">ATTIJARI ACTIONS</option>
+
+                          <option value="100">ATTIJARI DIVERSIFIE</option>
+
+                          <option value="101">ATTIJARI INVEST</option>
+
+                          <option value="102">ATTIJARI PATRIMOINE</option>
+
+                          <option value="103">FCPE CNRA</option>
+
+                          <option value="104">FCPE BNI RETRAITE</option>
+
+                          <option value="105">FCP KARIMA ETHIQUE</option>
+
+                        </select>
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-mu_original_value" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <input type="text" name="form-0-mu_original_value" class="form-control-sm textinput textInput form-control" placeholder="Original Value" readonly="readonly" onblur="mu_triggerHtmxGet_current_value(id)" id="id_form-0-mu_original_value">
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-mu_current_value" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <input type="text" name="form-0-mu_current_value" class="form-control-sm textinput textInput form-control" placeholder="Current Value" readonly="readonly" onblur="mu_triggerHtmxGet_nbr_of_share(id)" id="id_form-0-mu_current_value">
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg col-md col-sm-2 col-xs-12">
+
+
+
+                    <div id="div_id_form-0-mu_nbr_of_share" class="form-group">
+
+
+
+
+
+
+
+
+                      <div class="">
+                        <input type="text" name="form-0-mu_nbr_of_share" class="form-control form-control-sm textinput textInput form-control" placeholder="Number of Shares" id="id_form-0-mu_nbr_of_share">
+
+
+
+
+
+
+
+
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                </div>
+
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              <input class="btn btn-sm btn-info" role="button" type="submit" value="Save">
+            </div>
+          </form>
+        </div>
+
+
+        <script type="text/javascript">
+let opcvm_text = "OPCVM";  //label value nothing selected
+let id_opcvm = "";
+   function mu_triggerHtmxGet(id)
+   {
+     //alert("id: "+id);  //id_form-0-sociate_de_gession
+     var e = document.getElementById(id);
+     var soc_text = e.options[e.selectedIndex].text;
+     opcvm_text=soc_text;
+     id_opcvm=id;
+     if(id.endsWith('sociate_de_gession'))
+     {
+      var soc_val = document.getElementById(id).value;
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('sociate_de_gession', 'depositaire');
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+      var url ='/jdadev/reload_depositaire/soc_text'.replace('soc_text', soc_text);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'innerHTML', onBeforeSwap: function(detail) {
+        console.log('Response content:', detail.serverResponse);
+    }});
+     }
+     else if(id.endsWith('depositaire'))
+     {
+      var soc_val = document.getElementById(id).value;
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('depositaire', 'opcvm');
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+      var url ='/jdadev/reload_opcvm/soc_text'.replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'innerHTML'});
+     }
+     else if(id.endsWith('opcvm')) //When opcvm is selected refresh mu original value
+     {
+      var soc_val = document.getElementById(id).value;
+      var id_int = id.replace("id_form-","").replace("-opcvm","");
+      //alert("id_int"+id_int);
+
+      //alert("soc_val "+ soc_val);
+      //alert("soc_text "+ soc_text);
+      var id_form_nbr_soc = id.replace('opcvm', 'mu_original_value'); //id_form-0-mu_original_value
+      //alert("id_form_nbr_soc: "+id_form_nbr_soc);
+
+      var url ='/jdadev/reload_mu_original_value/id_int/soc_text'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc, swap:'outerHTML'});
+     }
+     else
+     {
+      alert('Unknown request type')
+     }
+    }
+
+
+    function mu_triggerHtmxGet_current_value(id)
+    {
+     //alert(id);//id_form-0-mu_original_value
+     var id_int = id.replace("id_form-","").replace("-mu_original_value","");
+     //alert(id_int);
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert(id);
+     var soc_text = opcvm_text; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM")
+     {
+      //alert("curr_val id_int: "+id_int);
+
+      var id_form_nbr_soc_curr_val = id.replace('opcvm', 'mu_current_value'); //id_form-0-mu_current_value
+      //alert("id_form_nbr_soc_curr_val: "+id_form_nbr_soc_curr_val);
+
+      var url ='/jdadev/reload_mu_current_value/id_int/soc_text'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_curr_val, swap:'innerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+
+    function mu_triggerHtmxGet_nbr_of_share(id)
+    {
+     //alert(id);//id_form-0-mu_nbr_of_share
+     var id_int = id.replace("id_form-","").replace("-mu_current_value","");
+     //alert('id_int: '+id_int);
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert("opcvm id: "+id);
+     var soc_text = opcvm_text; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM")
+     {
+      //alert("nbr_shr_val id_int: "+id_int);
+
+      var id_form_nbr_soc_nbr_shr_val = id.replace('opcvm', 'mu_nbr_of_share'); //id_form-1-mu_nbr_of_share
+      //alert("id_form_nbr_soc_nbr_shr_val: "+id_form_nbr_soc_nbr_shr_val);
+
+      var url ='/jdadev/reload_mu_nbr_of_share/id_int/soc_text'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_nbr_shr_val, swap:'outerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+
+    function Xmu_triggerHtmxGet_nbr_of_share(id)
+    {
+     alert(id); //id_form-0-mu_current_value
+     var id_int = id.replace("id_form-","").replace("-mu_current_value","");
+     id='id_form-'+id_int+'-opcvm'; //replace id with opcvm id to get the text value
+     //alert('new id: '+id);
+     var soc_text = opcvm_text; //get opcvm the text value
+     //alert("soc_text: "+soc_text);
+     if(soc_text != "OPCVM")
+     {
+      //alert("curr_val id_int: "+id_int);
+      //alert("nbr_shr_val id_int: "+id_int);
+      //var id_form_nbr_soc_nbr_shr_val = id.replace('opcvm', 'mu_nbr_of_share'); //id_form-0-mu_nbr_of_share
+      //alert("id_form_nbr_soc_nbr_shr_val: "+id_form_nbr_soc_nbr_shr_val);
+      //var url ='/jdadev/reload_mu_nbr_of_share/id_int/soc_text'.replace('id_int', id_int).replace('soc_text', soc_text);
+      //alert("url: "+url);
+      //htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_nbr_shr_val, swap:'outerHTML'});
+     }
+     else
+     {
+      //Don't execute user blur without selecting an OPCVM value
+      alert("Please select an OPCVM before proceeding");
+     }
+    }
+</script>
+
+
+
+
+
+
+
+      </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script type="text/javascript">
+$(document).ready(function() {
+    $('.equity_right_id').change(function() {
+        var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        if (stockId) {
+            $.ajax({
+                url: '/jdadev/fetch-stock-data/', // URL to the AJAX view
+                data: {
+                    'stock_id': stockId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    // Alert to check if data is received correctly
+                    //alert("Received data: " + JSON.stringify(data));
+
+                    // Update daily_value field within the formset
+                    $('#id_form-' + formIndex + '-daily_value').val(data.daily_value);
+
+                    //get_tot_curr_val(formIndex);
+                },
+                error: function(xhr, status, error) {
+                    // Alert to check if there's an error
+                    alert("AJAX Error: " + error);
+                }
+            });
+        }
+    });
+});
+</script>
+      <script type="text/javascript">
+$(document).ready(function() {
+    $('.nbr_of_stocks_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update daily_value field within the formset
+        get_tot_curr_val(formIndex);
+
+    });
+});
+
+</script>
+
+      <script type="text/javascript">
+$(document).ready(function() {
+    $('.tot_purchase_value_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_tot_purchase_val(formIndex);
+    });
+});
+
+</script>
+
+
+      <script type="text/javascript">
+  function get_tot_curr_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && daily_stock_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_current_value").value=nbr_of_stocks_val*daily_stock_val;
+   }
+  }
+
+</script>
+
+
+      <script type="text/javascript">
+$(document).ready(function() {
+    $('.total_gain_or_loss_id').change(function() {
+        //var stockId = $(this).val();
+        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
+        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
+
+        // Alert to check if stockId and formIndex are being captured correctly
+        //alert("Selected stock ID: " + stockId);
+        //alert("Form index: " + formIndex);
+
+        // Update total_purchase_value field within the formset
+        get_gain_or_loss(formIndex);
+    });
+});
+
+</script>
+      <script type="text/javascript">
+  function get_tot_purchase_val(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var nbr_of_stocks_val=document.getElementById("id_form-"+formIndex+"-nbr_of_stocks").value;
+   var daily_stock_val=document.getElementById("id_form-"+formIndex+"-daily_value").value;
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+   var avg_weighted_cost_val=document.getElementById("id_form-"+formIndex+"-avg_weighted_cost").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (nbr_of_stocks_val != null && avg_weighted_cost_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_purchase_value").value=nbr_of_stocks_val*avg_weighted_cost_val;
+   }
+  }
+</script>
+
+      <script type="text/javascript">
+  function get_gain_or_loss(formIndex)
+  {
+   //alert("id_form-"+formIndex+"-nbr_of_stocks");
+   var total_current_val=document.getElementById("id_form-"+formIndex+"-total_current_value").value;
+   var total_purchase_val=document.getElementById("id_form-"+formIndex+"-total_purchase_value").value;
+
+
+   //alert("nbr_of_stocks_val: "+nbr_of_stocks_val);
+   //alert("daily_stock_val"+daily_stock_val);
+   //alert("total_current_value"+total_current_val);
+   //alert("total_purchase_val"+total_purchase_val);
+   //alert("avg_weighted_cost_val"+avg_weighted_cost_val);
+   if (total_purchase_val != null && total_current_val!=null)
+   {
+    document.getElementById("id_form-"+formIndex+"-total_gain_or_loss").value=total_current_val-total_purchase_val;
+   }
+  }
+</script>
+
+
+      <!--/div-->
+    </div><!-- End About Section -->
+  </div>
+</main><!-- End #main -->
+<!-- ======= Footer ======= -->
+<footer>
+  <div class="footer-area">
+    <div class="container-custom"> <!-- container-fluid -->
+      <div class="row">
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="footer-content">
+            <div class="footer-head">
+              <div class="footer-logo">
+                <h2><span>J&D </span>Advisory</h2>
+              </div>
+              <!-- UEMOA -->
+              <p>The first independent research and investment advisory agency in the UEMOA financial market, Joseph & Daniel Advisory is located in the Ivorian capital Abidjan, more precisely at the Riviera II roundabout in the Cocody town.
+              </p>
+              <div class="footer-icons">
+                <ul>
+                  <li>
+                    <a href="#"><i class="fab fa-facebook-f"></i></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                  </li>
+                  <li>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end single footer -->
+        <div class="col-md-3 col-sm-3 col-xs-12">
+          <div class="footer-content">
+            <div class="footer-head">
+              <h4>information</h4>
+
+              <p>
+              <div class="footer-contacts">
+                <p><span>Tel:</span> +225 27 22 51 54 20</p>
+                <p><span>Email:</span> info@jda-ci.com</p>
+                <p><span>Working Hours:</span> 8am-5pm</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end single footer -->
+        <div class="col-md-3 col-sm-3 col-xs-12">
+          <div class="footer-content">
+            <div class="footer-head">
+              <h4>JDA Web Platform</h4>
+              <p>
+                JDA Platform and web services is designed to help facilite the distribution of its domain specific content or select third-party data.
+              </p>
+              <!--div class="flicker-img">
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/1.jpg" alt=""></a>
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/2.jpg" alt=""></a>
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/3.jpg" alt=""></a>
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/4.jpg" alt=""></a>
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/5.jpg" alt=""></a>
+                  <a><img src="/static/jdamainapp/assets/img/portfolio/6.jpg" alt=""></a>
+              </div-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-area-bottom">
+    <div class="container-custom">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="copyright text-center">
+            <p>
+              <i class="far fa-copyright"></i> Copyright <strong><span>JDA</span></strong>. All Rights Reserved
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer><!-- End  Footer -->
+
+<!-- include alert modal for alerts pks {rec_id}
+{ include 'jdamainapp/jdamainapp_confirm_delete_modal.html' }
+-->
+
+<a class="back-to-top" href="#"><i class="fa fa-chevron-up"></i></a>
+<div id="preloaderX"></div>
+
+<!-- Vendor JS Files -->
+<script src="/static/jdamainapp/assets/vendor/jquery/jquery.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/php-email-form/validate.js"></script>
+<script src="/static/jdamainapp/assets/vendor/appear/jquery.appear.js"></script>
+<script src="/static/jdamainapp/assets/vendor/knob/jquery.knob.js"></script>
+<script src="/static/jdamainapp/assets/vendor/parallax/parallax.js"></script>
+<script src="/static/jdamainapp/assets/vendor/wow/wow.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/nivo-slider/js/jquery.nivo.slider.js"></script>
+<script src="/static/jdamainapp/assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+<script src="/static/jdamainapp/assets/vendor/venobox/venobox.min.js"></script>
+<!--script src="/static/jdamainapp/assets/js/res.js"></script-->
+<!-- formset js -->
+<!--script src="/static/jdamainapp/assets/js/dynamic_formset.old.js"></script-->
+
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script-->
+<!--script src="/static/jdamainapp/assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta/js/bootstrap-select.min.js">
+
+<!-- Template Main JS File -->
+<script src="/static/jdamainapp/assets/js/main.js "></script>
+<script>
+    $("#msg_alert").show().delay(8000).fadeOut();
+
+</script>
+
+
+<!--  jQuery -->
+
+
+<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css"/>
+
+<!-- Bootstrap Date-Picker Plugin -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<! -- jspdf -->
+<script src="/static/jdamainapp/assets/js/jspdf.min.js "></script>
+<!-- custom ajax scripts -->
+<!--script src="/static/jdamainapp/assets/js/jda_ajax.js"></script-->
+
+<!-- Datatable -->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.6/js/responsive.bootstrap4.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js" ></script>
+
+
+
+
+<!--script src="https://cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"  crossorigin="anonymous" referrerpolicy="no-referrer"></script-->
+
+<script>
+<!-- Financial stmts dataTable-->
+$(document).ready(function() {
+    $('#financial_stmt_data_table').DataTable();
+
+    responsive: true
+} );
+
+
+<!-- Publications dataTable -->
+$(document).ready(function() {
+    $.fn.dataTable.moment('MM-DD-YYYY');
+    $.fn.dataTable.moment('D-MM-YY');
+    $('#publication_listingX').DataTable();
+    responsive: true
+} );
+
+<!-- securities dataTable -->
+$(document).ready(function() {
+    $.fn.dataTable.moment('MM-DD-YYYY');
+    $.fn.dataTable.moment('D-MM-YY');
+    $('#security_listingX').DataTable();
+    responsive: true
+} );
+
+function getLanguage() {
+    var langMap = {
+        'en' : 'English',
+        'fr' : 'French'
+    }
+
+    var lang = "";
+    //alert(lang);
+    //return '//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json';
+    return '//cdn.datatables.net/plug-ins/1.10.7/i18n/'+langMap[lang]+'.json'
+}
+
+
+$(document).ready(function() {
+    $('#publication_listing').DataTable( {
+        language : {
+            url: getLanguage()
+
+        },
+        responsive: true,
+        "order": [[ 0, "desc" ]]
+    } );
+
+} );
+
+$(document).ready(function() {
+    $('#security_listing').DataTable( {
+        language : {
+            url: getLanguage()
+        },
+        responsive: true,
+        "order": [[ 0, "desc" ]]
+    } );
+
+} );
+
+$(document).ready(function() {
+    $('#company_listing').DataTable( {
+        language : {
+            url: getLanguage()
+        },
+        responsive: true,
+        "order": [[ 0, "desc" ]]
+    } );
+
+} );
+</script>
+
+<!-- Datepicker -->
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+
+
+
+</script>
+
+
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="bal_date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+
+
+
+</script>
+
+<!-- publication_admins -->
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="publication_date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+
+
+
+</script>
+
+<!-- publication_admins -->
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="from_date"]'); //our date input has the name "from_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+     $(document).ready(function(){
+      var date_input=$('input[name="to_date"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+
+      $(document).ready(function(){
+      var date_input=$('input[name="bnd_isu_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+      $(document).ready(function(){
+      var date_input=$('input[name="isu_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+     $(document).ready(function(){
+      var date_input=$('input[name="open_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+      $(document).ready(function(){
+      var date_input=$('input[name="close_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+    $(document).ready(function(){
+      var date_input=$('input[name="lstn_dt"]'); //our date input has the name "lstn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+      $(document).ready(function(){
+      var date_input=$('input[name="first_pay_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+      $(document).ready(function(){
+      var date_input=$('input[name="lst_pay_dt"]'); //our date input has the name "to_date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+    $(document).ready(function(){
+      var date_input=$('input[name="creatn_dt"]'); //our date input has the name "creatn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+    $(document).ready(function(){
+      var date_input=$('input[name="elecn_dt"]'); //our date input has the name "elecn_dt"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>
+
+</script>
+
+<!-- Publication Menu Toggle Script -->
+<script>
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+</script>
+
+
+<script type="text/javascript" >
+    $(document).ready(function(){
+        $("#id_username").attr('placeholder', '');
+        $("#id_password").attr('placeholder', '');
+        $("#id_password1").attr('placeholder', '');
+        $("#id_password2").attr('placeholder', '');
+    });
+</script>
+
+
+<script>
+    $('#my-modal').on('show.bs.modal', function (event) {
+    var myVal = $(event.relatedTarget).data('val');
+    $(this).find(".modal-body").text(myVal);
+});
+</script>
+<script>
+document.body.addEventListener('configRequest.htmx', (event) => {
+event.detail.headers['X-CSRFToken'] = 'VHSieqz09ENYyhzsGT4adYOiL92ZmvNpvRgPmsPnm3UWOXJNSiyl70ip5PG2EuHW';
+})
+</script>
+
+<style>
+  tr.htmx-swapping td {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+  background-color:#e6ffe6;
+}
+</style>
+<!-- Move this into static file once you fix collect static issues -->
+<script>
+    function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore(selector, prefix) {
+    var newElement = $(selector).clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement);
+    var conditionRow = $('.form-row:not(:last)');
+    conditionRow.find('.btn.add-form-row')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row').addClass('remove-form-row')
+    .html('-');
+    return false;
+}
+function deleteForm(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest('.form-row').remove();
+        var forms = $('.form-row');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row', function(e){
+    e.preventDefault();
+    cloneMore('.form-row:last', 'form');
+    return false;
+});
+$(document).on('click', '.remove-form-row', function(e){
+    e.preventDefault();
+    deleteForm('form', $(this));
+    return false;
+});
+</script>
+
+
+<!-- (2) Move this into static file once you fix collect static issues -->
+<script>
+    function updateElementIndex_2(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
+function cloneMore_2(selector, prefix) {
+    var newElement_2 = $(selector).clone(true);
+    var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+    newElement_2.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+        var name = $(this).attr('name')
+        if(name) {
+            name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+            var id = 'id_' + name;
+            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        }
+    });
+    newElement_2.find('label').each(function() {
+        var forValue = $(this).attr('for');
+        if (forValue) {
+          forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+          $(this).attr({'for': forValue});
+        }
+    });
+    total++;
+    $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+    $(selector).after(newElement_2);
+    var conditionRow = $('.form-row_2:not(:last)');
+    conditionRow.find('.btn.add-form-row_2')
+    .removeClass('btn-success').addClass('btn-danger')
+    .removeClass('add-form-row_2').addClass('remove-form-row_2')
+    .html('-');
+    return false;
+}
+function deleteForm_2(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        btn.closest('.form-row_2').remove();
+        var forms = $('.form-row_2');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex_2(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+$(document).on('click', '.add-form-row_2', function(e){
+    e.preventDefault();
+    cloneMore_2('.form-row_2:last', 'form');
+    return false;
+});
+$(document).on('click', '.remove-form-row_2', function(e){
+    e.preventDefault();
+    deleteForm_2('form', $(this));
+    return false;
+});
+</script>
+
+<style>
+    .form-row_2 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row_2 > .col,
+.form-row_2 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+  .form-row_3 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row_3 > .col,
+.form-row_3 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+  .form-row_4 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row_4 > .col,
+.form-row_4 > [class*="col-"] {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+</style>
+
+</body>
+</html>

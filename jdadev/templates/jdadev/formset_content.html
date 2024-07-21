@@ -1,0 +1,18 @@
+<!-- templates/jdadev/formset_content.html -->
+
+{{ bonds_formset.management_form }}
+{% for form in bonds_formset %}
+{{ form.id }}
+<div class="row form-row">
+  <div class="col-lg col-md col-sm-2 col-xs-12">
+    {{ form.institution_type|as_crispy_field }}
+  </div>
+  <div class="col-lg col-md col-sm-2 col-xs-12">
+    {{ form.symbol|as_crispy_field }}
+  </div>
+  <div class="col-lg col-md col-sm-2 col-xs-12">
+    {{ form.bond_name|as_crispy_field }}
+  </div>
+  <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+</div>
+{% endfor %}

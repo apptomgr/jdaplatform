@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+
+
+{% for i in symbols %}
+<option value="{{ i.id }}">{{ i.bond_name }}</option>
+{% endfor %}
