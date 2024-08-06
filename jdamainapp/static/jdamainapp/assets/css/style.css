@@ -240,7 +240,7 @@ div#preloader {
 # Header
 --------------------------------------------------------------*/
 #header {
-  height: 60px;
+  height: 70px;
   transition: all 0.5s;
   z-index: 997;
   transition: all 0.5s;
@@ -250,7 +250,7 @@ div#preloader {
 
 #header.header-scrolled {
   background: rgba(0, 0, 0, 0.8);
-  height: 60px;
+  height: 70px;
   padding: 10px 0;
 }
 
@@ -274,12 +274,12 @@ div#preloader {
 #header .logo img {
   padding: 0;
   margin: 0;
-  max-height: 40px;
+  max-height: 50px;
 }
 
 @media (max-width: 768px) {
   #header {
-    height: 60px;
+    height: 70px;
     padding: 10px 0;
     background: rgba(0, 0, 0, 0.8);
   }
@@ -3188,3 +3188,16 @@ margin-left: 12px;
 
 style="text-decoration: none; color: inherit;"
 
+/* Custom Navbar Styles */
+.custom-navbar {
+    height: 80px; /* Set the desired height */
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+    line-height: 80px; /* Center align the text vertically */
+}
+
+.custom-navbar .navbar-toggler {
+    line-height: 80px; /* Center align the toggle icon vertically */
+}

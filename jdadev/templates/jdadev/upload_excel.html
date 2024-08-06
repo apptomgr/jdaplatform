@@ -49,23 +49,6 @@
     }
 </style>
 
-{% comment%}
-{% extends 'jdamainapp/base.html' %}
-
-{% block title %}Upload Excel {% endblock %}
-
-{% block content %}
-<div class="row">
-    <div class="col-md-6">
-        <h1>Upload Excel File</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Upload</button>
-        </form>
-    </div>
-</div>
-{% endcomment %}
 {% endblock %}
 
 
