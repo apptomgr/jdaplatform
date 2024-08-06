@@ -49,8 +49,8 @@ def jdadev_home(request):
             return redirect('jdadev_client_portfolio')
         else:
             # Debugging and displaying form errors
-            print("Form errors:", form.errors)
-            print("Formset errors:", stock_formset.errors)
+            #print("Form errors:", form.errors)
+            #print("Formset errors:", stock_formset.errors)
             messages.warning(request, f"Form error: {form.errors} - Formset error: {[formset.errors for formset in stock_formset]}")
     else:
         # Handling GET request to display forms
@@ -109,7 +109,7 @@ def jdadev_equity_and_rights(request):
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
         stock_formset = ClientEquityAndRightsFormset(request.POST)
-        #print(f"30 -stock_formset: {stock_formset}")
+        #print(f"112 -stock_formset: {stock_formset}")
         if form.is_valid() and stock_formset.is_valid():
             client_portfolio = form.save(commit=False)
             client_portfolio.client = user
@@ -118,6 +118,11 @@ def jdadev_equity_and_rights(request):
             stock_forms = stock_formset.save(commit=False)
             for stock_form in stock_forms:
                 stock_form.client = user
+                #if stock_form.cleaned_data.get('DELETE'):
+                #    print("DELETE")
+                #    stock_form.instance.delete()
+                #else:
+                #    print("125 - SAVED")
                 stock_form.save()
             messages.success(request, f"{client_portfolio} info successfully added")
             return redirect('jdadev_equity_and_rights')
@@ -191,8 +196,8 @@ def jdadev_bonds(request):
 def jdadev_mutual_funds(request):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
-    print(f"191 Client: {client_portfolio}")
-    print(f"192 User: {user}")
+    #print(f"191 Client: {client_portfolio}")
+    #print(f"192 User: {user}")
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
         mutual_funds_formset = ClientMutualFundsFormset(request.POST)
@@ -202,14 +207,14 @@ def jdadev_mutual_funds(request):
             client_portfolio.client = user
             client_portfolio.save()
             mututal_fund_forms = mutual_funds_formset.save(commit=False)
-            print("202 - Attempting to save mutual_fund_formset")
+            #print("202 - Attempting to save mutual_fund_formset")
             for mutual_fund_form in mututal_fund_forms:
                 mutual_fund_form.client = user
                 mutual_fund_form.save()
 
             total_value_sum = ClientMutualFundsModel.objects.filter(client=user).aggregate(total_sum=Sum('mu_total_current_value'))['total_sum'] or 0.00
             update_mutual_funds(request, total_value_sum)
-            print(f"209 save mu formset: {client_portfolio}")
+            #print(f"209 save mu formset: {client_portfolio}")
 
 
             messages.success(request, f"{client_portfolio} info successfully added")
@@ -224,7 +229,7 @@ def jdadev_mutual_funds(request):
             mutual_funds_formset = ClientMutualFundsFormset(queryset=ClientMutualFundsModel.objects.filter(client=user))
 
     #print(f"444 - mutual_funds_formset[0].depositaire: {mutual_funds_formset[0].depositaire}")
-    print(form)
+    #print(form)
     context = {'form': form, 'client_portfolio': client_portfolio, 'client': user, 'mutual_funds_formset': mutual_funds_formset, 'total_form_count': mutual_funds_formset.total_form_count}
     return render(request, 'jdadev/jdadev_mutual_funds.html', context)
 
@@ -249,7 +254,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
 
         adj_bn=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[0]
         adj_mu=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[1]
-        print(f"caller: adj_bn:{adj_bn} - adj_mu:{adj_mu}")
+        #print(f"caller: adj_bn:{adj_bn} - adj_mu:{adj_mu}")
         per_lst=[]
         val_lst=[]
         if portfolio_type == 'overall_portfolio':
@@ -302,7 +307,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(adj_bn*100)
             per_lst.append(adj_mu*100)
     else:
-        print("Invalid portfolio type")
+        #print("Invalid portfolio type")
         return redirect('jdadev_home')
 
     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
@@ -310,24 +315,25 @@ def jdadev_overall_portfolio(request, portfolio_type):
 
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-    print(f"per_tot: {per_tot}")
-    print(f"per_bn: {per_bn} - per_mu: {per_mu}")
+    #print(f"per_tot: {per_tot}")
+    #print(f"per_bn: {per_bn} - per_mu: {per_mu}")
     adj_bn = 0
     adj_mu = 0
     adj_vals=[]
     if portfolio_type =='dynamic':
         if per_bn+per_mu >per_tot*Decimal(.20):
-            print(f" If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
+            #print(f" If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
             x_mu=per_tot*Decimal(.20)-per_mu
             if x_mu <0:
                 adj_bn=0
                 adj_mu =.20
             else:
                 adj_bn=x_mu
+                adj_mu=per_mu
 
-            print(f" x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
+            #print(f" x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
         else:
-            print(f"<Else per_tot*20: {per_tot*Decimal(.20)}")
+            #print(f"<Else per_tot*20: {per_tot*Decimal(.20)}")
             adj_bn=per_tot*Decimal(.20)-per_mu
             adj_mu=per_mu
     elif portfolio_type =='balanced':
@@ -338,9 +344,11 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
                 adj_mu =.45
             else:
                 adj_bn=x_mu
+                adj_mu=per_mu
         else:
             adj_bn=per_tot*Decimal(.45)-per_mu
             adj_mu=per_mu
+
 
     elif portfolio_type =='prudent':
         if per_bn+per_mu >per_tot*Decimal(.70):
@@ -350,6 +358,7 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
                 adj_mu =.70
             else:
                 adj_bn=x_mu
+                adj_mu=per_mu
         else:
             adj_bn=per_tot*Decimal(.70)-per_mu
             adj_mu=per_mu
@@ -507,16 +516,16 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 
 #//////////////////////////////reload_symbols////////////////////////////////
 def reload_symbols(request, inst_val):
-    print(inst_val)
+    #print(inst_val)
     #query the Intitution_types model to get the inst+type name based on the inst_val (id)
     inst_val_str = InstitutionTypeModel.objects.filter(id=inst_val)[0].inst_type
 
     #print(inst_val_str)
     if inst_val == "":
         symbols = BondModel.objects.all().order_by('symbol')
-        print(symbols)
+        #print(symbols)
     else:
-        print(f"QRY: filter(institution_type={inst_val_str})")
+        #print(f"QRY: filter(institution_type={inst_val_str})")
         symbols = BondModel.objects.filter(institution_type=inst_val_str).order_by('symbol')
     context ={'symbols':symbols}
     return render(request, 'jdadev/partials/jdadev_symbols.html', context)
@@ -540,7 +549,7 @@ def reload_original_value(request, id_int, sym_val):
     #print(f"id_int:{id_int}  sym_val:{sym_val}")
     if sym_val == "":
         symbols = BondModel.objects.all().order_by('symbol')
-        print(f"symbols all:{symbols}")
+        #print(f"symbols all:{symbols}")
     else:
         symbols = BondModel.objects.filter(id=sym_val).order_by('symbol')
         #for i in symbols:
@@ -580,7 +589,7 @@ def reload_depositaire(request, soc_text):
 #//////////////////////////////reload_opcvm////////////////////////////////
 from decimal import Decimal
 def reload_opcvm(request, soc_text):
-    print(f"261: soc_text:{soc_text}")
+    #print(f"261: soc_text:{soc_text}")
     if soc_text == "":
         opcvm = MutualFundModel.objects.all().order_by('opcvm')
         #print(f"depositaire all:{depositaire}")
@@ -598,7 +607,7 @@ def reload_opcvm(request, soc_text):
 
 #//////////////////////////////reload_mu_original_value////////////////////////////////
 def reload_mu_original_value(request, id_int, soc_text):
-    print(f"305: soc_text:{soc_text}")
+    #print(f"305: soc_text:{soc_text}")
     if soc_text == "":
         original_value = MutualFundModel.objects.all()
         #print(f"depositaire all:{depositaire}")
@@ -616,7 +625,7 @@ def reload_mu_original_value(request, id_int, soc_text):
 
 #//////////////////////////////reload_mu_current_value////////////////////////////////
 def reload_mu_current_value(request, id_int, soc_text):
-    print(f"323: soc_val:{soc_text}")
+    #print(f"323: soc_val:{soc_text}")
 
 
     if soc_text == "" or soc_text == 'OPCVM':
@@ -633,14 +642,14 @@ def reload_mu_current_value(request, id_int, soc_text):
         mu_curr_val= str(cv.current_value).replace(',', '.').replace('0000', '00')
         #unique_orv = list(set(orv))
         #print(mu_curr_val)
-        print(f"340 - reload_mu_current_value: {mu_curr_val}")
+        #print(f"340 - reload_mu_current_value: {mu_curr_val}")
 
     context ={'id_int':id_int,'mu_curr_val':mu_curr_val}
     return render(request, 'jdadev/partials/jdadev_mu_current_value.html', context)
 
 #//////////////////////////////reload_mu_nbr_of_share////////////////////////////////
 def reload_mu_nbr_of_share(request, id_int, soc_text):
-    print(f"347: soc_val:{soc_text}")
+    #print(f"347: soc_val:{soc_text}")
     if soc_text == "":
         pass
         #mu_nbr_of_share = MutualFundModel.objects.all()
@@ -655,7 +664,7 @@ def reload_mu_nbr_of_share(request, id_int, soc_text):
 
 #//////////////////////////////reload_mu_total_current_value////////////////////////////////
 def reload_mu_total_current_value(request, id_int, soc_text):
-    print(f"362: soc_text:{soc_text}")
+    #print(f"362: soc_text:{soc_text}")
     mu_tot_curr_val=soc_text
     context ={'id_int':id_int,'mu_tot_curr_val':mu_tot_curr_val}
     return render(request, 'jdadev/partials/jdadev_mu_total_current_value.html', context)
@@ -665,7 +674,7 @@ def reload_mu_total_current_value(request, id_int, soc_text):
 @login_required
 def update_equity_and_rights(request, new_value):
     user = request.user  # Get the logged-in user
-    print(f"New_Value: {new_value}")
+    #print(f"New_Value: {new_value}")
     # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
     # new_value = 999.00
 
@@ -673,7 +682,7 @@ def update_equity_and_rights(request, new_value):
     updated_rows = ClientPortfolioModel.objects.filter(client=user).update(equity_and_rights=new_value)
 
     # Debug output to check if the update was successful
-    print(f"Updated {updated_rows} row(s)")
+    #print(f"Updated {updated_rows} row(s)")
 
     # Redirect or render a template after updating
     #return redirect('some_success_url')  # Replace 'some_success_url' with your actual success URL or render a template
@@ -682,7 +691,7 @@ def update_equity_and_rights(request, new_value):
 @login_required
 def update_bonds(request, new_value):
     user = request.user  # Get the logged-in user
-    print(f"New_Value: {new_value}")
+    #print(f"New_Value: {new_value}")
     # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
     # new_value = 999.00
 
@@ -690,7 +699,7 @@ def update_bonds(request, new_value):
     updated_rows = ClientPortfolioModel.objects.filter(client=user).update(bonds=new_value)
 
     # Debug output to check if the update was successful
-    print(f"Updated {updated_rows} row(s)")
+    #print(f"Updated {updated_rows} row(s)")
 
     # Redirect or render a Stemplate after updating
     #return redirect('some_success_url')  # Replace 'some_success_url' with your actual success URL or render a template
@@ -699,7 +708,7 @@ def update_bonds(request, new_value):
 @login_required
 def update_mutual_funds(request, new_value):
     user = request.user  # Get the logged-in user
-    print(f"486 New_Value: {new_value}")
+    #print(f"486 New_Value: {new_value}")
     # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
     # new_value = 999.00
 
@@ -707,7 +716,7 @@ def update_mutual_funds(request, new_value):
     updated_rows = ClientPortfolioModel.objects.filter(client=user).update(mutual_funds=new_value)
 
     # Debug output to check if the update was successful
-    print(f"414 Updated {updated_rows} row(s)")
+    #print(f"414 Updated {updated_rows} row(s)")
 
     # Redirect or render a Stemplate after updating
     #return redirect('some_success_url')  # Replace 'some_success_url' with your actual success URL or render a template
@@ -720,7 +729,7 @@ def fetch_stock_data(request):
     stock_id = request.GET.get('stock_id')
     stock = get_object_or_404(StockDailyValuesModel, id=stock_id)
     data = {'daily_value': stock.daily_value,}
-    print(f"data: {data}")
+    #print(f"data: {data}")
     return JsonResponse(data)
 
 
@@ -762,7 +771,7 @@ def upload_file(request):
 
 #///////////////////////////////////////upload_excel//////////////////////////////////////////////////////
 def upload_excel(request):
-    #print("56 file upload ")
+    #print("765 file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -778,7 +787,7 @@ def upload_excel(request):
 
             try:
                 df = pd.read_excel(excel_data)
-                #print(f"Pre: {df}")
+                #print(f"781 Pre: {df}")
                 # Preprocess the data
                 df['daily_value'] = df['daily_value'].apply(lambda x: None if pd.isna(x) else float(x))
                 df['target_value'] = df['target_value'].apply(lambda x: None if pd.isna(x) else float(x))
@@ -793,10 +802,11 @@ def upload_excel(request):
                 #print(f"Post: {df}")
                 #print(f"{df['daily_value']}-----{df['target_value']}")
             except pd.errors.ParserError as pe:
-                #print(f"68 Exception pe: {pe}")
+                #print(f"796 Exception pe: {pe}")
+                #messages.error(request, f"Error Loading institution types: {e})")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
-                #print(f"68 Exception e: {e}")
+                #print(f"800 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             except pd.errors.ParserError:
@@ -808,6 +818,7 @@ def upload_excel(request):
             required_columns = ['ticker', 'daily_value', 'target_value']
             missing_columns = [col for col in required_columns if col not in df.columns]
             if missing_columns:
+                #print("811: missing columns")
                 return render(request, 'jdadev/upload_error.html', {'error_message': f"Missing required columns in Excel file: {', '.join(missing_columns)}"})
 
             try:
@@ -818,10 +829,10 @@ def upload_excel(request):
                         target_value = row['target_value']
                         StockDailyValuesModel.objects.create(ticker=ticker, daily_value=daily_value, target_value=target_value)
                     except Exception as e:
-                        #print(f"92 Exception e:{e}")
+                        #print(f"822 Exception e:{e}")
                         return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
             except Exception as e:
-                #print(f"95 Exception e:{e}")
+                #print(f"825 Exception e:{e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error creating objects from Excel data: " + str(e)})
 
             return render(request, 'jdadev/upload_success.html')
@@ -832,7 +843,7 @@ def upload_excel(request):
 
 #///////////////////////////////////////upload_bond_excel//////////////////////////////
 def upload_bond_excel(request):
-    print("107 file upload ")
+    #print("107 file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -867,10 +878,10 @@ def upload_bond_excel(request):
                 #print(f"Post: {df}")
                 #print(f"{df['original_value']}-----{df['coupon']}-----{df['current_value']}-----{df['nbr_of_shares']}-----{df['total_value']}")
             except pd.errors.ParserError as pe:
-                print(f"409 Exception pe: {pe}")
+               # print(f"409 Exception pe: {pe}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
-                print(f"412 Exception e: {e}")
+               # print(f"412 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             except pd.errors.ParserError:
@@ -921,7 +932,7 @@ def upload_bond_excel(request):
 
 #///////////////////////////////////////upload_mutual_fund_excel//////////////////////////////
 def upload_mutual_fund_excel(request):
-    print("463 file upload ")
+    #print("463 file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -950,17 +961,18 @@ def upload_mutual_fund_excel(request):
                 # Replace NaN with a temporary placeholder
                 # Replace the temporary placeholder with None
                 df['original_value'] = df['original_value'].replace('', 0.00)
+
                 df['current_value'] = df['current_value'].replace('', 0.00)
                 df['nbr_of_share'] = df['nbr_of_share'].replace('', 0)
 
-                print("495 Done with data validation")
+                #print("495 Done with data validation")
                 #print(f"Post: {df}")
-                print(f"497 {df['sociate_de_gession']}-----{df['depositaire']}-----{df['opcvm']}-----{df['original_value']}-----{df['nbr_of_share']}")
+                #print(f"497 {df['sociate_de_gession']}-----{df['depositaire']}-----{df['opcvm']}-----{df['original_value']}-----{df['nbr_of_share']}")
             except pd.errors.ParserError as pe:
-                print(f"499 Exception pe: {pe}")
+                #print(f"499 Exception pe: {pe}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
-                print(f"502 Exception e: {e}")
+                #print(f"965 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             except pd.errors.ParserError:
@@ -973,11 +985,11 @@ def upload_mutual_fund_excel(request):
             missing_columns = [col for col in required_columns if col not in df.columns]
             if missing_columns:
                 return render(request, 'jdadev/upload_error.html', {'error_message': f"Missing required columns in Excel file: {', '.join(missing_columns)}"})
-            print("515 starting inserts")
+            #print("515 starting inserts")
             try:
                 for index, row in df.iterrows():
                     try:
-                        print("trying to..")
+                        #print("trying to..")
                         sociate_de_gession = row['sociate_de_gession']
                         depositaire = row['depositaire']
                         opcvm = row['opcvm']
@@ -992,7 +1004,7 @@ def upload_mutual_fund_excel(request):
                                                  current_value =current_value,
                                                  nbr_of_share=nbr_of_share,)
                     except Exception as e:
-                        print(f"533 Exception e:{e}")
+                        #print(f"533 Exception e:{e}")
                         return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
             except Exception as e:
                 #print(f"95 Exception e:{e}")
@@ -1002,7 +1014,7 @@ def upload_mutual_fund_excel(request):
             #insert_distinct_institution_types()
             return render(request, 'jdadev/upload_success.html')
     else:
-        print("543 UploadFileForm")
+        #print("543 UploadFileForm")
         form = UploadFileForm()
 
     return render(request, 'jdadev/upload_excel.html', {'form': form})
@@ -1033,7 +1045,7 @@ def insert_distinct_institution_types(request):
                 InstitutionTypeModel.objects.create(inst_type=institution_type)
     except Exception as e:
         # Handle other types of errors
-        print(f"An error occurred: {e}")
+        #print(f"An error occurred: {e}")
         messages.error(request, f"Error Loading institution types: {e})")
         return redirect('jdadev_home')
 
@@ -1052,10 +1064,10 @@ def insert_distinct_depositaire(request):
             if not DepositaireModel.objects.filter(depositaire=depositaire).exists():
                 # If it doesn't exist, create a new depositaire object and save it
                 DepositaireModel.objects.create(depositaire=depositaire)
-                print(f"771 - depositaire: {depositaire}")
+                #print(f"771 - depositaire: {depositaire}")
     except Exception as e:
         # Handle other types of errors
-        print(f"An error occurred: {e}")
+        #print(f"An error occurred: {e}")
         messages.error(request, f"Error Loading depositaires: {e})")
         return redirect('jdadev_home')
 
@@ -1076,7 +1088,7 @@ def insert_distinct_sociate_de_gession(request):
                 SociateDeGessionModel.objects.create(sociate_de_gession=sociate_de_gession)
     except Exception as e:
         # Handle other types of errors
-        print(f"An error occurred: {e}")
+        #print(f"An error occurred: {e}")
         messages.error(request, f"Error Loading sociate de gession data: {e})")
         return redirect('jdadev_home')
 
@@ -1087,7 +1099,7 @@ def insert_distinct_sociate_de_gession(request):
 
 #///////////////////////////////////////upload_institution_type_excel//////////////////////////////
 def upload_institution_type_excel(request):
-    print("410 file upload ")
+    #print("410 file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -1104,7 +1116,7 @@ def upload_institution_type_excel(request):
 
             try:
                 df = pd.read_excel(excel_data)
-                print(f"Pre: {df}")
+                #print(f"Pre: {df}")
                 # Preprocess the data
                 df['institution_type_id'] = df['institution_type_id'].apply(lambda x: None if pd.isna(x) else int(x))
                 df['institution_type'] = df['institution_type'].apply(lambda x: None if pd.isna(x) else str(x))
@@ -1112,13 +1124,13 @@ def upload_institution_type_excel(request):
                 df['institution_type'] = df['institution_type'].replace('', 'NA')
 
 
-                print(f"Post: {df}")
-                print(f"{df['institution_type_id']}-----{df['institution_type']}")
+                #print(f"Post: {df}")
+                #print(f"{df['institution_type_id']}-----{df['institution_type']}")
             except pd.errors.ParserError as pe:
-                print(f"443 Exception pe: {pe}")
+                #print(f"443 Exception pe: {pe}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
-                print(f"446 Exception e: {e}")
+                #print(f"446 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             except pd.errors.ParserError:
@@ -1248,9 +1260,9 @@ def res_htmx(request):
 from django.http import HttpResponse
 
 def get_selected_value(request):
-    print("Request GET parameters:", request.GET)  # Log all GET parameters
+    #print("Request GET parameters:", request.GET)  # Log all GET parameters
     selected_value = request.GET.get('dynamic_select')
-    print(f"Selected value: {selected_value}")  # Debugging line
+    #print(f"Selected value: {selected_value}")  # Debugging line
     return HttpResponse(f'<div id="select-container">{selected_value}</div>')
 
 
