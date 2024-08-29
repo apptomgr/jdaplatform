@@ -1,0 +1,49 @@
+{% extends 'jdamainapp/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Upload Excel {% endblock %}
+
+{% block content %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+<div class="row">
+
+
+  <div class="col-md-12">
+    <h6 class="text-secondary text-center">Client Portfolio List as of {% now "Y-m-d" %}</h6>
+    <table id="company_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <thead>
+      <tr>
+        <th>Client</th>
+        <th>Entry Date</th>
+        <th>Username</th>
+        <th>Group</th>
+        <th>Email</th>
+        <th>Last Login</th>
+        <th>Date Joined</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      {% for i in client_list %}
+      <tr>
+        <td><a href="{% url 'jdadev_overall_portfolio_by_client' 'overall_portfolio' i.client.id %}">{{ i.client }}</a></td>
+        <td>{{ i.entry_date }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ grp}}</td>
+        <td>{{ user.email}}</td>
+        <td>{{ user.last_login }}</td>
+        <td>{{ user.date_joined }}</td>
+
+        <!--li>User Group: {user_grp }</li-->
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+
