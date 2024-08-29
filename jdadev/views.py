@@ -15,6 +15,7 @@ from .models import ClientPortfolioModel, ClientEquityAndRightsModel, ClientBond
 from .forms import ClientPortfolioForm, ClientEquityAndRightsForm, ClientEquityAndRightsFormset, ClientEquityAndRightsFormset_edit, ClientBondsForm, ClientBondsFormset, ClientBondsFormset_edit, ClientMutualFundsFormset, ClientMutualFundsFormset_edit
 from accounts .decorators import allowed_users
 from django.db.models import Sum
+from django.contrib.auth.models import User
 
 #/////////////////////////////////jdadev_home////////////////////
 @login_required
@@ -114,16 +115,24 @@ def jdadev_equity_and_rights(request):
             client_portfolio = form.save(commit=False)
             client_portfolio.client = user
             client_portfolio.save()
-            # Save each form in the formset
+           # Save each form in the formset
             stock_forms = stock_formset.save(commit=False)
             for stock_form in stock_forms:
                 stock_form.client = user
-                #if stock_form.cleaned_data.get('DELETE'):
-                #    print("DELETE")
-                #    stock_form.instance.delete()
-                #else:
-                #    print("125 - SAVED")
                 stock_form.save()
+           # Now check if the delete flag was on
+            del_pk=[]
+            for idx, form in enumerate(stock_formset):
+                if request.POST.get(f'form-{idx}-DELETE') == 'on':
+                    #print("Delete flag on")
+                    #print(f"idx:{idx}")
+                    eq_item=ClientEquityAndRightsModel.objects.filter(client=user)
+                    #print(f"{eq_item}")
+                    #print(eq_item[idx].pk)
+                    del_pk.append(eq_item[idx].pk)
+                    #print(f"del_pk: {del_pk}")
+
+                ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk).delete()
             messages.success(request, f"{client_portfolio} info successfully added")
             return redirect('jdadev_equity_and_rights')
         else:
@@ -234,6 +243,7 @@ def jdadev_mutual_funds(request):
     return render(request, 'jdadev/jdadev_mutual_funds.html', context)
 
 #////////////////////////////////jdadev_overall_portfolio////////////////////////////////
+@login_required
 def jdadev_overall_portfolio(request, portfolio_type):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
@@ -314,6 +324,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
+
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
     #print(f"per_tot: {per_tot}")
     #print(f"per_bn: {per_bn} - per_mu: {per_mu}")
@@ -369,7 +380,105 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 
     return adj_vals
 
+#///////////////////////////////////jdadev_view_client_list////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers','staffs'])
+def jdadev_view_client_list(request):
+    client_list = ClientPortfolioModel.objects.all().order_by('-id')
+    grp =None
 
+    if request.user.groups.all():
+        grp = request.user.groups.all()[0].name
+    #GreaGreatprint(f"grp:{grp}")
+    context = {'client_list': client_list, 'grp': grp}
+    return render(request, 'jdadev/jdadev_client_list.html', context)
+
+
+#////////////////////////////////jdadev_overall_portfolio_by_client////////////////////////////////
+@login_required
+def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
+    user = client #request.user
+    client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
+    ovp= ClientPortfolioModel.objects.filter(client=user).first()
+
+    if ovp:
+        la  = ovp.liquid_assets
+        eqr = ovp.equity_and_rights
+        bn  = ovp.bonds
+        mu = ovp.mutual_funds
+        tot=la+eqr+bn+mu
+
+        per_tot=(tot/tot)
+        per_la=(la/tot)
+        per_eqr=(eqr/tot)
+        per_bn=(bn/tot)
+        per_mu=(mu/tot)
+
+        adj_bn=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[0]
+        adj_mu=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[1]
+        #print(f"caller: adj_bn:{adj_bn} - adj_mu:{adj_mu}")
+        per_lst=[]
+        val_lst=[]
+        if portfolio_type == 'overall_portfolio':
+            per_lst.append(per_tot*100)
+            per_lst.append(per_la*100)
+            per_lst.append(per_eqr*100)
+            per_lst.append(per_bn*100)
+            per_lst.append(per_mu*100)
+
+            val_lst.append(tot)
+            val_lst.append(la)
+            val_lst.append(eqr)
+            val_lst.append(bn)
+            val_lst.append(mu)
+
+        elif portfolio_type == 'dynamic':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.10))
+            val_lst.append(tot*Decimal(.70))
+            val_lst.append(tot*Decimal(adj_bn))
+            val_lst.append(tot*Decimal(adj_mu))
+
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.10*100)
+            per_lst.append(.70*100)
+            per_lst.append(adj_bn*100)
+            per_lst.append(adj_mu*100)
+
+        elif portfolio_type == 'balanced':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.10))
+            val_lst.append(tot*Decimal(.45))
+            val_lst.append(tot*Decimal(adj_bn))
+            val_lst.append(tot*Decimal(adj_mu))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.10*100)
+            per_lst.append(.45*100)
+            per_lst.append(adj_bn*100)
+            per_lst.append(adj_mu*100)
+
+        elif portfolio_type == 'prudent':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.10))
+            val_lst.append(tot*Decimal(.20))
+            val_lst.append(tot*Decimal(adj_bn))
+            val_lst.append(tot*Decimal(adj_mu))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.10*100)
+            per_lst.append(.20*100)
+            per_lst.append(adj_bn*100)
+            per_lst.append(adj_mu*100)
+    else:
+        #print("Invalid portfolio type")
+        return redirect('jdadev_home')
+    # get username based on user param id
+    user = User.objects.get(id=user)
+    username = user.username
+
+    context={'client_portfolio': client_portfolio,'client':username,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
+    return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
+
+#///////////////////////////////////jdadev_view_client_portfolio////////////////////////////////
 # #//////////////////////////////// adjusted_per_bn //////////////////////////////////
 # def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 #     #print(f"per_tot: {per_tot}")

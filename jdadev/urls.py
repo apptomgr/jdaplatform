@@ -39,6 +39,9 @@ urlpatterns = [
     path('reload_mu_current_value/<str:id_int>/<str:soc_text>', views.reload_mu_current_value, name='reload_mu_current_value'),
     path('reload_mu_nbr_of_share/<str:id_int>/<str:soc_text>', views.reload_mu_nbr_of_share, name='reload_mu_nbr_of_share'),
 
+    path('jdadev_view_client_list', views.jdadev_view_client_list, name='jdadev_view_client_list'),
+    path('jdadev_overall_portfolio_by_client/<str:portfolio_type>/<str:client>', views.jdadev_overall_portfolio_by_client, name='jdadev_overall_portfolio_by_client'),
+
 
     path('jdadev_bonds/res/', views.res, name='res'),
     path('jdadev_bonds/res_htmx/', views.res_htmx, name='res_htmx'),
