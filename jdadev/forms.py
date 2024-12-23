@@ -1,6 +1,6 @@
 from django import forms
 from .models import ClientPortfolioModel, ClientEquityAndRightsModel, StockDailyValuesModel, BondModel, InstitutionTypeModel, ClientBondsModel, MutualFundModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel
-from django.utils.translation import ugettext_lazy
+#from django.utils.translation import ugettext_lazy
 from django.urls import reverse_lazy
 from django.forms import modelformset_factory
 from django.db.models import Sum
@@ -23,10 +23,10 @@ class UploadFileForm(forms.Form):
 
 #///////////////////////////// ClientPortfolioForm //////////////////////////////////////
 class ClientPortfolioForm(forms.ModelForm):
-    liquid_assets = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Liquid Assets')}, ))
-    equity_and_rights = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'readonly': 'readonly', 'placeholder': ugettext_lazy('Equity & Rights'), 'onfocus': 'showEquityAndRightsForm()'}))
-    bonds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': ugettext_lazy('Bonds')}, ))
-    mutual_funds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': ugettext_lazy('Mutual Funds')}, ))
+    liquid_assets = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Liquid Assets'}, ))
+    equity_and_rights = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'readonly': 'readonly', 'placeholder': 'Equity & Rights', 'onfocus': 'showEquityAndRightsForm()'}))
+    bonds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Bonds'}, ))
+    mutual_funds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Mutual Funds'}, ))
 
     class Meta:
         model = ClientPortfolioModel
@@ -35,8 +35,8 @@ class ClientPortfolioForm(forms.ModelForm):
 
 #///////////////////////////// ClientEquityAndRightsForm //////////////////////////////////////
 class ClientEquityAndRightsForm(forms.ModelForm):
-    stocks = forms.ModelChoiceField(queryset=StockDailyValuesModel.objects.all(), empty_label=ugettext_lazy('Stocks'), label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm equity_right_id show-tick'}))
-    nbr_of_stocks = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm nbr_of_stocks_id', 'placeholder':ugettext_lazy('Number of stocks')}))
+    stocks = forms.ModelChoiceField(queryset=StockDailyValuesModel.objects.all(), empty_label='Stocks', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm equity_right_id show-tick'}))
+    nbr_of_stocks = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm nbr_of_stocks_id', 'placeholder':'Number of stocks'}))
     avg_weighted_cost = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm tot_purchase_value_id total_gain_or_loss_id', 'placeholder': 'Average Weighted Cost'}, ))
     daily_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Daily Value', 'readonly': 'readonly'}, ))
     total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
@@ -78,10 +78,10 @@ class ClientBondsForm(forms.ModelForm):
                                             empty_label='Institution Types',
                                             label='',
                                             widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_institution_type_id show-tick','onchange':'return triggerHtmxGet(id);',}))
-    symbol = forms.ModelChoiceField(queryset=BondModel.objects.all(), empty_label=ugettext_lazy('Symbol'), label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_symbol_id show-tick','onchange':'return triggerHtmxGet(id), triggerHtmxGet_original_value(id);',}))
+    symbol = forms.ModelChoiceField(queryset=BondModel.objects.all(), empty_label='Symbol', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_symbol_id show-tick','onchange':'return triggerHtmxGet(id), triggerHtmxGet_original_value(id);',}))
     bond_name = BondNameModelChoiceField(queryset=bond_name_queryset, empty_label=('Bond Names'),label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm Xbonds_institution_type_id show-tick'}))
     original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly'}, ))
-    nbr_of_bonds = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'onblur':'return get_bond_tot_curr_val(id);', 'placeholder':ugettext_lazy('Number of Bonds')}))
+    nbr_of_bonds = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'onblur':'return get_bond_tot_curr_val(id);', 'placeholder':'Number of Bonds'}))
     total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
 
     class Meta:
@@ -98,10 +98,10 @@ class ClientMutualFundForm(forms.ModelForm):
     #print("88 ClientMutualFundForm..")
     sociate_de_gession=forms.ModelChoiceField(queryset=SociateDeGessionModel.objects.all().distinct().order_by('sociate_de_gession'),empty_label='Societe De Gessions',label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick','onchange':'return mu_triggerHtmxGet(id);',}))
     depositaire=forms.ModelChoiceField(queryset=DepositaireModel.objects.all().distinct().order_by('depositaire'), empty_label='Depositaire', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick mu_depositaire_id','onchange':'return mu_triggerHtmxGet(id);',}))
-    opcvm = forms.ModelChoiceField(queryset=MutualFundModel.objects.all().distinct().order_by('opcvm'), empty_label=ugettext_lazy('OPCVM'), label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick','onchange':'mu_triggerHtmxGet(id)'}))
+    opcvm = forms.ModelChoiceField(queryset=MutualFundModel.objects.all().distinct().order_by('opcvm'), empty_label='OPCVM', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick','onchange':'mu_triggerHtmxGet(id)'}))
     mu_original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly', 'onclick':'mu_triggerHtmxGet_current_value(id)'}))
     mu_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Current Value', 'readonly': 'readonly','onclick':'mu_triggerHtmxGet_nbr_of_share(id)'}))
-    mu_nbr_of_share = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Number of Shares'),'onblur':'mu_triggerHtmxGet_tot_curr_val(id)'}))
+    mu_nbr_of_share = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares','onblur':'mu_triggerHtmxGet_tot_curr_val(id)'}))
     mu_total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
 
     class Meta:
