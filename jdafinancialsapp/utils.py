@@ -3,7 +3,8 @@ from django.utils.dateparse import parse_date
 from django.db import models
 from dateutil.relativedelta import relativedelta
 from countries_plus.models import Country
-from django.utils.translation import ugettext_lazy
+#from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy as _
 
 def get_rpt_range_period(date, rpt_date):
     #print(f"utils5: date:{date} - rpt_date {rpt_date} date.month: {date.month} ")
@@ -387,7 +388,7 @@ def yearsago(years, from_date=None):
 
 # ////////////////////// Merge_two_lists ////////////////////////////
 def merge_two_lists(list1, list2):
-    merge_list_head = [('', ugettext_lazy('Issuer'))]
+    merge_list_head = [('', _('Issuer'))]
     merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
     merged_list = merge_list_head + merged_list
     return merged_list

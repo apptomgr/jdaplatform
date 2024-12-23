@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
-{% load flags %}
 {% load i18n %}
+{% load custom_tags %}
 
 <html lang="en">
 
@@ -173,7 +173,32 @@
                     </form>
                 </li-->
                 {% endif %}
-                <li onclick="return getLang('square');">{% languages 'square' %}</li>
+                <li>
+                    <a href="{% url 'switch_language' %}">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% if LANGUAGE_CODE == 'en' %}
+                        <img src="{% static 'jdamainapp/assets/img/fr.png' %}" alt="French Flag" width="20" height="18">
+
+                        {% else %}
+                        <img src="{% static 'jdamainapp/assets/img/us.png' %}" alt="English Flag" width="20" height="18">
+
+                        {% endif %}
+                    </a>
+                    <!--div class="d-flex">
+                        <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+
+                            <a href="{% url 'set_language' %}?language=en" class="nav-link{% if LANGUAGE_CODE == 'en' %} disabled{% endif %}">
+                                <img src="{% static 'jdamainapp/assets/img/us.png' %}" alt="English" style="width: 24px; height: auto;" />
+                            </a>
+
+                            <a href="{% url 'set_language' %}?language=fr" class="nav-link{% if LANGUAGE_CODE == 'fr' %} disabled{% endif %}">
+                                <img src="{% static 'jdamainapp/assets/img/fr.png' %}" alt="Français" style="width: 24px; height: auto;" />
+                            </a>
+                        </form>
+                    </div-->
+                </li>
                 <!--li class="login"><a href="#"><i aria-hidden="true" class="fa fa-user text-secondary"></i> Members</a></li-->
             </ul>
 

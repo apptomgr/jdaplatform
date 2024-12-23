@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profile
-from django.utils.translation import ugettext_lazy
+#from django.utils.translation import ugettext_lazy
 from django.contrib.auth.models import Group
 
 
@@ -35,7 +35,7 @@ class ProfileUpdateForm(forms.ModelForm):
 class GroupUpdateForm(forms.ModelForm):
     queryset_groups = Group.objects.exclude(name='admins').all().order_by('name')
     #email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    name = forms.ModelChoiceField(required=True, queryset=queryset_groups, label='Group', to_field_name='name', empty_label=ugettext_lazy('Group Name'))
+    name = forms.ModelChoiceField(required=True, queryset=queryset_groups, label='Group', to_field_name='name', empty_label='Group Name')
 
     class Meta:
         model = Group
@@ -54,7 +54,7 @@ class AccountAdminForm(forms.Form):
     queryset_emails = User.objects.values_list('email', flat='True').distinct()
     queryset_grp = User.objects.values_list('groups__name', flat='True')
 
-    username = forms.ModelChoiceField(required=True, queryset=queryset_users, empty_label=ugettext_lazy('Username'), label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    username = forms.ModelChoiceField(required=True, queryset=queryset_users, empty_label='Username', label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
 
 
 class AccountAdminUpdateForm(forms.Form):
@@ -97,7 +97,7 @@ class adminTaskProfileUpdateForm(forms.ModelForm):
     queryset_grp = User.objects.values_list('groups__name', flat='True').distinct()
     username = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.CharField(required=True, max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    group = forms.ModelChoiceField(required=True, queryset=queryset_grp, empty_label=ugettext_lazy('Group'), widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    group = forms.ModelChoiceField(required=True, queryset=queryset_grp, empty_label='Group', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
     logo = forms.ImageField()
 
     class Meta:

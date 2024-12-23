@@ -4,8 +4,8 @@ from .models import CompanyModel, SectorModel, FinancialStatementModel,  \
     FinancialStatementInvAcctLinkModel, ShareholderModel, AddressModel, LeadersModel, ParentCompanyModel, \
     SubsidiaryModel, CountryModel, EconomicDataModel, ElectionModel, EconomicZoneModel, OtherIndicatorsModel, TradePartnersModel, EnergyModel
 from jdaanalyticsapp.models import SecurityModel, StockModel, BondModel, GuarantorModel, ExchangeModel
-from django_countries.fields import CountryField, countries, country_to_text
-from django.utils.translation import ugettext_lazy
+from django_countries.fields import CountryField, countries #, country_to_text
+#from django.utils.translation import ugettext_lazy
 from .utils import merge_two_lists, merge_company_lists
 from django.forms import inlineformset_factory
 from django.forms import modelformset_factory
@@ -30,6 +30,7 @@ class SectorForm(forms.ModelForm):
 
 
 # /////////////////////////// CompanyForm //////////////////////////
+from django_countries.widgets import CountrySelectWidget
 class CompanyForm(forms.ModelForm):
     CHOICES = (
         ('', 'Reporting Period'),
@@ -38,21 +39,22 @@ class CompanyForm(forms.ModelForm):
         ('Annually', 'Annually'),
     )
 
-    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Corporate Name')},))
-    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Company')},))
+    corp_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Corporate Name'},))
+    company = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Company'},))
     sector = forms.ModelChoiceField(required=False, queryset=SectorModel.objects.all(), empty_label='Type de Tier', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #rpt_period = forms.ChoiceField(choices=CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'placeholder':'Reporting Period'}))
-    legl_form = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': ugettext_lazy('Legal Form')},))
-    creatn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Creation Date')}))
-    rccm_nbr = forms.CharField(required=False, max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': ugettext_lazy('RCCM Number')}, ))
-    country = CountryField(blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    legl_form = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'Legal Form'},))
+    creatn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Creation Date'}))
+    rccm_nbr = forms.CharField(required=False, max_length=20, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm mt-3', 'placeholder': 'RCCM Number'}, ))
+    #country = CountryField(blank_label=('Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'})))
+    country = CountryField()
     #id_cntry = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Pays du siege social'}, ))
     #flag_pub_ctrl = forms.BooleanField(label='Societe sous control public', required=False, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm form-check-input checkbox-inline', 'id':'flag_pub_ctrl'})),
     flag_pub_ctrl = forms.BooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox mt-4','type':'checkbox'}))#forms.BooleanField(label='Visible', required=True, widget=forms.widgets.CheckboxInput(attrs={'class': 'form-control-sm-sm selectpicker'})),
-    actvty_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activite Sector BRVM')}, ))
-    actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activity Code (CIV)')}, ))
-    intrnl_actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Activity Code Joseph & Daniel Adv.')}, ))
-    othr_bus_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Other Business Sectors')}, ))
+    actvty_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Activite Sector BRVM'}, ))
+    actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Activity Code (CIV)'}, ))
+    intrnl_actvty_code =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Activity Code Joseph & Daniel Adv.'}, ))
+    othr_bus_sctr =forms.CharField(required=False, max_length=30, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Other Business Sectors'}, ))
     #shareholder = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick', 'data-live-search': 'true'}))
 
     #shrhldr_name = forms.ModelChoiceField(queryset=ShareholderModel.objects.all(), empty_label='Nome de l\'actionnaire', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown'}))
@@ -73,16 +75,22 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = CompanyModel
         fields = '__all__'
-        #fields = ['company', 'sector', 'rpt_period']
+        widgets = {
+            'country': CountrySelectWidget(attrs={
+                'class': 'form-control-sm selector selectpicker show-tick',
+                'data-live-search': 'true',
+                'placeholder': 'Country'
+            }),
+        }
 
 
 #///////////////////////////// AddressForm /////////////////////////////////////
 class AddressForm(forms.ModelForm):
-    addr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Address')}, ))
-    phone_nbr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Phone Number')}, ))
-    fax_nbr = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Fax Number')}, ))
-    email = forms.EmailField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Email')}, ))
-    website = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Website')}, ))
+    addr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Address'}, ))
+    phone_nbr = forms.CharField(max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Phone Number'}, ))
+    fax_nbr = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Fax Number'}, ))
+    email = forms.EmailField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Email'}, ))
+    website = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Website'}, ))
 
     class Meta:
         model = AddressModel
@@ -91,9 +99,9 @@ class AddressForm(forms.ModelForm):
 
 #///////////////////////////// ShareholderForm //////////////////////////////////////
 class ShareholderForm(forms.ModelForm):
-    shrhldr_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Name')}, ))
-    shrhldr_type = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shareholder Type')}, ))
-    shrs_hld = forms.CharField(initial=0.00, required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Shares Held')}, ))
+    shrhldr_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Shareholder Name'}, ))
+    shrhldr_type = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Shareholder Type'}, ))
+    shrs_hld = forms.CharField(initial=0.00, required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Shares Held'}, ))
 
     class Meta:
         model = ShareholderModel
@@ -110,10 +118,10 @@ ShareholderFormset_edit_0 = modelformset_factory(ShareholderModel, form=Sharehol
 
 #///////////////////////////// LeadersForm //////////////////////////////////////
 class LeadersForm(forms.ModelForm):
-    lst_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Last Name & First Name')}, ))
-    func = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Function')}, ))
-    phone_nbr = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Phone Number')}, ))
-    email = forms.EmailField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Email')}, ))
+    lst_name = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Last Name & First Name'}, ))
+    func = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Function'}, ))
+    phone_nbr = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Phone Number'}, ))
+    email = forms.EmailField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Email'}, ))
 
     class Meta:
         model = LeadersModel
@@ -141,9 +149,9 @@ LeadersFormset_edit_0 = modelformset_factory(LeadersModel, form=LeadersForm, ext
 
 #///////////////////////////// ParentCompanyForm //////////////////////////////////////
 class ParentCompanyForm(forms.ModelForm):
-    legl_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Legal Name')}, ))
-    comm_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Company Name')}, ))
-    cntry = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    legl_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Legal Name'}, ))
+    comm_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Company Name'}, ))
+    cntry = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
 
     class Meta:
         model = ParentCompanyModel
@@ -161,9 +169,9 @@ ParentCompanyFormset_edit_0 = modelformset_factory(ParentCompanyModel, form=Pare
 
 #///////////////////////////// SubsidiaryForm //////////////////////////////////////
 class SubsidiaryForm(forms.ModelForm):
-    company_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Company Name')}, ))
-    share_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Share Amount')}, ))
-    url = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Website')}, ))
+    company_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Company Name'}, ))
+    share_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Share Amount'}, ))
+    url = forms.URLField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Website'}, ))
 
 
     class Meta:
@@ -181,25 +189,25 @@ SubsidiaryFormset_edit_0 = modelformset_factory(SubsidiaryModel, form=Subsidiary
 
 # /////////////////////////// CountryForm //////////////////////////
 class CountryForm(forms.ModelForm):
-    country = CountryField(blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'hx-get':reverse_lazy('jdafinancialsapp_hx_country_data'), 'hx-trigger':'change', 'hx-target':'#country_data', 'hx-swap':'outerHTML','data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
-    #name = forms.ModelChoiceField(queryset=Country.objects.order_by('name').values_list('name', flat='True').distinct(), empty_label=ugettext_lazy('Country Name'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    crncy = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Currency Code')}, ))
-    #forms.ModelChoiceField(queryset=Country.objects.order_by('currency_code').values_list('currency_code', flat='True').distinct(), empty_label=ugettext_lazy('Currency'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    prsdnt_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('President Name')}, ))
-    area = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Area')}, ))
-    #area = forms.ModelChoiceField(queryset=Country.objects.order_by('area').values_list('area', flat='True').all(), empty_label=ugettext_lazy('Area'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    ofcl_lang = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Official Language')}, ))
-    #ofcl_lang = forms.ModelChoiceField(queryset= Language.objects.all().distinct(), empty_label=ugettext_lazy('Language'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    #continent = forms.ModelChoiceField(required=False, queryset=Country.objects.order_by('continent').values_list('continent', flat='True').distinct(), empty_label=ugettext_lazy('Continent'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    continent = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Continent')}, ))
-    #area = CountryField(blank_label=ugettext_lazy('area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Area')}))
-    #crncy = CountryField(blank_label=ugettext_lazy('Currency')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Currency')}))
-    #area = CountryField(blank_label=ugettext_lazy('Area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Area')}))
-    #world_region = forms.ModelChoiceField(queryset=Country.objects.values_list('capital', flat='True').all(), empty_label=ugettext_lazy('World Region'), label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
-    #capl_city = forms.ModelChoiceField(queryset=Country.objects.order_by('capital').values_list('capital', flat='True').all(), empty_label=ugettext_lazy('Capital'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    capl_city = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Capital City')}, ))
-    #ph_code = forms.ModelChoiceField(queryset=Country.objects.values_list('phone', flat='True').distinct(), empty_label=ugettext_lazy('Country Code'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
-    ph_code = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Country Code')}, ))
+    country = CountryField(blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'hx-get':reverse_lazy('jdafinancialsapp_hx_country_data'), 'hx-trigger':'change', 'hx-target':'#country_data', 'hx-swap':'outerHTML','data-live-search=': 'true', 'placeholder':'Country'}))
+    #name = forms.ModelChoiceField(queryset=Country.objects.order_by('name').values_list('name', flat='True').distinct(), empty_label='Country Name'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    crncy = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Currency Code'}, ))
+    #forms.ModelChoiceField(queryset=Country.objects.order_by('currency_code').values_list('currency_code', flat='True').distinct(), empty_label='Currency'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    prsdnt_name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'President Name'}, ))
+    area = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Area'}, ))
+    #area = forms.ModelChoiceField(queryset=Country.objects.order_by('area').values_list('area', flat='True').all(), empty_label='Area'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    ofcl_lang = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Official Language'}, ))
+    #ofcl_lang = forms.ModelChoiceField(queryset= Language.objects.all().distinct(), empty_label='Language'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    #continent = forms.ModelChoiceField(required=False, queryset=Country.objects.order_by('continent').values_list('continent', flat='True').distinct(), empty_label='Continent'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    continent = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Continent'}, ))
+    #area = CountryField(blank_label='area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Area')}))
+    #crncy = CountryField(blank_label='Currency')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Currency')}))
+    #area = CountryField(blank_label='Area')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Area')}))
+    #world_region = forms.ModelChoiceField(queryset=Country.objects.values_list('capital', flat='True').all(), empty_label='World Region'), label='', widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    #capl_city = forms.ModelChoiceField(queryset=Country.objects.order_by('capital').values_list('capital', flat='True').all(), empty_label='Capital'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    capl_city = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Capital City'}, ))
+    #ph_code = forms.ModelChoiceField(queryset=Country.objects.values_list('phone', flat='True').distinct(), empty_label='Country Code'), label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick','data-live-search=': 'true'}))
+    ph_code = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Country Code'}, ))
 
     class Meta:
         model = CountryModel
@@ -209,7 +217,7 @@ class CountryForm(forms.ModelForm):
 
 # /////////////////////////// EconomicDataForm //////////////////////////
 class EconomicDataForm(forms.ModelForm):
-    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Year')}))
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Year'}))
     popltn = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Population'}, ))
     popltn_grth_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Population Growth Rate'}))
     actv_popltn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Active Population'}))
@@ -220,7 +228,7 @@ class EconomicDataForm(forms.ModelForm):
     hsehold_cnsmptn = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Household Consumption'}))
     idh = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'IDH'}))
 
-    yr_gdp = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('GDP Year')}))
+    yr_gdp = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'GDP Year'}))
     gdp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'GDP (XOF billion)'}))
     gdp_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'GDP Rate'}))
     gdp_prim_sctr = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Primary GDP Sector'}))
@@ -231,14 +239,14 @@ class EconomicDataForm(forms.ModelForm):
     fixd_capl_invstmt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Fixed Capital Investment'}))
     ide = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'IDE'}))
 
-    yr_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Debt Year')}))
+    yr_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Debt Year'}))
     infltn_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'percentInput form-control form-control-sm', 'placeholder':'Inflation Rate'}))
-    pub_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Public Debt')}))
-    forgn_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Foreign Debt')}))
-    dmstc_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Domestic Debt')}))
-    trd_bal = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Trade Balance')}))
-    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Export Amount')}))
-    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Import Amount')}))
+    pub_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Public Debt'}))
+    forgn_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Foreign Debt'}))
+    dmstc_dbt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Domestic Debt'}))
+    trd_bal = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Trade Balance'}))
+    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Export Amount'}))
+    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Import Amount'}))
 
     class Meta:
         model = EconomicDataModel
@@ -261,7 +269,7 @@ EconomicDataFormset_edit_10 = modelformset_factory(EconomicDataModel, form=Econo
 
 # /////////////////////////// ElectionForm //////////////////////////
 class ElectionForm(forms.ModelForm):
-    elecn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Election Date')}))
+    elecn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Election Date'}))
     elecn_type = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Election Type'}, ))
     cmnts = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Comments'}, ))
 
@@ -286,7 +294,7 @@ ElectionFormset_edit_10 = modelformset_factory(ElectionModel, form=ElectionForm,
 
 # /////////////////////////// EconomicZoneForm //////////////////////////
 class EconomicZoneForm(forms.ModelForm):
-    econ_zone = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Economic Zone')}, ))
+    econ_zone = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Economic Zone'}, ))
 
     class Meta:
         model = EconomicZoneModel
@@ -309,10 +317,10 @@ EconomicZoneFormset_edit_10 = modelformset_factory(EconomicZoneModel, form=Econo
 
 # /////////////////////////// OtherIndicatorsForm //////////////////////////
 class OtherIndicatorsForm(forms.ModelForm):
-    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
-    ind_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Index')}, ))
-    ind_val = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Valeur')}, ))
-    cmnts = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Comments')}, ))
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Year'}, ))
+    ind_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Index'}, ))
+    ind_val = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Valeur'}, ))
+    cmnts = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Comments'}, ))
 
     class Meta:
         model = OtherIndicatorsModel
@@ -335,15 +343,15 @@ OtherIndicatorsFormset_edit_10 = modelformset_factory(OtherIndicatorsModel, form
 
 # /////////////////////////// TradePartnersForm //////////////////////////
 class TradePartnersForm(forms.ModelForm):
-    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
-    exp_cntry = CountryField(blank_label=ugettext_lazy('Country')).formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
-    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Export Amount')}, ))
-    exp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Export Rate')}, ))
-    exp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Product')}))
-    imp_cntry = CountryField(blank_label=ugettext_lazy('Country')).formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
-    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Import Amount')}, ))
-    imp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Import Rate')}, ))
-    imp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':ugettext_lazy('Product')}))
+    yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Year'}, ))
+    exp_cntry = CountryField(blank_label='Country').formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'},))
+    exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Export Amount'}, ))
+    exp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Export Rate'}, ))
+    exp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Product'}))
+    imp_cntry = CountryField(blank_label='Country').formfield(required=False, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'}))
+    imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Import Amount'}, ))
+    imp_rate = forms.DecimalField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Import Rate'}, ))
+    imp_prodt_name = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder':'Product'}))
 
     class Meta:
         model = TradePartnersModel
@@ -367,22 +375,22 @@ TradePartnersFormset_edit_10 = modelformset_factory(TradePartnersModel, form=Tra
 
 # /////////////////////////// EnergyForm //////////////////////////
 class EnergyForm(forms.ModelForm):
-    energy_yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Year')}, ))
-    elec_hydro_dam_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Hydroelectric Dams')}, ))
-    elec_pwr_sttn_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Central Electric')}, ))
-    elec_otr_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Others')}, ))
-    crude_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
-    crude_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
-    crude_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
-    crude_rsrvs_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Reserves')}, ))
-    refined_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
-    refined_cnsmptn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Consumption')}, ))
-    refined_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
-    refined_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
-    gas_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Production')}, ))
-    gas_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Exports')}, ))
-    gas_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Imports')}, ))
-    gas_rsrv_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Reserves')}, ))
+    energy_yr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Year'}, ))
+    elec_hydro_dam_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Hydroelectric Dams'}, ))
+    elec_pwr_sttn_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Central Electric'}, ))
+    elec_otr_nbr = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Others'}, ))
+    crude_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Production'}, ))
+    crude_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Exports'}, ))
+    crude_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Imports'}, ))
+    crude_rsrvs_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Reserves'}, ))
+    refined_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Production'}, ))
+    refined_cnsmptn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Consumption'}, ))
+    refined_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Exports'}, ))
+    refined_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Imports'}, ))
+    gas_prodtn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Production'}, ))
+    gas_exp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Exports'}, ))
+    gas_imp_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Imports'}, ))
+    gas_rsrv_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Reserves'}, ))
 
     class Meta:
         model = EnergyModel
@@ -413,15 +421,15 @@ class FinStmtDashForm(forms.Form):
         ('Q4', 'Full Year'),
     )
 
-    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label=ugettext_lazy('Sector'), label='',
+    sector = forms.ModelChoiceField(queryset=SectorModel.objects.all(), empty_label='Sector', label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 
-    company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label=ugettext_lazy('Company'), label='',
+    company = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Company', label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 
-    statement = forms.ModelChoiceField(queryset=FinancialStatementModel.objects.all(), empty_label=ugettext_lazy('Statement'), label='',
+    statement = forms.ModelChoiceField(queryset=FinancialStatementModel.objects.all(), empty_label='Statement', label='',
                                      widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick',
                                                                 'data-live-search=': 'true'}))
 
@@ -782,7 +790,7 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_TITLE_TYPE = (
-        ('', ugettext_lazy('Title Type')),
+        ('', 'Title Type'),
         ('Listed Share', 'Listed Share'),
         ('Listed Bond', 'Listed Bond'),
         ('Unlisted Share', 'Unlisted Share'),
@@ -790,20 +798,20 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_SHR_CLASS = (
-        ('', ugettext_lazy('Share Class')),
+        ('', 'Share Class'),
         ('A', 'A'),
         ('B', 'B'),
         ('C', 'C'),
     )
 
     CHOICES_ISUR_TYPE = (
-        ('',ugettext_lazy('Issuer Type')),
+        ('','Issuer Type'),
         ('Private', 'Private'),
         ('Public', 'Public'),
     )
 
     CHOICES_RGSTRR = (
-        ('', ugettext_lazy('Registrar')),
+        ('', 'Registrar'),
         ('ABCO BOURSE','ABCO BOURSE'),
         ('AFRICABOURSE','AFRICABOURSE'),
         ('AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)','AFRICAINE DE GESTION ET D’INTERMEDIATION (AGI)'),
@@ -840,7 +848,7 @@ class SecurityForm(forms.ModelForm):
     )
 
     CHOICES_DEPSTY = (
-        ('', ugettext_lazy('Depository')),
+        ('', 'Depository'),
         ('BCEAO','BCEAO'),
         ('DC/BR','DC/BR'),
     )
@@ -850,7 +858,7 @@ class SecurityForm(forms.ModelForm):
 
 
     CHOICES_SECTOR = (
-        ('', ugettext_lazy('Activity Sector')),
+        ('', 'Activity Sector'),
         ('Agriculture', 'Agriculture'),
         ('Banking', 'Banking'),
         ('Manufacture', 'Manufacture'),
@@ -880,66 +888,72 @@ class SecurityForm(forms.ModelForm):
     CHOICES_ISSUE_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
     isin = forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'ISIN'}, ))
     name = forms.CharField(required=False, max_length=200, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Name'}, ))
-    ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Ticker')}, ))
+    ticker =forms.CharField(max_length=12, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Ticker'}, ))
     desc = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Description'},))
     # isu_dt = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Date'}))
-    isu_dt =forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Issue Date')}))
+    isu_dt =forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issue Date'}))
     # open_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
-    open_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Open Date')}))
-    close_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Close Date')}))
+    open_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Open Date'}))
+    close_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
     # close_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Close Date'}))
-    listg_sts = forms.ChoiceField(required=False, choices=CHOICES_LISTG, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Listing Status')}))
-    nmnl_amt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Nominal Value')}))
-    cntry = CountryField(blank=True, blank_label=ugettext_lazy('Country')).formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Country')}))
+    listg_sts = forms.ChoiceField(required=False, choices=CHOICES_LISTG, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Listing Status'}))
+    nmnl_amt = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Nominal Value'}))
+    cntry = CountryField(blank=True, blank_label='Country').formfield(label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Country'},))
     # cntry = # forms.ModelChoiceField(queryset=CountryField.objects.all(), empty_label='Country', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
-    currency = forms.CharField(required=False, max_length=5, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Currency')},))
-    min_lot = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Lot Minimum')}, ))
-    ttl_type = forms.ChoiceField(required=False, choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Title Type')}))
-    shr_class = forms.ChoiceField(required=False, choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Share Class')}))
-    isur_type = forms.ChoiceField(required=False, choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Issuer Type')}))
+    currency = forms.CharField(required=False, max_length=5, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':'Currency'},))
+    min_lot = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Lot Minimum'}, ))
+    ttl_type = forms.ChoiceField(required=False, choices=CHOICES_TITLE_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Title Type'}))
+    shr_class = forms.ChoiceField(required=False, choices=CHOICES_SHR_CLASS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Share Class'}))
+    isur_type = forms.ChoiceField(required=False, choices=CHOICES_ISUR_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Issuer Type'}))
     # actvy_sector = forms.ChoiceField(choices=CHOICES_SECTOR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Activity Sector'}))
     sector = forms.ModelChoiceField(required=False, queryset=SectorModel.objects.all(), empty_label='Sector', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'}))
     #issue = forms.ModelChoiceField(queryset=CompanyModel.objects.all(), empty_label='Issue', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'data-live-search=': 'true'})) # Drop down values from Exchange table
-    issuer = forms.ChoiceField(required=False, choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':ugettext_lazy('Issuer')}))
-    rgstrr = forms.ChoiceField(required=False, choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Security Status')}))
-    exchg  = forms.ModelMultipleChoiceField(required=False, queryset=ExchangeModel.objects.all(), label='', widget=forms.SelectMultiple(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'multiple':'multiple', 'data-live-search=': 'true', 'title':ugettext_lazy('Exchange')})) # Drop down values from Exchange table
-    depsty = forms.ChoiceField(required=False, choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Depository')}))
-    cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Country Tax')}))
-    invstr_cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Local Tax')}))
+    issuer = forms.ChoiceField(required=False, choices=CHOICES_ISSUE_LIST, label='', widget=forms.Select(attrs={'class': 'form-control-sm selector selectpicker show-tick', 'data-live-search=': 'true', 'placeholder':'Issuer'}))
+    rgstrr = forms.ChoiceField(required=False, choices=CHOICES_RGSTRR, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    exchg  = forms.ModelMultipleChoiceField(required=False, queryset=ExchangeModel.objects.all(), label='', widget=forms.SelectMultiple(attrs={'class': 'form-control-sm selectpicker show-tick my_dropdown', 'multiple':'multiple', 'data-live-search=': 'true', 'title':'Exchange'})) # Drop down values from Exchange table
+    depsty = forms.ChoiceField(required=False, choices=CHOICES_DEPSTY, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Depository'}))
+    cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Country Tax'}))
+    invstr_cntry_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Local Tax'}))
     txtn_code = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    exchg_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Exchange Tax')}))
+    exchg_tax = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Exchange Tax'}))
     val_code = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    lwst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Lowest Applied Rate')}))
-    hghst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Highest Applied Rate')}))
+    lwst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Lowest Applied Rate'}))
+    hghst_appl_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Highest Applied Rate'}))
 
 
     class Meta:
         model = SecurityModel
         fields = '__all__'
 
+
 # ////////////////////////// StockModelForm /////////////////////////////
 class StockModelForm(forms.ModelForm):
     CHOICES_SECR_STS = (
-        ('', ugettext_lazy('Security Status')),
-        ('Listed','Listed'),
+        ('', 'Security Status'),
+        ('Listed', 'Listed'),
         ('Unquoted', 'Unquoted'),
         ('Suspended', 'Suspended'),
         ('Deleted', 'Deleted'),
     )
-    stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Stock Type')},))
-    under_stock_type  = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(attrs={'class':'form-control-sm', 'placeholder':ugettext_lazy('Under Stock Type')},))
-    secr_status = forms.ChoiceField(required=False, choices=CHOICES_SECR_STS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Security Status')}))
-    dvdnd = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Dividend Per Share')}))
-    lstn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Listing Date')}))
+    stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(
+        attrs={'class': 'form-control-sm', 'placeholder': 'Stock Type'}, ))
+    under_stock_type = forms.CharField(required=False, max_length=25, label='', widget=forms.TextInput(
+        attrs={'class': 'form-control-sm', 'placeholder': 'Under Stock Type'}, ))
+    secr_status = forms.ChoiceField(required=False, choices=CHOICES_SECR_STS, label='', widget=forms.Select(
+        attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Security Status'}))
+    dvdnd = forms.DecimalField(required=False, max_digits=19, decimal_places=2, label='', widget=forms.TextInput(
+        attrs={'class': 'form-control form-control-sm', 'placeholder': 'Dividend Per Share'}))
+    lstn_dt = forms.DateField(required=False, label='', widget=forms.DateInput(
+        attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Listing Date'}))
 
     class Meta:
         model = StockModel
-        fields = ('stock_type','under_stock_type', 'secr_status','dvdnd')
+        fields = ('stock_type', 'under_stock_type', 'secr_status', 'dvdnd')
 
 # ////////////////////////// BondModelForm /////////////////////////////
 class BondModelForm(forms.ModelForm):
     CHOICES_BND_TYPE = (
-        ('', ugettext_lazy('Bond Type')),
+        ('', 'Bond Type'),
         ('Redeemable in Shares', 'Redeemable in Shares'),
         ('Constant Redemption Bond', 'Constant Redemption Bond'),
         ('Deferred Constant Redemption Bond', 'Deferred Constant Redemption Bond'),
@@ -947,14 +961,14 @@ class BondModelForm(forms.ModelForm):
     )
 
     CHOICES_DURATN_UNITS = (
-        ('', ugettext_lazy('Duration Units')),
+        ('', 'Duration Units'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_PPU = (
-        ('', ugettext_lazy('Payment Period Units')),
+        ('', 'Payment Period Units'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
@@ -962,45 +976,45 @@ class BondModelForm(forms.ModelForm):
     )
 
     CHOICES_DRPU = (
-        ('', ugettext_lazy('Deferred Repayment Period Units')),
+        ('', 'Deferred Repayment Period Units'),
         ('Monthly', 'Monthly'),
         ('Quarterly', 'Quarterly'),
         ('Semi-Annually', 'Semi-Annually'),
         ('Annually', 'Annually'),
     )
     CHOICES_RPYMT_MTHD = (
-        ('', ugettext_lazy('Repayment Method')),
+        ('', 'Repayment Method'),
         ('Sur Valeur', 'Sur Valeur'),
         ('Sur Valeur', 'Sur Valeur'),
     )
 
     CHOICES_RPYMT_TYPE = (
-        ('', ugettext_lazy('Repayment Type')),
+        ('', 'Repayment Type'),
         ('Fixed rate', 'Fixed rate'),
         ('Variable rate', 'Variaible'),
     )
     CHOICES_USAGE = (
-        ('', ugettext_lazy('Usage')),
+        ('', 'Usage'),
         ('360', '360'),
         ('365', '365'),
     )
     auth = forms.NullBooleanField(required=False, initial=True, label='', widget=forms.CheckboxInput(attrs={'class':'form-check-input my_checkbox','type':'checkbox'}))
-    gr_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Gross Bond Interest Rate')}))
-    net_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Net Bond Interest Rate')}))
-    nbr_shrs_outstg = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':ugettext_lazy('Number Shares Outstanding')}))
-    bnd_type = forms.ChoiceField(required=False, choices=CHOICES_BND_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Bond Type')}))
-    duratn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Duration')}, ))
-    duratn_units = forms.ChoiceField(required=False, choices=CHOICES_DURATN_UNITS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Duration Units')}))
+    gr_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Gross Bond Interest Rate'}))
+    net_bnd_int_rate = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Net Bond Interest Rate'}))
+    nbr_shrs_outstg = forms.DecimalField(required=False, max_digits=19, decimal_places=2,  label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number Shares Outstanding'}))
+    bnd_type = forms.ChoiceField(required=False, choices=CHOICES_BND_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Type'}))
+    duratn_amt = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Duration'}, ))
+    duratn_units = forms.ChoiceField(required=False, choices=CHOICES_DURATN_UNITS, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Duration Units'}))
     pymt_perd = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Payment Period'}, ))
-    pymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_PPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Payment Period Units')}))
-    dfrrd_rpymt_perd = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('Deferred Repayment Period')}, ))
-    dfrrd_rpymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Deferred Repayment Period Units')}))
+    pymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_PPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Payment Period Units'}))
+    dfrrd_rpymt_perd = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Deferred Repayment Period'}, ))
+    dfrrd_rpymt_perd_units = forms.ChoiceField(required=False, choices=CHOICES_DRPU, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Deferred Repayment Period Units'}))
     rpymt_mthd = forms.ChoiceField(required=False, choices=CHOICES_RPYMT_MTHD, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Method'}))
-    rpymt_type = forms.ChoiceField(required=False, choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Repayment Type')}))
-    bnd_isu_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Bond Issued Date')}))
-    first_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('First Payment Date')}))
-    lst_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Last Payment Date')}))
-    usage = forms.ChoiceField(required=False, choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': ugettext_lazy('Usage')}))
+    rpymt_type = forms.ChoiceField(required=False, choices=CHOICES_RPYMT_TYPE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Repayment Type'}))
+    bnd_isu_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Bond Issued Date'}))
+    first_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'First Payment Date'}))
+    lst_pay_dt = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Last Payment Date'}))
+    usage = forms.ChoiceField(required=False, choices=CHOICES_USAGE, label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker', 'placeholder': 'Usage'}))
 
     class Meta:
         model = BondModel
@@ -1049,7 +1063,7 @@ GuarantorFormset_edit = modelformset_factory(GuarantorModel, form=GuarantorForm,
 #     class Meta:
 #         verbose_name_plural ='FinancialStatementFact'
 
-# ugettext_lazy('Sector') # this string will be marked for translation
+# 'Sector') # this string will be marked for translation
 # from django.core.exceptions import ValidationError
 
 # def validate_id_exists(value):

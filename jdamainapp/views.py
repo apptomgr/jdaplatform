@@ -1,8 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.utils import translation
+from django.urls import reverse
+from django.conf import settings
+from django.http import HttpResponseRedirect
+
+
+def switch_language(request):
+    current_language = translation.get_language()
+    next_language = 'fr' if current_language == 'en' else 'en'
+    # Activate the new language
+    translation.activate(next_language)
+    # Store the language preference in the session manually
+    request.session['django_language'] = next_language
+    # Redirect to the home page or the desired URL
+    response = HttpResponseRedirect(reverse('jdamainapp_home'))
+    # Set the language cookie
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, next_language)
+
+    return response
+
 
 
 def get_user_grp(request):

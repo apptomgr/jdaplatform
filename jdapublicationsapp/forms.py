@@ -2,41 +2,41 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import PublicationModel, PublicationCompanyModel
 import datetime
-from django.utils.translation import ugettext_lazy
+#from django.utils.translation import ugettext_lazy
 
 
 
 #/////////////////////////// PublicationAdminsForm //////////////////////////
 class PublicationAdminsForm(forms.ModelForm):
     CATEGORY_CHOICES = (
-        ('', ugettext_lazy('Category')),
+        ('', 'Category'),
         #('Models', 'Models'),
         ('Newsletters', 'Newsletters'),
-        ('Commentaries', ugettext_lazy('Commentaries')),
-        ('Reports', ugettext_lazy('Reports')),
+        ('Commentaries', 'Commentaries'),
+        ('Reports', 'Reports'),
     )
 
     RESEARCH_TYPE_CHOICES = (
-        ('', ugettext_lazy('Type')),
-        ('Daily Briefing', ugettext_lazy('Daily Briefing')),
-        ('Research Notes', ugettext_lazy('Research Notes')),
-        ('Quarterly Results', ugettext_lazy('Quarterly Results')),
-        ('Half Year Results', ugettext_lazy('Half Year Results')),
-        ('Annual Results', ugettext_lazy('Annual Results')),
-        ('Sector Reports', ugettext_lazy('Sector Reports')),
-        ('Strategic Reports', ugettext_lazy('Strategic Reports')),
-        ('IPO Analysis', ugettext_lazy('IPO Analysis')),
-        ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Shareholder Meeting Feedback', ugettext_lazy('Shareholder Meeting Feedback')),
+        ('', 'Type'),
+        ('Daily Briefing', 'Daily Briefing'),
+        ('Research Notes', 'Research Notes'),
+        ('Quarterly Results', 'Quarterly Results'),
+        ('Half Year Results', 'Half Year Results'),
+        ('Annual Results', 'Annual Results'),
+        ('Sector Reports', 'Sector Reports'),
+        ('Strategic Reports', 'Strategic Reports'),
+        ('IPO Analysis', 'IPO Analysis'),
+        ('Economic Notes', 'Economic Notes'),
+        ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investment Case', ugettext_lazy('Investment Case'))
+        ('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (
-        ('', ugettext_lazy('Language')),
-        ('English', ugettext_lazy('English')),
-        ('French', ugettext_lazy('French')),
+        ('', 'Language'),
+        ('English', 'English'),
+        ('French', 'French'),
     )
 
     #auth = PublicationModel.objects.values_list('author__username', flat='True').distinct()
@@ -44,16 +44,16 @@ class PublicationAdminsForm(forms.ModelForm):
     queryset = User.objects.filter(groups__name__in=['staffs', 'managers', 'admins'])
 
     #initial = datetime.date.today,
-    author = forms.ModelChoiceField(queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
+    author = forms.ModelChoiceField(queryset=queryset, empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     publication_date = forms.DateField(label='', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Date'}))
     research_category = forms.ChoiceField(choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
     research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
-    subject = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': ugettext_lazy('Subject')}, ))
+    subject = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
     visible_flag = forms.BooleanField(label='Visible', required=False, disabled=False,widget=forms.widgets.CheckboxInput(attrs={'class': 'checkbox-inline'})),
-    publication_desc = forms.CharField(label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':ugettext_lazy('Publication Description')}))
+    publication_desc = forms.CharField(label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
     file_name = forms.FileField(label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
     #company = forms.ModelChoiceField(queryset=PublicationCompanyModel.objects.all(), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control-sm selectpicker show-tick'}))
-    company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label=ugettext_lazy('Company'), label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
+    company = forms.ModelChoiceField(required = False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick','data-live-search=': 'true'}))
     pub_language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control selectpicker show-tick'}))
     #research_type = forms.ChoiceField(choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control selectpicker show-tick'}))
 
@@ -66,34 +66,34 @@ class PublicationAdminsForm(forms.ModelForm):
 #////////////////////////////////// PublicationFilterForm ////////////////////////////
 class PublicationFilterForm(forms.ModelForm):
     CATEGORY_CHOICES = (
-        ('', ugettext_lazy('Category')),
+        ('', 'Category'),
         #('Models', ugettext_lazy('Models')),
         ('Newsletters', 'Newsletters'),
-        ('Commentaries', ugettext_lazy('Commentaries')),
-        ('Reports', ugettext_lazy('Reports')),
+        ('Commentaries', 'Commentaries'),
+        ('Reports', 'Reports'),
     )
 
     RESEARCH_TYPE_CHOICES = (
-        ('', ugettext_lazy('Type')),
-        ('Daily Briefing', ugettext_lazy('Daily Briefing')),
-        ('Research Notes', ugettext_lazy('Research Notes')),
-        ('Quarterly Results', ugettext_lazy('Quarterly Results')),
-        ('Half Year Results', ugettext_lazy('Half Year Results')),
-        ('Annual Results', ugettext_lazy('Annual Results')),
-        ('Sector Reports', ugettext_lazy('Sector Reports')),
-        ('Strategic Reports', ugettext_lazy('Strategic Reports')),
-        ('IPO Analysis', ugettext_lazy('IPO Analysis')),
-        ('Economic Notes', ugettext_lazy('Economic Notes')),
-        ('Shareholder Meeting Feedback', ugettext_lazy('Shareholder Meeting Feedback')),
+        ('', 'Type'),
+        ('Daily Briefing', 'Daily Briefing'),
+        ('Research Notes', 'Research Notes'),
+        ('Quarterly Results', 'Quarterly Results'),
+        ('Half Year Results', 'Half Year Results'),
+        ('Annual Results', 'Annual Results'),
+        ('Sector Reports', 'Sector Reports'),
+        ('Strategic Reports', 'Strategic Reports'),
+        ('IPO Analysis', 'IPO Analysis'),
+        ('Economic Notes', 'Economic Notes'),
+        ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investment Case', ugettext_lazy('Investment Case'))
+        ('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (
-        ('', ugettext_lazy('Language')),
-        ('English', ugettext_lazy('English')),
-        ('French', ugettext_lazy('French')),
+        ('', 'Language'),
+        ('English', 'English'),
+        ('French', 'French'),
     )
 
 
@@ -102,16 +102,16 @@ class PublicationFilterForm(forms.ModelForm):
 
     #queryset = PublicationModel.objects.values('author__username').distinct()
     #queryset = PublicationModel.objects.values_list('author__username', flat='True').distinct()
-    author = forms.ModelChoiceField(required=False, queryset=queryset, empty_label=ugettext_lazy('Author'), label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
+    author = forms.ModelChoiceField(required=False, queryset=queryset, empty_label='Author', label='', widget=forms.Select(attrs={'class': 'form-control-sm  show-tick'}))
 
-    from_date = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('From Date')}))
-    to_date = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': ugettext_lazy('To Date')}))
+    from_date = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'From Date'}))
+    to_date = forms.DateField(required=False, label='', widget=forms.DateInput(attrs={'class': 'form-control-sm', 'placeholder': 'To Date'}))
     research_category = forms.ChoiceField(required=False, choices=CATEGORY_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
     research_type = forms.ChoiceField(required=False, choices=RESEARCH_TYPE_CHOICES, label='', widget=forms.Select(attrs={'class': 'form-control-sm show-tick'}))
     subject = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}, ))
     #visible_flag = forms.BooleanField(label='Visible', required=False, disabled=False,widget=forms.widgets.CheckboxInput(attrs={'class': 'checkbox-inline'})),
     publication_desc = forms.CharField(required=False, label='', widget=forms.Textarea(attrs={'rows':3, 'class': 'form-control', 'Placeholder':'Publication Description'}))
-    company = forms.ModelChoiceField(required=False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label=ugettext_lazy('Company'), label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
+    company = forms.ModelChoiceField(required=False, queryset=PublicationCompanyModel.objects.all().order_by('company_name'), empty_label='Company', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick'}))
     file_name = forms.FileField(required=False, label='', widget=forms.FileInput(attrs={'class': 'form-control-sm'}))
     pub_language = forms.ChoiceField(required=False, choices=LANGUAGE_CHOICES, label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick'}))
 
@@ -125,7 +125,7 @@ class PublicationFilterForm(forms.ModelForm):
 
 #/////////////////////////// PublicationCompanyForm //////////////////////////
 class PublicationCompanyForm(forms.ModelForm):
-    company_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':ugettext_lazy('Company')}))
+    company_name = forms.CharField(max_length=50, label='', widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Company'}))
 
     class Meta:
         model = PublicationCompanyModel

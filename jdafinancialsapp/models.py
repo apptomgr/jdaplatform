@@ -122,7 +122,7 @@ class SubsidiaryModel(models.Model):
 
 #/////////////////////////////////// CountryModel ///////////////////////////////
 class CountryModel(models.Model):
-    country = CountryField(blank=True, null=True, unique=True)
+    country = CountryField(blank=True, null=True, unique=True, blank_label='(Select Country)')
     crncy = models.CharField(max_length=3, blank=True, null=True)
     prsdnt_name = models.CharField(max_length=200, blank=True, null=True)
     area = models.CharField(max_length=100, blank=True, null=True) # models.IntegerField(blank=True, null=True)
