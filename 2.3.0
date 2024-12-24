@@ -1,0 +1,5 @@
+Requirement already satisfied: dj-database-url in /Users/iboudiallo/.venvs/jdaplatformenv10/lib/python3.10/site-packages (2.2.0)
+Requirement already satisfied: Django>=3.2 in /Users/iboudiallo/.venvs/jdaplatformenv10/lib/python3.10/site-packages (from dj-database-url) (4.0)
+Requirement already satisfied: typing-extensions>=3.10.0.0 in /Users/iboudiallo/.venvs/jdaplatformenv10/lib/python3.10/site-packages (from dj-database-url) (4.12.2)
+Requirement already satisfied: asgiref<4,>=3.4.1 in /Users/iboudiallo/.venvs/jdaplatformenv10/lib/python3.10/site-packages (from Django>=3.2->dj-database-url) (3.8.1)
+Requirement already satisfied: sqlparse>=0.2.2 in /Users/iboudiallo/.venvs/jdaplatformenv10/lib/python3.10/site-packages (from Django>=3.2->dj-database-url) (0.5.1)
