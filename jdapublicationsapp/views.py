@@ -147,13 +147,18 @@ def jdapublicationsapp_pubs(request):
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
     commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
     reports_cnt=publication_listing.filter(research_category='Reports').count()
+    #print(f"total 150: {reports_cnt}")
     #pub stats
     total = publication_listing.count()
+    #print(f"total 152: {total}")
     if total >0:
         #per_models=(models_cnt/total) *100
         per_newsletters = round((newsletters_cnt / total) * 100)
         per_commentaries = round((commentaries_cnt / total) * 100)
         per_reports = round((reports_cnt / total) * 100)
+        #print(per_newsletters)
+        #print(per_commentaries)
+        #print(per_reports)
     else:
         #per_models=0
         per_newsletters=0
@@ -161,13 +166,15 @@ def jdapublicationsapp_pubs(request):
         per_reports=0
     #push all stats vals in a list that will be set as a session DRY
     pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
+    #print(pub_stats_lst)
     pub_stats_session = request.session.get('pub_stats_session')
-    if pub_stats_session is None:
-        pub_stats_session = pub_stats_lst
+    #if pub_stats_session is None:
+    #    pub_stats_session = pub_stats_lst
+    pub_stats_session = pub_stats_lst
     request.session['pub_stats_session'] = pub_stats_session
 
     stats_sess = request.session.get('pub_stats_session')
-    #print(f"168 - session val: {stats_sess}")
+    #print(f"171 - session val: {stats_sess}")
 
     #pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
     #request.session['pub_stats_session']

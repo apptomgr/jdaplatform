@@ -4,7 +4,6 @@
 {% load i18n %}
 
 {% block content %}
-
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb my_breadcrumb_bg">
         <li class="breadcrumb-item"><a href="{% url 'jdapublicationsapp_home' %}" class="text-light">Home</a></li>
@@ -167,7 +166,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.0}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
+                                            <input type="text" class="knob" value="{{stats_sess.0}}" data-rel="{{stats_sess.0}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Newsletters' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +175,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.1}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
+                                            <input type="text" class="knob" value="{{stats_sess.1}}" data-rel="{{stats_sess.1}}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Commentaries' %}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +184,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-4 text-center">
                                     <div class="single-skill">
                                         <div class="progress-circular">
-                                            <input type="text" class="knob" value="0" data-rel="{{stats_sess.2 }}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Reports' %}</h5>
+                                            <input type="text" class="knob" value="{{stats_sess.2}}" data-rel="{{stats_sess.2 }}" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled><h5 class="progress-h4">{% trans 'Reports' %}</h5>
                                         </div>
                                     </div>
                                 </div>
