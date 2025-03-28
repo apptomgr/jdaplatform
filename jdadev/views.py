@@ -110,7 +110,7 @@ def jdadev_equity_and_rights(request):
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
         stock_formset = ClientEquityAndRightsFormset(request.POST)
-        #print(f"112 -stock_formset: {stock_formset}")
+
         if form.is_valid() and stock_formset.is_valid():
             client_portfolio = form.save(commit=False)
             client_portfolio.client = user
@@ -120,20 +120,31 @@ def jdadev_equity_and_rights(request):
             for stock_form in stock_forms:
                 stock_form.client = user
                 stock_form.save()
+
            # Now check if the delete flag was on
             del_pk=[]
             for idx, form in enumerate(stock_formset):
                 if request.POST.get(f'form-{idx}-DELETE') == 'on':
-                    #print("Delete flag on")
-                    #print(f"idx:{idx}")
+                    #print("127 - Delete flag on")
+                    #print(f"128 - idx:{idx}")
                     eq_item=ClientEquityAndRightsModel.objects.filter(client=user)
-                    #print(f"{eq_item}")
+                    #print(f"130 -{eq_item}")
                     #print(eq_item[idx].pk)
                     del_pk.append(eq_item[idx].pk)
-                    #print(f"del_pk: {del_pk}")
+                    #print(f"134 - del_pk: {del_pk}")
+                    del_eq_item = ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk)
+                    print(f"136 - del_eq_item: {del_eq_item} - {del_eq_item[0].stocks}")
+                    msg_eq_item = str(del_eq_item[0].stocks) # copy of the item to be deleted to pass to message
+                    del_eq_item.delete()
+                    #ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk).delete()
 
-                ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk).delete()
-            messages.success(request, f"{client_portfolio} info successfully added")
+                    messages.success(request, f"{msg_eq_item} stock is successfully deleted")
+            if len(del_pk) <= 0:
+                messages.success(request, f"{client_portfolio} info successfully added")
+            #Now update the stock total_current_value to refresh the UI
+            total_value_sum = ClientEquityAndRightsModel.objects.filter(client=user).aggregate(total_sum=Sum('total_current_value'))['total_sum'] or 0.00
+            update_equity_and_rights(request, total_value_sum)
+
             return redirect('jdadev_equity_and_rights')
         else:
             # Debugging and displaying form errors
@@ -167,25 +178,49 @@ def jdadev_bonds(request):
 
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
+        #print(f"181: {form}")
         bonds_formset = ClientBondsFormset(request.POST)
+        #print(f"183: {bonds_formset}")
 
         if form.is_valid() and bonds_formset.is_valid():
             client_portfolio = form.save(commit=False)
             client_portfolio.client = user
             client_portfolio.save()
-
+            # Save each form in the formset
             bond_forms = bonds_formset.save(commit=False)
-            #print("Attempting to save Bondformset")
             for bond_form in bond_forms:
                 bond_form.client = user
                 bond_form.save()
 
+
+            #///////
+            # Now check if the delete flag was on
+            del_pk=[]
+            for idx, form in enumerate(bonds_formset):
+                if request.POST.get(f'form-{idx}-DELETE') == 'on':
+                    #print("127 - Delete flag on")
+                    #print(f"128 - idx:{idx}")
+                    bn_item=ClientBondsModel.objects.filter(client=user)
+                    #print(f"130 -{eq_item}")
+                    #print(eq_item[idx].pk)
+                    del_pk.append(bn_item[idx].pk)
+                    #print(f"134 - del_pk: {del_pk}")
+                    del_bn_item = ClientBondsModel.objects.filter(client=user).filter(pk__in=del_pk)
+                    print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
+                    msg_bn_item = str(del_bn_item[0].bond_name) # copy of the item to be deleted to pass to message
+                    del_bn_item.delete()
+
+                    messages.success(request, f"{msg_bn_item} bond is successfully deleted")
+            if len(del_pk) <= 0:
+                messages.success(request, f"{client_portfolio} info successfully added")
+
+            #Now update the bond's total_current_value to refresh the UI
             total_value_sum = ClientBondsModel.objects.filter(client=user).aggregate(total_sum=Sum('total_current_value'))['total_sum'] or 0.00
             update_bonds(request, total_value_sum)
+            #/////////
 
 
-
-            messages.success(request, f"{client_portfolio} info successfully added")
+            #messages.success(request, f"{client_portfolio} info successfully added")
             return redirect('jdadev_bonds')
         else:
             messages.warning(request, f"Form error: {form.errors} - Formset error: {[formset.errors for formset in bonds_formset]}")
@@ -216,17 +251,46 @@ def jdadev_mutual_funds(request):
             client_portfolio.client = user
             client_portfolio.save()
             mututal_fund_forms = mutual_funds_formset.save(commit=False)
-            #print("202 - Attempting to save mutual_fund_formset")
+            print("254 - Attempting to save mutual_fund_formset")
             for mutual_fund_form in mututal_fund_forms:
                 mutual_fund_form.client = user
                 mutual_fund_form.save()
 
-            total_value_sum = ClientMutualFundsModel.objects.filter(client=user).aggregate(total_sum=Sum('mu_total_current_value'))['total_sum'] or 0.00
-            update_mutual_funds(request, total_value_sum)
+            #total_value_sum = ClientMutualFundsModel.objects.filter(client=user).aggregate(total_sum=Sum('mu_total_current_value'))['total_sum'] or 0.00
+            #update_mutual_funds(request, total_value_sum)
             #print(f"209 save mu formset: {client_portfolio}")
 
 
-            messages.success(request, f"{client_portfolio} info successfully added")
+            #messages.success(request, f"{client_portfolio} info successfully added")
+            #///////
+            # Now check if the delete flag was on
+            del_pk=[]
+            for idx, form in enumerate(mutual_funds_formset):
+                if request.POST.get(f'form-{idx}-DELETE') == 'on':
+                    print("270 - Delete flag on")
+                    print(f"217 - idx:{idx}")
+                    mu_item=ClientMutualFundsModel.objects.filter(client=user)
+                    print(f"273 -{mu_item}")
+                    print(mu_item[idx].pk)
+                    del_pk.append(mu_item[idx].pk)
+                    print(f"276 - del_pk: {del_pk}")
+                    del_mu_item = ClientMutualFundsModel.objects.filter(client=user).filter(pk__in=del_pk)
+                    print(f"278 - del_mu_item: {del_mu_item} - {del_mu_item[0].opcvm}")
+                    msg_mu_item = str(del_mu_item[0].opcvm) # copy of the item to be deleted to pass to message
+                    del_mu_item.delete()
+
+                    messages.success(request, f"{msg_mu_item} mutual fund is successfully deleted")
+            if len(del_pk) <= 0:
+                messages.success(request, f"{client_portfolio} info successfully added")
+
+            #Now update the mututal's total_current_value to refresh the UI
+            total_value_sum = ClientMutualFundsModel.objects.filter(client=user).aggregate(total_sum=Sum('mu_total_current_value'))['total_sum'] or 0.00
+            update_mutual_funds(request, total_value_sum)
+            #/////////
+
+
+            #messages.success(request, f"{client_portfolio} info successfully added")
+
             return redirect('jdadev_mutual_funds')
         else:
             messages.warning(request, f"Form error: {form.errors} - Formset error: {[formset.errors for formset in mutual_funds_formset]}")
@@ -647,12 +711,12 @@ def reload_bond_names(request, sym_val):
         #print(symbols)
     else:
         symbols = BondModel.objects.filter(id=sym_val).order_by('symbol')
-        #print(f"symb:{symbols} - OV: {symbols[0].original_value}")
+        #print(f"symb:{symbols} - OV: {symbols[0].original_value} - CPN: {symbols[0].coupon}")
     context ={'symbols':symbols}
     return render(request, 'jdadev/partials/jdadev_bond_names.html', context)
 
 
-#//////////////////////////////reload_bond_names////////////////////////////////
+#//////////////////////////////reload_original_value////////////////////////////////
 from decimal import Decimal
 def reload_original_value(request, id_int, sym_val):
     #print(f"id_int:{id_int}  sym_val:{sym_val}")
@@ -669,7 +733,34 @@ def reload_original_value(request, id_int, sym_val):
     context ={'id_int':id_int,'orig_val':ov}
     return render(request, 'jdadev/partials/jdadev_original_value.html', context)
 
+#//////////////////////////////reload_current_value////////////////////////////////
+def reload_current_value(request, id_int, sym_val):
+    if sym_val == "":
+        symbols = BondModel.objects.all().order_by('symbol')
+        #print(f"symbols all:{symbols}")
+    else:
+        symbols = BondModel.objects.filter(id=sym_val).order_by('symbol')
+    #print(f"220:id_int: {id_int} symbols{symbols} - OV: {symbols[0].original_value}")
+    curr_v= str(symbols[0].current_value).replace(',', '.')
+    print(f"curr_v: {curr_v}")
+    context ={'id_int':id_int,'curr_val':curr_v}
+    return render(request, 'jdadev/partials/jdadev_bond_current_value.html', context)
 
+#//////////////////////////////reload_bond_coupon////////////////////////////////
+def reload_bond_coupon(request, id_int, sym_val):
+    #print(f"cpn id_int:{id_int}  sym_val:{sym_val}")
+    if sym_val == "":
+        symbols = BondModel.objects.all().order_by('symbol')
+        #print(f"symbols all:{symbols}")
+    else:
+        symbols = BondModel.objects.filter(id=sym_val).order_by('symbol')
+        #for i in symbols:
+        #    print(f"symb:{symbols} - OV: {symbols[i].original_value}")
+    #print(f"220:id_int: {id_int} symbols{symbols} - OV: {symbols[0].original_value}")
+    cv= str(symbols[0].coupon).replace(',', '.')
+    print(f"cv: {cv}")
+    context ={'id_int':id_int,'cpn_val':cv}
+    return render(request, 'jdadev/partials/jdadev_bond_coupon_value.html', context)
 #//////////////////////////////reload_depositaire////////////////////////////////
 from decimal import Decimal
 def reload_depositaire(request, soc_text):
@@ -801,10 +892,10 @@ def update_equity_and_rights(request, new_value):
 def update_bonds(request, new_value):
     user = request.user  # Get the logged-in user
     #print(f"New_Value: {new_value}")
-    # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
+    # Assuming you want to set the bonds field to 999 for the logged-in user's portfolio
     # new_value = 999.00
 
-    # Update the equity_and_rights field for the user's portfolio
+    # Update the bonds field for the user's portfolio
     updated_rows = ClientPortfolioModel.objects.filter(client=user).update(bonds=new_value)
 
     # Debug output to check if the update was successful
@@ -818,10 +909,10 @@ def update_bonds(request, new_value):
 def update_mutual_funds(request, new_value):
     user = request.user  # Get the logged-in user
     #print(f"486 New_Value: {new_value}")
-    # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
+    # Assuming you want to set the mutual_funds field to 999 for the logged-in user's portfolio
     # new_value = 999.00
 
-    # Update the equity_and_rights field for the user's portfolio
+    # Update the mutual_funds field for the user's portfolio
     updated_rows = ClientPortfolioModel.objects.filter(client=user).update(mutual_funds=new_value)
 
     # Debug output to check if the update was successful

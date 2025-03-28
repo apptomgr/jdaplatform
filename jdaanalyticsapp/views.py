@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts .decorators import allowed_users
 
-
 def get_user_grp(request):
     grp = None
     if request.user.groups.all():
@@ -19,7 +18,7 @@ def get_user_grp(request):
 def jdaanalyticsapp_home(request):
 
     grp = get_user_grp(request)
-    print(f"22 - user_grp: {grp}")
+    #print(f"22 - user_grp: {grp}")
     context = {'user_grp': grp}
     return render(request, 'jdaanalyticsapp/jdaanalyticsapp_home.html', context)
 
