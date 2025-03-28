@@ -73,23 +73,25 @@ distinct_bond_names = BondModel.objects.values_list('bond_name', flat=True).dist
 bond_name_queryset = BondModel.objects.filter(bond_name__in=distinct_bond_names)
 #///////////////////////////////////////ClientBondsForm//////////////////////////////
 class ClientBondsForm(forms.ModelForm):
-    #print("calling ClientBondsForm..")
     institution_type=forms.ModelChoiceField(queryset=InstitutionTypeModel.objects.all().distinct().order_by('inst_type'),
                                             empty_label='Institution Types',
                                             label='',
                                             widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_institution_type_id show-tick','onchange':'return triggerHtmxGet(id);',}))
     symbol = forms.ModelChoiceField(queryset=BondModel.objects.all(), empty_label='Symbol', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_symbol_id show-tick','onchange':'return triggerHtmxGet(id), triggerHtmxGet_original_value(id);',}))
     bond_name = BondNameModelChoiceField(queryset=bond_name_queryset, empty_label=('Bond Names'),label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm Xbonds_institution_type_id show-tick'}))
+    nbr_of_shares = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares'}))
+    coupon = forms.DecimalField(required=False, max_digits=12, decimal_places=4, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_bond_coupon(id);', 'placeholder': 'Coupon', 'readonly': 'readonly'}, ))
     original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly'}, ))
-    nbr_of_bonds = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'onblur':'return get_bond_tot_curr_val(id);', 'placeholder':'Number of Bonds'}))
-    total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
-
+    current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_current_value(id);', 'placeholder': 'Current Value', 'readonly': 'readonly'}, ))
+    total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_curr_val(id);',  'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
+    total_purchase_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_purchase_val(id);', 'placeholder': 'Total Purchase Value', 'readonly': 'readonly'}, ))
+    total_gain_or_loss = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_bond_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly', 'onblur':'updateColor(this);'},))
     class Meta:
         model = ClientBondsModel
-        fields = ['institution_type', 'symbol', 'bond_name', 'original_value', 'nbr_of_bonds','total_current_value']
+        fields = ['institution_type', 'symbol','bond_name', 'nbr_of_shares','coupon',  'original_value', 'current_value', 'total_current_value', 'total_purchase_value', 'total_gain_or_loss']
 
 #///////////////////////////// ClientBondsFormset /////////////////////////////
-ClientBondsFormset = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=1)
+ClientBondsFormset = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=0, can_delete=True)
 ClientBondsFormset_edit = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=0, can_delete=True)
 
 
@@ -102,11 +104,13 @@ class ClientMutualFundForm(forms.ModelForm):
     mu_original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly', 'onclick':'mu_triggerHtmxGet_current_value(id)'}))
     mu_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Current Value', 'readonly': 'readonly','onclick':'mu_triggerHtmxGet_nbr_of_share(id)'}))
     mu_nbr_of_share = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares','onblur':'mu_triggerHtmxGet_tot_curr_val(id)'}))
-    mu_total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
+    mu_total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'return get_mutual_fund_tot_curr_val(id);', 'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
+    mu_total_purchase_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_mutual_fund_tot_purchase_val(id);', 'placeholder': 'Total Purchase Value', 'readonly': 'readonly'}, ))
+    mu_total_gain_or_loss = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_mutual_fund_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly', 'onblur':'updateColor(this);'},))
 
     class Meta:
         model = ClientMutualFundsModel
-        fields = ['sociate_de_gession', 'depositaire', 'opcvm', 'mu_original_value','mu_current_value', 'mu_nbr_of_share','mu_total_current_value']
+        fields = ['sociate_de_gession', 'depositaire', 'opcvm', 'mu_original_value','mu_current_value', 'mu_nbr_of_share','mu_total_current_value', 'mu_total_purchase_value', 'mu_total_gain_or_loss']
 
 #///////////////////////////// ClientMutualFundsFormset /////////////////////////////
 

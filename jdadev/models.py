@@ -20,9 +20,9 @@ class BondModel(models.Model):
     symbol = models.CharField(max_length=100, blank=False, null=False)
     bond_name = models.CharField(max_length=100, blank=False, null=False)
     original_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    coupon = models.DecimalField(default=0.00, max_digits=18, decimal_places=4, blank=True, null=True)
+    coupon = models.DecimalField(default=0.0000, max_digits=18, decimal_places=4, blank=False, null=False)
     current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    nbr_of_shares = models.IntegerField(blank=True, null=True)
+    nbr_of_bonds = models.IntegerField(blank=True, null=True)
     total_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     institution_type = models.CharField(max_length=100, blank=False, null=False)
     #institution_type_id = models.ForeignKey(InstitutionTypeModel, on_delete=models.CASCADE, related_name='bonds')
@@ -119,9 +119,13 @@ class ClientBondsModel(models.Model):
     institution_type = models.ForeignKey(InstitutionTypeModel, related_name='institution_types', on_delete=models.CASCADE, blank=True, null=True)
     symbol = models.ForeignKey(BondModel, related_name='symbols', on_delete=models.CASCADE, blank=True, null=True)
     bond_name = models.ForeignKey(BondModel, related_name='bond_names', on_delete=models.CASCADE, blank=True, null=True)
+    nbr_of_shares = models.IntegerField(blank=True, null=True)
+    coupon = models.DecimalField(default=0.00, max_digits=18, decimal_places=4, blank=False, null=False)
     original_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    nbr_of_bonds = models.IntegerField(blank=True, null=True)
+    current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_purchase_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return f"Client {self.client} - Symbol: {self.symbol}"
@@ -141,7 +145,10 @@ class ClientMutualFundsModel(models.Model):
     mu_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     mu_nbr_of_share = models.IntegerField(blank=True, null=True)
     mu_total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    mu_total_purchase_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    mu_total_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
 
     def __str__(self):
         return f"Client {self.client} - opcvm: {self.opcvm}"

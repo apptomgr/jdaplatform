@@ -24,8 +24,10 @@
                 <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_current_value|as_crispy_field}}</div>
                 <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_nbr_of_share|as_crispy_field}}</div>
                 <div class="col-lg col-md col-sm-2 col-xs-12">{{form.mu_total_current_value|as_crispy_field}}</div>
-                <!--div class="ml-1">{{ form.DELETE }}</div-->
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.mu_total_purchase_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12 positive-value">{{form.mu_total_gain_or_loss|as_crispy_field}}</div>
                 <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                <div>{{form.DELETE}}<i class="fa fa-times text-danger mt-2 ml-1"></i></div>
 
             </div>
             {% endfor %}
@@ -186,7 +188,60 @@ let id_opcvm = "";
 </script>
 
 
+<script type="text/javascript">
+  function get_mutual_fund_tot_curr_val(id)
+  {
+   alert("id"+id); //id_form-0-mu_total_current_value
+   var id_int = id.replace("id_form-","").replace("-mu_total_current_value","");
+   alert("id_int: "+id_int);
+   var mu_nbr_of_share_val=document.getElementById("id_form-"+id_int+"-mu_nbr_of_share").value;  //id_form-0-mu_nbr_of_share
+   var mu_current_value_val=document.getElementById("id_form-"+id_int+"-mu_current_value").value; //id_form-0-mu_current_value
 
+   //alert("mu_nbr_of_shares_val: "+mu_nbr_of_share_val);
+   //alert("mu_current_value_val"+mu_current_value_val);
+
+   if (mu_nbr_of_share_val != null && mu_current_value_val!=null)
+   {
+    document.getElementById("id_form-"+id_int+"-mu_total_current_value").value=mu_nbr_of_share_val*mu_current_value_val;
+   }
+  }
+</script>
+
+<script type="text/javascript">
+
+  function get_mutual_fund_tot_purchase_val(id)
+  {
+   //alert("id: "+id); //id_form-0-mu_total_purchase_value
+   var id_int = id.replace("id_form-","").replace("-mu_total_purchase_value","");
+   //alert("id_int: "+id_int);
+   var mu_nbr_of_share_val=document.getElementById("id_form-"+id_int+"-mu_nbr_of_share").value;  //id_form-0-mu_nbr_of_shares
+   var mu_original_value_val=document.getElementById("id_form-"+id_int+"-mu_original_value").value; //id_form-0-mu_original_value
+
+   //alert("mu_nbr_of_share_val: "+mu_nbr_of_share_val);
+   //alert("mu_original_value_val"+mu_original_value_val);
+
+   if(mu_nbr_of_share_val != null && mu_original_value_val!=null)
+   {
+    document.getElementById("id_form-"+id_int+"-mu_total_purchase_value").value=mu_nbr_of_share_val*mu_original_value_val;
+   }
+  }
+</script>
+
+<script type="text/javascript">
+  function get_mutual_fund_tot_gain_or_loss_val(id)
+  {
+   var id_int = id.replace("id_form-","").replace("-mu_total_gain_or_loss","");
+   var mu_total_purchase_value=document.getElementById("id_form-"+id_int+"-mu_total_purchase_value").value;  //id_form-0-mu_total_purchase_value
+   var mu_total_current_value=document.getElementById("id_form-"+id_int+"-mu_total_current_value").value; //id_form-0-mu_total_current_value
+   //alert("mu_total_purchase_value: "+ parseFloat(mu_total_purchase_value));
+   if(mu_total_purchase_value != null && mu_total_current_value!=null)
+   {
+    mu_tot_gain_or_loss =(mu_total_current_value-mu_total_purchase_value).toFixed(2);
+    //alert("mu_total_gain_or_loss: "+ mu_tot_gain_or_loss);
+    document.getElementById("id_form-"+id_int+"-mu_total_gain_or_loss").value=mu_tot_gain_or_loss;
+   }
+  }
+</script>
 
 
 

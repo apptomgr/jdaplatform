@@ -17,13 +17,18 @@
             {% for form in bonds_formset %}
             {{ form.id }}
             <div class="row form-row">
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{ form.institution_type |as_crispy_field}}</div>
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.symbol|as_crispy_field}}</div>
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.bond_name|as_crispy_field}}</div>
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.original_value|as_crispy_field}}</div>
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.nbr_of_bonds|as_crispy_field}}</div>
-                <div class="col-lg col-md col-sm-2 col-xs-12">{{form.total_current_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{ form.institution_type |as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.symbol|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.bond_name|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.nbr_of_shares|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.coupon|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.original_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.current_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.total_current_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12">{{form.total_purchase_value|as_crispy_field}}</div>
+                <div class="col-lg col-md col-sm-1 col-xs-12 positive-value">{{form.total_gain_or_loss|as_crispy_field}}</div>
                 <div class="btn btn-sm btn-success add-form-row" style="height:30px; border-radius:20%">+</div>
+                <div>{{form.DELETE}}<i class="fa fa-times text-danger mt-2 ml-1"></i></div>
             </div>
             {% endfor %}
             </div>
@@ -36,7 +41,7 @@
 
 
 <script type="text/javascript">
-    function triggerHtmxGet(id)
+   async function triggerHtmxGet(id)
     {
      //alert("id: "+id);
      if(id.endsWith('institution_type'))
@@ -51,8 +56,11 @@
       //alert("symb");
       var sym_val = document.getElementById(id).value;
       var id_form_nbr_bond_name = id.replace('symbol', 'bond_name');
+      //alert(id_form_nbr_bond_name);
       var url ='{% url "reload_bond_names" 'sym_val' %}'.replace('sym_val', sym_val);
-      htmx.ajax('GET', url, {target: '#'+id_form_nbr_bond_name, swap:'innerHTML'}); //id_form-2-original_value
+      //alert(url);
+      await htmx.ajax('GET', url, {target: '#'+id_form_nbr_bond_name, swap:'innerHTML'}); //id_form-2-bond_name
+
      }
      else
      {
@@ -63,7 +71,7 @@
 
 
 <script type="text/javascript">
-    function triggerHtmxGet_original_value(id)
+    async function triggerHtmxGet_original_value(id)
     {
      //alert("id: "+id);
      var id_int = id.replace("id_form-","").replace("-symbol","");
@@ -75,9 +83,40 @@
      //alert("id_form_nbr_original_value: "+id_form_nbr_original_value);
      var url ='{% url "reload_original_value" 'id_int' 'sym_val' %}'.replace('id_int', id_int).replace('sym_val', sym_val);
      //alert("url"+url);
-     htmx.ajax('GET', url, {target: '#'+id_form_nbr_original_value, swap:'outerHTML'}); //id_form-2-original_value
+     await htmx.ajax('GET', url, {target: '#'+id_form_nbr_original_value, swap:'outerHTML'}); //id_form-2-original_value
      //reset tot_curr_val calulation
      // get_bond_tot_curr_val(id);
+    }
+</script>
+
+<script type="text/javascript">
+    async function triggerHtmxGet_current_value(id)
+    {
+     //alert("id: "+id);
+     var id_int = id.replace("id_form-","").replace("-current_value",""); //id_form-1-current_value
+     //alert("curr val id_int: "+id_int);
+     var sym_val = document.getElementById('id_form-'+id_int+'-symbol').value;
+     //alert("sym_val: "+sym_val);
+     var id_form_nbr_current_value = id.replace('symbol', 'current_value');
+     //alert("id_form_nbr_current_value: "+id_form_nbr_current_value);
+     var url ='{% url "reload_current_value" 'id_int' 'sym_val' %}'.replace('id_int', id_int).replace('sym_val', sym_val);
+     await htmx.ajax('GET', url, {target: '#'+id_form_nbr_current_value, swap:'outerHTML'}); //id_form-2-current_value
+    }
+</script>
+
+<script type="text/javascript">
+  async function triggerHtmxGet_bond_coupon(id)
+    {
+     //alert("id: " + id);
+     var id_int = id.replace("id_form-","").replace("-coupon","");
+     //alert("id_int: "+id_int);
+     var sym_val = document.getElementById('id_form-'+id_int+'-symbol').value;
+     //alert("sym_val: "+sym_val);
+     var id_form_bond_coupon = id.replace('symbol', 'bond_coupon');
+     //alert("id_form_bond_coupon: "+id_form_bond_coupon);
+     var url ='{% url "reload_bond_coupon" 'id_int' 'sym_val' %}'.replace('id_int', id_int).replace('sym_val', sym_val);
+     //alert("url: "+url);
+     await htmx.ajax('GET', url, {target: '#'+id_form_bond_coupon, swap:'outerHTML'}); //id_form-2-bond_coupon
     }
 </script>
 
@@ -85,22 +124,75 @@
 <script type="text/javascript">
   function get_bond_tot_curr_val(id)
   {
-   //alert("id"+id); //id_form-0-nbr_of_bonds
-   var id_int = id.replace("id_form-","").replace("-nbr_of_bonds","");
+   //alert("id"+id); //id_form-0-total_current_value
+   var id_int = id.replace("id_form-","").replace("-total_current_value","");
    //alert("id_int: "+id_int);
-   var nbr_of_bonds_val=document.getElementById("id_form-"+id_int+"-nbr_of_bonds").value;  //id_form-0-nbr_of_bonds
-   var original_value_val=document.getElementById("id_form-"+id_int+"-original_value").value; //id_form-0-original_value
+   var nbr_of_shares_val=document.getElementById("id_form-"+id_int+"-nbr_of_shares").value;  //id_form-0-nbr_of_shares
+   var current_value_val=document.getElementById("id_form-"+id_int+"-current_value").value; //id_form-0-current_value
 
-   //alert("nbr_of_bonds_val: "+nbr_of_bonds_val);
-   //alert("original_value_val"+original_value_val);
+   //alert("nbr_of_shares_val: "+nbr_of_shares_val);
+   //alert("current_value_val"+current_value_val);
 
-   if (nbr_of_bonds_val != null && original_value_val!=null)
+   if (nbr_of_shares_val != null && current_value_val!=null)
    {
-    document.getElementById("id_form-"+id_int+"-total_current_value").value=nbr_of_bonds_val*original_value_val;
+    document.getElementById("id_form-"+id_int+"-total_current_value").value=nbr_of_shares_val*current_value_val;
    }
   }
-
 </script>
+
+<script type="text/javascript">
+  function get_bond_tot_purchase_val(id)
+  {
+   //alert("id: "+id); //id_form-0-total_purchase_value
+   var id_int = id.replace("id_form-","").replace("-total_purchase_value","");
+   //alert("id_int: "+id_int);
+   var nbr_of_shares_val=document.getElementById("id_form-"+id_int+"-nbr_of_shares").value;  //id_form-0-nbr_of_shares
+   var original_value_val=document.getElementById("id_form-"+id_int+"-original_value").value; //id_form-0-original_value
+
+   //alert("nbr_of_shares_val: "+nbr_of_shares_val);
+   //alert("original_value_val"+original_value_val);
+
+   if(nbr_of_shares_val != null && original_value_val!=null)
+   {
+    document.getElementById("id_form-"+id_int+"-total_purchase_value").value=nbr_of_shares_val*original_value_val;
+   }
+  }
+</script>
+
+<script type="text/javascript">
+  function get_bond_tot_gain_or_loss_val(id)
+  {
+   var id_int = id.replace("id_form-","").replace("-total_gain_or_loss","");
+   var total_purchase_value=document.getElementById("id_form-"+id_int+"-total_purchase_value").value;  //id_form-0-total_purchase_value
+   var total_current_value=document.getElementById("id_form-"+id_int+"-total_current_value").value; //id_form-0-total_current_value
+   //alert("total_purchase_value: "+ parseFloat(total_purchase_value));
+   if(total_purchase_value != null && total_current_value!=null)
+   {
+    tot_gain_or_loss =parseFloat(total_current_value)-parseFloat(total_purchase_value);
+    //alert("total_gain_or_loss: "+ tot_gain_or_loss);
+    document.getElementById("id_form-"+id_int+"-total_gain_or_loss").value=tot_gain_or_loss;
+   }
+  }
+</script>
+
+<script>
+    function updateColor(input) { alert("updateColor: "+ input);
+        let value = parseFloat(input.value) || 0; // Convert to number, default to 0 if empty
+        if (value < 0) {
+            input.style.color = "red";
+        } else if (value > 0) {
+            input.style.color = "green";
+        } else {
+            input.style.color = "black"; // Reset to default for zero
+        }
+    }
+
+    // Apply the color update on page load (in case values are pre-filled)
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('input[id^="total_gain_or_loss"]').forEach(updateColor);
+    });
+</script>
+
 {% endblock %}
 
 
