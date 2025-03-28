@@ -85,7 +85,7 @@ class ClientBondsForm(forms.ModelForm):
     current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_current_value(id);', 'placeholder': 'Current Value', 'readonly': 'readonly'}, ))
     total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_curr_val(id);',  'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
     total_purchase_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_purchase_val(id);', 'placeholder': 'Total Purchase Value', 'readonly': 'readonly'}, ))
-    total_gain_or_loss = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_bond_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly', 'onblur':'updateColor(this);'},))
+    total_gain_or_loss = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_bond_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly'},))
     class Meta:
         model = ClientBondsModel
         fields = ['institution_type', 'symbol','bond_name', 'nbr_of_shares','coupon',  'original_value', 'current_value', 'total_current_value', 'total_purchase_value', 'total_gain_or_loss']
