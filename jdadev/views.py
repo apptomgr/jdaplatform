@@ -251,7 +251,7 @@ def jdadev_mutual_funds(request):
             client_portfolio.client = user
             client_portfolio.save()
             mututal_fund_forms = mutual_funds_formset.save(commit=False)
-            print("254 - Attempting to save mutual_fund_formset")
+            #print("254 - Attempting to save mutual_fund_formset")
             for mutual_fund_form in mututal_fund_forms:
                 mutual_fund_form.client = user
                 mutual_fund_form.save()
@@ -267,15 +267,15 @@ def jdadev_mutual_funds(request):
             del_pk=[]
             for idx, form in enumerate(mutual_funds_formset):
                 if request.POST.get(f'form-{idx}-DELETE') == 'on':
-                    print("270 - Delete flag on")
-                    print(f"217 - idx:{idx}")
+                    #print("270 - Delete flag on")
+                    #print(f"217 - idx:{idx}")
                     mu_item=ClientMutualFundsModel.objects.filter(client=user)
-                    print(f"273 -{mu_item}")
-                    print(mu_item[idx].pk)
+                    #print(f"273 -{mu_item}")
+                    #print(mu_item[idx].pk)
                     del_pk.append(mu_item[idx].pk)
-                    print(f"276 - del_pk: {del_pk}")
+                    #print(f"276 - del_pk: {del_pk}")
                     del_mu_item = ClientMutualFundsModel.objects.filter(client=user).filter(pk__in=del_pk)
-                    print(f"278 - del_mu_item: {del_mu_item} - {del_mu_item[0].opcvm}")
+                    #print(f"278 - del_mu_item: {del_mu_item} - {del_mu_item[0].opcvm}")
                     msg_mu_item = str(del_mu_item[0].opcvm) # copy of the item to be deleted to pass to message
                     del_mu_item.delete()
 
