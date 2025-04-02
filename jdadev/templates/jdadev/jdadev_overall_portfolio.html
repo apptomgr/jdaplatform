@@ -27,6 +27,11 @@
         }
 
 </style>
+<style>
+    .centered-input {
+        text-align: center;
+    }
+</style>
 
 <div class="card shadow-sm p-2 mb-3 bg-white rounded">
     <div class="card-header">
@@ -41,16 +46,18 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'jdadev_overall_portfolio' 'dynamic' %}">Dynamic</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'jdadev_overall_portfolio' 'balanced' %}">Balanced</a>
+                    <a class="dropdown-item" href="{% url 'jdadev_overall_portfolio' 'moderate' %}">Moderate</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'jdadev_overall_portfolio' 'prudent' %}">Prudent</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'jdadev_overall_portfolio' 'custom' %}">Custom</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card-body">
-        <table id="Xpublication_listing" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <table id="res" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
             <thead>
             <tr>
                 <th>Portfolio Value</th>
@@ -62,6 +69,24 @@
             </tr>
             </thead>
             <tbody>
+            {% if custom_form %}
+            <tr>
+                <td>{{val_lst.0|floatformat:2}}</td>
+                <td>{{val_lst.1|floatformat:2}}</td>
+                <td>{{val_lst.2|floatformat:2}}</td>
+                <td>{{val_lst.3|floatformat:2}}</td>
+                <td>{{val_lst.4|floatformat:2}}</td>
+                <td>{{ovp.entry_date}}</td>
+            </tr>
+            <tr>
+                <td id="portfolio_value">{{per_lst.0}}%</td>
+                <td>{{custom_form.liquid_assets|as_crispy_field}}</td>
+                <td>{{custom_form.equity_and_rights|as_crispy_field}}</td>
+                <td>{{custom_form.bonds|as_crispy_field}}</td>
+                <td>{{custom_form.mutual_funds|as_crispy_field}}</td>
+                <td>{{ovp.entry_date}}</td>
+            </tr>
+            {% else %}
             <tr>
                 <td>{{val_lst.0|floatformat:2}}</td>
                 <td>{{val_lst.1|floatformat:2}}</td>
@@ -78,6 +103,7 @@
                 <td>{{per_lst.4|floatformat:2}}%</td>
                 <td>{{ovp.entry_date}}</td>
             </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
@@ -86,6 +112,33 @@
     </div-->
 </div>
 
+
+
+<script type="text/javascript">
+function get_custom_profile_per() {
+    // Get current values from all inputs each time
+    const la = parseFloat(document.getElementById("id_liquid_assets").value) || 0;
+    const eq = parseFloat(document.getElementById("id_equity_and_rights").value) || 0;
+    const bn = parseFloat(document.getElementById("id_bonds").value) || 0;
+    const mu = parseFloat(document.getElementById("id_mutual_funds").value) || 0;
+
+    // Calculate sum
+    const sum = la + eq + bn + mu;
+    const portfolioElement = document.getElementById("portfolio_value");
+
+    // Update displayed value
+    portfolioElement.innerHTML = sum+"%";
+
+    // Update color based on value
+    if (sum < 100) {
+        portfolioElement.style.color = '#BABC29';  // Yellow
+    } else if (sum === 100) {
+        portfolioElement.style.color = '#558F24';  // Green
+    } else {
+        portfolioElement.style.color = '#CF244E';  // Red
+    }
+}
+</script>
 {% endblock %}
 
 

@@ -303,6 +303,7 @@ def jdadev_mutual_funds(request):
 
     #print(f"444 - mutual_funds_formset[0].depositaire: {mutual_funds_formset[0].depositaire}")
     #print(form)
+
     context = {'form': form, 'client_portfolio': client_portfolio, 'client': user, 'mutual_funds_formset': mutual_funds_formset, 'total_form_count': mutual_funds_formset.total_form_count}
     return render(request, 'jdadev/jdadev_mutual_funds.html', context)
 
@@ -312,6 +313,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
     ovp= ClientPortfolioModel.objects.filter(client=user).first()
+    #print(f"ovp:{ovp}")
 
     if ovp:
         la  = ovp.liquid_assets
@@ -319,6 +321,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
         bn  = ovp.bonds
         mu = ovp.mutual_funds
         tot=la+eqr+bn+mu
+        custom_form =None
 
         per_tot=(tot/tot)
         per_la=(la/tot)
@@ -326,9 +329,9 @@ def jdadev_overall_portfolio(request, portfolio_type):
         per_bn=(bn/tot)
         per_mu=(mu/tot)
 
-        adj_bn=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[0]
-        adj_mu=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[1]
-        #print(f"caller: adj_bn:{adj_bn} - adj_mu:{adj_mu}")
+        #adj_bn=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[0]
+        #adj_mu=adjusted_per_bn(portfolio_type,per_tot,per_bn,per_mu)[1]
+        #print(f"332 caller: adj_bn:{adj_bn} - adj_mu:{adj_mu}")
         per_lst=[]
         val_lst=[]
         if portfolio_type == 'overall_portfolio':
@@ -346,59 +349,107 @@ def jdadev_overall_portfolio(request, portfolio_type):
 
         elif portfolio_type == 'dynamic':
             val_lst.append(tot)
-            val_lst.append(tot*Decimal(.10))
-            val_lst.append(tot*Decimal(.70))
-            val_lst.append(tot*Decimal(adj_bn))
-            val_lst.append(tot*Decimal(adj_mu))
+            val_lst.append(tot*Decimal(.05)) #
+            val_lst.append(tot*Decimal(.55))
+            val_lst.append(tot*Decimal(.20))
+            val_lst.append(tot*Decimal(.20))
 
             per_lst.append((tot/tot)*100)
-            per_lst.append(.10*100)
-            per_lst.append(.70*100)
-            per_lst.append(adj_bn*100)
-            per_lst.append(adj_mu*100)
+            per_lst.append(.05*100)
+            per_lst.append(.55*100)
+            per_lst.append(.20*100)
+            per_lst.append(.20*100)
 
-        elif portfolio_type == 'balanced':
+        elif portfolio_type == 'moderate':
             val_lst.append(tot)
-            val_lst.append(tot*Decimal(.10))
-            val_lst.append(tot*Decimal(.45))
-            val_lst.append(tot*Decimal(adj_bn))
-            val_lst.append(tot*Decimal(adj_mu))
+            val_lst.append(tot*Decimal(.05))
+            val_lst.append(tot*Decimal(.40))
+            val_lst.append(tot*Decimal(.35))
+            val_lst.append(tot*Decimal(.20))
             per_lst.append((tot/tot)*100)
-            per_lst.append(.10*100)
-            per_lst.append(.45*100)
-            per_lst.append(adj_bn*100)
-            per_lst.append(adj_mu*100)
+            per_lst.append(.05*100)
+            per_lst.append(.40*100)
+            per_lst.append(.35*100)
+            per_lst.append(.20*100)
 
         elif portfolio_type == 'prudent':
             val_lst.append(tot)
-            val_lst.append(tot*Decimal(.10))
+            val_lst.append(tot*Decimal(.05))
             val_lst.append(tot*Decimal(.20))
-            val_lst.append(tot*Decimal(adj_bn))
-            val_lst.append(tot*Decimal(adj_mu))
+            val_lst.append(tot*Decimal(.55))
+            val_lst.append(tot*Decimal(.20))
             per_lst.append((tot/tot)*100)
-            per_lst.append(.10*100)
+            per_lst.append(.05*100)
             per_lst.append(.20*100)
-            per_lst.append(adj_bn*100)
-            per_lst.append(adj_mu*100)
+            per_lst.append(.55*100)
+            per_lst.append(.20*100)
+        elif portfolio_type == 'custom':
+            #Show user default portfolio values
+            per_lst.append(per_tot*100)
+            per_lst.append(per_la*100)
+            per_lst.append(per_eqr*100)
+            per_lst.append(per_bn*100)
+            per_lst.append(per_mu*100)
+
+            val_lst.append(tot)
+            val_lst.append(la)
+            val_lst.append(eqr)
+            val_lst.append(bn)
+            val_lst.append(mu)
+            # User will have to provide custom values
+            #print(f"386 - Custom portfolio not implemented yet")
+            # redirect to custom_profile_form loaded via htmx to a partial custom profile page
+            custom_form = CustomProfileForm()
+            #context={'custom_form': custom_form, 'tes':'tes'}
+            #print("redirecting to")
+            #return redirect('jdadev_overall_portfolio.html', context)
     else:
         #print("Invalid portfolio type")
         return redirect('jdadev_home')
 
-    context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
+    context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form, 'tes':'tes'}
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
+#////////////////////////////////////////////////////////////////////////////////////
+# views.py
+from django.shortcuts import render, redirect
+from .forms import CustomProfileForm
+
+def jdadev_custom_portfolio(request):
+    # Handle form submission
+    if request.method == 'POST':
+        form = CustomProfileForm(request.POST)
+        if form.is_valid():
+            # Process data (e.g., save to session/database)
+            request.session['custom_allocation'] = form.cleaned_data
+            # Return the display partial with submitted data
+            return render(request, 'partials/custom_profile_display.html', form.cleaned_data)
+        else:
+            # Re-render form with errors
+            return render(request, 'partials/custom_profile_form.html', {'form': form})
+
+    # Handle initial GET request
+    portfolio_type = request.GET.get('portfolio_type')
+
+    #if portfolio_type == 'custom':
+    form = CustomProfileForm()
+    #    return render(request, 'partials/custom_profile_form.html', {'form': form})
+    #else:
+    context={"form": form}
+    return context
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
 
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-    #print(f"per_tot: {per_tot}")
-    #print(f"per_bn: {per_bn} - per_mu: {per_mu}")
+    print(f"394 per_tot: {per_tot}")
+    print(f"395 per_bn: {per_bn} - per_mu: {per_mu}")
     adj_bn = 0
     adj_mu = 0
     adj_vals=[]
     if portfolio_type =='dynamic':
         if per_bn+per_mu >per_tot*Decimal(.20):
-            #print(f" If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
+            print(f"401 If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
             x_mu=per_tot*Decimal(.20)-per_mu
+            print(f"403 - x_mu: {x_mu}")
             if x_mu <0:
                 adj_bn=0
                 adj_mu =.20
@@ -406,12 +457,12 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
                 adj_bn=x_mu
                 adj_mu=per_mu
 
-            #print(f" x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
+            print(f"411 x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
         else:
             #print(f"<Else per_tot*20: {per_tot*Decimal(.20)}")
             adj_bn=per_tot*Decimal(.20)-per_mu
             adj_mu=per_mu
-    elif portfolio_type =='balanced':
+    elif portfolio_type =='moderate':
         if per_bn+per_mu >per_tot*Decimal(.45):
             x_mu=per_tot*Decimal(.45)-per_mu
             if x_mu <0:
@@ -440,6 +491,7 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 
     adj_vals.append(adj_bn)
     adj_vals.append(adj_mu)
+    print(f"444 - adj_bn:{adj_bn} - adj_mu:{adj_mu}")
 
 
     return adj_vals
@@ -509,7 +561,7 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
             per_lst.append(adj_bn*100)
             per_lst.append(adj_mu*100)
 
-        elif portfolio_type == 'balanced':
+        elif portfolio_type == 'moderate':
             val_lst.append(tot)
             val_lst.append(tot*Decimal(.10))
             val_lst.append(tot*Decimal(.45))
@@ -563,7 +615,7 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
 #             adj_result.append(per_mu)
 #             #pass
 #             #print(f"< per_tot*20: {per_tot*.20}")
-#     elif portfolio_type =='balanced':
+#     elif portfolio_type =='moderate':
 #         per_bn= per_tot*Decimal(.45)-per_mu
 #         adj_bn=per_bn
 #     elif portfolio_type =='prudent':
@@ -603,8 +655,8 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
 #     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'per_lst':per_lst}
 #     return render(request, 'jdadev/jdadev_ovp_dynamic.html', context)
 #
-# #////////////////////////////////jdadev_ovp_balanced////////////////////////////////
-# def jdadev_ovp_balanced(request):
+# #////////////////////////////////jdadev_ovp_moderate////////////////////////////////
+# def jdadev_ovp_moderate(request):
 #     user = request.user
 #     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
 #     ovp= ClientPortfolioModel.objects.get()
@@ -628,7 +680,7 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
 #     per_lst.append((tot)*Decimal(.10))
 #
 #     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'per_lst':per_lst}
-#     return render(request, 'jdadev/jdadev_ovp_balanced.html', context)
+#     return render(request, 'jdadev/jdadev_ovp_moderate.html', context)
 #
 # #////////////////////////////////jdadev_ovp_prudent////////////////////////////////
 # def jdadev_ovp_prudent(request):

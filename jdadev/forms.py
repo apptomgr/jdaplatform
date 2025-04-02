@@ -117,6 +117,16 @@ class ClientMutualFundForm(forms.ModelForm):
 ClientMutualFundsFormset = modelformset_factory(ClientMutualFundsModel, form=ClientMutualFundForm, extra=1, can_delete=True)
 ClientMutualFundsFormset_edit = modelformset_factory(ClientMutualFundsModel, form=ClientMutualFundForm, extra=0, can_delete=True)
 
+
+# #/////////////////////////////////////// custom_profile_form /////////////////////////////
+# forms.py
+from django import forms
+
+class CustomProfileForm(forms.Form):
+    liquid_assets = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input','onblur':'get_custom_profile_per()',  'placeholder': '0.00%'}))
+    equity_and_rights = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()','placeholder': '0.00%'}))
+    bonds = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()', 'placeholder': '0.00%'}))
+    mutual_funds = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()', 'placeholder': '0.00%'}))
 # #///////////////////////////// GuarantorForm /////////////////////////////
 # class GuarantorForm(forms.ModelForm):
 #     guarantor = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))

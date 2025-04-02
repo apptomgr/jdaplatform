@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
 {% block assets %}
 
+
+
 <div class="card-body" xmlns="http://www.w3.org/1999/html">
 
     <form method="POST" novalidate>
@@ -10,6 +12,7 @@
         <div class="row mt-1">
             <div class="col-lg-2 col-md-2 col-sm col-xs-12">{{ form.mutual_funds|as_crispy_field }}</div>
         </div>
+
         <!-- Mututal_fund formset -->
         <div class="collapse show" id="mutual_fund_id">
             {{ mutual_funds_formset.management_form }}
