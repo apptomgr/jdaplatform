@@ -13,8 +13,8 @@ urlpatterns = [
     path('jdadev_bond_report/', views.jdadev_bond_report, name='jdadev_bond_report'),
     path('jdadev_mutual_fund_report/', views.jdadev_mutual_fund_report, name='jdadev_mutual_fund_report'),
     path('jdadev_overall_portfolio/<str:portfolio_type>', views.jdadev_overall_portfolio, name='jdadev_overall_portfolio'),
-    #path('jdadev_ovp_dynamic/', views.jdadev_ovp_dynamic, name='jdadev_ovp_dynamic'),
-    #path('jdadev_ovp_balanced/', views.jdadev_ovp_balanced, name='jdadev_ovp_balanced'),
+    path('jdadev_recommendation/', views.jdadev_recommendation, name='jdadev_recommendation'),
+    path('jdadev_save_transaction_fees/', views.jdadev_save_transaction_fees, name='jdadev_save_transaction_fees'),
     #path('jdadev_ovp_prudent/', views.jdadev_ovp_prudent, name='jdadev_ovp_prudent'),
 
     path('jdadev_liquid_assets/', views.jdadev_liquid_assets, name='jdadev_liquid_assets'),

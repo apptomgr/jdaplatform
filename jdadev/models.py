@@ -62,6 +62,44 @@ class MutualFundModel(models.Model):
         verbose_name_plural = 'MutualFundModel'
         unique_together = [['opcvm', 'entry_date']]
 
+#///////////////////////////////ClientProfileModel/////////////////////////////////
+class ClientProfileModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)  # client
+    liquid_assets = models.DecimalField(default=0.00, max_digits=18, decimal_places=4, blank=False, null=False)
+    equity_and_rights = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
+    bonds = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
+    mutual_funds = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
+    profile_type = models.CharField(max_length=50, blank=False, null=False)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'ClientProfileModel'
+
+#///////////////////////////////TransactionFeesModel/////////////////////////////////
+class TransactionFeesModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    commission_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    tps = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    country_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    commission_brvm = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    commission_dc_br = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    entry_date = models.DateField(auto_now_add=True)
+
+    @property
+    def total_commission(self):
+        return (
+                self.country_sgi +
+                self.commission_brvm +
+                self.commission_dc_br
+        )
+
+    def __str__(self):
+        return f"Client {self.client} as of {self.entry_date}"
+
+
 #////////////////////////////////////////////SociateDeGessionModel////////////////////////////////
 class SociateDeGessionModel(models.Model):
     sociate_de_gession = models.CharField(max_length=100, blank=False, null=False)

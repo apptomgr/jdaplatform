@@ -1,5 +1,5 @@
 from django import forms
-from .models import ClientPortfolioModel, ClientEquityAndRightsModel, StockDailyValuesModel, BondModel, InstitutionTypeModel, ClientBondsModel, MutualFundModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel
+from .models import ClientPortfolioModel, ClientProfileModel, ClientEquityAndRightsModel, StockDailyValuesModel, BondModel, InstitutionTypeModel, ClientBondsModel, MutualFundModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel
 #from django.utils.translation import ugettext_lazy
 from django.urls import reverse_lazy
 from django.forms import modelformset_factory
@@ -118,15 +118,30 @@ ClientMutualFundsFormset = modelformset_factory(ClientMutualFundsModel, form=Cli
 ClientMutualFundsFormset_edit = modelformset_factory(ClientMutualFundsModel, form=ClientMutualFundForm, extra=0, can_delete=True)
 
 
-# #/////////////////////////////////////// custom_profile_form /////////////////////////////
-# forms.py
-from django import forms
-
-class CustomProfileForm(forms.Form):
+# #/////////////////////////////////////// ClientProfileForm /////////////////////////////
+class ClientProfileForm(forms.ModelForm):
     liquid_assets = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input','onblur':'get_custom_profile_per()',  'placeholder': '0.00%'}))
     equity_and_rights = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()','placeholder': '0.00%'}))
     bonds = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()', 'placeholder': '0.00%'}))
     mutual_funds = forms.DecimalField(required=True, max_digits=4, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm centered-input', 'onblur':'get_custom_profile_per()', 'placeholder': '0.00%'}))
+
+    class Meta:
+        model = ClientProfileModel
+        fields = ['liquid_assets', 'equity_and_rights', 'bonds', 'mutual_funds']
+
+
+# #/////////////////////////////////////// TransactionFeesForm /////////////////////////////
+class TransactionFeesForm(forms.ModelForm):
+    commission_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission SGI'}))
+    tps = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_country_sgi()', 'placeholder': 'TPS'}))
+    country_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Country SGI', 'readonly': 'readonly'}))
+    commission_brvm = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission BRVM'}))
+    commission_dc_br = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_total_commussion()', 'placeholder': 'Commission DC/BR'}))
+    total_commission = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Total Commission', 'readonly': 'readonly'}))
+
+    class Meta:
+        model = TransactionFeesModel
+        fields = ['commission_sgi', 'tps', 'country_sgi', 'commission_brvm', 'commission_dc_br','total_commission']
 # #///////////////////////////// GuarantorForm /////////////////////////////
 # class GuarantorForm(forms.ModelForm):
 #     guarantor = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
