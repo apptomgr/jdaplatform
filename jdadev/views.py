@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render, redirect
 from .forms import UploadFileForm
-from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel
+from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel,ClientProfileModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel
 import pandas as pd  # For working with Excel files
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import ClientPortfolioModel, ClientEquityAndRightsModel, ClientBondsModel, InstitutionTypeModel
-from .forms import ClientPortfolioForm, ClientEquityAndRightsForm, ClientEquityAndRightsFormset, ClientEquityAndRightsFormset_edit, ClientBondsForm, ClientBondsFormset, ClientBondsFormset_edit, ClientMutualFundsFormset, ClientMutualFundsFormset_edit
+from .forms import ClientPortfolioForm, ClientProfileForm, ClientEquityAndRightsForm, ClientEquityAndRightsFormset, ClientEquityAndRightsFormset_edit, ClientBondsForm, ClientBondsFormset, ClientBondsFormset_edit, ClientMutualFundsFormset, ClientMutualFundsFormset_edit, TransactionFeesForm
 from accounts .decorators import allowed_users
 from django.db.models import Sum
 from django.contrib.auth.models import User
@@ -308,12 +308,15 @@ def jdadev_mutual_funds(request):
     return render(request, 'jdadev/jdadev_mutual_funds.html', context)
 
 #////////////////////////////////jdadev_overall_portfolio////////////////////////////////
+#from django.db import connection
 @login_required
 def jdadev_overall_portfolio(request, portfolio_type):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
+    #print(f"client:{user}")
     ovp= ClientPortfolioModel.objects.filter(client=user).first()
     #print(f"ovp:{ovp}")
+    client_profiles = None # get existing profiles
 
     if ovp:
         la  = ovp.liquid_assets
@@ -359,6 +362,14 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.55*100)
             per_lst.append(.20*100)
             per_lst.append(.20*100)
+            #save the profiles in ClientProfileModel if they don't exist'
+            # First check if it exists
+            dynamic_pro=ClientProfileModel.objects.filter(client=user, profile_type='dynamic').exists()
+            if not dynamic_pro:
+                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #pull selected client profile from the database
+            client_profiles=ClientProfileModel.objects.filter(profile_type='dynamic')
+            #print(client_profiles[0].liquid_assets)
 
         elif portfolio_type == 'moderate':
             val_lst.append(tot)
@@ -371,6 +382,11 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.40*100)
             per_lst.append(.35*100)
             per_lst.append(.20*100)
+            #save the profiles in ClientProfileModel if they don't exist'
+            # First check if it exists
+            moderate_pro=ClientProfileModel.objects.filter(client=user, profile_type='moderate').exists()
+            if not moderate_pro:
+                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
 
         elif portfolio_type == 'prudent':
             val_lst.append(tot)
@@ -383,7 +399,34 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.20*100)
             per_lst.append(.55*100)
             per_lst.append(.20*100)
+            #save the profiles in ClientProfileModel if they don't exist'
+            # First check if it exists
+            prudent_pro=ClientProfileModel.objects.filter(client=user, profile_type='prudent').exists()
+            if not prudent_pro:
+                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #print(f"Dynamic_profile:{ClientProfileModel.objects.all()}")
+            #return redirect('jdadev_recommendation')
         elif portfolio_type == 'custom':
+            #pull selected client profile from the database
+            client_profiles=ClientProfileModel.objects.filter(profile_type='custom').order_by('-entry_date').first()
+            #print(f"409 - client_profiles: {client_profiles.bonds}")
+            #last_custom_profile = ClientProfileModel.objects.filter(client=client_portfolio).latest()
+            #return redirect('jdadev_overall_portfolio', portfolio_type='custom')
+            #per_la = client_profiles.liquid_assets
+            per_lst.append(per_tot*100)
+            per_lst.append(client_profiles.liquid_assets)
+            per_lst.append(client_profiles.equity_and_rights)
+            per_lst.append(client_profiles.bonds)
+            per_lst.append(client_profiles.mutual_funds)
+
+            val_lst.append(tot)
+            val_lst.append(la)
+            val_lst.append(eqr)
+            val_lst.append(bn)
+            val_lst.append(mu)
+
+
+        elif portfolio_type == 'custom_set':
             #Show user default portfolio values
             per_lst.append(per_tot*100)
             per_lst.append(per_la*100)
@@ -399,57 +442,203 @@ def jdadev_overall_portfolio(request, portfolio_type):
             # User will have to provide custom values
             #print(f"386 - Custom portfolio not implemented yet")
             # redirect to custom_profile_form loaded via htmx to a partial custom profile page
-            custom_form = CustomProfileForm()
-            #context={'custom_form': custom_form, 'tes':'tes'}
-            #print("redirecting to")
-            #return redirect('jdadev_overall_portfolio.html', context)
-    else:
-        #print("Invalid portfolio type")
-        return redirect('jdadev_home')
+            #///////////////////
+            #elif portfolio_type == 'custom':
+            # Handle POST request
+            #from django.conf import settings
+            #print("Using database:", settings.DATABASES['default'])
 
-    context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form, 'tes':'tes'}
+            if request.method == 'POST':
+                custom_form = ClientProfileForm(request.POST, instance=client_portfolio)
+
+                if custom_form.is_valid():
+                    la = custom_form.cleaned_data['liquid_assets']
+                    eq = custom_form.cleaned_data['equity_and_rights']
+                    bn = custom_form.cleaned_data['bonds']
+                    mu = custom_form.cleaned_data['mutual_funds']
+                    #print(f"portfolio_type: {portfolio_type}")
+                    client_portfolio = ClientProfileModel(client=user, liquid_assets=la, equity_and_rights=eq, bonds=bn, mutual_funds=mu, profile_type="custom") #profile_type="custom"
+                    client_portfolio.save()
+
+                    #print("Saved:", ClientProfileModel.objects.all().values())
+                    #client_portfolio = custom_form.save(commit=False)
+                    #client_portfolio.client = user  # Ensure user is assigned
+
+                    #client_portfolio.save()
+
+                    #print("Saved successfully!")
+
+                    # Now, immediately check the database
+                    #with connection.cursor() as cursor:
+                    #    cursor.execute("SELECT * FROM jdadev_clientprofilemodel")
+                    #    rows = cursor.fetchall()
+                    #    print("Database rows:", rows)  # Print rows to see if data exists
+                    #return redirect('jdadev_recommendation')
+                    return redirect('jdadev_overall_portfolio', portfolio_type='custom')
+            else:
+                custom_form = ClientProfileForm()
+    else:
+        return redirect('jdadev_home')
+    #print(f"client_profiles:{client_profiles.bonds}")
+    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
-#////////////////////////////////////////////////////////////////////////////////////
-# views.py
-from django.shortcuts import render, redirect
-from .forms import CustomProfileForm
+#///////////////////////////////////////jdadev_recommendation/////////////////////////////////////////////
+def jdadev_recommendation(request):
+    user = request.user
+    client_portfolio = ClientEquityAndRightsModel.objects.filter(client=user)
+    #Pre-calculate the gain_or_loss values
+    #client_portfolio_gain_or_loss = []
+    #for i in client_portfolio:
+    #    client_portfolio_gain_or_loss.append(i.daily_value - i.avg_weighted_cost)
 
-def jdadev_custom_portfolio(request):
-    # Handle form submission
+
+
     if request.method == 'POST':
-        form = CustomProfileForm(request.POST)
+        pass
+    #     form = ClientPortfolioForm(request.POST, instance=client_portfolio)
+    #     # print(f"181: {form}")
+    #     bonds_formset = ClientBondsFormset(request.POST)
+    #     # print(f"183: {bonds_formset}")
+    #
+    #     if form.is_valid() and bonds_formset.is_valid():
+    #         client_portfolio = form.save(commit=False)
+    #         client_portfolio.client = user
+    #         client_portfolio.save()
+    #         # Save each form in the formset
+    #         bond_forms = bonds_formset.save(commit=False)
+    #         for bond_form in bond_forms:
+    #             bond_form.client = user
+    #             bond_form.save()
+    #
+    #         # ///////
+    #         # Now check if the delete flag was on
+    #         del_pk = []
+    #         for idx, form in enumerate(bonds_formset):
+    #             if request.POST.get(f'form-{idx}-DELETE') == 'on':
+    #                 # print("127 - Delete flag on")
+    #                 # print(f"128 - idx:{idx}")
+    #                 bn_item = ClientBondsModel.objects.filter(client=user)
+    #                 # print(f"130 -{eq_item}")
+    #                 # print(eq_item[idx].pk)
+    #                 del_pk.append(bn_item[idx].pk)
+    #                 # print(f"134 - del_pk: {del_pk}")
+    #                 del_bn_item = ClientBondsModel.objects.filter(client=user).filter(pk__in=del_pk)
+    #                 print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
+    #                 msg_bn_item = str(del_bn_item[0].bond_name)  # copy of the item to be deleted to pass to message
+    #                 del_bn_item.delete()
+    #
+    #                 messages.success(request, f"{msg_bn_item} bond is successfully deleted")
+    #         if len(del_pk) <= 0:
+    #             messages.success(request, f"{client_portfolio} info successfully added")
+    #
+    #         # Now update the bond's total_current_value to refresh the UI
+    #         total_value_sum = ClientBondsModel.objects.filter(client=user).aggregate(total_sum=Sum('total_current_value'))[
+    #                               'total_sum'] or 0.00
+    #         update_bonds(request, total_value_sum)
+    #         # /////////
+    #
+    #         # messages.success(request, f"{client_portfolio} info successfully added")
+    #         return redirect('jdadev_bonds')
+    #     else:
+    #         messages.warning(request,
+    #                          f"Form error: {form.errors} - Formset error: {[formset.errors for formset in bonds_formset]}")
+    else:
+        form = TransactionFeesForm() #instance=client_portfolio)
+    #check if the transactionFees table exists and get the last entry
+    transactionFees = TransactionFeesModel.objects.all().last()
+    if transactionFees!=None:
+        total_commission = transactionFees.country_sgi + transactionFees.commission_brvm + transactionFees.commission_dc_br
+        #print(f"TransactionFees: {transactionFees}")
+    else:
+        total_commission = 00.00
+
+    for i in client_portfolio:
+        #print(f"Daily_value: {i.daily_value} - {total_commission}")
+        i.gain_or_loss = i.daily_value - i.avg_weighted_cost
+        i.potential_gain_or_loss = i.stocks.target_value - i.daily_value
+        i.selling_price = i.daily_value - total_commission
+
+    context = {'form': form, 'client_portfolio': client_portfolio}
+    return render(request, 'jdadev/jdadev_recommendation.html', context)
+
+
+
+#//////////////////////////////////////save_transaction_fees////////////////////
+from django.shortcuts import render
+from .forms import TransactionFeesForm
+#from .models import TransactionFees
+
+def jdadev_save_transaction_fees(request):
+    user = request.user
+
+    if request.method == 'POST':
+        instance = TransactionFeesModel.objects.filter(client=user).last()
+        form = TransactionFeesForm(request.POST, instance=instance)
+
         if form.is_valid():
-            # Process data (e.g., save to session/database)
-            request.session['custom_allocation'] = form.cleaned_data
-            # Return the display partial with submitted data
-            return render(request, 'partials/custom_profile_display.html', form.cleaned_data)
+            transaction_fees = form.save(commit=False)
+            transaction_fees.client = user
+            transaction_fees.save()
+
+            #(f"✅ Saved: {transaction_fees}")
+            return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", {'instance': transaction_fees})
         else:
-            # Re-render form with errors
-            return render(request, 'partials/custom_profile_form.html', {'form': form})
+            #print("🚨 Form is invalid:")
+            #print(form.errors)
+            return render(request,"jdadev/partials/jdadev_transaction_fees_form.html", {"form": form})
 
-    # Handle initial GET request
-    portfolio_type = request.GET.get('portfolio_type')
+    else:
+        instance = TransactionFeesModel.objects.filter(client=user).last()
+        form = TransactionFeesForm(instance=instance)
 
-    #if portfolio_type == 'custom':
-    form = CustomProfileForm()
-    #    return render(request, 'partials/custom_profile_form.html', {'form': form})
-    #else:
-    context={"form": form}
-    return context
+    return render(request, 'jdadev/partials/jdadev_transaction_fees_form.html', {'form': form})
+
+#from django.shortcuts import render, redirect
+#from .forms import ClientProfileModel
+
+# def jdadev_custom_portfolio(request):
+#     # Handle form submission
+#     if request.method == 'POST':
+#         form = CustomProfileForm(request.POST)
+#         print(f"422 - form: {form.cleaned_data}")
+#         if form.is_valid():
+#             # Process data (e.g., save to session/database)
+#
+#             liquid_assets = form.cleaned_data['liquid_assets']
+#             #number = form.cleaned_date['phone_number']
+#             #p = Person(name=name, phone_number=number, date_subscribed=datetime.now(), messages_recieved=0)
+#             #p.save()
+#             print(f"liquid_assets: {liquid_assets}")
+#             #request.session['custom_allocation'] = form.cleaned_data
+#             # Return the display partial with submitted data
+#             return render(request, 'partials/custom_profile_display.html', form.cleaned_data)
+#         else:
+#             # Re-render form with errors
+#             return render(request, 'partials/custom_profile_form.html', {'form': form})
+#
+#     # Handle initial GET request
+#     portfolio_type = request.GET.get('portfolio_type')
+#
+#     #if portfolio_type == 'custom':
+#     form = CustomProfileForm()
+#     #    return render(request, 'partials/custom_profile_form.html', {'form': form})
+#     #else:
+#     context={"form": form}
+#     return context
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
 
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-    print(f"394 per_tot: {per_tot}")
-    print(f"395 per_bn: {per_bn} - per_mu: {per_mu}")
+    #print(f"394 per_tot: {per_tot}")
+    #print(f"395 per_bn: {per_bn} - per_mu: {per_mu}")
     adj_bn = 0
     adj_mu = 0
     adj_vals=[]
     if portfolio_type =='dynamic':
         if per_bn+per_mu >per_tot*Decimal(.20):
-            print(f"401 If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
+            #print(f"401 If per_bn+per_mu: {per_bn+per_mu} > per_tot*20: {per_tot*Decimal(.20)}")
             x_mu=per_tot*Decimal(.20)-per_mu
-            print(f"403 - x_mu: {x_mu}")
+            #print(f"403 - x_mu: {x_mu}")
             if x_mu <0:
                 adj_bn=0
                 adj_mu =.20
@@ -457,7 +646,7 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
                 adj_bn=x_mu
                 adj_mu=per_mu
 
-            print(f"411 x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
+            #print(f"411 x_mu: {x_mu} - per_mu:{per_mu}- adj_bn: {adj_bn} - adj_mu: {adj_mu}")
         else:
             #print(f"<Else per_tot*20: {per_tot*Decimal(.20)}")
             adj_bn=per_tot*Decimal(.20)-per_mu
@@ -491,7 +680,7 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 
     adj_vals.append(adj_bn)
     adj_vals.append(adj_mu)
-    print(f"444 - adj_bn:{adj_bn} - adj_mu:{adj_mu}")
+    #print(f"444 - adj_bn:{adj_bn} - adj_mu:{adj_mu}")
 
 
     return adj_vals

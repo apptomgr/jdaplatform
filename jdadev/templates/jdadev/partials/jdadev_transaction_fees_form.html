@@ -1,0 +1,36 @@
+{% load crispy_forms_tags %}
+<div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
+    <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+        <form method="post"
+              hx-post="{% url 'jdadev_save_transaction_fees' %}"
+              hx-target="#transactionFees_form"
+              hx-swap="outerHTML">
+            {% csrf_token %}
+
+            <div class="mb-0">
+                {{ form.commission_sgi|as_crispy_field }}
+            </div>
+            <div class="mb-0">
+                {{ form.tps|as_crispy_field }}
+            </div>
+            <div class="mb-0">
+                {{ form.country_sgi|as_crispy_field }}
+            </div>
+            <div class="mb-0">
+                {{ form.commission_brvm |as_crispy_field }}
+            </div>
+            <div class="mb-0">
+                {{ form.commission_dc_br|as_crispy_field }}
+            </div>
+            <div class="mb-0">
+                {{ form.total_commission|as_crispy_field }}
+            </div>
+
+            {% if not form.fields.commission_sgi.widget.attrs.readonly %}
+            <div class="text-center mt-2">
+                <button type="submit" class="btn btn-sm btn-info">Submit</button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
