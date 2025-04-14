@@ -69,7 +69,7 @@ class ClientProfileModel(models.Model):
     equity_and_rights = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
     bonds = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
     mutual_funds = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=False, null=False)
-    profile_type = models.CharField(max_length=50, blank=False, null=False)
+    profile_type = models.CharField(default='custom', max_length=50, blank=False, null=False)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
 
     def __str__(self):
