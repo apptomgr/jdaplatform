@@ -557,7 +557,7 @@ def jdadev_recommendation(request):
         #print(f"Daily_value: {i.daily_value} - {total_commission}")
         i.gain_or_loss = i.daily_value - i.avg_weighted_cost
         i.potential_gain_or_loss = i.stocks.target_value - i.daily_value
-        i.selling_price = i.daily_value - total_commission
+        i.selling_price = Decimal(i.daily_value) - Decimal(total_commission)
 
     context = {'form': form, 'client_portfolio': client_portfolio}
     return render(request, 'jdadev/jdadev_recommendation.html', context)
