@@ -16,6 +16,7 @@ from .forms import ClientPortfolioForm, ClientProfileForm, ClientEquityAndRights
 from accounts .decorators import allowed_users
 from django.db.models import Sum
 from django.contrib.auth.models import User
+from .helpers import EquityReportRow
 
 #/////////////////////////////////jdadev_home////////////////////
 @login_required
@@ -133,7 +134,7 @@ def jdadev_equity_and_rights(request):
                     del_pk.append(eq_item[idx].pk)
                     #print(f"134 - del_pk: {del_pk}")
                     del_eq_item = ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk)
-                    print(f"136 - del_eq_item: {del_eq_item} - {del_eq_item[0].stocks}")
+                    #print(f"136 - del_eq_item: {del_eq_item} - {del_eq_item[0].stocks}")
                     msg_eq_item = str(del_eq_item[0].stocks) # copy of the item to be deleted to pass to message
                     del_eq_item.delete()
                     #ClientEquityAndRightsModel.objects.filter(client=user).filter(pk__in=del_pk).delete()
@@ -206,7 +207,7 @@ def jdadev_bonds(request):
                     del_pk.append(bn_item[idx].pk)
                     #print(f"134 - del_pk: {del_pk}")
                     del_bn_item = ClientBondsModel.objects.filter(client=user).filter(pk__in=del_pk)
-                    print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
+                    #print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
                     msg_bn_item = str(del_bn_item[0].bond_name) # copy of the item to be deleted to pass to message
                     del_bn_item.delete()
 
@@ -316,7 +317,8 @@ def jdadev_overall_portfolio(request, portfolio_type):
     #print(f"client:{user}")
     ovp= ClientPortfolioModel.objects.filter(client=user).first()
     #print(f"ovp:{ovp}")
-    client_profiles = None # get existing profiles
+    client_profiles = None #ClientProfileModel.objects.filter(client=user) # get existing profiles
+    custom_profile = ClientProfileModel.objects.filter(client=user, profile_type='custom')
 
     if ovp:
         la  = ovp.liquid_assets
@@ -439,15 +441,8 @@ def jdadev_overall_portfolio(request, portfolio_type):
             val_lst.append(eqr)
             val_lst.append(bn)
             val_lst.append(mu)
-            # User will have to provide custom values
-            #print(f"386 - Custom portfolio not implemented yet")
-            # redirect to custom_profile_form loaded via htmx to a partial custom profile page
-            #///////////////////
-            #elif portfolio_type == 'custom':
-            # Handle POST request
-            #from django.conf import settings
-            #print("Using database:", settings.DATABASES['default'])
 
+            # User will have to provide custom values
             if request.method == 'POST':
                 custom_form = ClientProfileForm(request.POST, instance=client_portfolio)
 
@@ -456,121 +451,115 @@ def jdadev_overall_portfolio(request, portfolio_type):
                     eq = custom_form.cleaned_data['equity_and_rights']
                     bn = custom_form.cleaned_data['bonds']
                     mu = custom_form.cleaned_data['mutual_funds']
-                    #print(f"portfolio_type: {portfolio_type}")
-                    client_portfolio = ClientProfileModel(client=user, liquid_assets=la, equity_and_rights=eq, bonds=bn, mutual_funds=mu, profile_type="custom") #profile_type="custom"
-                    client_portfolio.save()
 
-                    #print("Saved:", ClientProfileModel.objects.all().values())
-                    #client_portfolio = custom_form.save(commit=False)
-                    #client_portfolio.client = user  # Ensure user is assigned
+                    # Delete the user's current custom profile if it exists
+                    ClientProfileModel.objects.filter(client=user, profile_type="custom").delete()
 
-                    #client_portfolio.save()
+                    # Create and save the new entry
+                    client_portfolio = ClientProfileModel(client=user,liquid_assets=la,equity_and_rights=eq,bonds=bn,mutual_funds=mu,profile_type="custom")
+                    try:
+                        client_portfolio.full_clean()
+                        client_portfolio.save()
+                        return redirect('jdadev_overall_portfolio', portfolio_type='custom')
 
-                    #print("Saved successfully!")
+                    except ValidationError as e:
+                        # Add field-specific and non-field errors to the form
+                        for field, errors in e.message_dict.items():
+                            for error in errors:
+                                if field == '__all__':
+                                    custom_form.add_error(None, error)  # non-field error
+                                else:
+                                    custom_form.add_error(field, error)
 
-                    # Now, immediately check the database
-                    #with connection.cursor() as cursor:
-                    #    cursor.execute("SELECT * FROM jdadev_clientprofilemodel")
-                    #    rows = cursor.fetchall()
-                    #    print("Database rows:", rows)  # Print rows to see if data exists
-                    #return redirect('jdadev_recommendation')
-                    return redirect('jdadev_overall_portfolio', portfolio_type='custom')
+                        #print(f"error: {e}")
+                        #custom_form.add_error(None, f"Validation Exception: {e}")
+                        #custom_form.add_error(None, f"Validation Exception: The sum of all asset percentages must be exactly 100%.")
+
+
+
+                        #return redirect('jdadev_overall_portfolio', portfolio_type='custom_set')
+                    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'custom_profile':custom_profile,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
+                    return render(request, 'jdadev/jdadev_overall_portfolio.html', context) #{'custom_form': custom_form, 'val_lst': [0,0,0,0,0],  # or actual values 'per_lst': [0,0,0,0],'ovp': None,})
             else:
                 custom_form = ClientProfileForm()
     else:
         return redirect('jdadev_home')
     #print(f"client_profiles:{client_profiles.bonds}")
-    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
+    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'custom_profile':custom_profile,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
+#////////////////////////////////////////jdadev_set_custom_profile////////////////////////////////////////
+@login_required
+def jdadev_set_custom_profile(request):
+    user = request.user
+
+    try:
+        existing_profile = ClientProfileModel.objects.get(client=user, profile_type="custom")
+    except ClientProfileModel.DoesNotExist:
+        existing_profile = None
+
+    if request.method == 'POST':
+        custom_form = ClientProfileForm(request.POST)
+
+        if custom_form.is_valid():
+            la = custom_form.cleaned_data['liquid_assets']
+            eq = custom_form.cleaned_data['equity_and_rights']
+            bn = custom_form.cleaned_data['bonds']
+            mu = custom_form.cleaned_data['mutual_funds']
+
+            # Delete any existing custom profile
+            ClientProfileModel.objects.filter(client=user, profile_type="custom").delete()
+
+            # Create a new profile instance
+            new_profile = ClientProfileModel(
+                client=user,
+                liquid_assets=la,
+                equity_and_rights=eq,
+                bonds=bn,
+                mutual_funds=mu,
+                profile_type="custom"
+            )
+
+            try:
+                new_profile.full_clean()  # Will trigger your `clean()` logic
+                new_profile.save()
+                return redirect('jdadev_overall_portfolio', portfolio_type='custom')
+
+            except ValidationError as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        custom_form.add_error(None if field == '__all__' else field, error)
+
+    else:
+        custom_form = ClientProfileForm(instance=existing_profile)
+
+    return render(request, 'jdadev/jdadev_overall_portfolio.html', {'custom_form': custom_form})
 #///////////////////////////////////////jdadev_recommendation/////////////////////////////////////////////
 def jdadev_recommendation(request):
     user = request.user
-    client_portfolio = ClientEquityAndRightsModel.objects.filter(client=user)
-    #Pre-calculate the gain_or_loss values
-    #client_portfolio_gain_or_loss = []
-    #for i in client_portfolio:
-    #    client_portfolio_gain_or_loss.append(i.daily_value - i.avg_weighted_cost)
+    instance = TransactionFeesModel.objects.filter(client=user).last()
+    if instance:
+        form = TransactionFeesForm(instance=instance)
 
-
-
-    if request.method == 'POST':
-        pass
-    #     form = ClientPortfolioForm(request.POST, instance=client_portfolio)
-    #     # print(f"181: {form}")
-    #     bonds_formset = ClientBondsFormset(request.POST)
-    #     # print(f"183: {bonds_formset}")
-    #
-    #     if form.is_valid() and bonds_formset.is_valid():
-    #         client_portfolio = form.save(commit=False)
-    #         client_portfolio.client = user
-    #         client_portfolio.save()
-    #         # Save each form in the formset
-    #         bond_forms = bonds_formset.save(commit=False)
-    #         for bond_form in bond_forms:
-    #             bond_form.client = user
-    #             bond_form.save()
-    #
-    #         # ///////
-    #         # Now check if the delete flag was on
-    #         del_pk = []
-    #         for idx, form in enumerate(bonds_formset):
-    #             if request.POST.get(f'form-{idx}-DELETE') == 'on':
-    #                 # print("127 - Delete flag on")
-    #                 # print(f"128 - idx:{idx}")
-    #                 bn_item = ClientBondsModel.objects.filter(client=user)
-    #                 # print(f"130 -{eq_item}")
-    #                 # print(eq_item[idx].pk)
-    #                 del_pk.append(bn_item[idx].pk)
-    #                 # print(f"134 - del_pk: {del_pk}")
-    #                 del_bn_item = ClientBondsModel.objects.filter(client=user).filter(pk__in=del_pk)
-    #                 print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
-    #                 msg_bn_item = str(del_bn_item[0].bond_name)  # copy of the item to be deleted to pass to message
-    #                 del_bn_item.delete()
-    #
-    #                 messages.success(request, f"{msg_bn_item} bond is successfully deleted")
-    #         if len(del_pk) <= 0:
-    #             messages.success(request, f"{client_portfolio} info successfully added")
-    #
-    #         # Now update the bond's total_current_value to refresh the UI
-    #         total_value_sum = ClientBondsModel.objects.filter(client=user).aggregate(total_sum=Sum('total_current_value'))[
-    #                               'total_sum'] or 0.00
-    #         update_bonds(request, total_value_sum)
-    #         # /////////
-    #
-    #         # messages.success(request, f"{client_portfolio} info successfully added")
-    #         return redirect('jdadev_bonds')
-    #     else:
-    #         messages.warning(request,
-    #                          f"Form error: {form.errors} - Formset error: {[formset.errors for formset in bonds_formset]}")
     else:
-        form = TransactionFeesForm() #instance=client_portfolio)
-    #check if the transactionFees table exists and get the last entry
-    transactionFees = TransactionFeesModel.objects.all().last()
-    if transactionFees!=None:
-        total_commission = transactionFees.country_sgi + transactionFees.commission_brvm + transactionFees.commission_dc_br
-        #print(f"TransactionFees: {transactionFees}")
-    else:
-        total_commission = 00.00
+        form = TransactionFeesForm()
 
-    for i in client_portfolio:
-        #print(f"Daily_value: {i.daily_value} - {total_commission}")
-        i.gain_or_loss = i.daily_value - i.avg_weighted_cost
-        i.potential_gain_or_loss = i.stocks.target_value - i.daily_value
-        i.selling_price = Decimal(i.daily_value) - Decimal(total_commission)
-
-    context = {'form': form, 'client_portfolio': client_portfolio}
+    context = {'form': form}
     return render(request, 'jdadev/jdadev_recommendation.html', context)
+
 
 
 
 #//////////////////////////////////////save_transaction_fees////////////////////
 from django.shortcuts import render
-from .forms import TransactionFeesForm
+#from .forms import TransactionFeesForm
 #from .models import TransactionFees
 
 def jdadev_save_transaction_fees(request):
     user = request.user
+    #client_eq_portfolio=ClientEquityAndRightsModel.objects.filter(client=user)
+    portfolio = ClientEquityAndRightsModel.objects.filter(client=request.user)
+    latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
 
     if request.method == 'POST':
         instance = TransactionFeesModel.objects.filter(client=user).last()
@@ -580,9 +569,15 @@ def jdadev_save_transaction_fees(request):
             transaction_fees = form.save(commit=False)
             transaction_fees.client = user
             transaction_fees.save()
+            #print("SAVED")
+            #gain_or_loss =client_eq_portfolio.daily_value -
+            #report_rows = [EquityReportRow(obj) for obj in client_eq_portfolio]
+            if not latest_fees:
+                return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
 
-            #(f"✅ Saved: {transaction_fees}")
-            return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", {'instance': transaction_fees})
+            report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
+            context= {'instance': transaction_fees, 'report_rows':report_rows}
+            return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
             #print("🚨 Form is invalid:")
             #print(form.errors)

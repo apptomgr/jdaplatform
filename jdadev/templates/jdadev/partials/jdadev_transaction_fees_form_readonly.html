@@ -1,5 +1,5 @@
 <div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
-<table class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive">
+  <table class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive">
   <thead>
   <tr>
     <th colspan="2"><small>Transaction Fees</small></th>
@@ -7,32 +7,83 @@
   </thead>
   <tbody>
   <tr>
-    <td class="text-left">Commission SGI</td>
-    <td class="text-secondary">{{instance.commission_sgi}}</td>
+    <td class="text-left"><small>Commission SGI</small></td>
+    <td class="text-secondary"><small>{{instance.commission_sgi}}</small></td>
   </tr>
   <tr>
-    <td class="text-left">TPS</td>
-    <td>{{instance.tps}}</td>
+    <td class="text-left"><small>TPS</small></td>
+    <td><small>{{instance.tps}}</small></td>
   </tr>
   <tr>
-    <td class="text-left">Country SGI</td>
-    <td>{{instance.country_sgi}}</td>
+    <td class="text-left"><small>Country SGI</small></td>
+    <td><small>{{instance.country_sgi}}</small></td>
   </tr>
   <tr>
-    <td class="text-left">Commission BRVM</td>
-    <td>{{instance.commission_brvm}}</td>
+    <td class="text-left"><small>Commission BRVM</small></td>
+    <td><small>{{instance.commission_brvm}}</small></td>
   </tr>
   <tr>
-    <td class="text-left">Commission DC/BR</td>
-    <td>{{instance.commission_dc_br}}</td>
+    <td class="text-left"><small>Commission DC/BR</small></td>
+    <td><small>{{instance.commission_dc_br}}</small></td>
   </tr>
   <tr>
-    <td class="text-left">Total Commission</td>
-    <td>{{instance.total_commission}}</td>
+    <td class="text-left"><small>Total Commission</small></td>
+    <td><small>{{instance.total_commission}}</small></td>
+  </tr>
+  <tr>
+    <td class="text-left"><small>Actual Loss</small></td>
+    <td><small>{{instance.actual_loss}}</small></td>
+  </tr>
+  <tr>
+    <td class="text-left"><small>Potential Loss</small></td>
+    <td><small>{{instance.potential_loss}}</small></td>
   </tr>
   </tbody>
 </table>
 </div>
+<!-- recommendation report -->
+<div id="recommendation_report" class="col-10 bg-light border-end">
+  <table id="client_recommendation"
+         class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+    <thead>
+    <tr>
+      <th><small>Stock</small></th>
+      <th><small>Average Weighted Cost</small></th>
+      <th><small>Market Price</small></th>
+      <th><small>Gain/Loss</small></th>
+      <th><small>Target Price</small></th>
+      <th><small>Potential Gain/Loss</small></th>
+      <th><small>Selling Price</small></th>
+      <th><small>Number of Shares</small></th>
+      <th><small>Decision</small></th>
+      <th><small>Sale Amount</small></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i in report_rows %}
+    <tr>
+      <td>{{i.stock}}</td>
+      <td>{{i.avg_weighted_cost|floatformat:2}}</td>
+      <td>{{i.market_price|floatformat:2}}</td>
+      <td class="{% if i.gain_or_loss < 0 %}text-danger{% elif i.gain_or_loss > 0 %}text-success{% endif %}">
+        {{ i.gain_or_loss|floatformat:0 }}
+      </td>
+      <td>{{i.target_price|floatformat:2}}</td>
+      <td class="{% if i.potential_gain_or_loss < 0 %}text-danger{% elif i.potential_gain_or_loss > 0 %}text-success{% endif %}">
+        {{i.potential_gain_or_loss|floatformat:2}}</td>
+      <td>{{i.selling_price|floatformat:2}}</td>
+      <td>{{ i.nbr_of_stocks }}</td>
+      <td class="{% if i.decision == 'SELL' %}text-danger{% else %}text-success{% endif %}">
+        {{ i.decision }}
+      </td>
+      <td>{{ i.sale_amount|floatformat:0 }}</td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% comment %}
 <!--div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
   <div class="card p-4 shadow-sm mx-auto text-start" style="max-width: 500px;">

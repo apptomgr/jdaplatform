@@ -1,0 +1,15 @@
+<!-- Left side static summary -->
+<div class="card p-3 shadow-sm bg-white">
+  <h6>Submitted Fees</h6>
+  <div><strong>Commission SGI:</strong> {{ instance.commission_sgi }}</div>
+  <div><strong>TPS:</strong> {{ instance.tps }}</div>
+  <div><strong>Country SGI:</strong> {{ instance.country_sgi }}</div>
+  <div><strong>Commission BRVM:</strong> {{ instance.commission_brvm }}</div>
+  <div><strong>Commission DC/BR:</strong> {{ instance.commission_dc_br }}</div>
+  <div><strong>Total Commission:</strong> {{ instance.total_commission }}</div>
+</div>
+
+<script>
+  // Load right-hand report after form submission
+  htmx.ajax('GET', "{% url 'jdadev_transaction_report' %}", '#transactionFees_report');
+</script>

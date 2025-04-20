@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 class StockDailyValuesModel(models.Model):
     ticker = models.CharField(max_length=100, blank=False, null=False)
@@ -75,6 +76,16 @@ class ClientProfileModel(models.Model):
     def __str__(self):
         return f"Client {self.client} as of {self.entry_date}"
 
+    def clean(self):
+        total = float(self.liquid_assets or 0) + float(self.equity_and_rights or 0) + float(self.bonds or 0) + float(self.mutual_funds or 0)
+
+        # Allow a small epsilon for floating-point tolerance
+        if not 99.99 <= total <= 100.01:
+            raise ValidationError("The sum of all asset percentages must be exactly 100%.")
+
+        if total != 100:
+            raise ValidationError("The sum of asset allocations must be exactly 100%.")
+
     class Meta:
         verbose_name_plural = 'ClientProfileModel'
 
@@ -86,15 +97,18 @@ class TransactionFeesModel(models.Model):
     country_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     commission_brvm = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     commission_dc_br = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    total_commission = models.DecimalField(max_digits=8, decimal_places=2)
+    actual_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    potential_loss =models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     entry_date = models.DateField(auto_now_add=True)
 
-    @property
-    def total_commission(self):
-        return (
-                self.country_sgi +
-                self.commission_brvm +
-                self.commission_dc_br
-        )
+    # @property
+    # def total_commission(self):
+    #     return (
+    #             self.country_sgi +
+    #             self.commission_brvm +
+    #             self.commission_dc_br
+    #     )
 
     def __str__(self):
         return f"Client {self.client} as of {self.entry_date}"
