@@ -138,10 +138,12 @@ class TransactionFeesForm(forms.ModelForm):
     commission_brvm = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission BRVM'}))
     commission_dc_br = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_total_commussion()', 'placeholder': 'Commission DC/BR'}))
     total_commission = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Total Commission', 'readonly': 'readonly'}))
+    actual_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Actual Loss'}))
+    potential_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Potential Loss'}))
 
     class Meta:
         model = TransactionFeesModel
-        fields = ['commission_sgi', 'tps', 'country_sgi', 'commission_brvm', 'commission_dc_br','total_commission']
+        fields = ['commission_sgi', 'tps', 'country_sgi', 'commission_brvm', 'commission_dc_br','total_commission','actual_loss','potential_loss']
 # #///////////////////////////// GuarantorForm /////////////////////////////
 # class GuarantorForm(forms.ModelForm):
 #     guarantor = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))

@@ -1,0 +1,56 @@
+{% load crispy_forms_tags %}
+
+<div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
+  <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+    <form method="post"
+          hx-post="{% url 'jdadev_save_transaction_fees' %}"
+          hx-target="#transactionFees_form"
+          hx-indicator="#sell-recommendation-loading"
+          hx-swap="outerHTML">
+      {% csrf_token %}
+      <div class="mb-0">
+        {{ form.commission_sgi|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.tps|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.country_sgi|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.commission_brvm|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.commission_dc_br|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.total_commission|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.actual_loss|as_crispy_field }}
+      </div>
+      <div class="mb-0">
+        {{ form.potential_loss|as_crispy_field }}
+      </div>
+
+      <div class="text-center mt-2">
+        <button type="submit" class="btn btn-sm btn-info">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Right Panel Container -->
+<div class="col-8 d-flex align-items-center justify-content-center" style="max-height: 50vh;">
+  <!-- Default Empty State -->
+  <div id="sell-recommendation-placeholder" class="d-flex flex-column align-items-center justify-content-center text-muted" style="min-height: 300px;">
+    <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
+    <h5>No Recommendation Yet</h5>
+    <p class="text-center">Fill in the transaction fees and click submit to view your Sell Recommendation here.</p>
+    <div class="spinner-border text-info" role="status">
+      <span class="visually-hidden"></span>
+    </div>
+</div>
+
+</div>
+

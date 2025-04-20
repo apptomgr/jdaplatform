@@ -15,92 +15,8 @@
     <div class="card-body">
         <div class="container-fluid">
             <div class="row">
-                <!-- Left Section (2 columns) -->
-                <div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
-                    <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
-                        <form method="post"
-                              hx-post="{% url 'jdadev_save_transaction_fees' %}"
-                              hx-target="#transactionFees_form"
-                              hx-swap="outerHTML">
-                            {% csrf_token %}
-                            <div class="mb-0">
-                                {{ form.commission_sgi|as_crispy_field }}
-                            </div>
-                            <div class="mb-0">
-                                {{ form.tps|as_crispy_field }}
-                            </div>
-                            <div class="mb-0">
-                                {{ form.country_sgi|as_crispy_field }}
-                            </div>
-                            <div class="mb-0">
-                                {{ form.commission_brvm|as_crispy_field }}
-                            </div>
-                            <div class="mb-0">
-                                {{ form.commission_dc_br|as_crispy_field }}
-                            </div>
-                            <div class="mb-0">
-                                {{ form.total_commission|as_crispy_field }}
-                            </div>
-
-                            <div class="text-center mt-2">
-                                <button type="submit" class="btn btn-sm btn-info">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="col-10">
-                    <table id="client_recommendation"
-                           class="table table-sm table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th><small>Stock</small></th>
-                            <th><small>Average Weighted Cost</small></th>
-                            <th><small>Market Price</small></th>
-                            <th><small>Gain/Loss</small></th>
-                            <th><small>Target Price</small></th>
-                            <th><small>Potential Gain/Loss</small></th>
-                            <th><small>Selling Price</small></th>
-                            <th><small>Number of Shares</small></th>
-                            <th><small>Decision</small></th>
-                            <th><small>Sale Amount</small></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for i in client_portfolio%}
-                        <tr>
-                            <td>{{i.stocks}}</td>
-                            <td>{{i.avg_weighted_cost|floatformat:2}}</td>
-                            <td>{{i.daily_value|floatformat:2}}</td>
-                            <td>{{i.gain_or_loss|floatformat:2}}</td>
-                            <td>{{i.stocks.target_value|floatformat:2}}</td>
-                            <td>{{i.potential_gain_or_loss|floatformat:2}}</td>
-                            <td>{{i.selling_price|floatformat:2}}</td>
-                            <td>{{i.nbr_of_stocks}}</td>
-                            <!-- Decision & Button -->
-                            <td id="decision-{{ forloop.counter }}-{{ i.stocks }}">
-                                <button class="btn btn-sm btn-outline-primary"
-                                        data-symbol="{{ i.stocks }}"
-                                        data-weighted-cost="{{ i.avg_weighted_cost }}"
-                                        data-market-price="{{ i.daily_value }}"
-                                        data-target-price="{{ i.stocks.target_value }}"
-                                        data-potential-loss="{{ i.potential_gain_or_loss }}"
-                                        data-shares="{{ i.nbr_of_stocks }}"
-                                        data-actual-loss="0.05"
-                                        data-potential-loss-threshold="0.10"
-                                        data-index="{{ forloop.counter }}"
-                                        onclick="handleDecisionClick(this)">
-                                    Check
-                                </button>
-                            </td>
-
-                            <!-- Sale Amount -->
-                            <td id="sale-amount-{{ forloop.counter }}-{{ i.stocks }}"></td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                <!-- form or static transactionfees placeholder-->
+                {% include 'jdadev/partials/jdadev_transaction_fees_placeholder.html'%}
             </div>
         </div>
     </div>
@@ -111,24 +27,15 @@
 </div>
 <script type="text/javascript">
 function get_country_sgi() {
-    // Get current values from all inputs each time
     const tps = parseFloat(document.getElementById("id_tps").value) || 0;
     const comm_sgi = parseFloat(document.getElementById("id_commission_sgi").value) || 0;
-    //alert("tps: "+ tps +" comm_sgi: "+ comm_sgi);
-    //const bn = parseFloat(document.getElementById("id_bonds").value) || 0;
-    //const mu = parseFloat(document.getElementById("id_mutual_funds").value) || 0;
 
     // Calculate country_sgi
-    const country_sgi = (1+tps+comm_sgi);
-
+    const country_sgi = (1+tps)*comm_sgi;
     const country_sgiElement = document.getElementById("id_country_sgi");
 
     // Update displayed value
     country_sgiElement.value = country_sgi;
-
-    // Update Country_sgi_value
-    //country_sqi_value.value = country_sqi;
-    //alert(country_sqi_value);
 
     // Update color based on value
     //if (sum < 100) {
@@ -160,49 +67,5 @@ function get_total_commussion() {
     total_commissionElement.value = total_commission;
 }
 </script>
-
-
-<script>
-function handleDecisionClick(button) {
-    const symbol = button.dataset.symbol;
-    const index = button.dataset.index;
-
-    const weightedCost = parseFloat(button.dataset.weightedCost);
-    const marketPrice = parseFloat(button.dataset.marketPrice);
-    const targetPrice = parseFloat(button.dataset.targetPrice);
-    const potentialLoss = parseFloat(button.dataset.potentialLoss);
-    const shares = parseFloat(button.dataset.shares);
-    const actualLoss = parseFloat(button.dataset.actualLoss);
-    const potentialLossThreshold = parseFloat(button.dataset.potentialLossThreshold);
-
-    let decision = "hold";
-    let saleAmount = "";
-
-    if (shares > 0) {
-        const condition1 = (marketPrice / weightedCost <= (1 - actualLoss)) && (targetPrice / shares < 1);
-        const condition2 = (targetPrice / marketPrice <= (1 - potentialLossThreshold));
-
-        if (condition1 || condition2) {
-            decision = "sell";
-            saleAmount = (shares * marketPrice).toFixed(2);
-        }
-    }
-
-    // Replace button with decision label
-    const decisionText = `<span class="text-${decision === 'sell' ? 'danger' : 'secondary'} fw-bold">${decision.toUpperCase()}</span>`;
-    button.outerHTML = decisionText;
-
-    // Update sale amount
-
-    //const saleAmountEl = document.getElementById(`sale-amount-${symbol}`);
-    //alert(${index});
-    const saleAmountEl = document.getElementById(`sale-amount-${index}-${symbol}`);
-    if (saleAmountEl) {
-        saleAmountEl.innerText = saleAmount;
-    }
-}
-
-</script>
-
 
 {% endblock %}

@@ -15,7 +15,7 @@ urlpatterns = [
     path('jdadev_overall_portfolio/<str:portfolio_type>', views.jdadev_overall_portfolio, name='jdadev_overall_portfolio'),
     path('jdadev_recommendation/', views.jdadev_recommendation, name='jdadev_recommendation'),
     path('jdadev_save_transaction_fees/', views.jdadev_save_transaction_fees, name='jdadev_save_transaction_fees'),
-    #path('jdadev_ovp_prudent/', views.jdadev_ovp_prudent, name='jdadev_ovp_prudent'),
+    #path('jdadev_set_custom_profile/', views.jdadev_set_custom_profile, name='jdadev_set_custom_profile'),
 
     path('jdadev_liquid_assets/', views.jdadev_liquid_assets, name='jdadev_liquid_assets'),
     path('jdadev_equity_and_rights/', views.jdadev_equity_and_rights, name='jdadev_equity_and_rights'),
