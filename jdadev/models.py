@@ -102,13 +102,6 @@ class TransactionFeesModel(models.Model):
     potential_loss =models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     entry_date = models.DateField(auto_now_add=True)
 
-    # @property
-    # def total_commission(self):
-    #     return (
-    #             self.country_sgi +
-    #             self.commission_brvm +
-    #             self.commission_dc_br
-    #     )
 
     def __str__(self):
         return f"Client {self.client} as of {self.entry_date}"
@@ -263,3 +256,14 @@ class CountryCityModel(models.Model):
 
     class Meta:
         verbose_name_plural = 'CountryCityModel'
+
+
+class ResModel(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return f"{self.country} "
+
+    class Meta:
+        verbose_name_plural = 'ResModel'
