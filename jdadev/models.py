@@ -97,7 +97,7 @@ class TransactionFeesModel(models.Model):
     country_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     commission_brvm = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     commission_dc_br = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    total_commission = models.DecimalField(max_digits=8, decimal_places=2)
+    total_commission = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     actual_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     potential_loss =models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
     entry_date = models.DateField(auto_now_add=True)
