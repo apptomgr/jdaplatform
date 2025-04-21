@@ -23,7 +23,7 @@ class BondModel(models.Model):
     original_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     coupon = models.DecimalField(default=0.0000, max_digits=18, decimal_places=4, blank=False, null=False)
     current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-    nbr_of_bonds = models.IntegerField(blank=True, null=True)
+    nbr_of_shares = models.IntegerField(blank=True, null=True)
     total_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     institution_type = models.CharField(max_length=100, blank=False, null=False)
     #institution_type_id = models.ForeignKey(InstitutionTypeModel, on_delete=models.CASCADE, related_name='bonds')
