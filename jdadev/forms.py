@@ -47,7 +47,7 @@ class ClientEquityAndRightsForm(forms.ModelForm):
         fields = ['stocks', 'nbr_of_stocks', 'avg_weighted_cost', 'daily_value','total_current_value', 'total_purchase_value', 'total_gain_or_loss']
 
 #///////////////////////////// ClientEquityAndRightsFormset /////////////////////////////
-ClientEquityAndRightsFormset = modelformset_factory(ClientEquityAndRightsModel, form=ClientEquityAndRightsForm, extra=0, can_delete=True) #extra=1)
+ClientEquityAndRightsFormset = modelformset_factory(ClientEquityAndRightsModel, form=ClientEquityAndRightsForm, extra=1, can_delete=True) #extra=1)
 ClientEquityAndRightsFormset_edit = modelformset_factory(ClientEquityAndRightsModel, form=ClientEquityAndRightsForm, extra=0, can_delete=True)
 
 
@@ -91,7 +91,7 @@ class ClientBondsForm(forms.ModelForm):
         fields = ['institution_type', 'symbol','bond_name', 'nbr_of_shares','coupon',  'original_value', 'current_value', 'total_current_value', 'total_purchase_value', 'total_gain_or_loss']
 
 #///////////////////////////// ClientBondsFormset /////////////////////////////
-ClientBondsFormset = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=0, can_delete=True)
+ClientBondsFormset = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=1, can_delete=True)
 ClientBondsFormset_edit = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=0, can_delete=True)
 
 

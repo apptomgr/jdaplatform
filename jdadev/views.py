@@ -107,6 +107,7 @@ def jdadev_liquid_assets(request):
 @login_required
 def jdadev_equity_and_rights(request):
     user = request.user
+    print(f"110 - user: {user}")
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
@@ -163,10 +164,11 @@ def jdadev_equity_and_rights(request):
         else:
             stock_formset = ClientEquityAndRightsFormset(queryset=ClientEquityAndRightsModel.objects.filter(client=user))
 
+
     total_value_sum = ClientEquityAndRightsModel.objects.filter(client=user).aggregate(total_sum=Sum('total_current_value'))['total_sum'] or 0.00
     #print(f"total_value_sum: {total_value_sum}")
     update_equity_and_rights(request, total_value_sum)
-
+    #print(f"else: {stock_formset}")
     context = {'form': form, 'client_portfolio': client_portfolio,'client':user, 'stock_formset':stock_formset}
     #context = {'form': form, 'client':user,}
     return render(request, 'jdadev/jdadev_equity_and_rights.html', context)
@@ -543,8 +545,8 @@ def jdadev_recommendation(request):
 
     else:
         form = TransactionFeesForm()
-
-    context = {'form': form}
+    spinner = True
+    context = {'form': form, 'spinner':spinner}
     return render(request, 'jdadev/jdadev_recommendation.html', context)
 
 
@@ -565,6 +567,7 @@ def jdadev_save_transaction_fees(request):
         instance = TransactionFeesModel.objects.filter(client=user).last()
         form = TransactionFeesForm(request.POST, instance=instance)
 
+
         if form.is_valid():
             transaction_fees = form.save(commit=False)
             transaction_fees.client = user
@@ -576,7 +579,8 @@ def jdadev_save_transaction_fees(request):
                 return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
 
             report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
-            context= {'instance': transaction_fees, 'report_rows':report_rows}
+            spinner = False;
+            context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner}
             return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
             #print("🚨 Form is invalid:")
