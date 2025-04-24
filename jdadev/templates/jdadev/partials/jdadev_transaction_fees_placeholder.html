@@ -1,48 +1,78 @@
 {% load crispy_forms_tags %}
 
-<div id="transactionFees_form" class="col-2 bg-light border-end" style="min-height: 100vh;">
+<div id="transactionFees_form" class="col-4 bg-light border-end" style="min-height: 50vh;">
   <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
     <form method="post"
           hx-post="{% url 'jdadev_save_transaction_fees' %}"
           hx-target="#transactionFees_form"
-          hx-swap="outerHTML">
+          hx-swap="outerHTML" novalidate>
       {% csrf_token %}
 
-      <div class="mb-0">
-        {{ form.commission_sgi|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.tps|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.country_sgi|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.commission_brvm|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.commission_dc_br|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.total_commission|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.actual_loss|as_crispy_field }}
-      </div>
-      <div class="mb-0">
-        {{ form.potential_loss|as_crispy_field }}
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Commission SGI</small>
+        </div>
+        <div class="col-6">{{ form.commission_sgi|as_crispy_field }}</div>
       </div>
 
-      <div class="text-center mt-2">
-        <button type="submit" class="btn btn-sm btn-info">Submit</button>
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">TPS</small>
+        </div>
+        <div class="col-6">{{ form.tps|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Country SGI</small>
+        </div>
+        <div class="col-6">{{ form.country_sgi|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Commission BRVM</small>
+        </div>
+        <div class="col-6">{{ form.commission_brvm|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Commission DC/BR</small>
+        </div>
+        <div class="col-6">{{ form.commission_dc_br|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Total Commission</small>
+        </div>
+        <div class="col-6">{{ form.total_commission|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Actual Loss</small>
+        </div>
+        <div class="col-6">{{ form.actual_loss|as_crispy_field }}</div>
+      </div>
+
+      <div class="mb-0 row align-items-center">
+        <div class="col-4 text-end text-right">
+          <small class="text-secondary">Potential Loss</small>
+        </div>
+        <div class="col-6">{{ form.potential_loss|as_crispy_field }}</div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-info">Submit</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- Right Panel Container -->
-<div class="col-8 d-flex align-items-center justify-content-center" style="max-height: 50vh;">
-  <!-- Default Empty State -->
+<!--div class="col-8 d-flex align-items-center justify-content-center" style="max-height: 50vh;">
   <div id="sell-recommendation-placeholder" class="d-flex flex-column align-items-center justify-content-center text-muted" style="min-height: 300px;">
     {% if spinner %}
     <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
@@ -50,7 +80,7 @@
     <p class="text-center">Fill in the transaction fees and click submit to view your Sell Recommendation here.</p>
 
     {% endif %}
-</div>
+</div-->
 
-</div>
+
 

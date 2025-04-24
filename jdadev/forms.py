@@ -23,10 +23,10 @@ class UploadFileForm(forms.Form):
 
 #///////////////////////////// ClientPortfolioForm //////////////////////////////////////
 class ClientPortfolioForm(forms.ModelForm):
-    liquid_assets = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Liquid Assets'}, ))
-    equity_and_rights = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'readonly': 'readonly', 'placeholder': 'Equity & Rights', 'onfocus': 'showEquityAndRightsForm()'}))
-    bonds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Bonds'}, ))
-    mutual_funds = forms.CharField(required=False, max_length=50, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Mutual Funds'}, ))
+    liquid_assets = forms.DecimalField(required=False, label='', widget=forms.NumberInput(attrs={'class': 'form-control-sm', 'placeholder': 'Liquid Assets'}, ))
+    equity_and_rights = forms.DecimalField(required=False, label='', widget=forms.NumberInput(attrs={'class': 'form-control-sm', 'readonly': 'readonly', 'placeholder': 'Equity & Rights', 'onfocus': 'showEquityAndRightsForm()'}))
+    bonds = forms.DecimalField(required=False, label='', widget=forms.NumberInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Bonds'}, ))
+    mutual_funds = forms.DecimalField(required=False, label='', widget=forms.NumberInput(attrs={'class': 'form-control-sm',  'readonly': 'readonly','placeholder': 'Mutual Funds'}, ))
 
     class Meta:
         model = ClientPortfolioModel

@@ -23,7 +23,7 @@ class EquityReportRow:
         # Derived calculations
         self.country_sgi = (1 + self.tps) * self.commission_sgi
         self.total_commission = self.country_sgi + self.commission_brvm + self.commission_dc_br
-        self.gain_or_loss = self.market_price - self.avg_weighted_cost
+        self.gain_or_loss = self.avg_weighted_cost - self.market_price
         self.potential_gain_or_loss = self.target_price - self.market_price
         self.selling_price = self.market_price * (1 - self.total_commission)
         self.sale_amount = self.selling_price * self.nbr_of_stocks

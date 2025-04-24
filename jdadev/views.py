@@ -82,24 +82,24 @@ def jdadev_home(request):
 #/////////////////////////////////jdadev_liquid_assets////////////////////
 @login_required
 def jdadev_liquid_assets(request):
-    #print("jdadev_liquid_assets")
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
+
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
-
         if form.is_valid():
             client_portfolio = form.save(commit=False)
             client_portfolio.client = user
             client_portfolio.save()
-            messages.success(request, f"{client_portfolio} info successfully added")
+            messages.success(request, "Portfolio info successfully updated")
             return redirect('jdadev_liquid_assets')
         else:
-            messages.warning(request,f"Form error: {form.errors}")
+            #print(form.errors)
+            messages.warning(request, f"Error: {form.errors}")
     else:
         form = ClientPortfolioForm(instance=client_portfolio)
 
-    context = {'form': form, 'client':user}
+    context = {'form': form, 'client': user}
     return render(request, 'jdadev/jdadev_liquid_assets.html', context)
 
 
@@ -107,7 +107,7 @@ def jdadev_liquid_assets(request):
 @login_required
 def jdadev_equity_and_rights(request):
     user = request.user
-    print(f"110 - user: {user}")
+    #print(f"110 - user: {user}")
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
     if request.method == 'POST':
         form = ClientPortfolioForm(request.POST, instance=client_portfolio)
@@ -150,7 +150,7 @@ def jdadev_equity_and_rights(request):
             return redirect('jdadev_equity_and_rights')
         else:
             # Debugging and displaying form errors
-            #print("Form errors:", form.errors)
+            #print("153 - Form errors:", form.errors)
             #print("Formset errors:", stock_formset.errors)
             messages.warning(request, f"Form error: {form.errors} - Formset error: {[formset.errors for formset in stock_formset]}")
 
@@ -289,10 +289,6 @@ def jdadev_mutual_funds(request):
             #Now update the mututal's total_current_value to refresh the UI
             total_value_sum = ClientMutualFundsModel.objects.filter(client=user).aggregate(total_sum=Sum('mu_total_current_value'))['total_sum'] or 0.00
             update_mutual_funds(request, total_value_sum)
-            #/////////
-
-
-            #messages.success(request, f"{client_portfolio} info successfully added")
 
             return redirect('jdadev_mutual_funds')
         else:
@@ -1362,7 +1358,7 @@ def upload_bond_excel(request):
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error creating objects from Excel data: " + str(e)})
 
             # Bond ddata upload is successful.  Now insert intitution types data into the InstitutionTypeModel
-            insert_distinct_institution_types()
+            insert_distinct_institution_types(request)
             return render(request, 'jdadev/upload_success.html')
     else:
         form = UploadFileForm()
@@ -1451,7 +1447,7 @@ def upload_mutual_fund_excel(request):
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error creating objects from Excel data: " + str(e)})
 
             # Bond ddata upload is successful.  Now insert intitution types data into the InstitutionTypeModel
-            #insert_distinct_institution_types()
+            #insert_distinct_institution_types(request)
             return render(request, 'jdadev/upload_success.html')
     else:
         #print("543 UploadFileForm")
