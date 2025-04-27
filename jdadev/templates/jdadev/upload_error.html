@@ -22,9 +22,26 @@
 <div class="card text-center mt-5">
   <div class="row">
     <div class="col">
-      <p>{{ error_message }}</p>
-      <p>{{ error_message_2 }}</p>
+      <h5 class="text-danger font-weight-bold">{{ error_message }}</h5>
+      <h5>{{ error_message_2 }}</h5>
+      {% if stocks_delete %}
+
+      <div class="container mt-4">
+        <h5>Clear current stock data</h5>
+        <div class="mb-3">
+          <form method="post" action="{% url 'jdadev_clear_stock_data' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Are you sure you want to delete all existing data?');">
+              Clear Existing Data
+            </button>
+          </form>
+        </div>
+
+      </div>
+      {% else %}
       <p>Please correct the issue and try again.</p>
+      {% endif %}
     </div>
   </div>
 </div>

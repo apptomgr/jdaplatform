@@ -17,6 +17,7 @@ from accounts .decorators import allowed_users
 from django.db.models import Sum
 from django.contrib.auth.models import User
 from .helpers import EquityReportRow
+from django.utils import timezone
 
 #/////////////////////////////////jdadev_home////////////////////
 @login_required
@@ -533,6 +534,7 @@ def jdadev_set_custom_profile(request):
 
     return render(request, 'jdadev/jdadev_overall_portfolio.html', {'custom_form': custom_form})
 #///////////////////////////////////////jdadev_recommendation/////////////////////////////////////////////
+@login_required
 def jdadev_recommendation(request):
     user = request.user
     instance = TransactionFeesModel.objects.filter(client=user).last()
@@ -545,14 +547,11 @@ def jdadev_recommendation(request):
     context = {'form': form, 'spinner':spinner}
     return render(request, 'jdadev/jdadev_recommendation.html', context)
 
-
-
-
 #//////////////////////////////////////save_transaction_fees////////////////////
 from django.shortcuts import render
 #from .forms import TransactionFeesForm
 #from .models import TransactionFees
-
+@login_required
 def jdadev_save_transaction_fees(request):
     user = request.user
     #client_eq_portfolio=ClientEquityAndRightsModel.objects.filter(client=user)
@@ -622,9 +621,9 @@ def jdadev_save_transaction_fees(request):
 #     context={"form": form}
 #     return context
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
-
+#@login_required
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-    #print(f"394 per_tot: {per_tot}")
+    print(f"626 per_tot: {per_tot}")
     #print(f"395 per_bn: {per_bn} - per_mu: {per_mu}")
     adj_bn = 0
     adj_mu = 0
@@ -682,7 +681,7 @@ def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
 
 #///////////////////////////////////jdadev_view_client_list////////////////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins','managers','staffs'])
+#@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdadev_view_client_list(request):
     client_list = ClientPortfolioModel.objects.all().order_by('-id')
     grp =None
@@ -697,6 +696,7 @@ def jdadev_view_client_list(request):
 #////////////////////////////////jdadev_overall_portfolio_by_client////////////////////////////////
 @login_required
 def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
+    #print(client)
     user = client #request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
     ovp= ClientPortfolioModel.objects.filter(client=user).first()
@@ -778,152 +778,11 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
     context={'client_portfolio': client_portfolio,'client':username,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
-#///////////////////////////////////jdadev_view_client_portfolio////////////////////////////////
-# #//////////////////////////////// adjusted_per_bn //////////////////////////////////
-# def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-#     #print(f"per_tot: {per_tot}")
-#     #print(f"per_bn: {per_bn} - per_mu: {per_mu}")
-#     adj_bn = 0
-#     adj_mu = 0
-#     adj_result=[]
-#     if portfolio_type =='dynamic':
-#         if per_bn+per_mu >per_tot*Decimal(.20):
-#             print(f"> per_tot*20: {per_tot*Decimal(.20)}")
-#             adj_bn=per_tot*Decimal(.20)-per_mu
-#             adj_mu=per_mu + adj_bn
-#             if adj_bn <0:
-#                 adj_bn=0
-#                 #print(f"adj_bn: {adj_bn}")
-#             #print(f"adj_bn: {adj_bn} - adj_mu: {adj_mu}")
-#         else:
-#             adj_result.append(per_mu)
-#             #pass
-#             #print(f"< per_tot*20: {per_tot*.20}")
-#     elif portfolio_type =='moderate':
-#         per_bn= per_tot*Decimal(.45)-per_mu
-#         adj_bn=per_bn
-#     elif portfolio_type =='prudent':
-#         per_bn= per_tot*Decimal(.70)-per_mu
-#         adj_bn=per_bn
-#
-#         adj_result.append(adj_bn)
-#         adj_result.append(adj_mu)
-#
-#     return adj_result
 
-# #////////////////////////////////jdadev_ovp_dynamic////////////////////////////////
-# def jdadev_ovp_dynamic(request):
-#     user = request.user
-#     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
-#     ovp= ClientPortfolioModel.objects.get()
-#
-#     la  = ovp.liquid_assets
-#     print(f"la:{la}")
-#     eqr = ovp.equity_and_rights
-#     bn  = ovp.bonds
-#     mu = ovp.mutual_funds
-#     tot=la+eqr+bn+mu
-#     per_tot=(tot/tot)*100
-#     per_la=(la/tot)*100
-#     per_eqr=(eqr/tot)*100
-#     per_bn=(bn/tot)*100
-#     per_mu=(mu/tot)*100
-#     per_lst=[]
-#
-#     per_lst.append(per_tot)
-#     per_lst.append((tot)*Decimal(.10))
-#     per_lst.append((tot)*Decimal(.70))
-#     per_lst.append((tot)*Decimal(.06))
-#     per_lst.append((tot)*Decimal(.14))
-#
-#     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'per_lst':per_lst}
-#     return render(request, 'jdadev/jdadev_ovp_dynamic.html', context)
-#
-# #////////////////////////////////jdadev_ovp_moderate////////////////////////////////
-# def jdadev_ovp_moderate(request):
-#     user = request.user
-#     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
-#     ovp= ClientPortfolioModel.objects.get()
-#
-#     la  = ovp.liquid_assets
-#     eqr = ovp.equity_and_rights
-#     bn  = ovp.bonds
-#     mu = ovp.mutual_funds
-#     tot=la+eqr+bn+mu
-#     per_tot=(tot/tot)*100
-#     per_la=(la/tot)*100
-#     per_eqr=(eqr/tot)*100
-#     per_bn=(bn/tot)*100
-#     per_mu=(mu/tot)*100
-#     per_lst=[]
-#
-#     per_lst.append(per_tot)
-#     per_lst.append((tot)*Decimal(.10))
-#     per_lst.append((tot)*Decimal(.45))
-#     per_lst.append((tot)*Decimal(.45))
-#     per_lst.append((tot)*Decimal(.10))
-#
-#     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'per_lst':per_lst}
-#     return render(request, 'jdadev/jdadev_ovp_moderate.html', context)
-#
-# #////////////////////////////////jdadev_ovp_prudent////////////////////////////////
-# def jdadev_ovp_prudent(request):
-#     user = request.user
-#     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
-#     ovp= ClientPortfolioModel.objects.get()
-#
-#     la  = ovp.liquid_assets
-#     eqr = ovp.equity_and_rights
-#     bn  = ovp.bonds
-#     mu = ovp.mutual_funds
-#     tot=la+eqr+bn+mu
-#     per_tot=(tot/tot)*100
-#     per_la=(la/tot)*100
-#     per_eqr=(eqr/tot)*100
-#     per_bn=(bn/tot)*100
-#     per_mu=(mu/tot)*100
-#
-#     print(f"per_tot: {per_tot} per_la: {per_la} per_eqr {per_eqr} per_bn: {per_bn} per_mu: {per_mu}")
-#
-#     val_lst=[]
-#     val_lst.append(tot)
-#     val_lst.append(la)
-#     val_lst.append(eqr)
-#     val_lst.append(bn)
-#     val_lst.append(mu)
-#
-#     print(f"val_lst[0]:{val_lst[0]}, val_lst[1]:{val_lst[1]}, val_lst[2]:{val_lst[2]}")
-#
-#     per_lst=[]
-#     per_lst.append(per_tot)
-#     per_lst.append(per_la)
-#     per_lst.append(per_eqr)
-#     per_lst.append(per_bn)
-#     per_lst.append(per_mu)
-#
-#
-#     context={'client_portfolio': client_portfolio,'client':user,'tot':tot, 'ovp':ovp, 'per_lst':per_lst, 'val_lst':val_lst}
-#     return render(request, 'jdadev/jdadev_ovp_prudent.html', context)
-
-# def calculate_values(total_val):
-#     """
-#     Calculate bond_val and mutual_val based on total_val.
-#     bond_val cannot exceed 40% of total_val.
-#
-#     :param total_val: The total value to be distributed.
-#     :return: A tuple containing bond_val and mutual_val.
-#     """
-#     max_bond_val = Decimal(0.4) * total_val
-#     bond_val = min(total_val * Decimal(0.4), max_bond_val)
-#     mutual_val = total_val - bond_val
-#     bond_percent = bond_val/total_val
-#     mutual_percent = mutual_val/total_val
-#     print(f"Bond percent: {bond_percent}")
-#     print(f"Mutual percent: {mutual_percent}")
-#     return bond_val, mutual_val
 
 
 #//////////////////////////////reload_symbols////////////////////////////////
+@login_required
 def reload_symbols(request, inst_val):
     #print(inst_val)
     #query the Intitution_types model to get the inst+type name based on the inst_val (id)
@@ -940,6 +799,7 @@ def reload_symbols(request, inst_val):
     return render(request, 'jdadev/partials/jdadev_symbols.html', context)
 
 #//////////////////////////////reload_bond_names////////////////////////////////
+@login_required
 def reload_bond_names(request, sym_val):
     #print("sym_val: ", sym_val)
     if sym_val == "":
@@ -954,6 +814,7 @@ def reload_bond_names(request, sym_val):
 
 #//////////////////////////////reload_original_value////////////////////////////////
 from decimal import Decimal
+@login_required
 def reload_original_value(request, id_int, sym_val):
     #print(f"id_int:{id_int}  sym_val:{sym_val}")
     if sym_val == "":
@@ -970,6 +831,7 @@ def reload_original_value(request, id_int, sym_val):
     return render(request, 'jdadev/partials/jdadev_original_value.html', context)
 
 #//////////////////////////////reload_current_value////////////////////////////////
+@login_required
 def reload_current_value(request, id_int, sym_val):
     if sym_val == "":
         symbols = BondModel.objects.all().order_by('symbol')
@@ -983,6 +845,7 @@ def reload_current_value(request, id_int, sym_val):
     return render(request, 'jdadev/partials/jdadev_bond_current_value.html', context)
 
 #//////////////////////////////reload_bond_coupon////////////////////////////////
+@login_required
 def reload_bond_coupon(request, id_int, sym_val):
     #print(f"cpn id_int:{id_int}  sym_val:{sym_val}")
     if sym_val == "":
@@ -999,6 +862,7 @@ def reload_bond_coupon(request, id_int, sym_val):
     return render(request, 'jdadev/partials/jdadev_bond_coupon_value.html', context)
 #//////////////////////////////reload_depositaire////////////////////////////////
 from decimal import Decimal
+@login_required
 def reload_depositaire(request, soc_text):
     #print(f"236: soc_val:{soc_text}")
     #get dps based on the soc_text
@@ -1024,6 +888,7 @@ def reload_depositaire(request, soc_text):
 
 #//////////////////////////////reload_opcvm////////////////////////////////
 from decimal import Decimal
+@login_required
 def reload_opcvm(request, soc_text):
     #print(f"261: soc_text:{soc_text}")
     if soc_text == "":
@@ -1042,6 +907,7 @@ def reload_opcvm(request, soc_text):
 
 
 #//////////////////////////////reload_mu_original_value////////////////////////////////
+@login_required
 def reload_mu_original_value(request, id_int, soc_text):
     #print(f"305: soc_text:{soc_text}")
     if soc_text == "":
@@ -1060,6 +926,7 @@ def reload_mu_original_value(request, id_int, soc_text):
     return render(request, 'jdadev/partials/jdadev_mu_original_value.html', context)
 
 #//////////////////////////////reload_mu_current_value////////////////////////////////
+@login_required
 def reload_mu_current_value(request, id_int, soc_text):
     #print(f"323: soc_val:{soc_text}")
 
@@ -1084,6 +951,7 @@ def reload_mu_current_value(request, id_int, soc_text):
     return render(request, 'jdadev/partials/jdadev_mu_current_value.html', context)
 
 #//////////////////////////////reload_mu_nbr_of_share////////////////////////////////
+@login_required
 def reload_mu_nbr_of_share(request, id_int, soc_text):
     #print(f"347: soc_val:{soc_text}")
     if soc_text == "":
@@ -1099,6 +967,7 @@ def reload_mu_nbr_of_share(request, id_int, soc_text):
 
 
 #//////////////////////////////reload_mu_total_current_value////////////////////////////////
+@login_required
 def reload_mu_total_current_value(request, id_int, soc_text):
     #print(f"362: soc_text:{soc_text}")
     mu_tot_curr_val=soc_text
@@ -1169,43 +1038,85 @@ def fetch_stock_data(request):
     return JsonResponse(data)
 
 
-# #/////////////////////////update_mutual_funds////////////////////////////////
-# @login_required
-# def update_mutual_funds(request, new_value):
-#     user = request.user  # Get the logged-in user
-#     print(f"476 user: {user}")
-#     print(f"477 New_Value: {new_value}")
-#     # Assuming you want to set the equity_and_rights field to 999 for the logged-in user's portfolio
-#     # new_value = 999.00
-#
-#     # Update the equity_and_rights field for the user's portfolio
-#     updated_rows = ClientPortfolioModel.objects.filter(mutual_funds=user).update(mutual_funds=new_value)
-#
-#     # Debug output to check if the update was successful
-#     print(f"485 Updated {updated_rows} row(s)")
-#
-#     # Redirect or render a Stemplate after updating
-#     #return redirect('some_success_url')  # Replace 'some_success_url' with your actual success URL or render a template
+
 #/////////////////////////////// upload_file //////////////////////////////////////////////////////////
+@login_required
 def upload_file(request):
-    #print("file upload")
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            excel_file = request.FILES['file']
-            df = pd.read_excel(excel_file)
-            for index, row in df.iterrows():
-                StockDailyValuesModel.objects.create(
-                    ticker=row['Ticker'],
-                    daily_value=row['Daily Value'],
-                    target_value=row['Target Value'],
-                )
-            return render(request, 'success.html')
+            try:
+                excel_file = request.FILES['file']
+                df = pd.read_excel(excel_file)
+
+                # Convert DataFrame to list of model instances
+                objects_to_create = []
+                duplicates = 0
+                created = 0
+                today = timezone.now().date()
+
+                for index, row in df.iterrows():
+                    ticker = row['Ticker']
+                    daily_value = row['Daily Value']
+                    target_value = row.get('Target Value', 0.00)  # Use get to handle missing columns
+
+                    # Check if this ticker already exists for today
+                    exists = StockDailyValuesModel.objects.filter(
+                        ticker=ticker,
+                        entry_date=today
+                    ).exists()
+
+                    if exists:
+                        duplicates += 1
+                        # Optional: Update existing records instead of skipping
+                        # StockDailyValuesModel.objects.filter(ticker=ticker, entry_date=today).update(
+                        #     daily_value=daily_value,
+                        #     target_value=target_value
+                        # )
+                    else:
+                        objects_to_create.append(StockDailyValuesModel(
+                            ticker=ticker,
+                            daily_value=daily_value,
+                            target_value=target_value,
+                            # Let entry_date default to today
+                        ))
+                        created += 1
+
+                # Bulk create for better performance
+                if objects_to_create:
+                    StockDailyValuesModel.objects.bulk_create(objects_to_create)
+
+                messages.success(request, f'Successfully processed {len(df)} rows. Created {created} new records. Found {duplicates} duplicates.')
+                return render(request, 'jdadev/jdadev_upload_success.html')
+
+            except Exception as e:
+                messages.error(request, f'Error processing file: {str(e)}')
+                return render(request, 'jdadev/jdadev_upload_file.html', {'form': form})
     else:
         form = UploadFileForm()
-    return render(request, 'jdadev/jdadev_upload_success.html', {'form': form})
+
+    return render(request, 'jdadev/jdadev_upload_file.html', {'form': form})
+# def upload_file(request):
+#     #print("file upload")
+#     if request.method == 'POST':
+#         form = UploadFileForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             excel_file = request.FILES['file']
+#             df = pd.read_excel(excel_file)
+#             for index, row in df.iterrows():
+#                 StockDailyValuesModel.objects.create(
+#                     ticker=row['Ticker'],
+#                     daily_value=row['Daily Value'],
+#                     target_value=row['Target Value'],
+#                 )
+#             return render(request, 'success.html')
+#     else:
+#         form = UploadFileForm()
+#     return render(request, 'jdadev/jdadev_upload_success.html', {'form': form})
 
 #///////////////////////////////////////upload_excel//////////////////////////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_excel(request):
     #print("765 file upload ")
     if request.method == 'POST':
@@ -1265,10 +1176,16 @@ def upload_excel(request):
                         target_value = row['target_value']
                         StockDailyValuesModel.objects.create(ticker=ticker, daily_value=daily_value, target_value=target_value)
                     except Exception as e:
-                        #print(f"822 Exception e:{e}")
-                        return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
+                        if "UNIQUE constraint failed" in str(e):
+                            #print("Found the keyword!")
+                            #print(f"1327 Exception e:{e}")
+                            return render(request, 'jdadev/upload_error.html', {'error_message': f"The file data already exists. Click below to delete and reload", 'stocks_delete':'True'})
+                        else:
+                            print(f"1330 Exception e:{e}")
+                        #return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
+                            return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
             except Exception as e:
-                #print(f"825 Exception e:{e}")
+                print(f"1329 Exception e:{e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error creating objects from Excel data: " + str(e)})
 
             return render(request, 'jdadev/upload_success.html')
@@ -1277,7 +1194,33 @@ def upload_excel(request):
 
     return render(request, 'jdadev/upload_excel.html', {'form': form})
 
+
+#/////////////////////////////////////jdadev_clear_stock_data/////////////////////////////////
+#@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdadev_clear_stock_data(request):
+    if request.method == 'POST':
+        try:
+            # Option 1: Delete only today's records
+            today = timezone.now().date()
+            deleted, _ = StockDailyValuesModel.objects.filter(entry_date=today).delete()
+            messages.success(request, f"Successfully cleared {deleted} stock records for today.")
+
+            # Option 2: Delete records for a specific ticker
+            # ticker = request.POST.get('ticker')
+            # if ticker:
+            #     deleted, _ = StockDailyValuesModel.objects.filter(ticker=ticker).delete()
+            #     messages.success(request, f"Successfully cleared {deleted} records for {ticker}.")
+
+        except Exception as e:
+            messages.error(request, f"Error clearing stock data: {str(e)}")
+
+    return redirect('upload_excel')
 #///////////////////////////////////////upload_bond_excel//////////////////////////////
+#@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_bond_excel(request):
     #print("107 file upload ")
     if request.method == 'POST':
@@ -1365,8 +1308,30 @@ def upload_bond_excel(request):
 
     return render(request, 'jdadev/upload_excel.html', {'form': form})
 
+#/////////////////////////////////////jdadev_clear_bond_data/////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdadev_clear_bond_data(request):
+    if request.method == 'POST':
+        try:
+            # Option 1: Delete only today's records
+            today = timezone.now().date()
+            deleted, _ = BondModel.objects.filter(entry_date=today).delete()
+            messages.success(request, f"Successfully cleared {deleted} today's bond records.")
 
+            # Option 2: Delete records for a specific ticker
+            # ticker = request.POST.get('ticker')
+            # if ticker:
+            #     deleted, _ = StockDailyValuesModel.objects.filter(ticker=ticker).delete()
+            #     messages.success(request, f"Successfully cleared {deleted} records for {ticker}.")
+
+        except Exception as e:
+            messages.error(request, f"Error clearing bond data: {str(e)}")
+
+    return redirect('upload_excel')
 #///////////////////////////////////////upload_mutual_fund_excel//////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_mutual_fund_excel(request):
     #print("463 file upload ")
     if request.method == 'POST':
@@ -1454,6 +1419,28 @@ def upload_mutual_fund_excel(request):
         form = UploadFileForm()
 
     return render(request, 'jdadev/upload_excel.html', {'form': form})
+
+#/////////////////////////////////////jdadev_clear_mutual_fund_data/////////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdadev_clear_mutual_fund_data(request):
+    if request.method == 'POST':
+        try:
+            # Option 1: Delete only today's records
+            today = timezone.now().date()
+            deleted, _ = MutualFundModel.objects.filter(entry_date=today).delete()
+            messages.success(request, f"Successfully cleared {deleted} today's Mutual fund records.")
+
+            # Option 2: Delete records for a specific ticker
+            # ticker = request.POST.get('ticker')
+            # if ticker:
+            #     deleted, _ = StockDailyValuesModel.objects.filter(ticker=ticker).delete()
+            #     messages.success(request, f"Successfully cleared {deleted} records for {ticker}.")
+
+        except Exception as e:
+            messages.error(request, f"Error clearing mutual fund data: {str(e)}")
+
+    return redirect('upload_excel')
 #/////////////////////////////////////// insert_distinct_institution_types //////////////////////////////////////
 # def insert_distinct_institution_types():
 #     # Get distinct institution_type values from BondModel
@@ -1469,6 +1456,8 @@ def upload_mutual_fund_excel(request):
 #         # Handle other types of errors
 #         print(f"An error occurred: {e}")
 #/////////////////////////////////////////insert_distinct_institution_types///////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def insert_distinct_institution_types(request):
     # Get distinct institution_type values from BondModel
     distinct_institution_types = BondModel.objects.values_list('institution_type', flat=True).distinct()
@@ -1490,6 +1479,8 @@ def insert_distinct_institution_types(request):
     return redirect('jdadev_home')
 
 #/////////////////////////////////////////insert_distinct_depositaire///////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def insert_distinct_depositaire(request):
     # Get distinct depositaire values from MutualFundModel
     distinct_depositaires = MutualFundModel.objects.values_list('depositaire', flat=True).distinct().order_by('depositaire')
@@ -1512,6 +1503,8 @@ def insert_distinct_depositaire(request):
     return redirect('jdadev_home')
 
 #/////////////////////////////////////////insert_distinct_sociate_de_gession///////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def insert_distinct_sociate_de_gession(request):
     # Get distinct depositaire values from MutualFundModel
     distinct_sociate_de_gessions = MutualFundModel.objects.values_list('sociate_de_gession', flat=True).distinct()
@@ -1534,6 +1527,9 @@ def insert_distinct_sociate_de_gession(request):
 
 
 #///////////////////////////////////////upload_institution_type_excel//////////////////////////////
+#@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_institution_type_excel(request):
     #print("410 file upload ")
     if request.method == 'POST':
@@ -1600,6 +1596,7 @@ def upload_institution_type_excel(request):
 
     return render(request, 'jdadev/upload_excel.html', {'form': form})
 #/////////////////////////////////jdadev_stock_report////////////////////////////////
+@login_required
 def jdadev_stock_report(request):
     stocks = StockDailyValuesModel.objects.all()
 
@@ -1607,6 +1604,7 @@ def jdadev_stock_report(request):
     return render(request, 'jdadev/jdadev_stock_report.html', context)
 
 #/////////////////////////////////jdadev_bond_report////////////////////////////////
+@login_required
 def jdadev_bond_report(request):
     bonds = BondModel.objects.all()
 
@@ -1615,6 +1613,7 @@ def jdadev_bond_report(request):
 
 
 #/////////////////////////////////jdadev_mututal_fund_report////////////////////////////////
+@login_required
 def jdadev_mutual_fund_report(request):
     mutual_funds = MutualFundModel.objects.all()
 
@@ -1623,7 +1622,7 @@ def jdadev_mutual_fund_report(request):
 
 
 #////////////////////////// jdadev_client_portfolio ///////////////////////
-#@login_required
+@login_required
 #@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdadev_client_portfolio(request):
     now = datetime.now()
