@@ -31,7 +31,7 @@ function get_country_sgi() {
     const comm_sgi = parseFloat(document.getElementById("id_commission_sgi").value) || 0;
 
     // Calculate country_sgi
-    const country_sgi = (1+tps)*comm_sgi;
+    const country_sgi = ((1+tps)*comm_sgi).toFixed(2);
     const country_sgiElement = document.getElementById("id_country_sgi");
 
     // Update displayed value
@@ -59,7 +59,7 @@ function get_total_commussion() {
 
 
     // Calculate total_commission
-    const total_commission = (coun_sgi+comm_brvm+comm_dc_br);
+    const total_commission = (coun_sgi+comm_brvm+comm_dc_br).toFixed(2);
 
     const total_commissionElement = document.getElementById("id_total_commission");
 

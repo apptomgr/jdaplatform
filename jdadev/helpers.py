@@ -9,7 +9,6 @@ class EquityReportRow:
         self.stock = equity_obj.stocks.ticker if equity_obj.stocks else "N/A"
         self.avg_weighted_cost = equity_obj.avg_weighted_cost or Decimal("0.00")
         self.market_price = equity_obj.daily_value or Decimal("0.00")
-        #self.gain_or_loss = (equity_obj.avg_weighted_cost - equity_obj.daily_value) or Decimal("0.00")
         self.target_price = equity_obj.stocks.target_value if equity_obj.stocks and equity_obj.stocks.target_value else Decimal("0.00")
 
         self.nbr_of_stocks = equity_obj.nbr_of_stocks or 0
@@ -25,6 +24,15 @@ class EquityReportRow:
         self.total_commission = self.country_sgi + self.commission_brvm + self.commission_dc_br
         self.gain_or_loss = self.avg_weighted_cost - self.market_price
         self.potential_gain_or_loss = self.target_price - self.market_price
+
+        # Determine selling price (calculated regardless of decision)
         self.selling_price = self.market_price * (1 - self.total_commission)
-        self.sale_amount = self.selling_price * self.nbr_of_stocks
+
+        # First determine the decision
         self.decision = "SELL" if self.potential_gain_or_loss <= 0 else "KEEP"
+
+        # Calculate sale amount based on decision
+        if self.decision == "SELL":
+            self.sale_amount = self.selling_price * self.nbr_of_stocks
+        else:  # KEEP
+            self.sale_amount = Decimal("0.00")  # Set to 0 if decision is KEEP

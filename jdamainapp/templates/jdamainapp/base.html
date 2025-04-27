@@ -95,7 +95,7 @@
                 </li>
 
                 <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
-                    {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
+                    {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs"  or user_grp == "customers"%}
                     <ul>
                         <li><a href="{% url 'jdadev_home' %}"><i class="fas fa-solid fa-briefcase"></i> {% trans 'Portfolio Management' %} </a></li>
                         <li><hr class="my_hr_divider"></li>

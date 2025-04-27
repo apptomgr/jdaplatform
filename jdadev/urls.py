@@ -8,6 +8,7 @@ urlpatterns = [
     path('upload_bond/', views.upload_bond_excel, name='upload_bond_excel'),
     path('upload_mutual_fund_excel/', views.upload_mutual_fund_excel, name='upload_mutual_fund_excel'),
     path('jdadev_stock_report/', views.jdadev_stock_report, name='jdadev_stock_report'),
+    path('jdadev_clear_stock_data', views.jdadev_clear_stock_data, name='jdadev_clear_stock_data'),
 
     #path('upload_institution_type_excel/', views.upload_institution_type_excel, name='upload_institution_type_excel'),
     path('jdadev_bond_report/', views.jdadev_bond_report, name='jdadev_bond_report'),
