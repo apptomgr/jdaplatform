@@ -891,11 +891,13 @@ from decimal import Decimal
 @login_required
 def reload_opcvm(request, soc_text):
     #print(f"261: soc_text:{soc_text}")
+    latest_entry_date = MutualFundModel.objects.order_by('-entry_date').values_list('entry_date', flat=True).first()
     if soc_text == "":
-        opcvm = MutualFundModel.objects.all().order_by('opcvm')
+
+        opcvm = MutualFundModel.objects.filter(entry_date=latest_entry_date).order_by('opcvm')
         #print(f"depositaire all:{depositaire}")
     else:
-        opcvm = MutualFundModel.objects.filter(depositaire=soc_text).order_by('opcvm').distinct()
+        opcvm = MutualFundModel.objects.filter(entry_date=latest_entry_date).filter(depositaire=soc_text).order_by('opcvm').distinct()
         # opc=[]
         # for i in opcvm:
         #     opc.append(i.opcvm)
@@ -1032,6 +1034,12 @@ from django.shortcuts import get_object_or_404
 
 def fetch_stock_data(request):
     stock_id = request.GET.get('stock_id')
+    #print(stock_id)
+
+    #latest_entry_date = StockDailyValuesModel.objects.order_by('-entry_date').values_list('entry_date', flat=True).first()
+
+    #stock = StockDailyValuesModel.objects.filter(entry_date=latest_entry_date).filter(id=stock_id)
+
     stock = get_object_or_404(StockDailyValuesModel, id=stock_id)
     data = {'daily_value': stock.daily_value,}
     #print(f"data: {data}")
@@ -1217,6 +1225,37 @@ def jdadev_clear_stock_data(request):
             messages.error(request, f"Error clearing stock data: {str(e)}")
 
     return redirect('upload_excel')
+
+#/////////////////////////////////////jdadev_clear_custom_profile/////////////////////////////////
+#@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdadev_clear_custom_profile(request):
+    user = request.user  # Get the logged-in user
+    #print(f"user: {user}")
+
+    try:
+        # Option 1: Delete only today's records
+        today = timezone.now().date()
+        deleted, _ = ClientProfileModel.objects.filter(client=user).filter(profile_type='custom').delete()
+        messages.success(request, f"Successfully cleared {deleted} user {user} custom profile records.")
+        #print("del success")
+
+        # Option 2: Delete records for a specific ticker
+        # ticker = request.POST.get('ticker')
+        # if ticker:
+        #     deleted, _ = StockDailyValuesModel.objects.filter(ticker=ticker).delete()
+        #     messages.success(request, f"Successfully cleared {deleted} records for {ticker}.")
+
+    except Exception as e:
+        #print(f"E: {e}")
+        messages.error(request, f"Error clearing custom user profile data: {str(e)}")
+
+    return redirect("jdadev_home")
+    #return redirect('jdadev_overall_portfolio', portfolio_type='custom')
+    #return render(request, 'jdadev/jdadev_overall_portfolio.html', {})
+
+
 #///////////////////////////////////////upload_bond_excel//////////////////////////////
 #@allowed_users(allowed_roles=['admins','managers', 'staffs'])
 @login_required

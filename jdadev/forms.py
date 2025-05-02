@@ -35,7 +35,10 @@ class ClientPortfolioForm(forms.ModelForm):
 
 #///////////////////////////// ClientEquityAndRightsForm //////////////////////////////////////
 class ClientEquityAndRightsForm(forms.ModelForm):
-    stocks = forms.ModelChoiceField(queryset=StockDailyValuesModel.objects.all(), empty_label='Stocks', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm equity_right_id show-tick'}))
+    # Get the latest date when stocks were loaded
+    latest_entry_date = StockDailyValuesModel.objects.order_by('-entry_date').values_list('entry_date', flat=True).first()
+
+    stocks = forms.ModelChoiceField(queryset=StockDailyValuesModel.objects.filter(entry_date=latest_entry_date), empty_label='Stocks', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm equity_right_id show-tick'}))
     nbr_of_stocks = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm nbr_of_stocks_id', 'placeholder':'Number of stocks'}))
     avg_weighted_cost = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm tot_purchase_value_id total_gain_or_loss_id', 'placeholder': 'Average Weighted Cost'}, ))
     daily_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Daily Value', 'readonly': 'readonly'}, ))
@@ -97,10 +100,11 @@ ClientBondsFormset_edit = modelformset_factory(ClientBondsModel, form=ClientBond
 
 #///////////////////////////////////////ClientMutualFundForm//////////////////////////////
 class ClientMutualFundForm(forms.ModelForm):
-    #print("88 ClientMutualFundForm..")
+    # Get the latest date when stocks were loaded
+    latest_entry_date = MutualFundModel.objects.order_by('-entry_date').values_list('entry_date', flat=True).first()
     sociate_de_gession=forms.ModelChoiceField(queryset=SociateDeGessionModel.objects.all().distinct().order_by('sociate_de_gession'),empty_label='Societe De Gessions',label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick','onchange':'return mu_triggerHtmxGet(id);',}))
     depositaire=forms.ModelChoiceField(queryset=DepositaireModel.objects.all().distinct().order_by('depositaire'), empty_label='Depositaire', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick mu_depositaire_id','onchange':'return mu_triggerHtmxGet(id);',}))
-    opcvm = forms.ModelChoiceField(queryset=MutualFundModel.objects.all().distinct().order_by('opcvm'), empty_label='OPCVM', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick','onchange':'mu_triggerHtmxGet(id)'}))
+    opcvm = forms.ModelChoiceField(queryset=MutualFundModel.objects.filter(entry_date=latest_entry_date).distinct().order_by('opcvm'), empty_label='OPCVM', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm  show-tick','onchange':'mu_triggerHtmxGet(id)'}))
     mu_original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly', 'onclick':'mu_triggerHtmxGet_current_value(id)'}))
     mu_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Current Value', 'readonly': 'readonly','onclick':'mu_triggerHtmxGet_nbr_of_share(id)'}))
     mu_nbr_of_share = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares','onblur':'mu_triggerHtmxGet_tot_curr_val(id)'}))
