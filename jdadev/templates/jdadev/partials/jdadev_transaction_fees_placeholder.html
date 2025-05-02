@@ -2,7 +2,7 @@
 
 <div id="transactionFees_form" class="col-4 bg-light border-end" style="min-height: 50vh;">
   <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
-    <form method="post"
+    <form id="transForm" method="post"
           hx-post="{% url 'jdadev_save_transaction_fees' %}"
           hx-target="#transactionFees_form"
           hx-swap="outerHTML" novalidate>
@@ -68,8 +68,13 @@
         <button type="submit" class="btn btn-info">Submit</button>
       </div>
     </form>
+    <!--div class="align-center mt-3">
+      <button class="btn btn-secondary btn-sm" hx-get="{ url 'your_view_name' }" hx-target="#form-container">Clear Data</button>
+    </div-->
   </div>
 </div>
+
+
 
 <!-- Right Panel Container -->
 <!--div class="col-8 d-flex align-items-center justify-content-center" style="max-height: 50vh;">

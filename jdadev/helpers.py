@@ -25,14 +25,42 @@ class EquityReportRow:
         self.gain_or_loss = self.avg_weighted_cost - self.market_price
         self.potential_gain_or_loss = self.target_price - self.market_price
 
-        # Determine selling price (calculated regardless of decision)
+        # Calculate actual loss and potential loss values for the decision formula
+        self.actual_loss = self.fees.actual_loss if hasattr(self.fees, 'actual_loss') and self.fees.actual_loss else Decimal("0.00")
+        self.potential_loss = self.fees.potential_loss if hasattr(self.fees, 'potential_loss') and self.fees.potential_loss else Decimal("0.00")
+
+        # Determine selling price
         self.selling_price = self.market_price * (1 - self.total_commission)
 
-        # First determine the decision
-        self.decision = "SELL" if self.potential_gain_or_loss <= 0 else "KEEP"
+        # Implement the decision logic from the formula
+        self.decision = "KEEP"  # Default to KEEP
+
+        # Only proceed with decision logic if we have shares
+        if self.nbr_of_stocks > 0:
+            condition1 = False
+            condition2 = False
+
+            # Check if (Stock Market Price/Weighted Average Cost<=(1-Actual Loss) AND Stock Target Price/Client Stock Shares<1)
+            if self.avg_weighted_cost > 0:  # Prevent division by zero
+                ratio1 = self.market_price / self.avg_weighted_cost
+                if ratio1 <= (1 - self.actual_loss):
+                    if self.nbr_of_stocks > 0:  # Extra check for division by zero
+                        ratio2 = self.target_price / self.nbr_of_stocks
+                        if ratio2 < 1:
+                            condition1 = True
+
+            # Check if (Stock Target Price/Stock Market Price<=(1-Potential Loss))
+            if self.market_price > 0:  # Prevent division by zero
+                ratio3 = self.target_price / self.market_price
+                if ratio3 <= (1 - self.potential_loss):
+                    condition2 = True
+
+            # If either condition is true, decision is SELL
+            if condition1 or condition2:
+                self.decision = "SELL"
 
         # Calculate sale amount based on decision
         if self.decision == "SELL":
             self.sale_amount = self.selling_price * self.nbr_of_stocks
         else:  # KEEP
-            self.sale_amount = Decimal("0.00")  # Set to 0 if decision is KEEP
+            self.sale_amount = Decimal("0.00")
