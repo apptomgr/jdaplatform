@@ -1,0 +1,43 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
+
+{% load static %}
+
+{% block content %}
+{% include "jdadev/jdadev_breadcrumbs.html" %}
+
+<style>
+.spinner-container {
+    display: none;
+}
+.htmx-request.spinner-container {
+    display: block;
+}
+</style>
+
+
+
+<div class="container mt-2">
+    <div class="text-center">
+        <button
+                class="btn btn-sm btn-info"
+                hx-get="{% url 'jdadev_ai_validator_report' %}"
+                hx-target="#report-container"
+                hx-swap="innerHTML"
+                hx-indicator="#spinner">
+            Generate AI Validation Report
+        </button>
+
+        <!-- Spinner element -->
+        <div id="spinner" class="htmx-indicator spinner-container mt-2">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="report-container" class="mt-2">
+        <!-- Report will be loaded here -->
+    </div>
+</div>
+
+{% endblock %}

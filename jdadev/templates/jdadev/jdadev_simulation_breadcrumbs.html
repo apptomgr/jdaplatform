@@ -1,0 +1,64 @@
+{% load i18n %}
+<style>
+        .dropdown-item:hover {
+            background-color: #3ec1d5; /* Change this to your desired color */
+            color: #fff; /* Change this to your desired text color */
+        }
+
+        .sim_breadcrumb_bg {
+           background-color: #dcdcdc;
+        }
+
+</style>
+
+
+<nav aria-label="breadcrumb" class="ml-3 mr-3">
+    <ol class="breadcrumb sim_breadcrumb_bg">
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_home' %}" onclick="setActive(this)">
+                <span class="text-secondary">Held Securities</span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_target_portfolio' %}" onclick="setActive(this)">
+                <span class="text-secondary">Target Portfolio</span>
+            </a>
+        </li>
+    </ol>
+</nav>
+
+<style>
+  .dropdown-menu .dropdown-item {
+    font-size: 0.785rem; /* Adjust the font size as needed */
+  }
+</style>
+<script>
+        function setActive(clickedLink) {
+            // Remove text-info class from all breadcrumb spans and restore text-secondary
+            document.querySelectorAll('.breadcrumb-item span').forEach(span => {
+                span.classList.remove('text-info');
+                span.classList.add('text-secondary');
+            });
+
+            // Add text-info class to the clicked link's span and remove text-secondary
+            const clickedSpan = clickedLink.querySelector('span');
+            clickedSpan.classList.remove('text-secondary');
+            clickedSpan.classList.add('text-info');
+        }
+
+        // Optional: Set active state based on current URL when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            const breadcrumbLinks = document.querySelectorAll('.breadcrumb-item a');
+
+            breadcrumbLinks.forEach(link => {
+                // You would need to modify this logic based on your actual URL structure
+                const href = link.getAttribute('href');
+                if (currentUrl.includes('simulation_home') && href.includes('jdadev_simulation_home')) {
+                    setActive(link);
+                } else if (currentUrl.includes('target_portfolio') && href.includes('jdadev_simulation_target_portfolio')) {
+                    setActive(link);
+                }
+            });
+        });
+    </script>

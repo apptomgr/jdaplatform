@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render, redirect
 from .forms import UploadFileForm
-from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel,ClientProfileModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel
+from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel,ClientProfileModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel,SimHeldSecuritiesModel
 import pandas as pd  # For working with Excel files
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
@@ -548,9 +548,6 @@ def jdadev_recommendation(request):
     return render(request, 'jdadev/jdadev_recommendation.html', context)
 
 #//////////////////////////////////////save_transaction_fees////////////////////
-from django.shortcuts import render
-#from .forms import TransactionFeesForm
-#from .models import TransactionFees
 @login_required
 def jdadev_save_transaction_fees(request):
     user = request.user
@@ -574,8 +571,9 @@ def jdadev_save_transaction_fees(request):
                 return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
 
             report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
+            save_sim_held_securities(request, report_rows)
             spinner = False;
-            context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner}
+            context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
             return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
             #print("🚨 Form is invalid:")
@@ -587,6 +585,96 @@ def jdadev_save_transaction_fees(request):
         form = TransactionFeesForm(instance=instance)
 
     return render(request, 'jdadev/partials/jdadev_transaction_fees_form.html', {'form': form})
+
+
+
+#//////////////////////////////////save_sim_held_securities/////////////////////////////////
+def save_sim_held_securities(request, report_rows):
+    user = request.user
+
+    # Delete previous entries for this user
+    SimHeldSecuritiesModel.objects.filter(client=user).delete()
+
+    # Bulk create entries from report rows
+    instances = []
+    for row in report_rows:
+        instance = SimHeldSecuritiesModel(
+            client=user,
+            stock=row.stock,
+            nbr_of_stocks=row.nbr_of_stocks,
+            avg_weighted_cost=row.avg_weighted_cost,
+            mkt_price=row.market_price,
+            gain_or_loss=row.gain_or_loss,
+            target_price=row.target_price,
+            potential_gain_or_loss=row.potential_gain_or_loss,
+            selling_price=row.selling_price,
+            decision=row.decision,
+            sale_amount=row.sale_amount
+        )
+        instances.append(instance)
+
+    SimHeldSecuritiesModel.objects.bulk_create(instances)
+
+#//////////////////////////////////jdadev_simulation_home/////////////////////////////////
+@login_required
+def jdadev_simulation_home(request):
+    sim=SimHeldSecuritiesModel.objects.filter(decision='KEEP')
+    context={'sim':sim, 'selected_nav':'text-info'}
+    return render(request, 'jdadev/jdadev_simulation_home.html', context)
+
+#//////////////////////////////////jdadev_simulation_target_portfolio/////////////////////////////////
+def jdadev_simulation_target_portfolio(request):
+    user = request.user
+    client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
+    #print(f"client:{user}")
+    ovp= ClientPortfolioModel.objects.filter(client=user).first() #ovp= Overall portfolio
+    #print(f"before la: {ovp.liquid_assets}")
+    #print(f"before eq: {ovp.equity_and_rights}")
+    client_profiles = ClientProfileModel.objects.filter(client=user) # get existing profiles
+    sim = SimHeldSecuritiesModel.objects.filter(decision='SELL').aggregate(total_amount_sold=Sum('sale_amount'))
+    total_amount_sold = sim['total_amount_sold'] or 0
+    ovp.liquid_assets = ovp.liquid_assets + abs(total_amount_sold)
+    ovp.equity_and_rights = ovp.equity_and_rights - abs(total_amount_sold)
+    #print(f"total_amount: {abs(total_amount_sold)}")
+    #print(f"After la: {ovp.liquid_assets}")
+    #custom_profile = ClientProfileModel.objects.filter(client=user, profile_type='custom')
+    #now get the sale amounts and add them to the liquid asset
+    #remove the equity sold values from the equity and rights client portfolio
+
+    if ovp:
+        la  = ovp.liquid_assets
+        #print(f"la: {la}")
+        eqr = ovp.equity_and_rights
+        #print(f"eqr: {eqr}")
+        bn  = ovp.bonds
+        mu = ovp.mutual_funds
+        tot=la+eqr+bn+mu
+
+        per_tot=(tot/tot)
+        per_la=(la/tot)
+        per_eqr=(eqr/tot)
+        per_bn=(bn/tot)
+        per_mu=(mu/tot)
+
+        per_lst=[]
+        val_lst=[]
+
+        per_lst.append(per_tot*100)
+        per_lst.append(per_la*100)
+        per_lst.append(per_eqr*100)
+        per_lst.append(per_bn*100)
+        per_lst.append(per_mu*100)
+
+        val_lst.append(tot)
+        val_lst.append(la)
+        val_lst.append(eqr)
+        val_lst.append(bn)
+        val_lst.append(mu)
+
+
+    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
+    return render(request, 'jdadev/jdadev_simulation_target_portfolio.html', context)
+
 
 #from django.shortcuts import render, redirect
 #from .forms import ClientProfileModel
@@ -1772,17 +1860,387 @@ def load_cities(request):
     return render(request, 'jdadev/partials/city_dropdown_list_options.html', {'country_id': country_id ,'cities': cities})
 
 
+#///////////////////////////////////////// jdadev_ai_validator_home /////////////////////////////
+@login_required
+@allowed_users(allowed_roles=['admins','managers', 'staffs'])
+def jdadev_ai_validator_home(request):
+    return render(request, "jdadev/jdadev_ai_validator_home.html")
 
 
+#///////////////////////////////////////// jdadev_ai_validator /////////////////////////////
+# views.py
 
-# from .models import City
+
+from django.shortcuts import render
+from .models import StockDailyValuesModel, ValidatorModel
+from openai import OpenAI
+import os
+
+def jdadev_ai_validator_report(request):
+    # Get the latest date
+    latest_entry_date = StockDailyValuesModel.objects.order_by('-entry_date').values_list('entry_date', flat=True).first()
+    print(f"latest_entry_date: {latest_entry_date}")
+
+    if not latest_entry_date:
+        return render(request, "jdadev/partials/jdadev_ai_validator_report.html", {"report": None})
+
+    # Check cache
+    cached = ValidatorModel.objects.filter(entry_date=latest_entry_date).first()
+    #print(f"cached: {cached}")
+    if cached:
+        return render(request, "jdadev/partials/jdadev_ai_validator_report.html", {
+            "report": {
+                "anomalies": cached.anomalies,
+                "missing_data": cached.missing_data,
+                "insights": cached.insights
+            },
+            "cached": True
+        })
+
+    # Gather data
+    data = StockDailyValuesModel.objects.filter(entry_date=latest_entry_date)
+    #print(f"data: {data}")
+    formatted_data = "\n".join([
+        f"{obj.entry_date} | {obj.ticker} | Value: {obj.daily_value} | Target: {obj.target_value}"
+        for obj in data
+    ])
+
+    prompt = f"""
+    Please analyze the following stock data and return a markdown-formatted report with **these exact section headers**:
+    
+    # Anomalies  
+    # Missing Data  
+    # Insights
+    
+    Only include these three sections — even if one is empty, still include its header with a short explanation. Here's the data:
+    
+    {formatted_data}
+    """
+
+    # Call OpenAI
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4",
+        #tools=[{"type": "web_search_preview"}], # Uncomment for web search functionality
+        messages=[
+            {"role": "system", "content": "You are a financial data analyst."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    content = response.choices[0].message.content
+    #print(f"content: {content}")
+
+    anomalies = jdadev_ai_extract_section(content, "Anomalies")
+    missing_data = jdadev_ai_extract_section(content, "Missing Data")
+    insights = jdadev_ai_extract_section(content, "Insights")
+
+    #print(f"anomalies: {anomalies}")
+    #print(f"missing_data: {missing_data}")
+    #print(f"insights: {insights}")
+
+    # Save it
+    ValidatorModel.objects.create(
+        entry_date=latest_entry_date,
+        anomalies=anomalies,
+        missing_data=missing_data,
+        insights=insights
+    )
+
+    return render(request, "jdadev/partials/jdadev_ai_validator_report.html", {
+        "report": {
+            "anomalies": anomalies,
+            "missing_data": missing_data,
+            "insights": insights
+        },
+        "cached": False
+    })
+
+#/////////////////////////////////////////////// jdadev_ai_extract_section //////////////////////////////
+import re
+
+def jdadev_ai_extract_section(content, section_name):
+    pattern = rf"#\s*{section_name}\s*\n(.*?)(?=\n#|$)"
+    match = re.search(pattern, content, re.DOTALL | re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
+#/////////////////////////////////////////////// jdadev_ai_validator //////////////////////////////
+# stock_validator/views.py
+#from django.shortcuts import render
+#from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+#import datetime
+#import pandas as pd
+from openai import OpenAI
+#from .models import StockDailyValuesModel
+
+#@csrf_exempt
+# def jdadev_ai_validator(request):
+#     """
+#     Function-based view for validating stock data using OpenAI.
+#     """
+#     if request.method == 'GET':
+#         # Handle GET requests to show the validation form
+#         return render(request, 'jdadev/jdadev_ai_validator_report.html')
 #
-# def country(request):
-#     country_form = CountryForm()
-#     city_form = CityForm()
-#     return render(request, 'jdadev/country.html', {'country_form': country_form, 'city_form': city_form})
+#     elif request.method == 'POST':
+#         # Handle POST requests to validate the data
+#         try:
+#             data = json.loads(request.body)
+#             date_range = data.get('date_range', 30)  # Default to last 30 days
+#             ticker_filter = data.get('ticker', None)
+#
+#             # Get the data from the database
+#             validation_result = perform_validation(date_range, ticker_filter)
+#
+#             return JsonResponse({
+#                 'success': True,
+#                 'validation_result': validation_result
+#             })
+#
+#         except Exception as e:
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': str(e)
+#             }, status=400)
 
-# def load_cities(request):
-#     country_id = request.GET.get('country')
-#     cities = City.objects.filter(country_id=country_id).order_by('name')
-#     return render(request, 'jdadev/partials/city_dropdown_list_options.html', {'cities': cities})
+# from django.http import JsonResponse
+# from django.views.decorators.http import require_http_methods
+# from django.shortcuts import render
+# import json
+# # views.py
+# # views.py
+# from django.http import JsonResponse
+# from django.views.decorators.http import require_http_methods
+# from django.views.decorators.csrf import ensure_csrf_cookie
+# import json
+#
+# @ensure_csrf_cookie
+# @require_http_methods(["GET", "POST"])
+# def jdadev_ai_validator(request):
+#     if request.method == 'GET':
+#         return render(request, 'jdadev/jdadev_ai_validator_report.html')
+#
+#     elif request.method == 'POST':
+#         try:
+#             # Handle both form data and JSON
+#             if request.content_type == 'application/json':
+#                 data = json.loads(request.body)
+#                 date_range = data.get('date_range', 30)
+#                 ticker_filter = data.get('ticker', None)
+#             else:
+#                 date_range = request.POST.get('date_range', 30)
+#                 ticker_filter = request.POST.get('ticker', None)
+#
+#             # Convert to proper types
+#             try:
+#                 date_range = int(date_range)
+#             except (ValueError, TypeError):
+#                 date_range = 30
+#
+#             if ticker_filter == '':
+#                 ticker_filter = None
+#
+#             # Perform validation
+#             validation_result = perform_validation(date_range, ticker_filter)
+#
+#             return JsonResponse({
+#                 'success': True,
+#                 'validation_result': validation_result
+#             })
+#
+#         except Exception as e:
+#             return JsonResponse({
+#                 'success': False,
+#                 'error': str(e)
+#             }, status=400)
+#
+# def perform_validation(date_range=30, ticker_filter=None):
+#     """
+#     Validate stock data for missing values and generate insights.
+#
+#     Args:
+#         date_range (int): Number of days to look back
+#         ticker_filter (str, optional): Filter for a specific ticker
+#
+#     Returns:
+#         dict: Validation results and insights
+#     """
+#     # Calculate the start date
+#     end_date = datetime.datetime.now().date()
+#     start_date = end_date - datetime.timedelta(days=date_range)
+#
+#     # Query the database
+#     queryset = StockDailyValuesModel.objects.filter(entry_date__gte=start_date)
+#     if ticker_filter:
+#         queryset = queryset.filter(ticker=ticker_filter)
+#
+#     # Convert to DataFrame for easier analysis
+#     stock_data = pd.DataFrame(list(queryset.values()))
+#
+#     if stock_data.empty:
+#         return {
+#             'status': 'error',
+#             'message': 'No data found for the specified criteria'
+#         }
+#
+#     # Check for missing values only
+#     missing_values_check = check_missing_values(stock_data)
+#
+#     # Get OpenAI insights
+#     ai_insights = get_openai_insights(stock_data, missing_values_check)
+#
+#     return {
+#         'status': 'success',
+#         'data_stats': {
+#             'record_count': len(stock_data),
+#             'date_range': {
+#                 'start': start_date.isoformat(),
+#                 'end': end_date.isoformat()
+#             },
+#             'unique_tickers': stock_data['ticker'].nunique(),
+#         },
+#         'missing_values_check': missing_values_check,
+#         'ai_insights': ai_insights
+#     }
+#
+# def check_missing_values(df):
+#     """
+#     Check for missing values in the DataFrame.
+#
+#     Args:
+#         df (DataFrame): The stock data
+#
+#     Returns:
+#         dict: Missing values report
+#     """
+#     results = {
+#         'missing_values': {},
+#         'complete_records_percentage': 0
+#     }
+#
+#     # Check for missing values in each column
+#     missing_counts = df.isnull().sum().to_dict()
+#     results['missing_values'] = {k: int(v) for k, v in missing_counts.items() if v > 0}
+#
+#     # If no missing values were found, add a message
+#     if not results['missing_values']:
+#         results['missing_values_message'] = "No missing values found in the data."
+#
+#     # Calculate percentage of complete records
+#     complete_records = df.dropna().shape[0]
+#     results['complete_records_percentage'] = round((complete_records / df.shape[0]) * 100, 2)
+#
+#     # Missing dates in sequence for each ticker
+#     ticker_groups = df.groupby('ticker')
+#     missing_dates_by_ticker = {}
+#
+#     for ticker, group in ticker_groups:
+#         dates = sorted(group['entry_date'])
+#
+#         if len(dates) <= 1:
+#             continue
+#
+#         # Create a complete date range
+#         date_range = pd.date_range(start=min(dates), end=max(dates), freq='D')
+#         missing_dates = [d.date() for d in date_range if d.date() not in dates]
+#
+#         if missing_dates:
+#             missing_dates_by_ticker[ticker] = [date.isoformat() for date in missing_dates]
+#
+#     if missing_dates_by_ticker:
+#         results['missing_dates'] = missing_dates_by_ticker
+#
+#     return results
+# #////////////
+# def get_openai_insights(df, missing_values_check):
+#     """
+#     Get insights from OpenAI about the stock data.
+#
+#     Args:
+#         df (DataFrame): The stock data
+#         missing_values_check (dict): Results of missing values check
+#
+#     Returns:
+#         dict: OpenAI insights
+#     """
+#     try:
+#         # Initialize OpenAI client
+#         client = OpenAI()
+#
+#         # Enhanced custom JSON encoder function
+#         def custom_encoder(obj):
+#             # Handle NumPy numeric types
+#             if pd.api.types.is_float_dtype(type(obj)) or isinstance(obj, (np.floating, float)):
+#                 return float(obj)
+#             elif pd.api.types.is_integer_dtype(type(obj)) or isinstance(obj, (np.integer, int)):
+#                 return int(obj)
+#             # Handle Decimal types
+#             elif isinstance(obj, Decimal):
+#                 return float(obj)
+#             # Handle date/datetime
+#             elif isinstance(obj, (datetime.date, datetime.datetime, pd.Timestamp)):
+#                 return obj.isoformat()
+#             # Handle pandas NA/null values
+#             elif pd.isna(obj):
+#                 return None
+#             # Handle NumPy array-like objects
+#             elif isinstance(obj, (np.ndarray, pd.Series)):
+#                 return obj.tolist()
+#             # Handle other non-serializable objects
+#             raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
+#
+#         # Prepare data summary for OpenAI
+#         data_summary = {
+#             'ticker_count': int(df['ticker'].nunique()),  # Ensure native Python type
+#             'unique_tickers': df['ticker'].unique().tolist(),
+#             'date_range': {
+#                 'start': custom_encoder(df['entry_date'].min()),
+#                 'end': custom_encoder(df['entry_date'].max())
+#             },
+#             'record_count': int(len(df)),  # Ensure native Python type
+#             'missing_values_check': missing_values_check,
+#             'sample_data': df.head(5).apply(lambda x: x.map(custom_encoder) if pd.api.types.is_numeric_dtype(x) else x)
+#                 .to_dict(orient='records') if not df.empty else []
+#         }
+#
+#         # Calculate summary stats by ticker with type conversion
+#         summary_stats = {}
+#         for ticker in df['ticker'].unique():
+#             ticker_data = df[df['ticker'] == ticker]
+#             if not ticker_data.empty:
+#                 summary_stats[ticker] = {
+#                     'daily_value': {
+#                         'mean': custom_encoder(ticker_data['daily_value'].mean()),
+#                         'min': custom_encoder(ticker_data['daily_value'].min()),
+#                         'max': custom_encoder(ticker_data['daily_value'].max())
+#                     },
+#                     'target_value': {
+#                         'mean': custom_encoder(ticker_data['target_value'].mean()),
+#                         'min': custom_encoder(ticker_data['target_value'].min()),
+#                         'max': custom_encoder(ticker_data['target_value'].max())
+#                     }
+#                 }
+#
+#         data_summary['summary_stats_by_ticker'] = summary_stats
+#
+#         # Create a prompt for OpenAI
+#         prompt = f"""
+#         You are a data quality expert and financial analyst. Analyze the following stock data and provide key insights:
+#
+#         DATA SUMMARY:
+#         {json.dumps(data_summary, indent=2, default=custom_encoder)}
+#
+#         Provide:
+#         1. Data quality assessment: Focus on missing values and their potential impact.
+#         2. Data insights: Provide 3-5 key insights about the stock performance.
+#         3. Recommendations: Suggest any actions to improve data completeness.
+#
+#         Format your response as JSON with these keys: "quality_assessment", "insights", "recommendations".
+#         """
+#
+#         # Make request to OpenAI
+#         response = client.chat.completions.create(
+# 

@@ -81,6 +81,15 @@
     </tr>
     {% endfor %}
     </tbody>
+    <tfoot>
+    <tr>
+      <td class="footer" colspan="12">
+        <!--button type="button" class="btn btn-sm btn-success mt-2 mb-2">Execute Simulated Sale</button-->
+        <button type="button" class="btn btn-sm btn-success mt-2 mb-2" onclick="window.location.href='{% url 'jdadev_simulation_home' %}'">Execute Simulated Sale</button>
+
+      </td>
+    </tr>
+    </tfoot>
   </table>
 </div>
 

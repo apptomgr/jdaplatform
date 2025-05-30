@@ -48,6 +48,9 @@ urlpatterns = [
     path('jdadev_view_client_list', views.jdadev_view_client_list, name='jdadev_view_client_list'),
     path('jdadev_overall_portfolio_by_client/<str:portfolio_type>/<str:client>', views.jdadev_overall_portfolio_by_client, name='jdadev_overall_portfolio_by_client'),
 
+    #Simulation
+    path('jdadev_simulation_home', views.jdadev_simulation_home, name='jdadev_simulation_home'),
+    path('jdadev_simulation_target_portfolio', views.jdadev_simulation_target_portfolio, name='jdadev_simulation_target_portfolio'),
 
     path('jdadev_bonds/res/', views.res, name='res'),
     path('jdadev_bonds/res_htmx/', views.res_htmx, name='res_htmx'),
@@ -62,6 +65,11 @@ urlpatterns = [
     path('insert_distinct_sociate_de_gession', views.insert_distinct_sociate_de_gession, name='insert_distinct_sociate_de_gession'),
 
     path('load_cities/', views.load_cities, name='load_cities'),
+
+    #openai stuff
+    path('jdadev_ai_validator_home/', views.jdadev_ai_validator_home, name='jdadev_ai_validator_home'),
+    path('jdadev_ai_validator_report/', views.jdadev_ai_validator_report, name='jdadev_ai_validator_report'),
+    #path('validate/', views.validate_stock_data, name='validate_stock_data'),
 
     #insert_distinct_institution_types():
 

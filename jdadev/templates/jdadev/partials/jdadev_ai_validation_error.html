@@ -1,0 +1,19 @@
+<div class="validation-error mt-4">
+    <div class="alert alert-danger">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-octagon-fill me-3 fs-4"></i>
+            <div>
+                <h5 class="alert-heading mb-2">Validation Failed</h5>
+                <p class="mb-0">{{ error }}</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-outline-primary"
+            hx-post="{% url 'jdadev_ai_validator' %}"
+            hx-target="#validation-results"
+            hx-indicator=".validate-indicator">
+        <i class="bi bi-arrow-repeat me-2"></i>
+        Try Again
+    </button>
+</div>

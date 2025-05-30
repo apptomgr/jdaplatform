@@ -30,7 +30,8 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investment Case', 'Investment Case')
+        ('Recommendation', 'Recommendation')
+        #('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (
@@ -87,7 +88,8 @@ class PublicationFilterForm(forms.ModelForm):
         ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Investment Case', 'Investment Case')
+        ('Recommendation', 'Recommendation')
+        #('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (

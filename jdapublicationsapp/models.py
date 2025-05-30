@@ -40,7 +40,8 @@ class PublicationModel(models.Model):
         ('Sector Reports', 'Sector Reports'),
         ('Strategic Reports', 'Strategic Reports'),
         ('Economic Notes', 'Economic Notes'),
-        ('Investment Case', 'Investment Case')
+        ('Recommendation', 'Recommendation')
+        #('Investment Case', 'Investment Case')
     )
 
     LANGUAGE_CHOICES = (

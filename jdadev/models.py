@@ -202,6 +202,32 @@ class ClientMutualFundsModel(models.Model):
         verbose_name_plural = 'ClientMutualFundsModel'
         #unique_together = [['ticker', 'entry_date']]
 
+
+#////////////////////////////////////////////SimHeldSecuritiesModel////////////////////////////////
+class SimHeldSecuritiesModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    stock = models.CharField(max_length=100, blank=False, null=False)
+    nbr_of_stocks = models.IntegerField(blank=False, null=False)
+    avg_weighted_cost = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    mkt_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    target_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    potential_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    selling_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+
+    decision = models.CharField(max_length=10, blank=False, null=False)
+    sale_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.stock} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimHeldSecuritiesModel'
+        #unique_together = [['ticker', 'entry_date']]
+
 #//////////////////////////prototype below this line //////////////////////////
 class Daily_stock(models.Model):
     stock = models.CharField(max_length=100)
@@ -220,6 +246,19 @@ class Client_portfolio(models.Model):
         return f'{self.client.username} - {self.stock.stock}'
 
 
+#/////////////////////ValidatorModel/////////////////
+class ValidatorModel(models.Model):
+    entry_date = models.DateField(unique=True)
+    anomalies = models.TextField(blank=True)
+    missing_data = models.TextField(blank=True)
+    insights = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-entry_date']
+
+    def __str__(self):
+        return f"Validation Report for {self.entry_date}"
 #/////////  for testing purposes ////////
 class Option(models.Model):
     name = models.CharField(max_length=100)

@@ -1,0 +1,51 @@
+<div class="container mt-3">
+    {% if report %}
+    {% if cached %}
+    <div class="alert alert-info">Cached report loaded for {{ report.entry_date }}</div>
+    {% else %}
+    <div class="alert alert-success">New report generated for today.</div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Anomalies -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <i class="fas fa-exclamation-triangle"></i> Anomalies
+                </div>
+                <div class="card-body">
+                    <p class="card-text" style="white-space: pre-wrap;">{{ report.anomalies|default:"No anomalies detected." }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Missing Data -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-warning shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fas fa-question-circle"></i> Missing Data
+                </div>
+                <div class="card-body">
+                    <p class="card-text" style="white-space: pre-wrap;">{{ report.missing_data|default:"No missing data found." }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-lightbulb"></i> Insights
+                </div>
+                <div class="card-body">
+                    <p class="card-text" style="white-space: pre-wrap;">{{ report.insights|default:"No specific insights." }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        No report is available for the latest stock data.
+    </div>
+    {% endif %}
+</div>

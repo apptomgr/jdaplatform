@@ -1,0 +1,51 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+
+
+
+<div class="row">
+
+
+  <div class="col-md-12">
+    <!--span class="text-secondary text-center mb-2 mt-2 ">Sale Simulation for {{sim.0.entry_date}} records</span-->
+      {% include 'jdadev/jdadev_simulation_breadcrumbs.html' %}
+
+    <table id="sale_sim" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+      <thead>
+      <tr>
+        <th>Stock</th>
+        <th>Avg Weighted Cost</th>
+        <th>Market Price</th>
+        <th>Gain/Loss</th>
+        <th>Target Price</th>
+        <th>Potential Gain/Loss</th>
+        <th>Selling Price</th>
+        <th>Number of Shares</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for i in sim %}
+      <tr>
+        <td>{{ i.stock }}</td>
+        <td>{{ i.avg_weighted_cost }}</td>
+        <td>{{ i.mkt_price }}</td>
+        <td>{{ i.gain_or_loss }}</td>
+        <td>{{ i.target_price }}</td>
+        <td>{{ i.potential_gain_or_loss }}</td>
+        <td>{{ i.selling_price }}</td>
+        <td>{{ i.nbr_of_stocks }}</td>
+
+      </tr>
+      {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+
+

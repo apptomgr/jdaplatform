@@ -1,0 +1,159 @@
+<div class="validation-results">
+  <!-- Summary Card -->
+  <div class="card mb-4">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        Validation Summary
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-value">{{ validation_result.data_stats.record_count }}</div>
+            <div class="stat-label">Total Records</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-value">{{ validation_result.data_stats.unique_tickers }}</div>
+            <div class="stat-label">Unique Tickers</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Complete Records</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="date-range mt-3">
+        <span class="badge bg-info">
+          <i class="bi bi-calendar me-1"></i>
+          {{ validation_result.data_stats.date_range.start }} to {{ validation_result.data_stats.date_range.end }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Missing Dates Section -->
+  <div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+      <h4 class="mb-0">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Missing Dates Pattern Detected
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-warning">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        All tickers are missing data for: <strong>2025-04-22 to 2025-04-24</strong>
+      </div>
+
+      <div class="affected-tickers">
+        <h5>Affected Tickers ({{ validation_result.missing_values_check.missing_dates|length }} total):</h5>
+        <div class="ticker-badges">
+          {% for ticker in validation_result.missing_values_check.missing_dates.keys|slice:":10" %}
+          <span class="badge bg-secondary me-1 mb-1">{{ ticker }}</span>
+          {% endfor %}
+          {% if validation_result.missing_values_check.missing_dates|length > 10 %}
+          <span class="badge bg-light text-dark">+{{ validation_result.missing_values_check.missing_dates|length|add:"-10" }} more</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Insights Section -->
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">
+        <i class="bi bi-robot me-2"></i>
+        AI Analysis Insights
+      </h4>
+    </div>
+    <div class="card-body">
+      {% if validation_result.ai_insights.quality_assessment == "OpenAI response could not be parsed as JSON" %}
+      <div class="alert alert-info">
+        {{ validation_result.ai_insights.insights }}
+      </div>
+      {% else %}
+      <!-- Data Quality Assessment -->
+      <div class="insight-section mb-4">
+        <h5 class="text-primary">
+          <i class="bi bi-clipboard2-check-fill me-2"></i>
+          Data Quality Assessment
+        </h5>
+        <ul class="list-group list-group-flush">
+          {% for assessment in validation_result.ai_insights.quality_assessment %}
+          <li class="list-group-item">
+            <strong>{{ assessment.title }}:</strong> {{ assessment.text }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Key Insights -->
+      <div class="insight-section">
+        <h5 class="text-primary">
+          <i class="bi bi-lightbulb-fill me-2"></i>
+          Key Insights
+        </h5>
+        <div class="insight-cards">
+          {% for insight in validation_result.ai_insights.insights %}
+          <div class="card mb-2">
+            <div class="card-body">
+              <p class="mb-0">{{ insight.text }}</p>
+              {% if insight.tickers %}
+              <div class="mt-2">
+                <span class="small text-muted">Affected tickers:</span>
+                {% for ticker in insight.tickers %}
+                <span class="badge bg-info me-1">{{ ticker }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .validation-results {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+  }
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0d6efd;
+  }
+  .stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  .ticker-badges {
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 5px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+  }
+  .insight-section {
+    margin-bottom: 2rem;
+  }
+  .insight-cards .card {
+    border-left: 4px solid #0d6efd;
+  }
+</style>

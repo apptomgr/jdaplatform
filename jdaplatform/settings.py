@@ -247,3 +247,5 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
