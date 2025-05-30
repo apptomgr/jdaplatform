@@ -10,4 +10,5 @@ snippets.txt
 runtime.txt
 test.sqbpro
 pdfstuff/
-.venv
+.venv.env
+.env
