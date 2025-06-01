@@ -142,7 +142,7 @@ class ClientPortfolioModel(models.Model):
 #////////////////////////////////////////////ClientEquityAndRightsModel////////////////////////////////
 class ClientEquityAndRightsModel(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    stocks = models.ForeignKey(StockDailyValuesModel, related_name='stocks', on_delete=models.CASCADE, blank=True, null=True)
+    #stocks = models.ForeignKey(StockDailyValuesModel, related_name='stocks', on_delete=models.CASCADE, blank=True, null=True)
     nbr_of_stocks = models.IntegerField(blank=True, null=True)
     avg_weighted_cost = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     daily_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
