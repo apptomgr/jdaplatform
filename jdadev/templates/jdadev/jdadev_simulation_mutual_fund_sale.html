@@ -1,0 +1,122 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block assets %}
+
+workflow_bs -{{workflow_bs}}
+<style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .header .title {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .header .dropdown {
+            margin-left: auto;
+            background-color: #D5D8DC;/*#3ec1d5;*/
+            color: #ffffff;
+            border-radius: 5px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #3ec1d5; /* Change this to your desired color */
+            color: #fff; /* Change this to your desired text color */
+        }
+
+</style>
+<style>
+    .centered-input {
+        text-align: center;
+    }
+</style>
+{% include 'jdadev/jdadev_simulation_breadcrumbs.html' %}
+<div class="card shadow-sm p-2 mb-3 bg-white rounded">
+    <div class="card-header">
+        <div class="header">
+            <div class="title">
+                <h6 class="text-muted"><i class="fa fa-briefcase my_info_txt" aria-hidden="true"></i> {% trans 'Mutual Funds Sale' %}</h6>
+            </div>
+        </div>
+    </div>
+
+    <td class="card-body">
+
+        <table id="res" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+            <tr>
+                {% if workflow_bs == 'Mutual Fund Sale' %}
+                <td><strong>Portfolio Balance Amount: <span class="text-info">{{mu_portfolio_balance|floatformat:2}}</span></strong></td>
+                {% else %}
+                <td><strong>Portfolio Balance Amount: <span class="text-warning">{{mu_portfolio_balance|floatformat:2}}</span></strong></td>
+                {% endif%}
+            </tr>
+            <tr>
+                <th>OPCVM</th>
+                <th>Depositaire</th>
+                <th># Of Shares</th>
+                <th>Market Price</th>
+                <th>Fund Performance</th>
+                <th>Total Current Value</th>
+                <th>% To Be Sold</th>
+                <th># if Sell Share</th>
+                <th>Sale Proceeds</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in mutual_fund_sold_rpt %}
+            <tr>
+                <td>{{i.opcvm}}</td>
+                <td>{{i.depositaire}}</td>
+                <td>{{i.mu_nbr_of_share}}</td>
+                <td>{{i.market_price}}</td>
+                <td>{{i.performance}}</td>
+                <td>{{i.mu_total_current_value}}</td>
+                <td>{{i.percentage_sold}}</td>
+                <th>{{i.nbr_shares_sold}}</th>
+                <th>{{i.sold_amount}}</th>
+
+
+            </tr>
+            {% endfor %}
+
+            {% if workflow_bs == 'Mutual Fund Sale' %}
+
+            <tr>
+                <td colspan="10">
+                    <a
+                            hx-post="{% url 'jdadev_simulation_confirm_mutual_fund_sold' %}"
+                            hx-confirm="Are you sure you want to confirm this sale?"
+                            hx-redirect="{% url 'jdadev_simulation_mutual_fund_sold' %}"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            class="btn btn-success btn-sm text-white">
+                        Confirm Mutual Fund Sale
+                    </a>
+                </td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="10"><a href="{% url 'jdadev_simulation_stock_sale' %}" class="btn btn-info btn-sm">Buy Stocks <i class="fas fa-arrow-right"></i></a></td>
+            </tr>
+            {% endif%}
+
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+
+        <small id="bank_waiter">As of {% now "Y-m-d" %}</small>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+

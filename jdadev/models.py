@@ -26,7 +26,7 @@ class BondModel(models.Model):
     nbr_of_shares = models.IntegerField(blank=True, null=True)
     total_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     institution_type = models.CharField(max_length=100, blank=False, null=False)
-    #institution_type_id = models.ForeignKey(InstitutionTypeModel, on_delete=models.CASCADE, related_name='bonds')
+    yield_to_maturity = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
 
     def __str__(self):
@@ -54,6 +54,7 @@ class MutualFundModel(models.Model):
     current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     nbr_of_share = models.IntegerField(blank=True, null=True)
     total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    performance = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
 
     def __str__(self):
@@ -74,7 +75,7 @@ class ClientProfileModel(models.Model):
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
 
     def __str__(self):
-        return f"Client {self.client} as of {self.entry_date}"
+        return f"Client {self.client} with profile {self.profile_type} as of {self.entry_date}"
 
     def clean(self):
         total = float(self.liquid_assets or 0) + float(self.equity_and_rights or 0) + float(self.bonds or 0) + float(self.mutual_funds or 0)
@@ -150,6 +151,14 @@ class ClientEquityAndRightsModel(models.Model):
     total_purchase_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     total_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
 
+    @property
+    def gp(self):
+        try:
+            return (self.stocks.target_value / self.daily_value) -1
+        except (ZeroDivisionError, TypeError):
+            return None
+
+
     def __str__(self):
          return f"Client {self.client} - Stock: {self.stocks} - Avg Weighted Cost: {self.avg_weighted_cost} - Daily Value: {self.daily_value}"
 
@@ -192,6 +201,7 @@ class ClientMutualFundsModel(models.Model):
     mu_total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     mu_total_purchase_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     mu_total_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    #performance=models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
 
 
@@ -206,7 +216,6 @@ class ClientMutualFundsModel(models.Model):
 #////////////////////////////////////////////SimHeldSecuritiesModel////////////////////////////////
 class SimHeldSecuritiesModel(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-
     stock = models.CharField(max_length=100, blank=False, null=False)
     nbr_of_stocks = models.IntegerField(blank=False, null=False)
     avg_weighted_cost = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
@@ -215,11 +224,11 @@ class SimHeldSecuritiesModel(models.Model):
     target_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     potential_gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     selling_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
-
     decision = models.CharField(max_length=10, blank=False, null=False)
     sale_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    #securities balances
+    #curr_lq_amt = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
     entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
-
 
     def __str__(self):
         return f"Client {self.client} - Security {self.stock} as of {self.entry_date}"
@@ -228,6 +237,148 @@ class SimHeldSecuritiesModel(models.Model):
         verbose_name_plural = 'SimHeldSecuritiesModel'
         #unique_together = [['ticker', 'entry_date']]
 
+# class SimSecuritiesBalanceModel(models.Model):
+#     client = models.ForeignKey(User, on_delete=models.CASCADE)
+#
+#     def __str__(self):
+#         return f"Client {self.client} - Security {self.stock} as of {self.entry_date}"
+#
+#     class Meta:
+#         verbose_name_plural = 'SimSecuritiesBalanceModel'
+
+
+
+#////////////////////////////////////////////SimStockPurchasedModel////////////////////////////////
+class SimStockPurchasedModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    ticker = models.CharField(max_length=100, blank=False, null=False)
+    number_of_share = models.IntegerField(blank=False, null=False)
+    daily_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    target_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    #mkt_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    #gain_or_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    gp = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_purchase = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_to_buy = models.IntegerField(blank=False, null=False)
+    net_purchase_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    purchase_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.ticker} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimStockPurchasedModel'
+        #unique_together = [['ticker', 'entry_date']]
+
+#////////////////////////////////////////////SimBondPurchasedModel////////////////////////////////
+class SimBondPurchasedModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    bond_name = models.CharField(max_length=100, blank=False, null=False)
+    nbr_of_shares = models.IntegerField(blank=False, null=False)
+    current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    yield_to_maturity = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_purchase = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_to_buy = models.IntegerField(blank=False, null=False)
+    net_purchase_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    purchase_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.bond_name} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimBondPurchasedModel'
+        #unique_together = [['ticker', 'entry_date']]
+
+#////////////////////////////////////////////SimMutualFundPurchasedModel////////////////////////////////
+class SimMutualFundPurchasedModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    opcvm = models.CharField(max_length=100, blank=False, null=False)
+    mu_nbr_of_share = models.IntegerField(blank=False, null=False)
+    mu_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    performance = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_purchase = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_to_buy = models.IntegerField(blank=False, null=False)
+    net_purchase_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    purchase_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.opcvm} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimMutualFundPurchasedModel'
+
+
+
+
+#////////////////////////////////////////////SimStockSoldModel////////////////////////////////
+class SimStockSoldModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    ticker = models.CharField(max_length=100, blank=False, null=False)
+    number_of_share = models.IntegerField(blank=False, null=False)
+    daily_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    target_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    gp = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_sold = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_sold = models.IntegerField(blank=False, null=False)
+    net_sell_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    sold_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.ticker} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimStockPurchasedModel'
+
+#////////////////////////////////////////////SimBondSoldModel////////////////////////////////
+class SimBondSoldModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    bond_name = models.CharField(max_length=100, blank=False, null=False)
+    nbr_of_shares = models.IntegerField(blank=False, null=False)
+    current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    yield_to_maturity = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_sold = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_sold = models.IntegerField(blank=False, null=False)
+    net_sell_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    sold_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.bond_name} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimBondPurchasedModel'
+        #unique_together = [['ticker', 'entry_date']]
+
+
+#////////////////////////////////////////////SimMutualFundSoldModel////////////////////////////////
+class SimMutualFundSoldModel(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    opcvm = models.CharField(max_length=100, blank=False, null=False)
+    #depositaire = models.ForeignKey(DepositaireModel, related_name='depositaires', on_delete=models.CASCADE, blank=True, null=True)
+    mu_nbr_of_share = models.IntegerField(blank=False, null=False)
+    mu_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    performance = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    total_current_value = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    percentage_sold = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    nbr_shares_sold = models.IntegerField(blank=False, null=False)
+    net_sell_price = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    sold_amount = models.DecimalField(default=0.00, max_digits=18, decimal_places=2, blank=True, null=True)
+    entry_date = models.DateField(auto_now_add=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"Client {self.client} - Security {self.opcvm} as of {self.entry_date}"
+
+    class Meta:
+        verbose_name_plural = 'SimMutualFundSoldModel'
 #//////////////////////////prototype below this line //////////////////////////
 class Daily_stock(models.Model):
     stock = models.CharField(max_length=100)

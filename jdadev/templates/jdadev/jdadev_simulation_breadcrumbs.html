@@ -20,10 +20,47 @@
             </a>
         </li>
         <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_portfolio_after_sale' %}" onclick="setActive(this)">
+                <span class="text-secondary">Portfolio After Sale</span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
             <a href="{% url 'jdadev_simulation_target_portfolio' %}" onclick="setActive(this)">
                 <span class="text-secondary">Target Portfolio</span>
             </a>
         </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_stock_sold' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Stock Sold </span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_bond_sold' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Bond Sold </span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_mutual_fund_sold' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Mutual Fund  Sold </span>
+            </a>
+        </li>
+
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_stock_purchased' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Stock Purchased </span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_bond_purchased' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Bond Purchased </span>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'jdadev_simulation_mutual_fund_purchased' %}" onclick="setActive(this)">
+                <span class="text-secondary">Simulated Mutual Fund Purchased </span>
+            </a>
+        </li>
+
     </ol>
 </nav>
 
@@ -56,9 +93,31 @@
                 const href = link.getAttribute('href');
                 if (currentUrl.includes('simulation_home') && href.includes('jdadev_simulation_home')) {
                     setActive(link);
-                } else if (currentUrl.includes('target_portfolio') && href.includes('jdadev_simulation_target_portfolio')) {
+                } else if (currentUrl.includes('portfolio_after_sale') && href.includes('jdadev_simulation_portfolio_after_sale')) {
                     setActive(link);
                 }
+                else if (currentUrl.includes('target_portfolio') && href.includes('jdadev_simulation_target_portfolio')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('simulation_stock_purchased') && href.includes('jdadev_simulation_stock_purchased')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('simulation_bond_purchased') && href.includes('jdadev_simulation_bond_purchased')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('simulation_mutual_fund_purchased') && href.includes('jdadev_simulation_mutual_fund_purchased')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('jdadev_simulation_stock_sold') && href.includes('jdadev_simulation_stock_sold')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('jdadev_simulation_mutual_fund_sold') && href.includes('jdadev_simulation_mutual_fund_sold')) {
+                    setActive(link);
+                }
+                else if (currentUrl.includes('jdadev_simulation_bond_sold') && href.includes('jdadev_simulation_bond_solds')) {
+                    setActive(link);
+                }
+
             });
         });
     </script>

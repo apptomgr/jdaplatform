@@ -1,0 +1,132 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block assets %}
+<style xmlns:hx-on="http://www.w3.org/1999/xhtml">
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .header .title {
+        flex-grow: 1;
+        text-align: center;
+    }
+    .header .dropdown {
+        margin-left: auto;
+        background-color: #D5D8DC;
+        color: #ffffff;
+        border-radius: 5px;
+    }
+    .dropdown-item:hover {
+        background-color: #3ec1d5;
+        color: #fff;
+    }
+    .centered-input {
+        text-align: center;
+    }
+</style>
+
+{% include 'jdadev/jdadev_simulation_breadcrumbs.html' %}
+
+<div class="card shadow-sm p-2 mb-3 bg-white rounded">
+    <div class="card-header">
+        <div class="header">
+            <div class="title">
+                <h6 class="text-muted">
+                    <i class="fa fa-briefcase my_info_txt" aria-hidden="true"></i> {% trans 'Mutual Fund Purchase Simulation' %}
+                </h6>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center">
+            <div class="mt-1">
+                <strong>
+                    {% trans 'Portfolio Balance:' %}
+                    <span class="text-info">{{ client_portfolio_balance|floatformat:2 }}</span>
+                </strong>
+            </div>
+
+            <div class="ml-2">
+                <input
+                        type="number"
+                        name="mutual_fund_count"
+                        id="mutual_fundCountInput"
+                        placeholder="{% trans '# of mutual_funds to buy' %}"
+                        class="form-control form-control-sm"
+                        hx-get="{% url 'jdadev_simulation_get_number_of_mutual_funds' client_portfolio_balance %}"
+                        hx-trigger="blur changed delay:300ms"
+                        hx-target="#mutual_fund-columns"
+                        hx-swap="innerHTML"
+                />
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th>{% trans 'Mutual Funds' %}</th>
+            <th>{% trans 'Number of Shares' %}</th>
+            <th>{% trans 'Market Price' %}</th>
+            <th>{% trans 'Fund Performance' %}</th>
+            <th>{% trans 'Total Current Value' %}</th>
+            <th>{% trans '% To Be Purchased' %}</th>
+            <th>{% trans '# of Shares to Buy' %}</th>
+            <th>{% trans 'Net Purchase Price' %}</th>
+            <th>{% trans 'Purchase Amount' %}</th>
+        </tr>
+        </thead>
+        <tbody id="mutual_fund-columns">
+        <!-- HTMX will dynamically load rows from jdadev_simulation_get_number_of_mututal_funds -->
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="10" class="text-center">
+                <form
+                        id="buyMutualFundForm"
+                        hx-post="{% url 'jdadev_simulation_confirm_mutual_fund_purchase' %}"
+                        hx-target="#purchase-result"
+                        hx-swap="innerHTML"
+                >
+                    {% csrf_token %}
+                    <input type="hidden" name="portfolio_id" value="{{ portfolio.id }}">
+
+                    <!-- hidden by default; shown after HTMX swap -->
+                    <button
+                            type="button"
+                            class="btn btn-success btn-sm"
+                            id="purchaseButton"
+                            style="display:none;"
+                            onclick="if (confirm('{% filter escapejs %}{% trans 'Are you sure you want to purchase these mutual funds?' %}{% endfilter %}')) {this.closest('form').requestSubmit();}">
+                        {% trans 'Confirm Purchase' %}
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div id="purchase-result" class="mt-2">
+        <!-- Confirmation result will be injected here -->
+    </div>
+
+    <div class="card-footer text-muted">
+        <small>{% trans 'As of' %} {% now "Y-m-d" %}</small>
+    </div>
+</div>
+
+
+<script>
+  // Show button only after the rows are swapped in
+  document.body.addEventListener('htmx:afterSwap', function (evt) {
+    if (evt.detail.target && evt.detail.target.id === 'mutual_fund-columns') {
+      document.getElementById('purchaseButton').style.display = 'inline-block';
+    }
+  });
+</script>
+
+{% endblock %}

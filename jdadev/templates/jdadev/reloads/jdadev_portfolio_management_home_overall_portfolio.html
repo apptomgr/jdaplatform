@@ -28,7 +28,7 @@
       <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_bonds' %}">Bonds</a></li>
       <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_mutual_funds' %}">Mutual Funds</a></li>
       <li class="nav-item"><a class="nav-link ovp active" href="{% url 'jdadev_overall_portfolio' 'overall_portfolio' %}">Overall Portfolio</a></li>
-      <li class="nav-item"><a class="nav-link active" href="{% url 'jdadev_simulation_home'%}">Buy/Sell Simulation</a></li>
+      <li class="nav-item"><a class="nav-link active text-secondary" href="{% url 'jdadev_simulation_home'%}">Simulation</a></li>
     </ul>
   </div>
   {% block assets %}
@@ -201,65 +201,7 @@ $(document).ready(function() {
 
 {% endblock %}
 
-<!--////////////////////////// bonds_institution_type_id ////////////////////////////////////////-->
-<!--script src="https://unpkg.com/htmx.org@1.6.1/dist/htmx.min.js"></script>
-<script>
-    document.addEventListener('htmx:load', function() {
-        document.querySelectorAll('.bonds_institution_type_id').forEach(function(element) {
-            element.addEventListener('change', function() {
-                var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
-                var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
 
-                var e = document.getElementById(formId);
-                var dspText = e.options[e.selectedIndex].text;
-
-                var institutionTypeId = this.value;
-                var form = this.closest('form');
-
-                form.querySelector('#formset-container').setAttribute('hx-get', `{ url 'reload_bonds_formset' %}?institution_type_id=${institutionTypeId}&form_index=${formIndex}`);
-                form.querySelector('#formset-container').dispatchEvent(new Event('change'));
-            });
-        });
-    });
-</script-->
-
-<!--script type="text/javascript">
-$(document).ready(function() {
-    $('.bonds_institution_type_id').change(function() {
-        var formId = $(this).closest('.form-row').find('[id^="id_form-"]').attr('id');
-        var formIndex = formId.match(/\d+/)[0]; // Extract numerical part from form ID
-
-        var e = document.getElementById(formId);
-        var dspText = e.options[e.selectedIndex].text;
-        alert("Form index: " + formIndex);
-        //alert("FormId: " + formId)
-        //alert("dspText "+dspText);
-        // Dynamically set HTMX attributes for symbol field
-        //id_form-0-symbol
-        var symbolField = document.getElementById('id_form-'+formIndex+'-symbol').value;
-        //alert("symbolField:"+symbolField);
-        symbolField.setAttribute('hx-get', 'jdadev_bonds/load-symbols/?symb_text=dspText');
-        symbolField.setAttribute('hx-target', '#id_form-${formIndex}-symbol');
-
-                // Trigger the HTMX request manually
-        symbolField.dispatchEvent(new Event('htmx:configRequest'));
-
-        // Add an event listener for the symbol field to update the bond_name field
-        $(symbolField).change(function() {
-            var bondNameField = document.getElementById(`id_form-${formIndex}-bond_name`);
-            bondNameField.setAttribute('hx-get', `/load-bond-names/?index=${formIndex}&symbol=${symbolField.value}`);
-            bondNameField.setAttribute('hx-target', `#id_form-${formIndex}-bond_name`);
-
-            // Trigger the HTMX request manually
-            bondNameField.dispatchEvent(new Event('htmx:configRequest'));
-        });
-
-        // Trigger the initial change event to load symbols
-        $(symbolField).trigger('change');
-
-    });
-});
-</script-->
 
 
 

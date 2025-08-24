@@ -22,6 +22,7 @@
         <th>Number of Share</th>
         <th>Total Value</th>
         <th>Institution Type</th>
+        <th>Yield To Maturity</th>
         <th>Entry Date</th>
       </tr>
       </thead>
@@ -47,6 +48,7 @@
         <td>{{ bond.total_value }}</td>
         {% endif%}
         <td>{{ bond.institution_type }}</td>
+        <td>{{bond.yield_to_maturity}}</td>
         <td>{{ bond.entry_date }}</td>
 
       </tr>

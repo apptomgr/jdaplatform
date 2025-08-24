@@ -18,6 +18,7 @@
         <th>Original Value</th>
         <th>Current Value</th>
         <th>Number of Share</th>
+        <th>Performance</th>
         <th>Entry Date</th>
       </tr>
       </thead>
@@ -40,8 +41,9 @@
         {% else%}
         <td>{{ i.nbr_of_share }}</td>
         {% endif%}
-
+        <td>{{i.performance}}</td>
         <td>{{ i.entry_date }}</td>
+
 
       </tr>
       {% endfor %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import StockDailyValuesModel, BondModel,  ClientPortfolioModel, ClientEquityAndRightsModel, ClientBondsModel, Daily_stock, Option, \
-    Country, City, MutualFundModel, DepositaireModel,ClientMutualFundsModel, ClientProfileModel, TransactionFeesModel
+    Country, City, MutualFundModel, DepositaireModel,ClientMutualFundsModel, ClientProfileModel, TransactionFeesModel, SimHeldSecuritiesModel,SimStockPurchasedModel
 
 
 admin.site.register(StockDailyValuesModel)
@@ -15,6 +15,8 @@ admin.site.register(DepositaireModel)
 admin.site.register(ClientMutualFundsModel)
 
 admin.site.register(TransactionFeesModel)
+admin.site.register(SimHeldSecuritiesModel)
+admin.site.register(SimStockPurchasedModel)
 
 admin.site.register(Daily_stock)
 admin.site.register(Option)

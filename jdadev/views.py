@@ -1,7 +1,7 @@
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from .forms import UploadFileForm
-from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel,ClientProfileModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel,SimHeldSecuritiesModel
+from .models import StockDailyValuesModel, BondModel, MutualFundModel, ClientPortfolioModel,ClientProfileModel, ClientMutualFundsModel, DepositaireModel, SociateDeGessionModel, TransactionFeesModel,SimHeldSecuritiesModel, SimStockPurchasedModel, SimBondPurchasedModel, SimMutualFundPurchasedModel, SimStockSoldModel,SimBondSoldModel, SimMutualFundSoldModel
 import pandas as pd  # For working with Excel files
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
@@ -18,6 +18,10 @@ from django.db.models import Sum
 from django.contrib.auth.models import User
 from .helpers import EquityReportRow
 from django.utils import timezone
+from django.db.models import F, ExpressionWrapper, DecimalField
+from django.db.models import OuterRef, Subquery, IntegerField, DecimalField, FloatField, Value, ExpressionWrapper, F
+from django.db.models.functions import Coalesce
+from decimal import Decimal, ROUND_DOWN
 
 #/////////////////////////////////jdadev_home////////////////////
 @login_required
@@ -171,7 +175,6 @@ def jdadev_equity_and_rights(request):
     update_equity_and_rights(request, total_value_sum)
     #print(f"else: {stock_formset}")
     context = {'form': form, 'client_portfolio': client_portfolio,'client':user, 'stock_formset':stock_formset}
-    #context = {'form': form, 'client':user,}
     return render(request, 'jdadev/jdadev_equity_and_rights.html', context)
 
 #/////////////////////////////////jdadev_bonds///////////////////////////
@@ -317,8 +320,13 @@ def jdadev_overall_portfolio(request, portfolio_type):
     ovp= ClientPortfolioModel.objects.filter(client=user).first()
     #print(f"ovp:{ovp}")
     client_profiles = None #ClientProfileModel.objects.filter(client=user) # get existing profiles
-    custom_profile = ClientProfileModel.objects.filter(client=user, profile_type='custom')
-
+    custom_profile = None#ClientProfileModel.objects.filter(client=user, profile_type='custom')
+    print(f"321 client_profiles:{client_profiles}")
+    #Check for the latest saved client profile
+    lcp = None
+    if ClientProfileModel.objects.count() >0:
+        lcp = ClientProfileModel.objects.latest('id')
+        print(f"324:lcp for client {lcp.client} - Profile is {lcp.profile_type}")
     if ovp:
         la  = ovp.liquid_assets
         eqr = ovp.equity_and_rights
@@ -339,6 +347,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
         per_lst=[]
         val_lst=[]
         if portfolio_type == 'overall_portfolio':
+            print(f"345: portfolio_type - {portfolio_type}")
             per_lst.append(per_tot*100)
             per_lst.append(per_la*100)
             per_lst.append(per_eqr*100)
@@ -350,8 +359,10 @@ def jdadev_overall_portfolio(request, portfolio_type):
             val_lst.append(eqr)
             val_lst.append(bn)
             val_lst.append(mu)
+            #print(f"357:lcp for client {lcp.client} - {lcp.profile_type} ")
 
         elif portfolio_type == 'dynamic':
+            print("368 - set dynamic")
             val_lst.append(tot)
             val_lst.append(tot*Decimal(.05)) #
             val_lst.append(tot*Decimal(.55))
@@ -365,14 +376,18 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.20*100)
             #save the profiles in ClientProfileModel if they don't exist'
             # First check if it exists
-            dynamic_pro=ClientProfileModel.objects.filter(client=user, profile_type='dynamic').exists()
-            if not dynamic_pro:
-                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #dynamic_pro=ClientProfileModel.objects.filter(client=user, profile_type='dynamic').exists()
+            #print(f"375 dynamic_pro exists: {dynamic_pro}")
+            #if not dynamic_pro:
+            #create new dynamic profile for the customer
+            ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #print(f"378:lcp for client {lcp.client} - Profile is {lcp.profile_type}")
             #pull selected client profile from the database
-            client_profiles=ClientProfileModel.objects.filter(profile_type='dynamic')
-            #print(client_profiles[0].liquid_assets)
+            #client_profiles=ClientProfileModel.objects.filter(profile_type='dynamic')
+            #print(f"379:{client_profiles.profile_type}")
 
         elif portfolio_type == 'moderate':
+            #print("385 - set moderate")
             val_lst.append(tot)
             val_lst.append(tot*Decimal(.05))
             val_lst.append(tot*Decimal(.40))
@@ -385,16 +400,19 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.20*100)
             #save the profiles in ClientProfileModel if they don't exist'
             # First check if it exists
-            moderate_pro=ClientProfileModel.objects.filter(client=user, profile_type='moderate').exists()
-            if not moderate_pro:
-                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
-
+            #moderate_pro=ClientProfileModel.objects.filter(client=user, profile_type='moderate').exists()
+            #print(f"396 moderate_pro exists: {moderate_pro}")
+            #if not moderate_pro:
+            ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #pull selected client profile from the database
+            #client_profiles=ClientProfileModel.objects.filter(profile_type='moderate')
+            #print(f"401:{client_profiles}")
         elif portfolio_type == 'prudent':
+            #print("406 - set prudent")
             val_lst.append(tot)
             val_lst.append(tot*Decimal(.05))
             val_lst.append(tot*Decimal(.20))
             val_lst.append(tot*Decimal(.55))
-            val_lst.append(tot*Decimal(.20))
             per_lst.append((tot/tot)*100)
             per_lst.append(.05*100)
             per_lst.append(.20*100)
@@ -402,15 +420,19 @@ def jdadev_overall_portfolio(request, portfolio_type):
             per_lst.append(.20*100)
             #save the profiles in ClientProfileModel if they don't exist'
             # First check if it exists
-            prudent_pro=ClientProfileModel.objects.filter(client=user, profile_type='prudent').exists()
-            if not prudent_pro:
-                ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #prudent_pro=ClientProfileModel.objects.filter(client=user, profile_type='prudent').exists()
+            #if not prudent_pro:
+            ClientProfileModel.objects.create(client=user, liquid_assets=per_lst[1], equity_and_rights=per_lst[2], bonds=per_lst[3], mutual_funds=per_lst[4], profile_type=portfolio_type)
+            #pull selected client profile from the database
+            #client_profiles=ClientProfileModel.objects.filter(profile_type='prudent')
+            #print(f"414:{client_profiles}")
             #print(f"Dynamic_profile:{ClientProfileModel.objects.all()}")
             #return redirect('jdadev_recommendation')
         elif portfolio_type == 'custom':
             #pull selected client profile from the database
+            #print("429 - set custom")
             client_profiles=ClientProfileModel.objects.filter(profile_type='custom').order_by('-entry_date').first()
-            #print(f"409 - client_profiles: {client_profiles.bonds}")
+            #print(f"431 - client_profiles: {client_profiles}")
             #last_custom_profile = ClientProfileModel.objects.filter(client=client_portfolio).latest()
             #return redirect('jdadev_overall_portfolio', portfolio_type='custom')
             #per_la = client_profiles.liquid_assets
@@ -477,14 +499,22 @@ def jdadev_overall_portfolio(request, portfolio_type):
 
 
                         #return redirect('jdadev_overall_portfolio', portfolio_type='custom_set')
+
                     context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'custom_profile':custom_profile,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
                     return render(request, 'jdadev/jdadev_overall_portfolio.html', context) #{'custom_form': custom_form, 'val_lst': [0,0,0,0,0],  # or actual values 'per_lst': [0,0,0,0],'ovp': None,})
             else:
                 custom_form = ClientProfileForm()
     else:
+        #print("492- else")
         return redirect('jdadev_home')
-    #print(f"client_profiles:{client_profiles.bonds}")
-    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'custom_profile':custom_profile,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
+
+    #lcp = ClientProfileModel.objects.latest('id')
+    if ClientProfileModel.objects.count() >0:
+        lcp = ClientProfileModel.objects.latest('id')
+    #print(f"324:lcp for client {lcp.client} - Profile is {lcp.profile_type}")
+    #print(f"504 lcp:{lcp} type: {lcp.profile_type}")
+    #print(f"505 client_profiles:{client_profiles}")
+    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'custom_profile':custom_profile,'lcp':lcp, 'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, 'custom_form': custom_form}
     return render(request, 'jdadev/jdadev_overall_portfolio.html', context)
 
 #////////////////////////////////////////jdadev_set_custom_profile////////////////////////////////////////
@@ -554,6 +584,7 @@ def jdadev_save_transaction_fees(request):
     #client_eq_portfolio=ClientEquityAndRightsModel.objects.filter(client=user)
     portfolio = ClientEquityAndRightsModel.objects.filter(client=request.user)
     latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
+    #print(f"583 - latest_fees: {latest_fees}")
 
     if request.method == 'POST':
         instance = TransactionFeesModel.objects.filter(client=user).last()
@@ -571,6 +602,7 @@ def jdadev_save_transaction_fees(request):
                 return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
 
             report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
+            #print(f"600 - report_rows: {report_rows}")
             save_sim_held_securities(request, report_rows)
             spinner = False;
             context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
@@ -586,12 +618,9 @@ def jdadev_save_transaction_fees(request):
 
     return render(request, 'jdadev/partials/jdadev_transaction_fees_form.html', {'form': form})
 
-
-
 #//////////////////////////////////save_sim_held_securities/////////////////////////////////
 def save_sim_held_securities(request, report_rows):
     user = request.user
-
     # Delete previous entries for this user
     SimHeldSecuritiesModel.objects.filter(client=user).delete()
 
@@ -618,12 +647,12 @@ def save_sim_held_securities(request, report_rows):
 #//////////////////////////////////jdadev_simulation_home/////////////////////////////////
 @login_required
 def jdadev_simulation_home(request):
-    sim=SimHeldSecuritiesModel.objects.filter(decision='KEEP')
-    context={'sim':sim, 'selected_nav':'text-info'}
+    sim=SimHeldSecuritiesModel.objects.filter(client=request.user).filter(decision='KEEP')
+    context={'sim':sim, 'selected_nav':'text-info', 'client': request.user}
     return render(request, 'jdadev/jdadev_simulation_home.html', context)
 
-#//////////////////////////////////jdadev_simulation_target_portfolio/////////////////////////////////
-def jdadev_simulation_target_portfolio(request):
+#//////////////////////////////////jdadev_simulation_portfolio_after_sale/////////////////////////////////
+def jdadev_simulation_portfolio_after_sale(request):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
     #print(f"client:{user}")
@@ -631,8 +660,9 @@ def jdadev_simulation_target_portfolio(request):
     #print(f"before la: {ovp.liquid_assets}")
     #print(f"before eq: {ovp.equity_and_rights}")
     client_profiles = ClientProfileModel.objects.filter(client=user) # get existing profiles
-    sim = SimHeldSecuritiesModel.objects.filter(decision='SELL').aggregate(total_amount_sold=Sum('sale_amount'))
+    sim = SimHeldSecuritiesModel.objects.filter(client=user).filter(decision='SELL').aggregate(total_amount_sold=Sum('sale_amount'))
     total_amount_sold = sim['total_amount_sold'] or 0
+    #print(f"total_amount_sold: {total_amount_sold}")
     ovp.liquid_assets = ovp.liquid_assets + abs(total_amount_sold)
     ovp.equity_and_rights = ovp.equity_and_rights - abs(total_amount_sold)
     #print(f"total_amount: {abs(total_amount_sold)}")
@@ -673,45 +703,1263 @@ def jdadev_simulation_target_portfolio(request):
 
 
     context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
+    return render(request, 'jdadev/jdadev_simulation_portfolio_after_sale.html', context)
+
+#//////////////////////////////////jdadev_simulation_target_portfolio/////////////////////////////////
+def jdadev_simulation_target_portfolio(request):
+    user = request.user
+    client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
+    #print(f"client:{user}")
+    ovp= ClientPortfolioModel.objects.filter(client=user).first() #ovp= Overall portfolio
+    #orig_eqr = ovp.equity_and_rights
+    #print(f"714 orig_eqr: {orig_eqr}")
+    client_profiles = ClientProfileModel.objects.filter(client=user) # get existing profiles
+    sim = SimHeldSecuritiesModel.objects.filter(decision='SELL').aggregate(total_amount_sold=Sum('sale_amount'))
+    total_amount_sold = sim['total_amount_sold'] or 0
+    ovp.liquid_assets = ovp.liquid_assets + abs(total_amount_sold)
+    #print(f"before eq: {ovp.equity_and_rights}")
+    ovp.equity_and_rights = ovp.equity_and_rights - abs(total_amount_sold)
+
+    # After Sale eqr
+    lq_after_sale = ovp.liquid_assets
+    eqr_after_sale = ovp.equity_and_rights
+    bn_after_sale = ovp.bonds
+    mu_after_sale = ovp.mutual_funds
+    #print(f"after after_sale_eqr: {eqr_after_sale}")
+    #print(f"after after_sale_bn: {bn_after_sale}")
+    #print(f"after after_sale_mu: {mu_after_sale}")
+    #store port after sale info to pass as params
+
+    sec_port_aft_sale =[]
+    sec_port_aft_sale.append(float(lq_after_sale))
+    sec_port_aft_sale.append(float(eqr_after_sale))
+    sec_port_aft_sale.append(float(bn_after_sale))
+    sec_port_aft_sale.append(float(mu_after_sale))
+    #print(f"734- sec_port_aft_sale:{sec_port_aft_sale}")
+    #eqr_tgt_port = 0
+    #print(f"total_amount: {abs(total_amount_sold)}")
+    #print(f"After la: {ovp.liquid_assets}")
+    #custom_profile = ClientProfileModel.objects.filter(client=user, profile_type='custom')
+    #now get the sale amounts and add them to the liquid asset
+    #remove the equity sold values from the equity and rights client portfolio
+
+    #workflow_next_step
+    workflow_next_step = ""
+    workflow_bs = [] #0 #[0,1,2] -> [Do nothing, B, S]
+
+    #init the sec_tgt_ports (eq, bn and mu) to pass as a param to the next worklfow - Stock Sale
+    sec_tgt_ports =[]
+    # get client lcp (latest client profile) saved
+    lcp = None
+    if ClientProfileModel.objects.count() >0:
+        lcp = ClientProfileModel.objects.latest('id')
+
+    print(f"759 - lcp: {lcp.profile_type}")
+
+    if ovp:
+        la  = ovp.liquid_assets
+        eqr = ovp.equity_and_rights
+        #print(f"eqr: {eqr}")
+        bn  = ovp.bonds
+        mu = ovp.mutual_funds
+        tot=la+eqr+bn+mu
+        #print(f"tot: {tot}")
+
+        per_lst=[]
+        val_lst=[]
+        if lcp.profile_type == 'dynamic':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.05))
+            val_lst.append(tot*Decimal(.55))
+            val_lst.append(tot*Decimal(.20))
+            val_lst.append(tot*Decimal(.20))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.05*100)
+            per_lst.append(.55*100)
+            per_lst.append(.20*100)
+            per_lst.append(.20*100)
+            eqr_tgt_port = val_lst[2]
+            bn_tgt_port = val_lst[3]
+            mu_tgt_port = val_lst[4]
+
+            sec_tgt_ports.append(float(eqr_tgt_port))
+            sec_tgt_ports.append(float(bn_tgt_port))
+            sec_tgt_ports.append(float(mu_tgt_port))
+
+        elif lcp.profile_type == 'moderate':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.05))
+            val_lst.append(tot*Decimal(.40))
+            val_lst.append(tot*Decimal(.35))
+            val_lst.append(tot*Decimal(.20))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.05*100)
+            per_lst.append(.40*100)
+            per_lst.append(.35*100)
+            per_lst.append(.20*100)
+
+            eqr_tgt_port = val_lst[2]
+            #print(f"805 - eqr_tgt_port: {eqr_tgt_port}")
+            bn_tgt_port = val_lst[3]
+            mu_tgt_port = val_lst[4]
+            sec_tgt_ports.append(float(eqr_tgt_port))
+            sec_tgt_ports.append(float(bn_tgt_port))
+            sec_tgt_ports.append(float(mu_tgt_port))
+
+        elif lcp.profile_type == 'prudent':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(.05))
+            val_lst.append(tot*Decimal(.20))
+            val_lst.append(tot*Decimal(.55))
+            val_lst.append(tot*Decimal(.20))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(.05*100)
+            per_lst.append(.20*100)
+            per_lst.append(.55*100)
+            per_lst.append(.20*100)
+
+            eqr_tgt_port = val_lst[2]
+            bn_tgt_port = val_lst[3]
+            mu_tgt_port = val_lst[4]
+            sec_tgt_ports.append(float(eqr_tgt_port))
+            sec_tgt_ports.append(float(bn_tgt_port))
+            sec_tgt_ports.append(float(mu_tgt_port))
+
+    #Check decision point
+    ### 1. Determine if stock B or S
+    if eqr_after_sale < eqr_tgt_port:
+            print(f"813 true: {eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f} redirect to bond sale")
+            workflow_bs = "Stock Sale" # Do nothing
+            #workflow_next_step = "Stock Sale"
+            #redirect to sell stocks buy
+            #ßmessages.warning(request, f"{eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f}. You don't have enough stocks to sell. Redirecting next workflow - Bond sale")
+
+    else:
+        ### Since eq after sale is > eq trgt the client can sell stocks
+        print(f"839 - eqr_after_sale:{eqr_after_sale:,.2f} eqr_tgt_port: {eqr_tgt_port:,.2f}")
+        workflow_bs = "Bond Sale"
+
+        #print(f"840 sec_tgt_ports: {sec_tgt_ports}")
+
+    #Create session to store sec_tgt_ports, sec_port_aft_sale
+    # Delete the session keys first if they exist
+    if 'sec_tgt_ports' in request.session:
+        del request.session['sec_tgt_ports']
+    if 'sec_port_aft_sale' in request.session:
+        del request.session['sec_port_aft_sale']
+
+    # Now create the session keys with new values
+    request.session['sec_tgt_ports'] = sec_tgt_ports
+    request.session['sec_port_aft_sale'] = sec_port_aft_sale
+
+    formatted_ports = [f"{val:,.2f}" for val in sec_tgt_ports]
+    print(f"856 - {formatted_ports}")
+    formatted_ports = [f"{val:,.2f}" for val in sec_port_aft_sale]
+    print(f"858 - {formatted_ports}")
+
+
+    # Mark session as modified (optional but safe)
+    request.session.modified = True
+
+    context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, "sec_tgt_ports":sec_tgt_ports, 'sec_port_aft_sale':sec_port_aft_sale, "workflow_bs":workflow_bs, "workflow_next_step":workflow_next_step}
     return render(request, 'jdadev/jdadev_simulation_target_portfolio.html', context)
 
+#//////////////////////////////////jdadev_simulation_stock_sale/////////////////////////////////
+import ast
+def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale ):
+    user = request.user
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
-#from django.shortcuts import render, redirect
-#from .forms import ClientProfileModel
+    ### Get the portfolio_balance
+    print(f"876: sec_tgt_ports {sec_tgt_ports}")
+    print(f"877: sec_port_aft_sale {sec_port_aft_sale}")
+    portfolio_balance = float(sec_port_aft_sale[1] - sec_tgt_ports[0])
+    print(f"879 - bn_portfolio_balance: {portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[1]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[0]:,.2f}")
+    # #Convert str sec_tgt_ports to a list
+    # #sec_tgt_ports_values =None
+    # if sec_tgt_ports:
+    #     try:
+    #         sec_tgt_ports_values = ast.literal_eval(sec_tgt_ports)
+    #     except (ValueError, SyntaxError):
+    #         sec_tgt_ports_values = []
+    # else:
+    #     sec_tgt_ports_values = []
+    #
+    # #Convert str port_aft_sale to a list
+    # if sec_port_aft_sale:
+    #     #print("856: True")
+    #     try:
+    #         sec_port_aft_sale_values = ast.literal_eval(sec_port_aft_sale)
+    #         #print(f"858:sec_port_aft_sale_values: {sec_port_aft_sale_values}")
+    #     except (ValueError, SyntaxError):
+    #         print(f"861 error {ValueError}")
+    #         sec_port_aft_sale_values = []
+    # else:
+    #     print(f"897 - false")
+    #     sec_port_aft_sale_values = []
 
-# def jdadev_custom_portfolio(request):
-#     # Handle form submission
-#     if request.method == 'POST':
-#         form = CustomProfileForm(request.POST)
-#         print(f"422 - form: {form.cleaned_data}")
-#         if form.is_valid():
-#             # Process data (e.g., save to session/database)
+    client_eqr_portfolio = None
+    stock_sold_rpt= None
+
+    ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
+    # Now check if the client's bn_tot_curr_val is > or < than the sec_tgt_ports_values[2] (2 for bn) value
+    if float(sec_port_aft_sale[1] > sec_tgt_ports[0]):
+        print(f"true: {sec_port_aft_sale[1]:,.2f} is less than {sec_tgt_ports[0]:,.2f} proceed with stock sale")
+        workflow_bs = "Stock Sale"
+
+        ### get sim stocks to exclude from ClientEquityAndRightsModel since it was initially sold
+        sim_stocks = SimHeldSecuritiesModel.objects.filter(client=user, decision='SELL').values_list('stock', flat=True)
+        client_eqr_portfolio = ClientEquityAndRightsModel.objects.filter(client=user).exclude(stocks__ticker__in=sim_stocks) #.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('-gp_calc')
+        ### Generate the stock sold report
+        stock_sold_rpt = generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio)
+        ### Set the workflow_bs to "Stock Sell" send a message to the user
+        workflow_bs = "Stock Sale"
+
+        messages.success(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is greater than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. You have enough stocks to sell.")
+    else:
+        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is less than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. You dont have enough stocks to sell. Redirecting you to the next workflow - Bond Sell")
+        workflow_bs = "Bond Sale"
+        print("928 FALSE")
+
+
+    context ={'client_eqr_portfolio':client_eqr_portfolio, 'portfolio_balance': portfolio_balance, 'stock_sold_rpt':stock_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+    return render(request, 'jdadev/jdadev_simulation_stock_sale.html', context)
+
+
+#////////////////////////////////////////generate_stock_sold_report ////////////////////////////////////
+def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio):
+    """
+    Generate a prorata sale report for a client's portfolio,
+    capped at 50% per stock and limited by portfolio_balance.
+    """
+    #sort by gp
+    #client_eqr_portfolio = client_eqr_portfolio.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('gp_calc')
+
+    stocks = client_eqr_portfolio
+
+   # Sort by growth potential descending
+    #stocks = sorted(stocks, key=lambda s: s.gp or Decimal("-999"), reverse=True)
+
+    balance_left = Decimal(portfolio_balance)
+
+    report = []
+
+    for stock in stocks:
+        if balance_left <= 0:
+            break
+
+        # basic stock info
+        total_shares = stock.nbr_of_stocks or 0
+        market_price = stock.daily_value or Decimal("0")
+
+        if total_shares == 0 or market_price == 0:
+            continue
+
+        # max shares we can sell (50% cap)
+        max_to_sell = total_shares // 2
+
+        # max proceeds if we sold 50%
+        max_proceeds = Decimal(max_to_sell) * market_price
+
+        # check against portfolio balance left
+        if max_proceeds <= balance_left:
+            # sell full 50% of this stock
+            shares_to_sell = max_to_sell
+            proceeds = max_proceeds
+        else:
+            # sell only as much as balance allows
+            shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+            proceeds = shares_to_sell * market_price
+
+        # Deduct from balance
+        balance_left -= proceeds
+
+        # Add to report
+        report.append({
+            "ticker": stock.stocks.symbol if hasattr(stock.stocks, "symbol") else str(stock.stocks),
+            "number_of_share": total_shares,
+            "daily_value": float(market_price),
+            "target_value": float(stock.stocks.target_value),
+            "gp": float(stock.gp),
+            "total_current_value": float(stock.total_current_value),
+            "nbr_of_sell_share": int(shares_to_sell),
+            "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
+            "nbr_shares_sold": int(shares_to_sell),
+            "net_sell_price": float(market_price),
+            "sold_amount": float(proceeds),
+        })
+
+    ### store report in session
+    request.session['stock_sold'] = report
+    ### delete model data
+    SimStockSoldModel.objects.all().delete()
+
+    return report
+
+#////////////////////////////////////jdadev_simulation_confirm_stock_sold/////////
+from django.views.decorators.http import require_POST
+@require_POST
+def jdadev_simulation_confirm_stock_sold(request):
+    stock_sold = request.session.get('stock_sold', [])
+
+    if not stock_sold:
+        # Handle empty session (user didn't select stocks yet)
+        messages.error(request, "No stock data found in session.")
+        return redirect('some-page')
+
+    for stock in stock_sold:
+        ### Format the percentage_sold in case it comes as a string
+        percentage_str = stock['percentage_sold']  # "50%"
+        if isinstance(percentage_str, str) and percentage_str.endswith('%'):
+            percentage_value = Decimal(percentage_str.replace('%', '').strip())
+        else:
+            percentage_value = Decimal(percentage_str)
+
+        SimStockSoldModel.objects.create(
+             client=request.user,
+             ticker=stock['ticker'],
+             number_of_share=stock['number_of_share'],
+             daily_value=stock['daily_value'],
+             target_value=stock['target_value'],
+             gp=stock['gp'],
+             total_current_value=stock['total_current_value'],
+             percentage_sold=percentage_value, #stock['percentage_sold'],
+             nbr_shares_sold=stock['nbr_shares_sold'],
+             net_sell_price=stock['net_sell_price'],
+             sold_amount=stock['sold_amount'],
+         )
+    messages.success(request, f"Successfully  Sold stocks")  # show is current stock and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    ### Clear session after saving
+    del request.session['stock_sold']
+    ### delete model data
+    #SimStockSoldModel.objects.all().delete()
+    ### HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = reverse('jdadev_simulation_stock_sold')
+    return response
+
+#//////////////////////////////////jdadev_simulation_simulation_stock_sold/////////////////////////////
+def jdadev_simulation_stock_sold(request):
+    sold_stocks = SimStockSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
+    context={'sold_stocks': sold_stocks}
+    return render(request, 'jdadev/jdadev_simulation_stock_sold.html', context)
+
+#//////////////////////////////////jdadev_simulation_bond_sale/////////////////////////////////
+def jdadev_simulation_bond_sale(request):
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+
+    ### Get the bn_portfolio_balance
+    print(f"1060: sec_tgt_ports {sec_tgt_ports}")
+    print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
+    bn_portfolio_balance = float(sec_port_aft_sale[2] - sec_tgt_ports[1])
+    print(f"1063 -bn_portfolio_balance: {bn_portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[2]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[1]:,.2f}")
+    ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
+    # Now check if the client's bn_tot_curr_val is > or < than the sec_tgt_ports_values[2] (2 for bn) value
+    client_bn_portfolio = None
+    bond_sold_rpt = None
+    workflow_bs= None
+    if float(sec_port_aft_sale[2] > sec_tgt_ports[1]):
+        print(f"true: {sec_port_aft_sale[2]:,.2f} is less than {sec_tgt_ports[1]:,.2f} proceed with stock sale")
+
+        client_bn_portfolio = ClientBondsModel.objects.filter(client=request.user)
+        ### Generate the bond sold report
+        bond_sold_rpt = generate_bond_sold_report(request, bn_portfolio_balance, client_bn_portfolio)
+        ### Set the workflow_bs to "Stock Sell" send a message to the user
+        workflow_bs = "Bond Sale"
+
+        messages.success(request, f"Your after sale bond portfolio {sec_port_aft_sale[2]:,.2f} is greater than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. You have enough bonds to sell.")
+    else:
+        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[2]:,.2f} is less than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. You dont have enough bonds to sell. Redirecting you to the next workflow - Mutual Fund Sell")
+        workflow_bs = "Mutual Fund Sale"
+        #print("928 FALSE")
+
+    #print(f"1082 bond_sold_rpt - {bond_sold_rpt}")
+    context ={'client_bn_portfolio':client_bn_portfolio, "bn_portfolio_balance": bn_portfolio_balance, 'bond_sold_rpt':bond_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+
+    return render(request, 'jdadev/jdadev_simulation_bond_sale.html', context)
+
+#////////////////////////////////////////generate_bond_sold_report ////////////////////////////////////
+def generate_bond_sold_report(request, portfolio_balance, client_bn_portfolio):
+    """
+    Generate a prorata sale report for a client's portfolio,
+    capped at 50% per stock and limited by portfolio_balance.
+    """
+    #sort by gp
+    #client_eqr_portfolio = client_eqr_portfolio.annotate(gp_calc=ExpressionWrapper((F('bonds__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('gp_calc')
+
+    bonds = client_bn_portfolio
+
+    # Sort by growth potential descending
+    #stocks = sorted(stocks, key=lambda s: s.gp or Decimal("-999"), reverse=True)
+
+    balance_left = Decimal(portfolio_balance)
+
+    report = []
+
+    for bond in bonds:
+        if balance_left <= 0:
+            break
+        # basic bond info
+        total_shares = bond.nbr_of_shares or 0
+        market_price = bond.current_value or Decimal("0")
+
+        if total_shares == 0 or market_price == 0:
+            continue
+
+        # max shares we can sell (50% cap)
+        max_to_sell = total_shares // 2
+
+        # max proceeds if we sold 50%
+        max_proceeds = Decimal(max_to_sell) * market_price
+
+        # check against portfolio balance left
+        if max_proceeds <= balance_left:
+            # sell full 50% of this stock
+            shares_to_sell = max_to_sell
+            proceeds = max_proceeds
+        else:
+            # sell only as much as balance allows
+            shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+            proceeds = shares_to_sell * market_price
+
+        # Deduct from balance
+        balance_left -= proceeds
+
+        # Add to report
+        report.append({
+            "symbol": bond.bond_name.symbol if hasattr(bond.bond_name.symbol, "symbol") else str(bond.bond_name),
+            "bond_name": str(bond.bond_name.bond_name),
+            "number_of_share": total_shares,
+            "daily_value": float(market_price),
+            "ytm": float(bond.bond_name.yield_to_maturity),
+            "total_current_value": float(bond.total_current_value),
+            "nbr_of_sell_share": int(shares_to_sell),
+            "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
+            "nbr_shares_sold": int(shares_to_sell),
+            "net_sell_price": float(market_price),
+            "sold_amount": float(proceeds),
+        })
+
+    ### store report in session
+    request.session['bond_sold'] = report
+    ### delete model data
+    SimBondSoldModel.objects.all().delete()
+
+    return report
+#////////////////////////////////////jdadev_simulation_confirm_bond_sold/////////
+from django.views.decorators.http import require_POST
+@require_POST
+def jdadev_simulation_confirm_bond_sold(request):
+    print("1159 - Confirming bond sold")
+    bond_sold = request.session.get('bond_sold', [])
+
+    if not bond_sold:
+        print("1163 - not bond_sold")
+        # Handle empty session (user didn't select stocks yet)
+        messages.error(request, "No bond data found in session.")
+        return redirect('some-page')
+
+    for bond in bond_sold:
+        ### Format the percentage_sold in case it comes as a string
+        percentage_str = bond['percentage_sold']  # "50%"
+        if isinstance(percentage_str, str) and percentage_str.endswith('%'):
+            percentage_value = Decimal(percentage_str.replace('%', '').strip())
+        else:
+            percentage_value = Decimal(percentage_str)
+
+        SimBondSoldModel.objects.create(
+            client=request.user,
+            bond_name=bond['bond_name'],
+            nbr_of_shares=bond['number_of_share'],
+            current_value=bond['daily_value'],
+            yield_to_maturity=bond['ytm'],
+            total_current_value=bond['total_current_value'],
+            percentage_sold=percentage_value, #stock['percentage_sold'],
+            nbr_shares_sold=bond['nbr_shares_sold'],
+            net_sell_price=bond['net_sell_price'],
+            sold_amount=bond['sold_amount'],
+        )
+    messages.success(request, f"Successfully  Sold bonds")  # show is current stock and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    ### Clear session after saving
+    del request.session['bond_sold']
+    ### delete model data
+    #SimBondSoldModel.objects.all().delete()
+    ### HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = reverse('jdadev_simulation_bond_sold')
+    return response
+
+#//////////////////////////////////jdadev_simulation_simulation_bond_sold/////////////////////////////
+def jdadev_simulation_bond_sold(request):
+    sold_bonds = SimBondSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
+    context={'sold_bonds': sold_bonds}
+    #print(f"1204: {sold_bonds}")
+    return render(request, 'jdadev/jdadev_simulation_bond_sold.html', context)
+
+#//////////////////////////////////jdadev_simulation_mutual_fund_sale/////////////////////////////////
+def jdadev_simulation_mutual_fund_sale(request):
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+
+    ### Get the bn_portfolio_balance
+    print(f"1167: sec_tgt_ports {sec_tgt_ports}")
+    print(f"1068: sec_port_aft_sale {sec_port_aft_sale}")
+    mu_portfolio_balance = float(sec_port_aft_sale[3] - sec_tgt_ports[2])
+    print(f"1170 -mu_portfolio_balance: {mu_portfolio_balance:,.2f} sec_port_aft_sale_values[3]: {sec_port_aft_sale[3]:,.2f} minus sec_tgt_ports[2]: {sec_tgt_ports[2]:,.2f}")
+    ### Determine if you can sell mu. If float(sec_port_aft_sale[3] > sec_tgt_ports[2])
+    # Now check if the client's mu_tot_curr_val is > or < than the sec_tgt_ports[2] (3 for mu) value
+    client_mu_portfolio = None
+    mutual_fund_sold_rpt = None
+    workflow_bs= None
+    if float(sec_port_aft_sale[3] > sec_tgt_ports[2]):
+        print(f"true: {sec_port_aft_sale[3]:,.2f} is greater than {sec_tgt_ports[2]:,.2f} proceed with mutual fund sale")
+        workflow_bs = "Mutual Fund Sale"
+
+        ### get sim mutuals to exclude from ClientMutualFundsModel since it was initially sold
+        #sim_mutual_funds = ClientMutualFundsModel.objects.filter(client=request.user, decision='SELL').values_list('opcvm', flat=True)
+        #client_mu_portfolio = ClientMutualFundsModel.objects.filter(client=request.user).exclude(opcvm__ticker__in=sim_mutual_funds) #.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('-gp_calc')
+        client_mu_portfolio = ClientMutualFundsModel.objects.filter(client=request.user)
+
+        ### Generate the mututal fund sold report
+        mutual_fund_sold_rpt = generate_mutual_fund_sold_report(request, mu_portfolio_balance, client_mu_portfolio)
+
+        ### Set the workflow_bs to "Stock Sell" send a message to the user
+        workflow_bs = "Mutual Fund Sale"
+        print("1198 /////////////////")
+
+        messages.success(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is greater than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. You have enough mututal funds to sell.")
+    else:
+        messages.warning(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is less than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. You dont have enough mututal funds to sell. Redirecting you to the next workflow - Stock Buy")
+        workflow_bs = "Stock Buy"
+        print("1189 FALSE")
+
+    context ={'client_mu_portfolio':client_mu_portfolio, "mu_portfolio_balance": mu_portfolio_balance, 'mutual_fund_sold_rpt':mutual_fund_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+    #context ={'client_mu_portfolio':client_mu_portfolio, 'workflow_bs':workflow_bs, "mu_portfolio_balance": mu_portfolio_balance, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+    return render(request, 'jdadev/jdadev_simulation_mutual_fund_sale.html', context)
+
+#////////////////////////////////////////generate_bond_sold_report ////////////////////////////////////
+def generate_mutual_fund_sold_report(request, portfolio_balance, client_mu_portfolio):
+    """
+    Generate a prorata sale report for a client's portfolio,
+    capped at 50% per stock and limited by portfolio_balance.
+    """
+    #sort by gp
+    #client_eqr_portfolio = client_eqr_portfolio.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('gp_calc')
+
+    mututal_funds = client_mu_portfolio
+
+    # Sort by performance ascending
+    #mututal_funds = sorted(mututal_funds, key=lambda s: s.opcvm.performance or Decimal("999"), reverse=False)
+    mututal_funds = sorted(mututal_funds, key=lambda s: s.opcvm.performance if s.opcvm.performance is not None else Decimal("999"))
+
+    balance_left = Decimal(portfolio_balance)
+
+    report = []
+
+    for mu in mututal_funds:
+        if balance_left <= 0:
+            break
+
+        # basic mu info
+        total_shares = mu.mu_nbr_of_share or 0
+        market_price = mu.mu_current_value or Decimal("0")
+
+        if total_shares == 0 or market_price == 0:
+            continue
+
+        # max shares we can sell (50% cap)
+        max_to_sell = total_shares // 2
+
+        # max proceeds if we sold 50%
+        max_proceeds = Decimal(max_to_sell) * market_price
+        print(f"max_proceeds: {max_proceeds}")
+
+        # check against portfolio balance left
+        if max_proceeds <= balance_left:
+            # sell full 50% of this stock
+
+            shares_to_sell = max_to_sell
+            proceeds = max_proceeds
+
+        else:
+            # sell only as much as balance allows
+            shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+            proceeds = shares_to_sell * market_price
+            #print(f"shares_to_sell: {shares_to_sell}")
+        # Deduct from balance
+        balance_left -= proceeds
+
+        # Add to report
+        report.append({
+            "opcvm": mu.opcvm.opcvm if hasattr(mu.opcvm, "opcvm") else str(mu.opcvm),
+            "depositaire": mu.opcvm.depositaire,
+            "market_price": float(mu.mu_current_value),
+            "mu_nbr_of_share": total_shares,
+            "mu_total_current_value": float(mu.mu_total_current_value),
+            "performance": float(mu.opcvm.performance),
+            "nbr_of_sell_share": int(shares_to_sell),
+            "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
+            "nbr_shares_sold": int(shares_to_sell),
+            "net_sell_price": float(market_price),
+            "sold_amount": float(proceeds),
+        })
+
+    ### store report in session
+    request.session['mutual_fund_sold'] = report
+    ### delete model data
+    SimMutualFundSoldModel.objects.all().delete()
+
+    return report
+
+#////////////////////////////////////jdadev_simulation_confirm_mutual_fund_sold/////////
+from django.views.decorators.http import require_POST
+@require_POST
+def jdadev_simulation_confirm_mutual_fund_sold(request):
+    mutual_fund_sold = request.session.get('mutual_fund_sold', [])
+
+    if not mutual_fund_sold:
+        # Handle empty session (user didn't select mutual_funds yet)
+        messages.error(request, "No mutual fund data found in session.")
+        return redirect('some-page')
+
+    for mu in mutual_fund_sold:
+        print(f"1288 mu: {mu}")
+        ### Format the percentage_sold in case it comes as a string
+        percentage_str = mu['percentage_sold']  # "50%"
+        if isinstance(percentage_str, str) and percentage_str.endswith('%'):
+            percentage_value = Decimal(percentage_str.replace('%', '').strip())
+        else:
+            percentage_value = Decimal(percentage_str)
+
+        SimMutualFundSoldModel.objects.create(
+            client=request.user,
+            opcvm=mu['opcvm'],
+            #depositaire=mu['depositaire'],
+            mu_nbr_of_share=mu['mu_nbr_of_share'],
+            mu_current_value=mu['market_price'],
+            performance=mu['performance'],
+            total_current_value=mu['mu_total_current_value'],
+            percentage_sold=percentage_value, #stock['percentage_sold'],
+            nbr_shares_sold=mu['nbr_shares_sold'],
+            net_sell_price=mu['net_sell_price'],
+            sold_amount=mu['sold_amount'],
+        )
+    messages.success(request, f"Successfully  Sold Mutual Funds")  # show is current mutual_fund and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    ### Clear session after saving
+    del request.session['mutual_fund_sold']
+    ### delete model data
+    #SimStockSoldModel.objects.all().delete()
+    ### HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = reverse('jdadev_simulation_mutual_fund_sold')
+    return response
+
+#//////////////////////////////////jdadev_simulation_mutual_fund_sold/////////////////////////////
+def jdadev_simulation_mutual_fund_sold(request):
+    sold_mutual_funds = SimMutualFundSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
+    context={'sold_mutual_funds': sold_mutual_funds}
+    return render(request, 'jdadev/jdadev_simulation_mutual_fund_sold.html', context)
+
+
+#//////////////////////////////////jdadev_simulation_stock_buy/////////////////////////////////
+def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    #print(f"1271 - sec_tgt_ports: {sec_tgt_ports}")
+    #print(f"1272 - sec_port_aft_sale: {sec_port_aft_sale}")
+    # First delete the previous simulation
+    SimStockPurchasedModel.objects.all().delete()
+
+    user = request.user
+    workflow_bs = None
+
+    ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, stocks
+    client_portfolio_balance = float(sec_port_aft_sale[1]) - float(sec_tgt_ports[0])
+
+    ### Decision point: We need to buy stocks since eq_after_sale < eq_tgt_port
+    #Get the portfolio_balance after the initial sale
+    #print(f"1283 true: {sec_port_aft_sale[1]:,.2f} is less than {sec_tgt_ports[0]:,.2f} buy stocks if you have enough liquidity")
+    if sec_port_aft_sale[1] < sec_tgt_ports[0]: #[1],[0] for eq
+        #print(f"1285 true: {sec_port_aft_sale[1]} is greater than {sec_tgt_ports[0]} buy stocks if you have enough liquidity")
+        ### Check if you have enough lq up to 5% of lq from the init sale
+        lq_5 = sec_port_aft_sale[0] * 0.95
+        ### check if you bought stocks to adjust your lq balance since it's the previous sequence
+        total_stock_purchase_amt = SimStockPurchasedModel.objects.aggregate(total=Sum('purchase_amount'))['total'] or 0
+        curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
+        if client_portfolio_balance <=curr_lq_balance:
+            ### you have enough cash to purchase stocks
+            messages.success(request, f"Your have enough liquidity to purchase more stocks: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
+            workflow_bs ='Buy Stock' #
+        else:
+            # You don't have enough lq
+            #print(f"1297 - You don't have enough lq curr bal is {curr_lq_balance}")
+            workflow_bs ='Buy Bond'
+    else:
+        workflow_bs ='Buy Bond'
+        #print("1300 You can't buy stocks... ")
+        messages.warning(request, f"Your equity portfolio after sale is {sec_port_aft_sale[1]:,.2f} is less than your equity target portfolio : {sec_tgt_ports[0]:,.2f}. Proceed to next workflow - Buy Bond")
+
+    #print(f"1302 stock tgt and after_sale - {sec_tgt_ports[0]} - {sec_port_aft_sale[1]}")
+
+    context ={'client_portfolio_balance':client_portfolio_balance, 'workflow_bs':workflow_bs}
+    return render(request, 'jdadev/jdadev_simulation_stock_buy.html', context)
+
+#//////////////////////////////////////////////////////jdadev_simulation_get_number_of_stocks/////////////////
+def jdadev_simulation_get_number_of_stocks(request, client_portfolio_balance): #, sec_port_aft_sale, sec_tgt_ports):
+    stock_count = int(request.GET.get('stock_count', 0))
+    #sec_tgt_ports
+    #sec_port_aft_sale
+    # Customize these
+    client_id = request.user.id
+
+    total_portfolio_balance= float(client_portfolio_balance)
+    percentage_per_stock = round(100.0 / stock_count, 2)
+
+    # Subquery to get number_of_share from ClientEquityAndRightsModel
+    number_of_share_subquery = ClientEquityAndRightsModel.objects.filter(stocks=OuterRef('stocks'),client_id=client_id).values('nbr_of_stocks')[:1]
+
+    # Base query
+    stocks_with_gp = (
+        StockDailyValuesModel.objects
+            .filter(daily_value__gt=0)
+            .annotate(
+            gp=ExpressionWrapper(
+                F('target_value') / F('daily_value'),
+                output_field=DecimalField(max_digits=18, decimal_places=4)
+            ),
+            number_of_share=Coalesce(
+                Subquery(number_of_share_subquery, output_field=IntegerField()),
+                Value(0),
+                output_field=IntegerField()
+            ),
+            total_current_value=ExpressionWrapper(
+                F('daily_value') * F('number_of_share'),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            ),
+            percentage_purchase=ExpressionWrapper(
+                Value(percentage_per_stock),
+                output_field=FloatField()
+            ),
+            purchase_amount=ExpressionWrapper(
+                Value(total_portfolio_balance) * Value(percentage_per_stock) / Value(100),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            ),
+            nbr_shares_to_buy=ExpressionWrapper(
+                (Value(total_portfolio_balance) * Value(percentage_per_stock) / Value(100)) / F('daily_value'),
+                output_field=IntegerField()
+            ),
+            net_purchase_price=ExpressionWrapper(
+                F('nbr_shares_to_buy') * F('daily_value'),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            )
+        )
+            .order_by('-gp')[:stock_count]
+    )
+
+    # Convert queryset into list of dicts for session storage
+    stocks_list = list(
+        stocks_with_gp.values(
+            "ticker",
+            "number_of_share",
+            "daily_value",
+            "target_value",
+            "gp",
+            "total_current_value",
+            "percentage_purchase",
+            "nbr_shares_to_buy",
+            "net_purchase_price",
+            "purchase_amount"
+        )
+    )
+
+    # Optionally convert Decimals to floats for JSON serialization
+    for stock in stocks_list:
+        for key, value in stock.items():
+            if isinstance(value, Decimal):
+                stock[key] = float(value)
+
+    #print(f"1141 - stock_list: {stocks_list}")
+    # Save to session
+    request.session['pending_stocks'] = stocks_list
+
+    context = {'stocks':stocks_with_gp}
+    return render(request, 'jdadev/partials/jdadev_simulation_number_of_stocks.html', context)
+
+
+#////////////////////////////////////jdadev_simulation_confirm_stock_purchase/////////
+from django.views.decorators.http import require_POST
+@require_POST
+def jdadev_simulation_confirm_stock_purchase(request):
+    stock_data = request.session.get('pending_stocks', [])
+
+    if not stock_data:
+        # Handle empty session (user didn't select stocks yet)
+        messages.error(request, "No stock data found in session.")
+        return redirect('some-page')
+
+    # stock_data is now a list of dicts, same structure as above
+    for stock in stock_data:
+        SimStockPurchasedModel.objects.create(
+            client=request.user,
+            ticker=stock['ticker'],
+            number_of_share=stock['number_of_share'],
+            daily_value=stock['daily_value'],
+            target_value=stock['target_value'],
+            gp=stock['gp'],
+            total_current_value=stock['total_current_value'],
+            percentage_purchase=stock['percentage_purchase'],
+            nbr_shares_to_buy=stock['nbr_shares_to_buy'],
+            net_purchase_price=stock['net_purchase_price'],
+            purchase_amount=stock['purchase_amount'],
+        )
+    #messages.success(request, f"Successfully  Purchased stocks")  # show is current stock and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    # Optionally clear session after saving
+    del request.session['pending_stocks']
+    # HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = '/jdadev/jdadev_simulation_stock_purchased'  # URL mapped to purchased stock page
+    return response
+
+#//////////////////////////////////jdadev_purchased_stock/////////////////////////////////
+def jdadev_simulation_stock_purchased(request):
+    purchased_stocks = SimStockPurchasedModel.objects.filter(client=request.user).order_by('-id') #[:10]
+    context={'purchased_stocks': purchased_stocks}
+    return render(request, 'jdadev/jdadev_simulation_stock_purchased.html', context)
+
+#//////////////////////////////////jdadev_simulation_bond_buy/////////////////////////////////
+def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
+    #print("1209 jdadev_simulation_bond_buy")
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    #print(f"1026 - sess_sec_tgt_ports: {sec_tgt_ports}")
+    #print(f"1027 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
+
+    ### First delete the previous simulation
+    SimBondPurchasedModel.objects.all().delete()
+
+    #user = request.user
+
+    ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, bond
+    client_portfolio_balance = float(sec_tgt_ports[1]) - float(sec_port_aft_sale[2])  #[1] & [2] for bn
+    #print(f"1222- client_portfolio_balance: {client_portfolio_balance}")
+
+    ### Decision point: We need to buy bonds since bn_after_sale < bn_tgt_port
+    #Get the portfolio_balance after the initial sale
+    if sec_port_aft_sale[2] < sec_tgt_ports[1]: #[2],[1] for bn
+        #print(f"1227 true: {sec_port_aft_sale[2]} is less than {sec_tgt_ports[1]} buy bonds if you have enough liquidity")
+        ### check if you have enough lq up to 5% of lq from the init sale
+        lq_5 = sec_port_aft_sale[0] * 0.95
+        ### check if you bought stocks to adjust your lq balance since it's the previous sequence
+        total_stock_purchase_amt = SimStockPurchasedModel.objects.aggregate(total=Sum('purchase_amount'))['total'] or 0
+        curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
+        if client_portfolio_balance <=curr_lq_balance:
+            ### you have enough cash to purchase bondss
+            messages.success(request, f"Your have enough liquidity to purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
+            workflow_bs ='Confirm Bond Purchase' #
+        else:
+            # You don't have enough lq
+            #print(f"1240 - You don't have enough lq curr bal is {curr_lq_balance}")
+            workflow_bs ='0'
+    else:
+        #print("1243 You can't buy bonds... ")
+        messages.warning(request, f"Your bond portfolio after sale is {sec_port_aft_sale[2]:,.2f} is less than your equity target portfolio : {sec_tgt_ports[1]:,.2f}. Proceed to next workflow - Buy Mutual Fund")
+
+    #print(f"1248 bond tgt and after_sale - {sec_tgt_ports[1]} - {sec_port_aft_sale[2]}")
+
+    #print(f"1245 - client_portfolio_balance: {client_portfolio_balance} ")
+    context ={'client_portfolio_balance':client_portfolio_balance} #, 'workflow_bs':workflow_bs, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+    return render(request, 'jdadev/jdadev_simulation_bond_buy.html', context)
+
+#//////////////////////////////////////////////////////jdadev_simulation_get_number_of_bonds/////////////////
+def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
+    bond_count = int(request.GET.get('bond_count', 0))
+    #print(f"1254 - bond_count: {bond_count}")
+    #print(f"1255 - client_portfolio_balance: {client_portfolio_balance}")
+    client_id = request.user.id
+
+    total_portfolio_balance= float(client_portfolio_balance)
+    percentage_per_bond = round(100.0 / bond_count, 2)
+
+    # Subquery to get number_of_share from ClientEquityAndRightsModel
+    number_of_share_subquery = ClientBondsModel.objects.filter(bond_name=OuterRef('bond_names'),client=request.user).values('nbr_of_shares')[:1]
+    #print(f"1264 - number_of_share_subquery: {number_of_share_subquery}")
+    #tmp
+    bonds_with_ytm=BondModel.objects.filter(current_value__gt=0).annotate(
+        number_of_share=Coalesce(
+                 Subquery(number_of_share_subquery, output_field=IntegerField()),
+                 Value(0),
+                 output_field=IntegerField()
+             ),
+            total_current_value=ExpressionWrapper(
+                         F('current_value') * F('nbr_of_shares'),
+                         output_field=DecimalField(max_digits=18, decimal_places=2)
+                     ),
+            percentage_purchase=ExpressionWrapper(
+                         Value(percentage_per_bond),
+                         output_field=FloatField()
+                     ),
+            purchase_amount=ExpressionWrapper(
+                     Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
+                     output_field=DecimalField(max_digits=18, decimal_places=2)
+                 ),
+            nbr_shares_to_buy=ExpressionWrapper(
+                     (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
+                     output_field=IntegerField()
+                 ),
+            net_purchase_price=ExpressionWrapper(
+                         F('nbr_shares_to_buy') * F('current_value'),
+                         output_field=DecimalField(max_digits=18, decimal_places=2)
+                     )
+
+
+    ).order_by('yield_to_maturity')[:bond_count]
+
+    ### Convert queryset into list of dicts for session storage
+    bonds_list = list(
+        bonds_with_ytm.values(
+            "symbol",
+            "number_of_share",
+            "current_value",
+            "yield_to_maturity",
+            "total_current_value",
+            "percentage_purchase",
+            "nbr_shares_to_buy",
+            "net_purchase_price",
+            "purchase_amount"
+        )
+    )
+    #print(f"1312 - bonds_list: {bonds_list}")
+
+    ### Optionally convert Decimals to floats for JSON serialization
+    for bond in bonds_list:
+         for key, value in bond.items():
+             if isinstance(value, Decimal):
+                 bond[key] = float(value)
+
+    #print(f"1328 - bond_list: {bonds_list}")
+    ### Save to session
+    request.session['pending_bonds'] = bonds_list
+
+    context = {'bonds': bonds_with_ytm}
+    return render(request, 'jdadev/partials/jdadev_simulation_number_of_bonds.html', context)
+
+#////////////////////////////////////jdadev_simulation_confirm_stock_purchase/////////
+from django.views.decorators.http import require_POST
+@require_POST
+def jdadev_simulation_confirm_bond_purchase(request):
+    bond_data = request.session.get('pending_bonds', [])
+    #print(f"1329 - bond_data: {bond_data}")
+
+    if not bond_data:
+        # Handle empty session (user didn't select bonds yet)
+        messages.error(request, "No bond data found in session.")
+        #print(f"1333 - No bond data found in session")
+        return redirect('some-page') # XXXX Fix redirection
+
+    # bond_data is now a list of dicts, same structure as above
+    for bond in bond_data:
+        SimBondPurchasedModel.objects.create(
+            client=request.user,
+            bond_name=bond['symbol'],
+            nbr_of_shares=bond['number_of_share'],
+            current_value=bond['current_value'],
+            yield_to_maturity=bond['yield_to_maturity'],
+            total_current_value=bond['total_current_value'],
+            percentage_purchase=bond['percentage_purchase'],
+            nbr_shares_to_buy=bond['nbr_shares_to_buy'],
+            net_purchase_price=bond['net_purchase_price'],
+            purchase_amount=bond['purchase_amount'],
+        )
+    messages.success(request, f"Successfully  Purchased bonds")  # show is current bond and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    # Optionally clear session after saving
+    del request.session['pending_bonds']
+    # HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = '/jdadev/jdadev_simulation_bond_purchased'  # URL mapped to purchased bond page
+    return response
+
+#//////////////////////////////////jdadev_simulation_bond_purchased/////////////////////////////////
+def jdadev_simulation_bond_purchased(request):
+    purchased_bonds = SimBondPurchasedModel.objects.filter(client=request.user).order_by('yield_to_maturity') #[:10]
+    context={'purchased_bonds': purchased_bonds}
+    return render(request, 'jdadev/jdadev_simulation_bond_purchased.html', context)
+
+
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\ BOND Stuff \\\\\\\\\\\\\\\\\\\
+
+#\\\\\\\\\\\\\\\\\\\\\\\\ START MU Stuff
+#//////////////////////////////////jdadev_simulation_mutual_fund_buy/////////////////////////////////
+def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
+    #print("1604 -  jdadev_simulation_mutual_fund_buy")
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    #print(f"1608 - sess_sec_tgt_ports: {sec_tgt_ports}")
+    #print(f"1609 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
+
+    ### First delete the previous simulation db data if it exists
+    SimMutualFundPurchasedModel.objects.all().delete()
+
+    #user = request.user
+
+    ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, mu
+    client_portfolio_balance = float(sec_tgt_ports[2]) - float(sec_port_aft_sale[3])  #[2] & [3] for mu
+    #print(f"1618- client_portfolio_balance: {client_portfolio_balance}")
+
+    ### Decision point: We need to buy mus if mu_after_sale < mu_tgt_port
+    #Get the portfolio_balance after the initial sale
+    if sec_port_aft_sale[3] < sec_tgt_ports[2]: #[3],[2] for mu
+        #print(f"1623 true: {sec_port_aft_sale[3]} is less than {sec_tgt_ports[2]} buy mus if you have enough liquidity")
+        ### check if you have enough lq up to 5% of lq from the init sale
+        lq_5 = sec_port_aft_sale[0] * 0.95
+        ### check if you bought stocks or bonds to adjust your lq balance since they are  the previous sequences
+        total_stock_purchase_amt = SimStockPurchasedModel.objects.aggregate(total=Sum('purchase_amount'))['total'] or 0
+        total_bond_purchase_amt = SimBondPurchasedModel.objects.aggregate(total=Sum('purchase_amount'))['total'] or 0
+        curr_lq_balance = float(lq_5) - (float(total_stock_purchase_amt) + float(total_bond_purchase_amt))
+        #print(f"1630 -curr_lq_balance: {curr_lq_balance}")
+        if client_portfolio_balance <=curr_lq_balance:
+            ### you have enough cash to purchase mutual funds
+            #print("1633 - you have enough cash to purchase mutual funds")
+            messages.success(request, f"Your have enough liquidity to purchase more mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
+
+            #workflow_bs ='Confirm mu Purchase' #
+        else:
+            # You don't have enough lq
+            print(f"1639 - You don't have enough lq curr bal is {curr_lq_balance:,.2f}")
+            print("1640 redirecting to prev")
+            messages.error(request, f"Your dont't have enough liquidity to purchase mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}.")
+            return redirect('jdadev_simulation_bond_purchased')
+    else:
+        print("1644 You can't buy mutual funds... ")
+
+
+    context ={'client_portfolio_balance':client_portfolio_balance}
+    return render(request, 'jdadev/jdadev_simulation_mutual_fund_buy.html', context)
+
+#////////////////////////////////////jdadev_simulation_get_number_of_mutual_funds/////////////////
+def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balance):
+    mutual_fund_count = int(request.GET.get('mutual_fund_count', 0))
+    #print(f"1655 - mutual_fund_count: {mutual_fund_count}")
+    #print(f"1656 - client_portfolio_balance: {client_portfolio_balance}")
+    client_id = request.user.id
+
+    total_portfolio_balance= float(client_portfolio_balance)
+    percentage_per_mutual_fund = round(100.0 / mutual_fund_count, 2)
+
+    # Subquery to get number_of_share from ClientEquityAndRightsModel
+    number_of_share_subquery = ClientMutualFundsModel.objects.filter(opcvm=OuterRef('opcvm'),client=request.user).values('mu_nbr_of_share')[:1]
+
+    ###  START UPDATES FROM HERE ###
+    mututal_funds_with_perf=MutualFundModel.objects.filter(current_value__gt=0).annotate(
+        mu_nbr_of_share=Coalesce(
+            Subquery(number_of_share_subquery, output_field=IntegerField()),
+            Value(0),
+            output_field=IntegerField()
+        ),
+        mu_total_current_value=ExpressionWrapper(
+            F('current_value') * F('nbr_of_share'),
+            output_field=DecimalField(max_digits=18, decimal_places=2)
+        ),
+        percentage_purchase=ExpressionWrapper(
+            Value(percentage_per_mutual_fund),
+            output_field=FloatField()
+        ),
+        purchase_amount=ExpressionWrapper(
+            Value(total_portfolio_balance) * Value(percentage_per_mutual_fund) / Value(100),
+            output_field=DecimalField(max_digits=18, decimal_places=2)
+        ),
+        nbr_shares_to_buy=ExpressionWrapper(
+            (Value(total_portfolio_balance) * Value(percentage_per_mutual_fund) / Value(100)) / F('current_value'),
+            output_field=IntegerField()
+        ),
+        net_purchase_price=ExpressionWrapper(
+            F('nbr_shares_to_buy') * F('current_value'),
+            output_field=DecimalField(max_digits=18, decimal_places=2)
+        )
+
+
+    ).order_by('-performance')[:mutual_fund_count]
+
+    ### Convert queryset into list of dicts for session storage
+    mutual_funds_list = list(
+        mututal_funds_with_perf.values(
+            "opcvm",
+            "nbr_of_share",
+            "current_value",
+            "performance",
+            "mu_total_current_value",
+            "percentage_purchase",
+            "nbr_shares_to_buy",
+            "net_purchase_price",
+            "purchase_amount"
+        )
+    )
+    #print(f"1312 - bonds_list: {mutual_funds_list}")
+
+    ### Optionally convert Decimals to floats for JSON serialization
+    for mu in mutual_funds_list:
+        for key, value in mu.items():
+            if isinstance(value, Decimal):
+                mu[key] = float(value)
+
+    #print(f"1328 - bond_list: {mutual_funds_list}")
+    ### Save to session
+    request.session['pending_mutual_funds'] = mutual_funds_list
+
+    context = {'mutual_funds': mututal_funds_with_perf}
+    return render(request, 'jdadev/partials/jdadev_simulation_number_of_mutual_funds.html', context)
+
+#///////////////////////////////jdadev_simulation_confirm_mutual_fund_purchase////////////////////////////
+@require_POST
+def jdadev_simulation_confirm_mutual_fund_purchase(request):
+    mutual_fund_data = request.session.get('pending_mutual_funds', [])
+    #print(f"1498The  - mutual_fund_data: {mutual_fund_data}")
+
+    if not mutual_fund_data:
+        # Handle empty session (user didn't select bonds yet)
+        messages.error(request, "No bond data found in session.")
+        #print(f"1333 - No bond data found in session")
+        return redirect('some-page') # XXXX Fix redirection
+
+    # bond_data is now a list of dicts, same structure as above
+    for mu in mutual_fund_data:
+        SimMutualFundPurchasedModel.objects.create(
+            client=request.user,
+            opcvm=mu['opcvm'],
+            mu_nbr_of_share=mu['nbr_of_share'],
+            mu_current_value=mu['current_value'],
+            performance=mu['performance'],
+            total_current_value=mu['mu_total_current_value'],
+            percentage_purchase=mu['percentage_purchase'],
+            nbr_shares_to_buy=mu['nbr_shares_to_buy'],
+            net_purchase_price=mu['net_purchase_price'],
+            purchase_amount=mu['purchase_amount'],
+        )
+    messages.success(request, f"Successfully  Purchased Mutual Funss")  # show is current bond and cash balanced: {client_portfolio_balance}. ")
+    # Now update the target_portfolio
+
+    # Optionally clear session after saving
+    del request.session['pending_mutual_funds']
+    # HTMX redirect header
+    response = HttpResponse()
+    response['HX-Redirect'] = '/jdadev/jdadev_simulation_mutual_fund_purchased'  # URL mapped to purchased bond page
+    return response
+
+#//////////////////////////////////jdadev_simulation_bond_purchased/////////////////////////////////
+def jdadev_simulation_mutual_fund_purchased(request):
+    purchased_mutual_funds = SimMutualFundPurchasedModel.objects.filter(client=request.user).order_by('-performance') #[:10]
+
+    context={'purchased_mutual_funds': purchased_mutual_funds}
+    return render(request, 'jdadev/jdadev_simulation_mutual_fund_purchased.html', context)
+
+#\\\\\\\\\\\\\\\\\\\\\\\\ END MU Stuff
+
+
+
+# #//////////////////////////////////jdadev_simulation_bond_buy/////////////////////////////////
+# def jdadev_simulation_bond_buy(request):
+#     user = request.user
 #
-#             liquid_assets = form.cleaned_data['liquid_assets']
-#             #number = form.cleaned_date['phone_number']
-#             #p = Person(name=name, phone_number=number, date_subscribed=datetime.now(), messages_recieved=0)
-#             #p.save()
-#             print(f"liquid_assets: {liquid_assets}")
-#             #request.session['custom_allocation'] = form.cleaned_data
-#             # Return the display partial with submitted data
-#             return render(request, 'partials/custom_profile_display.html', form.cleaned_data)
-#         else:
-#             # Re-render form with errors
-#             return render(request, 'partials/custom_profile_form.html', {'form': form})
+#     #client_portfolio_balance
+#     client_portfolio_balance = ClientPortfolioModel.objects.aggregate(
+#         portfolio_balance=Sum(
+#             ExpressionWrapper(
+#                 F('liquid_assets') + F('equity_and_rights') + F('bonds') + F('mutual_funds'),
+#                 output_field=DecimalField(max_digits=18, decimal_places=2)
+#             )
+#         )
+#     )
 #
-#     # Handle initial GET request
-#     portfolio_type = request.GET.get('portfolio_type')
 #
-#     #if portfolio_type == 'custom':
-#     form = CustomProfileForm()
-#     #    return render(request, 'partials/custom_profile_form.html', {'form': form})
-#     #else:
-#     context={"form": form}
-#     return context
+#     context ={'client_portfolio_balance':client_portfolio_balance['portfolio_balance']}
+#     return render(request, 'jdadev/jdadev_simulation_bond_buy.html', context)
+
+#
+# #//////////////////////////////////////////////////////jdadev_simulation_get_number_of_bonds/////////////////
+# def jdadev_simulation_get_number_of_bonds(request):
+#     bond_count = int(request.GET.get('bond_count', 0))
+#     # Customize these
+#     client_id = request.user.id  # Replace with actual client/user ID (e.g., request.user.id)
+#
+#     #client_portfolio_balance
+#     client_portfolio_balance = ClientPortfolioModel.objects.aggregate(
+#         portfolio_balance=Sum(
+#             ExpressionWrapper(
+#                 F('liquid_assets') + F('equity_and_rights') + F('bonds') + F('mutual_funds'),
+#                 output_field=DecimalField(max_digits=18, decimal_places=2)
+#             )
+#         )
+#     )
+#     total_portfolio_balance= client_portfolio_balance['portfolio_balance']
+#     percentage_per_stock = round(100.0 / bond_count, 2)
+#
+#     # Subquery to get number_of_share from ClientBondsModel
+#     number_of_share_subquery = ClientBondsModel.objects.filter(
+#         bond_name=OuterRef('nbr_of_shares'),
+#         client_id=client_id
+#     ).values('nbr_of_shares')[:1]
+#
+#     # Base query
+#     bonds_with_gp = (
+#         BondModel.objects
+#             .filter(current_value__gt=0)
+#             .annotate(
+#             gp=ExpressionWrapper(
+#                 F('current_value') / F('original_value'),
+#                 output_field=DecimalField(max_digits=18, decimal_places=4)
+#             ),
+#             number_of_share=Coalesce(
+#                 Subquery(number_of_share_subquery, output_field=IntegerField()),
+#                 Value(0),
+#                 output_field=IntegerField()
+#             ),
+#             total_current_value=ExpressionWrapper(
+#                 F('current_value') * F('number_of_share'),
+#                 output_field=DecimalField(max_digits=18, decimal_places=2)
+#             ),
+#             purchase_percentage=ExpressionWrapper(
+#                 Value(percentage_per_stock),
+#                 output_field=FloatField()
+#             ),
+#             purchase_amount=ExpressionWrapper(
+#                 Value(total_portfolio_balance) * Value(percentage_per_stock) / Value(100),
+#                 output_field=DecimalField(max_digits=18, decimal_places=2)
+#             ),
+#             nbr_shares_to_buy=ExpressionWrapper(
+#                 (Value(total_portfolio_balance) * Value(percentage_per_stock) / Value(100)) / F('current_value'),
+#                 output_field=IntegerField()
+#             ),
+#             net_purchase_price=ExpressionWrapper(
+#                 F('nbr_shares_to_buy') * F('current_value'),
+#                 output_field=DecimalField(max_digits=18, decimal_places=2)
+#             )
+#         )
+#             .order_by('-gp')[:bond_count]
+#     )
+#
+#
+#     context = {'bonds':bonds_with_gp}
+#     return render(request, 'jdadev/partials/jdadev_simulation_number_of_bonds.html', context)
 #//////////////////////////////// adjusted_per_bn //////////////////////////////////
 #@login_required
 def adjusted_per_bn(portfolio_type, per_tot, per_bn, per_mu):
-    print(f"626 per_tot: {per_tot}")
+    #print(f"626 per_tot: {per_tot}")
     #print(f"395 per_bn: {per_bn} - per_mu: {per_mu}")
     adj_bn = 0
     adj_mu = 0
@@ -1214,7 +2462,7 @@ def upload_file(request):
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_excel(request):
-    #print("765 file upload ")
+    #print("1716 file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -1412,6 +2660,7 @@ def upload_bond_excel(request):
                         nbr_of_shares = row['nbr_of_shares']
                         total_value = row['total_value']
                         institution_type = row['institution_type']
+                        yield_to_maturity = row['yield_to_maturity']
                         BondModel.objects.create(symbol=symbol,
                                                  bond_name=bond_name,
                                                  original_value=original_value,
@@ -1419,7 +2668,8 @@ def upload_bond_excel(request):
                                                  current_value =current_value,
                                                  nbr_of_shares=nbr_of_shares,
                                                  total_value=total_value,
-                                                 institution_type=institution_type)
+                                                 institution_type=institution_type,
+                                                 yield_to_maturity=yield_to_maturity)
                     except Exception as e:
                         #print(f"92 Exception e:{e}")
                         return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
@@ -1460,7 +2710,7 @@ def jdadev_clear_bond_data(request):
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def upload_mutual_fund_excel(request):
-    #print("463 file upload ")
+    print("2337 mutual fund file upload ")
     if request.method == 'POST':
         try:
             excel_data = request.FILES['excel_file']
@@ -1477,7 +2727,7 @@ def upload_mutual_fund_excel(request):
 
             try:
                 df = pd.read_excel(excel_data)
-                #print(f"Pre: {df}")
+                print(f"2354 Pre: {df}")
                 # Preprocess the data
                 #df['sociate_de_gession'] = df['sociate_de_gession'].apply(lambda x: None if pd.isna(x) else float(x))
                 #df['depositaire'] = df['depositaire'].apply(lambda x: None if pd.isna(x) else float(x))
@@ -1485,27 +2735,36 @@ def upload_mutual_fund_excel(request):
                 df['original_value'] = df['original_value'].apply(lambda x: None if pd.isna(x) else float(x))
                 df['current_value'] = df['current_value'].apply(lambda x: None if pd.isna(x) else float(x))
                 df['nbr_of_share'] = df['nbr_of_share'].apply(lambda x: None if pd.isna(x) else int(x))
+                df['performance'] = df['performance'].apply(lambda x: 0.00 if pd.isna(x) or x == '' else float(x))
+                #print(f"2363 - {df['performance']}")
+
 
                 # Replace NaN with a temporary placeholder
                 # Replace the temporary placeholder with None
-                df['original_value'] = df['original_value'].replace('', 0.00)
 
+                df['original_value'] = df['original_value'].replace('', 0.00)
                 df['current_value'] = df['current_value'].replace('', 0.00)
                 df['nbr_of_share'] = df['nbr_of_share'].replace('', 0)
+                df['performance'] = df['performance'].replace('', 0.00)
+                # Convert numeric fields safely
+
+                # Replace NaN with None so Django ORM can store it properly
+                df = df.where(pd.notnull(df), None)
 
                 #print("495 Done with data validation")
                 #print(f"Post: {df}")
                 #print(f"497 {df['sociate_de_gession']}-----{df['depositaire']}-----{df['opcvm']}-----{df['original_value']}-----{df['nbr_of_share']}")
             except pd.errors.ParserError as pe:
-                #print(f"499 Exception pe: {pe}")
+                print(f"2388 Exception pe: {pe}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
-                #print(f"965 Exception e: {e}")
+                print(f"2391 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             except pd.errors.ParserError:
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: Invalid file format or corrupted file."})
             except Exception as e:
+                print(f"2387 Exception e: {e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error reading Excel file: " + str(e)})
 
             # Check if required columns are present
@@ -1524,18 +2783,21 @@ def upload_mutual_fund_excel(request):
                         original_value = row['original_value']
                         current_value = row['current_value']
                         nbr_of_share = row['nbr_of_share']
+                        performance = row['performance']
+                        print(f"2417 - performance: {performance}")
 
                         MutualFundModel.objects.create(sociate_de_gession=sociate_de_gession,
                                                  depositaire=depositaire,
                                                  opcvm=opcvm,
                                                  original_value=original_value,
-                                                 current_value =current_value,
-                                                 nbr_of_share=nbr_of_share,)
+                                                 current_value=current_value,
+                                                 nbr_of_share=nbr_of_share,
+                                                 performance=performance)
                     except Exception as e:
-                        #print(f"533 Exception e:{e}")
+                        print(f"2415 Exception e:{e}")
                         return render(request, 'jdadev/upload_error.html', {'error_message': f"Error creating object from Excel data at row {index + 1}: {str(e)}"})
             except Exception as e:
-                #print(f"95 Exception e:{e}")
+                print(f"2438 Exception e:{e}")
                 return render(request, 'jdadev/upload_error.html', {'error_message': "Error creating objects from Excel data: " + str(e)})
 
             # Bond ddata upload is successful.  Now insert intitution types data into the InstitutionTypeModel

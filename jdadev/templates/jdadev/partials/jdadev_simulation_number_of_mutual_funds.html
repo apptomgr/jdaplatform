@@ -1,0 +1,13 @@
+{% for i in mutual_funds %}
+<tr>
+    <td>{{ i.opcvm }}</td>
+    <td>{{ i.nbr_of_share }}</td>
+    <td>{{ i.current_value }}</td>
+    <td>{{ i.performance }}</td>
+    <td>{{ i.total_current_value|floatformat:2 }}</td>
+    <td>{{ i.percentage_purchase|floatformat:2 }}%</td>
+    <td>{{ i.nbr_shares_to_buy|floatformat:2 }}</td>
+    <td>{{ i.net_purchase_price|floatformat:2 }}</td>
+    <td>{{ i.purchase_amount|floatformat:2 }}</td>
+</tr>
+{% endfor %}

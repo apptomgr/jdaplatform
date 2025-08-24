@@ -1,0 +1,100 @@
+{% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block assets %}
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .header .title {
+        flex-grow: 1;
+        text-align: center;
+    }
+    .header .dropdown {
+        margin-left: auto;
+        background-color: #D5D8DC;
+        color: #ffffff;
+        border-radius: 5px;
+    }
+    .dropdown-item:hover {
+        background-color: #3ec1d5;
+        color: #fff;
+    }
+    .centered-input {
+        text-align: center;
+    }
+</style>
+
+{% include 'jdadev/jdadev_simulation_breadcrumbs.html' %}
+
+<div class="card shadow-sm p-2 mb-3 bg-white rounded">
+    <div class="card-header">
+        <div class="header">
+            <div class="title">
+                <h6 class="text-muted">
+                    <i class="fa fa-briefcase my_info_txt" aria-hidden="true"></i> {% trans 'Simulated Stock Sold' %}
+                </h6>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <th>{% trans 'Stocks' %}</th>
+            <th>{% trans 'Number of Shares' %}</th>
+            <th>{% trans 'Market Price' %}</th>
+            <th>{% trans 'Target Price' %}</th>
+            <th>{% trans 'Growth Potential' %}</th>
+            <th>{% trans 'Total Current Value' %}</th>
+            <th>{% trans '% To Be Purchased' %}</th>
+            <th>{% trans '# of Shares to Buy' %}</th>
+            <th>{% trans 'Net Purchase Price' %}</th>
+            <th>{% trans 'Purchase Amount' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for stock in sold_stocks %}
+        <tr>
+            <td>{{ stock.ticker }}</td>
+            <td>{{ stock.number_of_share }}</td>
+            <td>{{ stock.daily_value }}</td>
+            <td>{{ stock.target_value }}</td>
+            <td>{{ stock.gp }}</td>
+            <td>{{ stock.total_current_value}}</td>
+            <td>{{stock.percentage_sold}}</td>
+            <td>{{stock.nbr_shares_sold}}</td>
+            <td>{{stock.net_sell_price}}</td>
+            <td>{{stock.sold_amount}}</td>
+        </tr>
+        {% endfor %}
+        <!-- proceed to next step, buy bond, only if you already purchased stocks -->
+        {% if sold_stocks.count > 0 %}
+        <tr>
+            <td colspan="10"><a href="{% url 'jdadev_simulation_bond_sale' %}" class="btn btn-info btn-sm">Sell Bonds <i class="fas fa-arrow-right"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><!-- Force the user to navigate back to target tportfolio -->
+            <td colspan="10"><a href="{% url 'jdadev_simulation_target_portfolio' %}" class="btn btn-info btn-sm"><i class="fas fa-arrow-left"></i> Target Portfolio</a></td>
+        </tr>
+        {% endif %}
+
+        </tbody>
+        <tfoot>
+        <!--tr>
+            <td colspan="10" class="text-center">Footer</td>
+        </tr-->
+        </tfoot>
+    </table>
+
+    </div>
+
+    <div class="card-footer text-muted">
+        <small>{% trans 'As of' %} {% now "Y-m-d" %}</small>
+    </div>
+</div>
+{% endblock %}

@@ -11,8 +11,6 @@ urlpatterns = [
     path('jdadev_clear_stock_data', views.jdadev_clear_stock_data, name='jdadev_clear_stock_data'),
     path('jdadev_clear_custom_profile', views.jdadev_clear_custom_profile, name='jdadev_clear_custom_profile'),
 
-
-
     #path('upload_institution_type_excel/', views.upload_institution_type_excel, name='upload_institution_type_excel'),
     path('jdadev_bond_report/', views.jdadev_bond_report, name='jdadev_bond_report'),
     path('jdadev_mutual_fund_report/', views.jdadev_mutual_fund_report, name='jdadev_mutual_fund_report'),
@@ -50,7 +48,37 @@ urlpatterns = [
 
     #Simulation
     path('jdadev_simulation_home', views.jdadev_simulation_home, name='jdadev_simulation_home'),
+    path('jdadev_simulation_portfolio_after_sale', views.jdadev_simulation_portfolio_after_sale, name='jdadev_simulation_portfolio_after_sale'),
     path('jdadev_simulation_target_portfolio', views.jdadev_simulation_target_portfolio, name='jdadev_simulation_target_portfolio'),
+    ## EQ Sale
+    path('jdadev_simulation_stock_sale/', views.jdadev_simulation_stock_sale, name='jdadev_simulation_stock_sale'),
+    path('jdadev_simulation_confirm_stock_sold/', views.jdadev_simulation_confirm_stock_sold, name='jdadev_simulation_confirm_stock_sold'),
+    path('jdadev_simulation_stock_sold/', views.jdadev_simulation_stock_sold, name='jdadev_simulation_stock_sold'),
+    ## BN Sale
+    path('jdadev_simulation_bond_sale/', views.jdadev_simulation_bond_sale, name='jdadev_simulation_bond_sale'),
+    path('jdadev_simulation_confirm_bond_sold/', views.jdadev_simulation_confirm_bond_sold, name='jdadev_simulation_confirm_bond_sold'),
+    path('jdadev_simulation_bond_sold/', views.jdadev_simulation_bond_sold, name='jdadev_simulation_bond_sold'),
+
+    ### MU Sale
+    path('jdadev_simulation_mutual_fund_sale/', views.jdadev_simulation_mutual_fund_sale, name='jdadev_simulation_mutual_fund_sale'),
+    path('jdadev_simulation_confirm_mutual_fund_sold/', views.jdadev_simulation_confirm_mutual_fund_sold, name='jdadev_simulation_confirm_mutual_fund_sold'),
+    path('jdadev_simulation_mutual_fund_sold/', views.jdadev_simulation_mutual_fund_sold, name='jdadev_simulation_mutual_fund_sold'),
+
+    ### EQ purchase
+    path('jdadev_simulation_stock_buy/', views.jdadev_simulation_stock_buy, name='jdadev_simulation_stock_buy'),
+    path('jdadev_simulation_get_number_of_stocks/<str:client_portfolio_balance>', views.jdadev_simulation_get_number_of_stocks, name='jdadev_simulation_get_number_of_stocks'),
+    path('jdadev_simulation_confirm_stock_purchase', views.jdadev_simulation_confirm_stock_purchase, name='jdadev_simulation_confirm_stock_purchase'),
+    path('jdadev_simulation_stock_purchased', views.jdadev_simulation_stock_purchased, name='jdadev_simulation_stock_purchased'),
+    ### BN purchase
+    path('jdadev_simulation_bond_buy/', views.jdadev_simulation_bond_buy, name='jdadev_simulation_bond_buy'),
+    path('jdadev_simulation_get_number_of_bonds/<str:client_portfolio_balance>/', views.jdadev_simulation_get_number_of_bonds, name='jdadev_simulation_get_number_of_bonds'),
+    path('jdadev_simulation_confirm_bond_purchase', views.jdadev_simulation_confirm_bond_purchase, name='jdadev_simulation_confirm_bond_purchase'),
+    path('jdadev_simulation_bond_purchased', views.jdadev_simulation_bond_purchased, name='jdadev_simulation_bond_purchased'),
+    ### MU purchase
+    path('jdadev_simulation_mutual_fund_buy/', views.jdadev_simulation_mutual_fund_buy, name='jdadev_simulation_mutual_fund_buy'),
+    path('jdadev_simulation_get_number_of_mutual_funds/<str:client_portfolio_balance>/', views.jdadev_simulation_get_number_of_mutual_funds, name='jdadev_simulation_get_number_of_mutual_funds'),
+    path('jdadev_simulation_confirm_mutual_fund_purchase', views.jdadev_simulation_confirm_mutual_fund_purchase, name='jdadev_simulation_confirm_mutual_fund_purchase'),
+    path('jdadev_simulation_mutual_fund_purchased', views.jdadev_simulation_mutual_fund_purchased, name='jdadev_simulation_mutual_fund_purchased'),
 
     path('jdadev_bonds/res/', views.res, name='res'),
     path('jdadev_bonds/res_htmx/', views.res_htmx, name='res_htmx'),

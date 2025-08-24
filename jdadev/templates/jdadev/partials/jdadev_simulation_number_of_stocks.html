@@ -1,0 +1,59 @@
+{% for i in stocks %}
+<tr>
+    <td>{{ i.ticker }}</td>
+    <td>{{ i.number_of_share }}</td>
+    <td>{{ i.daily_value }}</td>
+    <td>{{ i.target_value }}</td>
+    <td>{{ i.gp|floatformat:2 }}</td>
+    <td>{{ i.total_current_value|floatformat:2 }}</td>
+    <td>{{ i.percentage_purchase|floatformat:2 }}%</td>
+    <td>{{ i.nbr_shares_to_buy|floatformat:2 }}</td>
+    <td>{{ i.net_purchase_price|floatformat:2 }}</td>
+    <td>{{ i.purchase_amount|floatformat:2 }}</td>
+</tr>
+{% endfor %}
+{% comment %}
+<tr>
+    <td colspan="11" class="text-end">
+        <button
+                id="buy-all-btn"
+                hx-post="{% url 'jdadev_simulation_confirm_stock_purchase' %}"
+                hx-trigger="click"
+                hx-vals='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'
+                hx-confirm="Are you sure you want to buy all stocks?"
+                hx-swap="none"
+                class="btn btn-sm btn-info">
+            Buy Stocks
+        </button>
+    </td>
+</tr>
+
+<script>
+document.getElementById("buy-all-btn").addEventListener("htmx:configRequest", function(evt) {
+    let rows = document.querySelectorAll("#stock-columns tr");
+    let stockData = [];
+
+    rows.forEach(row => {
+        let cells = row.querySelectorAll("td");
+        stockData.push({
+            ticker: cells[0].innerText,
+            number_of_share: cells[1].innerText,
+            daily_value: cells[2].innerText,
+            target_value: cells[3].innerText,
+            gp: cells[4].innerText,
+            total_current_value: cells[5].innerText,
+            percentage_purchase: cells[6].innerText.replace('%',''),
+            nbr_shares_to_buy: cells[7].innerText,
+            net_purchase_price: cells[8].innerText,
+            purchase_amount: cells[9].innerText
+        });
+    });
+
+    // Send JSON to Django
+    evt.detail.parameters['stocks'] = JSON.stringify(stockData);
+
+    // Add CSRF token dynamically as well
+    evt.detail.parameters['csrfmiddlewaretoken'] = "{{ csrf_token }}";
+});
+</script>
+{% endcomment %}

@@ -217,7 +217,16 @@ class TransactionFeesForm(forms.ModelForm):
     class Meta:
         model = TransactionFeesModel
         fields = ['commission_sgi', 'tps', 'country_sgi', 'commission_brvm', 'commission_dc_br','total_commission','actual_loss','potential_loss']
-# #///////////////////////////// GuarantorForm /////////////////////////////
+
+
+
+# #///////////////////////////// SimulationStockPurchaseForm /////////////////////////////
+class SimulationStockPurchaseForm(forms.Form):
+    nbr_of_stocks = forms.IntegerField(label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm nbr_of_stocks_id', 'placeholder': '# of stocks to buy'}))
+    #email = forms.EmailField(label="Your Email")
+
+
+
 # class GuarantorForm(forms.ModelForm):
 #     guarantor = forms.CharField(required=False, max_length=100, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant'}, ))
 #     guarantor_pctg = forms.DecimalField(required=False, max_digits=6, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Garant Pourcentage'}, ))

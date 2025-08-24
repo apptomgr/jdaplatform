@@ -4,11 +4,7 @@
 {% block assets %}
 
 
-
-
 <div class="row">
-
-
   <div class="col-md-12">
     <!--span class="text-secondary text-center mb-2 mt-2 ">Sale Simulation for {{sim.0.entry_date}} records</span-->
       {% include 'jdadev/jdadev_simulation_breadcrumbs.html' %}
@@ -40,6 +36,9 @@
 
       </tr>
       {% endfor %}
+      <tr>
+        <td colspan="8"><a href="{% url 'jdadev_simulation_portfolio_after_sale' %}" class="btn btn-info btn-sm">Portfolio After Sale <i class="fas fa-arrow-right"></i></a></td>
+      </tr>
 
       </tbody>
     </table>
