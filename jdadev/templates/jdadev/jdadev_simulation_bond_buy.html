@@ -1,8 +1,9 @@
 {% extends 'jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
-
 {% block assets %}
+
+workflow_bs {{workflow_bs}}
 <style xmlns:hx-on="http://www.w3.org/1999/xhtml">
     .header {
         display: flex;
@@ -48,7 +49,7 @@
                     <span class="text-info">{{ client_portfolio_balance|floatformat:2 }}</span>
                 </strong>
             </div>
-
+            {% if workflow_bs != 'Buy Mutual Fund' %} <!-- Don't show the input button unless workflow_bs ==
             <div class="ml-2">
                 <input
                         type="number"
@@ -62,6 +63,7 @@
                         hx-swap="innerHTML"
                 />
             </div>
+            {% endif %}
 
         </div>
     </div>
@@ -96,6 +98,7 @@
                     <input type="hidden" name="portfolio_id" value="{{ portfolio.id }}">
 
                     <!-- hidden by default; shown after HTMX swap -->
+
                     <button
                             type="button"
                             class="btn btn-success btn-sm"
@@ -107,6 +110,11 @@
                 </form>
             </td>
         </tr>
+        {% if workflow_bs == 'Buy Mutual Fund'%}
+        <tr>
+            <td colspan="10"><a href="{% url 'jdadev_simulation_mutual_fund_buy' %}" class="btn btn-info btn-sm">Buy Mututal Funds <i class="fas fa-arrow-right"></i></a></td>
+        </tr>
+        {% endif%}
         </tfoot>
     </table>
 

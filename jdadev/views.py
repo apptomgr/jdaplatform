@@ -581,15 +581,15 @@ def jdadev_recommendation(request):
 @login_required
 def jdadev_save_transaction_fees(request):
     user = request.user
+    print(f"584: user - {user} user.id - {user.id}")
     #client_eq_portfolio=ClientEquityAndRightsModel.objects.filter(client=user)
     portfolio = ClientEquityAndRightsModel.objects.filter(client=request.user)
     latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
-    #print(f"583 - latest_fees: {latest_fees}")
+    print(f"588 - latest_fees: {latest_fees}")
 
     if request.method == 'POST':
         instance = TransactionFeesModel.objects.filter(client=user).last()
         form = TransactionFeesForm(request.POST, instance=instance)
-
 
         if form.is_valid():
             transaction_fees = form.save(commit=False)
@@ -599,7 +599,8 @@ def jdadev_save_transaction_fees(request):
             #gain_or_loss =client_eq_portfolio.daily_value -
             #report_rows = [EquityReportRow(obj) for obj in client_eq_portfolio]
             if not latest_fees:
-                return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
+                latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
+                #return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
 
             report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
             #print(f"600 - report_rows: {report_rows}")
@@ -608,8 +609,8 @@ def jdadev_save_transaction_fees(request):
             context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
             return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
-            #print("🚨 Form is invalid:")
-            #print(form.errors)
+            print("611 - 🚨 Form is invalid:")
+            print(f"612: - { form.errors}")
             return render(request,"jdadev/partials/jdadev_transaction_fees_form.html", {"form": form})
 
     else:
@@ -1385,7 +1386,7 @@ def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port
     workflow_bs = None
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, stocks
-    client_portfolio_balance = float(sec_port_aft_sale[1]) - float(sec_tgt_ports[0])
+    client_portfolio_balance = float(sec_tgt_ports[0]) -float(sec_port_aft_sale[1])
 
     ### Decision point: We need to buy stocks since eq_after_sale < eq_tgt_port
     #Get the portfolio_balance after the initial sale
@@ -1399,11 +1400,12 @@ def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port
         curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase stocks
-            messages.success(request, f"Your have enough liquidity to purchase more stocks: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
+            messages.success(request, f"Your have enough liquidity to purchase more stocks: Your current liquid balance is <b>{curr_lq_balance:,.2f}</b> given you want to spend: {client_portfolio_balance}. ")
             workflow_bs ='Buy Stock' #
         else:
             # You don't have enough lq
             #print(f"1297 - You don't have enough lq curr bal is {curr_lq_balance}")
+            messages.warning(request, f"Your DON'T have enough liquidity to purchase more stocks: Your current liquid balance is <b>{curr_lq_balance:,.2f}</b> given you want to spend: <b>{client_portfolio_balance:,.2f}</b>. ")
             workflow_bs ='Buy Bond'
     else:
         workflow_bs ='Buy Bond'
@@ -1545,22 +1547,25 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
-    #print(f"1026 - sess_sec_tgt_ports: {sec_tgt_ports}")
-    #print(f"1027 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
+    print(f"1550 - sess_sec_tgt_ports: {sec_tgt_ports}")
+    print(f"1551 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
 
     ### First delete the previous simulation
     SimBondPurchasedModel.objects.all().delete()
 
-    #user = request.user
+    user = request.user
+    workflow_bs = None
+    #print(f"1557 - {workflow_bs}")
+
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, bond
-    client_portfolio_balance = float(sec_tgt_ports[1]) - float(sec_port_aft_sale[2])  #[1] & [2] for bn
-    #print(f"1222- client_portfolio_balance: {client_portfolio_balance}")
+    client_portfolio_balance = float(sec_port_aft_sale[2]) - float(sec_tgt_ports[1])  #[1] & [2] for bn
+    print(f"1563- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
-    ### Decision point: We need to buy bonds since bn_after_sale < bn_tgt_port
+    ### Decision point: We need to buy bonds if bn_after_sale < bn_tgt_port
     #Get the portfolio_balance after the initial sale
     if sec_port_aft_sale[2] < sec_tgt_ports[1]: #[2],[1] for bn
-        #print(f"1227 true: {sec_port_aft_sale[2]} is less than {sec_tgt_ports[1]} buy bonds if you have enough liquidity")
+        #print(f"1566true: {sec_port_aft_sale[2]} is less than {sec_tgt_ports[1]} buy bonds if you have enough liquidity")
         ### check if you have enough lq up to 5% of lq from the init sale
         lq_5 = sec_port_aft_sale[0] * 0.95
         ### check if you bought stocks to adjust your lq balance since it's the previous sequence
@@ -1568,20 +1573,23 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
         curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase bondss
-            messages.success(request, f"Your have enough liquidity to purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
+            messages.success(request, f"Your have enough liquidity ßto purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
             workflow_bs ='Confirm Bond Purchase' #
         else:
             # You don't have enough lq
             #print(f"1240 - You don't have enough lq curr bal is {curr_lq_balance}")
-            workflow_bs ='0'
+            #print(f"1557 - {workflow_bs}")
+            workflow_bs ='Buy Mutual Fund'
     else:
-        #print("1243 You can't buy bonds... ")
-        messages.warning(request, f"Your bond portfolio after sale is {sec_port_aft_sale[2]:,.2f} is less than your equity target portfolio : {sec_tgt_ports[1]:,.2f}. Proceed to next workflow - Buy Mutual Fund")
+        #print("1582 You can't buy bonds... ")
+        workflow_bs ='Buy Mutual Fund'
+        #print(f"1584 - {workflow_bs}")
+        messages.warning(request, f"Your bond portfolio after sale is {sec_port_aft_sale[2]:,.2f} is greater than your bond target portfolio : {sec_tgt_ports[1]:,.2f}. No need to buy more bonds. Proceed to next workflow - Buy Mutual Fund")
 
     #print(f"1248 bond tgt and after_sale - {sec_tgt_ports[1]} - {sec_port_aft_sale[2]}")
-
+    #print(f"1588 workflow_bs - {workflow_bs}")
     #print(f"1245 - client_portfolio_balance: {client_portfolio_balance} ")
-    context ={'client_portfolio_balance':client_portfolio_balance} #, 'workflow_bs':workflow_bs, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
+    context ={'client_portfolio_balance':client_portfolio_balance, 'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
     return render(request, 'jdadev/jdadev_simulation_bond_buy.html', context)
 
 #//////////////////////////////////////////////////////jdadev_simulation_get_number_of_bonds/////////////////
@@ -1590,6 +1598,8 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
     #print(f"1254 - bond_count: {bond_count}")
     #print(f"1255 - client_portfolio_balance: {client_portfolio_balance}")
     client_id = request.user.id
+
+    #lool
 
     total_portfolio_balance= float(client_portfolio_balance)
     percentage_per_bond = round(100.0 / bond_count, 2)
@@ -1716,16 +1726,17 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
     ### First delete the previous simulation db data if it exists
     SimMutualFundPurchasedModel.objects.all().delete()
 
-    #user = request.user
+    user = request.user
+    workflow_bs=None
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, mu
-    client_portfolio_balance = float(sec_tgt_ports[2]) - float(sec_port_aft_sale[3])  #[2] & [3] for mu
-    #print(f"1618- client_portfolio_balance: {client_portfolio_balance}")
+    client_portfolio_balance = float(sec_port_aft_sale[3]) - float(sec_tgt_ports[2])   #[2] & [3] for mu
+    print(f"1733- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
     ### Decision point: We need to buy mus if mu_after_sale < mu_tgt_port
     #Get the portfolio_balance after the initial sale
     if sec_port_aft_sale[3] < sec_tgt_ports[2]: #[3],[2] for mu
-        #print(f"1623 true: {sec_port_aft_sale[3]} is less than {sec_tgt_ports[2]} buy mus if you have enough liquidity")
+        print(f"1738 true: {sec_port_aft_sale[3]} is less than {sec_tgt_ports[2]} buy mus if you have enough liquidity")
         ### check if you have enough lq up to 5% of lq from the init sale
         lq_5 = sec_port_aft_sale[0] * 0.95
         ### check if you bought stocks or bonds to adjust your lq balance since they are  the previous sequences
@@ -1735,21 +1746,24 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
         #print(f"1630 -curr_lq_balance: {curr_lq_balance}")
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase mutual funds
-            #print("1633 - you have enough cash to purchase mutual funds")
+            print("1748 - you have enough cash to purchase mutual funds")
             messages.success(request, f"Your have enough liquidity to purchase more mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
 
-            #workflow_bs ='Confirm mu Purchase' #
+            workflow_bs ='Confirm Mutual Fund Purchase'
         else:
             # You don't have enough lq
-            print(f"1639 - You don't have enough lq curr bal is {curr_lq_balance:,.2f}")
-            print("1640 redirecting to prev")
+            workflow_bs ='Stock Sale'
+            print(f"1754 - You don't have enough lq curr bal is {curr_lq_balance:,.2f}")
+            print("1755 redirecting to prev")
             messages.error(request, f"Your dont't have enough liquidity to purchase mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}.")
             return redirect('jdadev_simulation_bond_purchased')
     else:
-        print("1644 You can't buy mutual funds... ")
+        messages.warning(request, f"Your Mutual Fund portfolio after sale is {sec_port_aft_sale[3]:,.2f} is greater than your Mututal Fund target portfolio : {sec_tgt_ports[2]:,.2f}. No need to buy more mutual funds. Proceed to next workflow - Sell Stocks")
+        workflow_bs ='Stock Sale'
+        #print("1759 You can't buy mutual funds... ")
 
 
-    context ={'client_portfolio_balance':client_portfolio_balance}
+    context ={'client_portfolio_balance':client_portfolio_balance, 'workflow_bs':workflow_bs}
     return render(request, 'jdadev/jdadev_simulation_mutual_fund_buy.html', context)
 
 #////////////////////////////////////jdadev_simulation_get_number_of_mutual_funds/////////////////

@@ -74,6 +74,10 @@
         </tr>
         {% endfor %}
         <!-- proceed to next step, buy bond, only if you already purchased stocks -->
+        <tr>
+            <td colspan="10"><a href="{% url 'jdadev_simulation_bond_buy' %}" class="btn btn-info btn-sm">Buy Bonds <i class="fas fa-arrow-right"></i></a></td>
+        </tr>
+        {% comment %}
         {% if purchased_mutual_funds.count > 0 %}
         <tr>
             <td colspan="10"><a href="{% url 'jdadev_simulation_bond_buy' %}" class="btn btn-info btn-sm">Buy Bonds <i class="fas fa-arrow-right"></i></a></td>
@@ -83,6 +87,7 @@
             <td colspan="10"><a href="{% url 'jdadev_simulation_target_portfolio' %}" class="btn btn-info btn-sm"><i class="fas fa-arrow-left"></i> Target Portfolio</a></td>
         </tr>
         {% endif %}
+        {% endcomment%}
 
         </tbody>
         <tfoot>
