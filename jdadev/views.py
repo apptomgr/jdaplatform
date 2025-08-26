@@ -653,6 +653,7 @@ def jdadev_simulation_home(request):
     return render(request, 'jdadev/jdadev_simulation_home.html', context)
 
 #//////////////////////////////////jdadev_simulation_portfolio_after_sale/////////////////////////////////
+@login_required
 def jdadev_simulation_portfolio_after_sale(request):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
@@ -707,6 +708,7 @@ def jdadev_simulation_portfolio_after_sale(request):
     return render(request, 'jdadev/jdadev_simulation_portfolio_after_sale.html', context)
 
 #//////////////////////////////////jdadev_simulation_target_portfolio/////////////////////////////////
+@login_required
 def jdadev_simulation_target_portfolio(request):
     user = request.user
     client_portfolio = ClientPortfolioModel.objects.filter(client=user).first()
@@ -867,6 +869,7 @@ def jdadev_simulation_target_portfolio(request):
 
 #//////////////////////////////////jdadev_simulation_stock_sale/////////////////////////////////
 import ast
+@login_required
 def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale ):
     user = request.user
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
@@ -1002,6 +1005,7 @@ def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio)
 #////////////////////////////////////jdadev_simulation_confirm_stock_sold/////////
 from django.views.decorators.http import require_POST
 @require_POST
+@login_required
 def jdadev_simulation_confirm_stock_sold(request):
     stock_sold = request.session.get('stock_sold', [])
 
@@ -1044,12 +1048,14 @@ def jdadev_simulation_confirm_stock_sold(request):
     return response
 
 #//////////////////////////////////jdadev_simulation_simulation_stock_sold/////////////////////////////
+@login_required
 def jdadev_simulation_stock_sold(request):
     sold_stocks = SimStockSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
     context={'sold_stocks': sold_stocks}
     return render(request, 'jdadev/jdadev_simulation_stock_sold.html', context)
 
 #//////////////////////////////////jdadev_simulation_bond_sale/////////////////////////////////
+@login_required
 def jdadev_simulation_bond_sale(request):
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
@@ -1156,6 +1162,7 @@ def generate_bond_sold_report(request, portfolio_balance, client_bn_portfolio):
 #////////////////////////////////////jdadev_simulation_confirm_bond_sold/////////
 from django.views.decorators.http import require_POST
 @require_POST
+@login_required
 def jdadev_simulation_confirm_bond_sold(request):
     print("1159 - Confirming bond sold")
     bond_sold = request.session.get('bond_sold', [])
@@ -1199,6 +1206,7 @@ def jdadev_simulation_confirm_bond_sold(request):
     return response
 
 #//////////////////////////////////jdadev_simulation_simulation_bond_sold/////////////////////////////
+@login_required
 def jdadev_simulation_bond_sold(request):
     sold_bonds = SimBondSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
     context={'sold_bonds': sold_bonds}
@@ -1206,6 +1214,7 @@ def jdadev_simulation_bond_sold(request):
     return render(request, 'jdadev/jdadev_simulation_bond_sold.html', context)
 
 #//////////////////////////////////jdadev_simulation_mutual_fund_sale/////////////////////////////////
+@login_required
 def jdadev_simulation_mutual_fund_sale(request):
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
@@ -1324,6 +1333,7 @@ def generate_mutual_fund_sold_report(request, portfolio_balance, client_mu_portf
 #////////////////////////////////////jdadev_simulation_confirm_mutual_fund_sold/////////
 from django.views.decorators.http import require_POST
 @require_POST
+@login_required
 def jdadev_simulation_confirm_mutual_fund_sold(request):
     mutual_fund_sold = request.session.get('mutual_fund_sold', [])
 
@@ -1367,6 +1377,7 @@ def jdadev_simulation_confirm_mutual_fund_sold(request):
     return response
 
 #//////////////////////////////////jdadev_simulation_mutual_fund_sold/////////////////////////////
+@login_required
 def jdadev_simulation_mutual_fund_sold(request):
     sold_mutual_funds = SimMutualFundSoldModel.objects.filter(client=request.user).order_by('-id') #[:10]
     context={'sold_mutual_funds': sold_mutual_funds}
@@ -1374,6 +1385,7 @@ def jdadev_simulation_mutual_fund_sold(request):
 
 
 #//////////////////////////////////jdadev_simulation_stock_buy/////////////////////////////////
+@login_required
 def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
@@ -1418,6 +1430,7 @@ def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port
     return render(request, 'jdadev/jdadev_simulation_stock_buy.html', context)
 
 #//////////////////////////////////////////////////////jdadev_simulation_get_number_of_stocks/////////////////
+@login_required
 def jdadev_simulation_get_number_of_stocks(request, client_portfolio_balance): #, sec_port_aft_sale, sec_tgt_ports):
     stock_count = int(request.GET.get('stock_count', 0))
     #sec_tgt_ports
@@ -1502,6 +1515,7 @@ def jdadev_simulation_get_number_of_stocks(request, client_portfolio_balance): #
 #////////////////////////////////////jdadev_simulation_confirm_stock_purchase/////////
 from django.views.decorators.http import require_POST
 @require_POST
+@login_required
 def jdadev_simulation_confirm_stock_purchase(request):
     stock_data = request.session.get('pending_stocks', [])
 
@@ -1536,12 +1550,14 @@ def jdadev_simulation_confirm_stock_purchase(request):
     return response
 
 #//////////////////////////////////jdadev_purchased_stock/////////////////////////////////
+@login_required
 def jdadev_simulation_stock_purchased(request):
     purchased_stocks = SimStockPurchasedModel.objects.filter(client=request.user).order_by('-id') #[:10]
     context={'purchased_stocks': purchased_stocks}
     return render(request, 'jdadev/jdadev_simulation_stock_purchased.html', context)
 
 #//////////////////////////////////jdadev_simulation_bond_buy/////////////////////////////////
+@login_required
 def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
     #print("1209 jdadev_simulation_bond_buy")
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
@@ -1670,6 +1686,7 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
 #////////////////////////////////////jdadev_simulation_confirm_stock_purchase/////////
 from django.views.decorators.http import require_POST
 @require_POST
+@login_required
 def jdadev_simulation_confirm_bond_purchase(request):
     bond_data = request.session.get('pending_bonds', [])
     #print(f"1329 - bond_data: {bond_data}")
@@ -1705,6 +1722,7 @@ def jdadev_simulation_confirm_bond_purchase(request):
     return response
 
 #//////////////////////////////////jdadev_simulation_bond_purchased/////////////////////////////////
+@login_required
 def jdadev_simulation_bond_purchased(request):
     purchased_bonds = SimBondPurchasedModel.objects.filter(client=request.user).order_by('yield_to_maturity') #[:10]
     context={'purchased_bonds': purchased_bonds}
@@ -1715,6 +1733,7 @@ def jdadev_simulation_bond_purchased(request):
 
 #\\\\\\\\\\\\\\\\\\\\\\\\ START MU Stuff
 #//////////////////////////////////jdadev_simulation_mutual_fund_buy/////////////////////////////////
+@login_required
 def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
     #print("1604 -  jdadev_simulation_mutual_fund_buy")
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
@@ -1841,6 +1860,7 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
 
 #///////////////////////////////jdadev_simulation_confirm_mutual_fund_purchase////////////////////////////
 @require_POST
+@login_required
 def jdadev_simulation_confirm_mutual_fund_purchase(request):
     mutual_fund_data = request.session.get('pending_mutual_funds', [])
     #print(f"1498The  - mutual_fund_data: {mutual_fund_data}")
@@ -1876,6 +1896,7 @@ def jdadev_simulation_confirm_mutual_fund_purchase(request):
     return response
 
 #//////////////////////////////////jdadev_simulation_bond_purchased/////////////////////////////////
+@login_required
 def jdadev_simulation_mutual_fund_purchased(request):
     purchased_mutual_funds = SimMutualFundPurchasedModel.objects.filter(client=request.user).order_by('-performance') #[:10]
 
