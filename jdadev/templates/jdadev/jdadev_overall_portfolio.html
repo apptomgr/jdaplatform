@@ -141,7 +141,7 @@
             <tr>
                 <!--td colspan="6"><div class="btn btn-info btn-sm" id="actionButton">Recommendation</div></td-->
                 {% if lcp.profile_type %}
-                <td colspan="6"><a href="{% url 'jdadev_recommendation' %}" class="btn btn-info btn-sm">Recommendation</a></td>
+                <td colspan="6"><a href="{% url 'jdadev_recommendation' %}" class="btn btn-info btn-sm">{% trans 'Recommendation' %}</a></td>
                 {% else %}
                 <td colspan="6"><a href="#" class="btn btn-warning btn-sm" aria-disabled="true">{% trans 'Select a Profile before proceeding' %}</a></td>
                 {% endif %}

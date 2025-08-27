@@ -830,20 +830,21 @@ def jdadev_simulation_target_portfolio(request):
 
     #Check decision point
     ### 1. Determine if stock B or S
-    if eqr_after_sale < eqr_tgt_port:
-            print(f"813 true: {eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f} redirect to bond sale")
-            workflow_bs = "Stock Sale" # Do nothing
-            #workflow_next_step = "Stock Sale"
-            #redirect to sell stocks buy
-            #ßmessages.warning(request, f"{eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f}. You don't have enough stocks to sell. Redirecting next workflow - Bond sale")
-
-    else:
-        ### Since eq after sale is > eq trgt the client can sell stocks
-        #print(f"839 - eqr_after_sale:{eqr_after_sale:,.2f} eqr_tgt_port: {eqr_tgt_port:,.2f}")
-        workflow_bs = "Bond Sale"
+    #print(f"813 true: {eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f} redirect to bond sale")
+    # if eqr_after_sale < eqr_tgt_port:
+    #         print(f"813 true: {eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f} redirect to bond sale")
+    #         workflow_bs = "Stock Sale" # Do nothing
+    #         #workflow_next_step = "Stock Sale"
+    #         #redirect to sell stocks buy
+    #         #ßmessages.warning(request, f"{eqr_after_sale:,.2f} is less than {eqr_tgt_port:,.2f}. You don't have enough stocks to sell. Redirecting next workflow - Bond sale")
+    #
+    # else:
+    #     ### Since eq after sale is > eq trgt the client can sell stocks
+    #     #print(f"839 - eqr_after_sale:{eqr_after_sale:,.2f} eqr_tgt_port: {eqr_tgt_port:,.2f}")
+    #     workflow_bs = "Bond Sale"
 
         #print(f"840 sec_tgt_ports: {sec_tgt_ports}")
-
+    workflow_bs = 'Stock Sale'
     #Create session to store sec_tgt_ports, sec_port_aft_sale
     # Delete the session keys first if they exist
     if 'sec_tgt_ports' in request.session:
@@ -1805,7 +1806,7 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
     workflow_bs=None
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, mu
-    client_portfolio_balance = float(sec_port_aft_sale[3]) - float(sec_tgt_ports[2])   #[2] & [3] for mu
+    client_portfolio_balance =  float(sec_tgt_ports[2]) -float(sec_port_aft_sale[3])   #[2] & [3] for mu
     #print(f"1733- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
     ### Decision point: We need to buy mus if mu_after_sale < mu_tgt_port
