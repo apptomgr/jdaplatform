@@ -757,7 +757,7 @@ def jdadev_simulation_target_portfolio(request):
     if ClientProfileModel.objects.count() >0:
         lcp = ClientProfileModel.objects.latest('id')
 
-    print(f"759 - lcp: {lcp.profile_type}")
+    #print(f"759 - lcp: {lcp.profile_type}")
 
     if ovp:
         la  = ovp.liquid_assets
@@ -839,7 +839,7 @@ def jdadev_simulation_target_portfolio(request):
 
     else:
         ### Since eq after sale is > eq trgt the client can sell stocks
-        print(f"839 - eqr_after_sale:{eqr_after_sale:,.2f} eqr_tgt_port: {eqr_tgt_port:,.2f}")
+        #print(f"839 - eqr_after_sale:{eqr_after_sale:,.2f} eqr_tgt_port: {eqr_tgt_port:,.2f}")
         workflow_bs = "Bond Sale"
 
         #print(f"840 sec_tgt_ports: {sec_tgt_ports}")
@@ -856,9 +856,9 @@ def jdadev_simulation_target_portfolio(request):
     request.session['sec_port_aft_sale'] = sec_port_aft_sale
 
     formatted_ports = [f"{val:,.2f}" for val in sec_tgt_ports]
-    print(f"856 - {formatted_ports}")
+    #print(f"856 - {formatted_ports}")
     formatted_ports = [f"{val:,.2f}" for val in sec_port_aft_sale]
-    print(f"858 - {formatted_ports}")
+    #print(f"858 - {formatted_ports}")
 
 
     # Mark session as modified (optional but safe)
@@ -877,10 +877,10 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
     ### Get the portfolio_balance
-    print(f"876: sec_tgt_ports {sec_tgt_ports}")
-    print(f"877: sec_port_aft_sale {sec_port_aft_sale}")
+    #print(f"876: sec_tgt_ports {sec_tgt_ports}")
+    #print(f"877: sec_port_aft_sale {sec_port_aft_sale}")
     portfolio_balance = float(sec_port_aft_sale[1] - sec_tgt_ports[0])
-    print(f"879 - bn_portfolio_balance: {portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[1]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[0]:,.2f}")
+    #print(f"879 - bn_portfolio_balance: {portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[1]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[0]:,.2f}")
     # #Convert str sec_tgt_ports to a list
     # #sec_tgt_ports_values =None
     # if sec_tgt_ports:
@@ -921,11 +921,11 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
         ### Set the workflow_bs to "Stock Sell" send a message to the user
         workflow_bs = "Stock Sale"
 
-        messages.success(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is greater than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. You have enough stocks to sell.")
+        messages.success(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is greater than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. Stock Sale is required.")
     else:
-        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is less than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. You dont have enough stocks to sell. Redirecting you to the next workflow - Bond Sell")
+        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[1]:,.2f} is less than your target equity portfolio, {sec_tgt_ports[0]:,.2f}. Stock Sale is not required. Redirecting you to the next workflow - Bond Sell")
         workflow_bs = "Bond Sale"
-        print("928 FALSE")
+        #print("928 FALSE")
 
 
     context ={'client_eqr_portfolio':client_eqr_portfolio, 'portfolio_balance': portfolio_balance, 'stock_sold_rpt':stock_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
@@ -1062,10 +1062,10 @@ def jdadev_simulation_bond_sale(request):
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
     ### Get the bn_portfolio_balance
-    print(f"1060: sec_tgt_ports {sec_tgt_ports}")
-    print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
+    #print(f"1060: sec_tgt_ports {sec_tgt_ports}")
+    #print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
     bn_portfolio_balance = float(sec_port_aft_sale[2] - sec_tgt_ports[1])
-    print(f"1063 -bn_portfolio_balance: {bn_portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[2]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[1]:,.2f}")
+    #print(f"1063 -bn_portfolio_balance: {bn_portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[2]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[1]:,.2f}")
     ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
     # Now check if the client's bn_tot_curr_val is > or < than the sec_tgt_ports_values[2] (2 for bn) value
     client_bn_portfolio = None
@@ -1080,9 +1080,9 @@ def jdadev_simulation_bond_sale(request):
         ### Set the workflow_bs to "Stock Sell" send a message to the user
         workflow_bs = "Bond Sale"
 
-        messages.success(request, f"Your after sale bond portfolio {sec_port_aft_sale[2]:,.2f} is greater than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. You have enough bonds to sell.")
+        messages.success(request, f"Your after sale bond portfolio {sec_port_aft_sale[2]:,.2f} is greater than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. Bond Sale is required.")
     else:
-        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[2]:,.2f} is less than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. You dont have enough bonds to sell. Redirecting you to the next workflow - Mutual Fund Sell")
+        messages.warning(request, f"Your after sale equity portfolio {sec_port_aft_sale[2]:,.2f} is less than your target bond portfolio, {sec_tgt_ports[1]:,.2f}. Bond Sale is not required. Redirecting you to the next workflow - Mutual Fund Sell")
         workflow_bs = "Mutual Fund Sale"
         #print("928 FALSE")
 
@@ -1164,7 +1164,7 @@ from django.views.decorators.http import require_POST
 @require_POST
 @login_required
 def jdadev_simulation_confirm_bond_sold(request):
-    print("1159 - Confirming bond sold")
+    #print("1159 - Confirming bond sold")
     bond_sold = request.session.get('bond_sold', [])
 
     if not bond_sold:
@@ -1221,17 +1221,17 @@ def jdadev_simulation_mutual_fund_sale(request):
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
     ### Get the bn_portfolio_balance
-    print(f"1167: sec_tgt_ports {sec_tgt_ports}")
-    print(f"1068: sec_port_aft_sale {sec_port_aft_sale}")
+    #print(f"1167: sec_tgt_ports {sec_tgt_ports}")
+    #print(f"1068: sec_port_aft_sale {sec_port_aft_sale}")
     mu_portfolio_balance = float(sec_port_aft_sale[3] - sec_tgt_ports[2])
-    print(f"1170 -mu_portfolio_balance: {mu_portfolio_balance:,.2f} sec_port_aft_sale_values[3]: {sec_port_aft_sale[3]:,.2f} minus sec_tgt_ports[2]: {sec_tgt_ports[2]:,.2f}")
+    #print(f"1170 -mu_portfolio_balance: {mu_portfolio_balance:,.2f} sec_port_aft_sale_values[3]: {sec_port_aft_sale[3]:,.2f} minus sec_tgt_ports[2]: {sec_tgt_ports[2]:,.2f}")
     ### Determine if you can sell mu. If float(sec_port_aft_sale[3] > sec_tgt_ports[2])
     # Now check if the client's mu_tot_curr_val is > or < than the sec_tgt_ports[2] (3 for mu) value
     client_mu_portfolio = None
     mutual_fund_sold_rpt = None
     workflow_bs= None
     if float(sec_port_aft_sale[3] > sec_tgt_ports[2]):
-        print(f"true: {sec_port_aft_sale[3]:,.2f} is greater than {sec_tgt_ports[2]:,.2f} proceed with mutual fund sale")
+        #print(f"true: {sec_port_aft_sale[3]:,.2f} is greater than {sec_tgt_ports[2]:,.2f} proceed with mutual fund sale")
         workflow_bs = "Mutual Fund Sale"
 
         ### get sim mutuals to exclude from ClientMutualFundsModel since it was initially sold
@@ -1244,16 +1244,15 @@ def jdadev_simulation_mutual_fund_sale(request):
 
         ### Set the workflow_bs to "Stock Sell" send a message to the user
         workflow_bs = "Mutual Fund Sale"
-        print("1198 /////////////////")
+        #print("1198 /////////////////")
 
-        messages.success(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is greater than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. You have enough mututal funds to sell.")
+        messages.success(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is greater than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. Mututal Funds sell is required.")
     else:
-        messages.warning(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is less than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. You dont have enough mututal funds to sell. Redirecting you to the next workflow - Stock Buy")
+        messages.warning(request, f"Your after sale mututal fund portfolio {sec_port_aft_sale[3]:,.2f} is less than your target mututal fund portfolio, {sec_tgt_ports[2]:,.2f}. Mututal funds to sell is not required. Redirecting you to the next workflow - Stock Buy")
         workflow_bs = "Stock Buy"
-        print("1189 FALSE")
+        #print("1189 FALSE")
 
     context ={'client_mu_portfolio':client_mu_portfolio, "mu_portfolio_balance": mu_portfolio_balance, 'mutual_fund_sold_rpt':mutual_fund_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
-    #context ={'client_mu_portfolio':client_mu_portfolio, 'workflow_bs':workflow_bs, "mu_portfolio_balance": mu_portfolio_balance, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
     return render(request, 'jdadev/jdadev_simulation_mutual_fund_sale.html', context)
 
 #////////////////////////////////////////generate_bond_sold_report ////////////////////////////////////
@@ -1575,8 +1574,8 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
 
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, bond
-    client_portfolio_balance = float(sec_port_aft_sale[2]) - float(sec_tgt_ports[1])  #[1] & [2] for bn
-    print(f"1563- client_portfolio_balance: {client_portfolio_balance:,.2f}")
+    client_portfolio_balance = float(sec_tgt_ports[1]) -float(sec_port_aft_sale[2])  #[1] & [2] for bn
+    #print(f"1578- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
     ### Decision point: We need to buy bonds if bn_after_sale < bn_tgt_port
     #Get the portfolio_balance after the initial sale
@@ -1589,7 +1588,7 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
         curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase bondss
-            messages.success(request, f"Your have enough liquidity ßto purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance}. ")
+            messages.success(request, f"Your have enough liquidity ßto purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
             workflow_bs ='Confirm Bond Purchase' #
         else:
             # You don't have enough lq
@@ -1619,56 +1618,113 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
 
     total_portfolio_balance= float(client_portfolio_balance)
     percentage_per_bond = round(100.0 / bond_count, 2)
+    #///
+    # Subquery: fetch client's number of shares for each BondModel
+    client_shares_sq = Subquery(
+        ClientBondsModel.objects.filter(
+            client=request.user,
+            symbol=OuterRef('pk')  # BondModel.pk <-> ClientBondsModel.symbol (FK)
+        ).values('nbr_of_shares')[:1],
+        output_field=IntegerField(),
+    )
 
-    # Subquery to get number_of_share from ClientEquityAndRightsModel
-    number_of_share_subquery = ClientBondsModel.objects.filter(bond_name=OuterRef('bond_names'),client=request.user).values('nbr_of_shares')[:1]
-    #print(f"1264 - number_of_share_subquery: {number_of_share_subquery}")
-    #tmp
-    bonds_with_ytm=BondModel.objects.filter(current_value__gt=0).annotate(
-        number_of_share=Coalesce(
-                 Subquery(number_of_share_subquery, output_field=IntegerField()),
-                 Value(0),
-                 output_field=IntegerField()
-             ),
+    # Annotate BondModel queryset with client-specific data
+    bonds_with_ytm = (
+        BondModel.objects.filter(current_value__gt=0)
+            .annotate(
+            client_nbr_of_shares=Coalesce(client_shares_sq, Value(0), output_field=IntegerField()),
+        )
+            .annotate(
             total_current_value=ExpressionWrapper(
-                         F('current_value') * F('nbr_of_shares'),
-                         output_field=DecimalField(max_digits=18, decimal_places=2)
-                     ),
+                F('current_value') * F('client_nbr_of_shares'),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            ),
             percentage_purchase=ExpressionWrapper(
-                         Value(percentage_per_bond),
-                         output_field=FloatField()
-                     ),
+                Value(percentage_per_bond),
+                output_field=FloatField()
+            ),
             purchase_amount=ExpressionWrapper(
-                     Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
-                     output_field=DecimalField(max_digits=18, decimal_places=2)
-                 ),
+                Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            ),
             nbr_shares_to_buy=ExpressionWrapper(
-                     (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
-                     output_field=IntegerField()
-                 ),
+                (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
+                output_field=IntegerField()
+            ),
             net_purchase_price=ExpressionWrapper(
-                         F('nbr_shares_to_buy') * F('current_value'),
-                         output_field=DecimalField(max_digits=18, decimal_places=2)
-                     )
+                F('nbr_shares_to_buy') * F('current_value'),
+                output_field=DecimalField(max_digits=18, decimal_places=2)
+            ),
+        )
+            .order_by('-yield_to_maturity')[:bond_count]
+    )
 
-
-    ).order_by('yield_to_maturity')[:bond_count]
-
-    ### Convert queryset into list of dicts for session storage
+    # Return as list of dictionaries
     bonds_list = list(
         bonds_with_ytm.values(
-            "symbol",
-            "number_of_share",
+            "symbol",                # Bond symbol
+            "client_nbr_of_shares",  # <-- from ClientBondsModel (NOT BondModel)
             "current_value",
             "yield_to_maturity",
             "total_current_value",
             "percentage_purchase",
             "nbr_shares_to_buy",
             "net_purchase_price",
-            "purchase_amount"
+            "purchase_amount",
         )
     )
-    #print(f"1312 - bonds_list: {bonds_list}")
+
+    #///
+
+    # # Subquery to get number_of_share from ClientEquityAndRightsModel
+    # number_of_share_subquery = ClientBondsModel.objects.filter(bond_name=OuterRef('bond_names'),client=request.user).values('nbr_of_shares')[:1]
+    # #print(f"1264 - number_of_share_subquery: {number_of_share_subquery}")
+    # #tmp
+    # bonds_with_ytm=BondModel.objects.filter(current_value__gt=0).annotate(
+    #     number_of_share=Coalesce(
+    #              Subquery(number_of_share_subquery, output_field=IntegerField()),
+    #              Value(0),
+    #              output_field=IntegerField()
+    #          ),
+    #         total_current_value=ExpressionWrapper(
+    #                      F('current_value') * F('nbr_of_shares'),
+    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
+    #                  ),
+    #         percentage_purchase=ExpressionWrapper(
+    #                      Value(percentage_per_bond),
+    #                      output_field=FloatField()
+    #                  ),
+    #         purchase_amount=ExpressionWrapper(
+    #                  Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
+    #                  output_field=DecimalField(max_digits=18, decimal_places=2)
+    #              ),
+    #         nbr_shares_to_buy=ExpressionWrapper(
+    #                  (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
+    #                  output_field=IntegerField()
+    #              ),
+    #         net_purchase_price=ExpressionWrapper(
+    #                      F('nbr_shares_to_buy') * F('current_value'),
+    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
+    #                  )
+    #
+    #
+    # ).order_by('-yield_to_maturity')[:bond_count]
+    #
+    # ### Convert queryset into list of dicts for session storage
+    # bonds_list = list(
+    #     bonds_with_ytm.values(
+    #         "symbol",
+    #         "number_of_share",
+    #         "current_value",
+    #         "yield_to_maturity",
+    #         "total_current_value",
+    #         "percentage_purchase",
+    #         "nbr_shares_to_buy",
+    #         "net_purchase_price",
+    #         "purchase_amount"
+    #     )
+    # )
+    # #print(f"1312 - bonds_list: {bonds_list}")
 
     ### Optionally convert Decimals to floats for JSON serialization
     for bond in bonds_list:
@@ -1750,12 +1806,12 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, mu
     client_portfolio_balance = float(sec_port_aft_sale[3]) - float(sec_tgt_ports[2])   #[2] & [3] for mu
-    print(f"1733- client_portfolio_balance: {client_portfolio_balance:,.2f}")
+    #print(f"1733- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
     ### Decision point: We need to buy mus if mu_after_sale < mu_tgt_port
     #Get the portfolio_balance after the initial sale
     if sec_port_aft_sale[3] < sec_tgt_ports[2]: #[3],[2] for mu
-        print(f"1738 true: {sec_port_aft_sale[3]} is less than {sec_tgt_ports[2]} buy mus if you have enough liquidity")
+        #print(f"1738 true: {sec_port_aft_sale[3]} is less than {sec_tgt_ports[2]} buy mus if you have enough liquidity")
         ### check if you have enough lq up to 5% of lq from the init sale
         lq_5 = sec_port_aft_sale[0] * 0.95
         ### check if you bought stocks or bonds to adjust your lq balance since they are  the previous sequences
@@ -1765,15 +1821,15 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
         #print(f"1630 -curr_lq_balance: {curr_lq_balance}")
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase mutual funds
-            print("1748 - you have enough cash to purchase mutual funds")
+            #print("1748 - you have enough cash to purchase mutual funds")
             messages.success(request, f"Your have enough liquidity to purchase more mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
 
             workflow_bs ='Confirm Mutual Fund Purchase'
         else:
             # You don't have enough lq
             workflow_bs ='Stock Sale'
-            print(f"1754 - You don't have enough lq curr bal is {curr_lq_balance:,.2f}")
-            print("1755 redirecting to prev")
+            #print(f"1754 - You don't have enough lq curr bal is {curr_lq_balance:,.2f}")
+            #print("1755 redirecting to prev")
             messages.error(request, f"Your dont't have enough liquidity to purchase mutual funds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}.")
             return redirect('jdadev_simulation_bond_purchased')
     else:

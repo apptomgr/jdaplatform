@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block assets %}
 {% comment %}
-Latest Client Profile (lcp): {{lcp.profile_type}}
+
 {% endcomment %}
 
 <style>
@@ -44,32 +44,32 @@ Latest Client Profile (lcp): {{lcp.profile_type}}
             </div>
             <div class="dropdown">
                 <a class="nav-link dropdown-toggle text-info" href="#" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <b>Profiles</b>
+                    <b>{% trans 'Profiles' %}</b>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item {% if lcp.profile_type == 'dynamic' %} active {% endif %}"  href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="{% url 'jdadev_overall_portfolio' 'dynamic' %}">
-                    {% if lcp.profile_type == 'dynamic' %} <i class="fas fa-check"></i> {% endif %} Dynamic
+                    {% if lcp.profile_type == 'dynamic' %} <i class="fas fa-check"></i> {% endif %} {% trans 'Dynamic' %}
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item {% if lcp.profile_type == 'moderate' %} active {% endif %}" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="{% url 'jdadev_overall_portfolio' 'moderate' %}">
-                        {% if lcp.profile_type == 'moderate' %} <i class="fas fa-check"></i> {%endif %} Moderate
+                        {% if lcp.profile_type == 'moderate' %} <i class="fas fa-check"></i> {%endif %} {% trans 'Moderate' %}
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item {% if lcp.profile_type == 'prudent' %} active {% endif %}"  href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="{% url 'jdadev_overall_portfolio' 'prudent' %}">
-                        {% if lcp.profile_type == 'prudent' %} <i class="fas fa-check"></i> {%endif %} Prudent
+                        {% if lcp.profile_type == 'prudent' %} <i class="fas fa-check"></i> {%endif %} {% trans 'Prudent' %}
                     </a>
                     <div class="dropdown-divider"></div>
                     {% if custom_profile %}
                     <a class="dropdown-item {% if lcp.profile_type == 'custom' %} active {% endif %}" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="{% url 'jdadev_overall_portfolio' 'custom' %}">
-                        {% if lcp.profile_type == 'custom' %} <i class="fas fa-check"></i> {%endif %} Custom
+                        {% if lcp.profile_type == 'custom' %} <i class="fas fa-check"></i> {%endif %} {% trans 'Custom' %}
                     </a>
                     {% else %}
                     <a class="dropdown-item {% if lcp.profile_type == 'custom' %} active {% endif %}" href="#" data-bs-toggle="modal" data-bs-target="#confirmModal" data-url="{% url 'jdadev_overall_portfolio' 'custom_set' %}">
-                        {% if lcp.profile_type == 'custom' %} <i class="fas fa-check"></i> {%endif %} Custom
+                        {% if lcp.profile_type == 'custom' %} <i class="fas fa-check"></i> {%endif %} {% trans 'Custom' %}
                     </a>
                     {% endif %}
                     <div class="dropdown-divider">tmp</div>
-                    <a class="dropdown-item text-warning" href="#" data-bs-toggle="modal" data-bs-target="#confirmDelModal" data-url="{% url 'jdadev_clear_custom_profile' %}">Clear</a>
+                    <a class="dropdown-item text-warning" href="#" data-bs-toggle="modal" data-bs-target="#confirmDelModal" data-url="{% url 'jdadev_clear_custom_profile' %}">{% trans 'Clear' %}</a>
 
                 </div>
             </div>
@@ -80,12 +80,12 @@ Latest Client Profile (lcp): {{lcp.profile_type}}
         <table id="res" class="table table-responsive-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
             <thead>
             <tr>
-                <th>Portfolio Value</th>
-                <th>Liquid Assets</th>
-                <th>Equity & Rights</th>
-                <th>Bonds</th>
-                <th>Mutual Funds</th>
-                <th>Entry Date</th>
+                <th>{% trans 'Portfolio Value' %}</th>
+                <th>{% trans 'Liquid Assets' %}</th>
+                <th>{% trans 'Equity & Rights' %}</th>
+                <th>{% trans 'Bonds' %}</th>
+                <th>{% trans 'Mutual Funds' %}</th>
+                <th>{% trans 'Entry Date' %}</th>
             </tr>
             </thead>
             <tbody>
@@ -117,7 +117,7 @@ Latest Client Profile (lcp): {{lcp.profile_type}}
             </tr>
                 <tr>
                     <td colspan="6">
-                        <button type="submit" class="btn btn-sm btn-info">Save Custom Profile</button>
+                        <button type="submit" class="btn btn-sm btn-info">{% trans 'Save Custom Profile' %}</button>
                     </td>
                 </tr>
             </form>
@@ -143,7 +143,7 @@ Latest Client Profile (lcp): {{lcp.profile_type}}
                 {% if lcp.profile_type %}
                 <td colspan="6"><a href="{% url 'jdadev_recommendation' %}" class="btn btn-info btn-sm">Recommendation</a></td>
                 {% else %}
-                <td colspan="6"><a href="#" class="btn btn-warning btn-sm" aria-disabled="true">Select a Profile before proceeding</a></td>
+                <td colspan="6"><a href="#" class="btn btn-warning btn-sm" aria-disabled="true">{% trans 'Select a Profile before proceeding' %}</a></td>
                 {% endif %}
             </tr>
             {% endif %}

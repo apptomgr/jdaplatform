@@ -1,7 +1,7 @@
 {% for i in bonds %}
 <tr>
     <td>{{ i.symbol }}</td>
-    <td>{{ i.nbr_of_shares }}</td>
+    <td>{{ i.client_nbr_of_shares }}</td>
     <td>{{ i.current_value }}</td>
     <td>{{ i.yield_to_maturity }}</td>
     <td>{{ i.total_current_value|floatformat:2 }}</td>

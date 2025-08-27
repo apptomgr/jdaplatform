@@ -111,17 +111,17 @@ ClientBondsFormset_edit = modelformset_factory(ClientBondsModel, form=ClientBond
 #///////////////////////////////////////ClientMutualFundForm//////////////////////////////
 from django import forms
 from .models import ClientMutualFundsModel, MutualFundModel, SociateDeGessionModel, DepositaireModel
-
+#'Societe De Gessions',
 class ClientMutualFundForm(forms.ModelForm):
     sociate_de_gession = forms.ModelChoiceField(
         queryset=SociateDeGessionModel.objects.all().distinct().order_by('sociate_de_gession'),
-        empty_label='Societe De Gessions',
+        empty_label=_('Asset Management Company'),
         label='',
         widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick', 'onchange': 'return mu_triggerHtmxGet(id);'})
     )
     depositaire = forms.ModelChoiceField(
         queryset=DepositaireModel.objects.all().distinct().order_by('depositaire'),
-        empty_label='Depositaire',
+        empty_label=_('Depositary'),
         label='',
         widget=forms.Select(attrs={'class': 'form-control form-control-sm show-tick mu_depositaire_id', 'onchange': 'return mu_triggerHtmxGet(id);'})
     )
