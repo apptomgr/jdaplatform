@@ -1574,7 +1574,7 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
 
 
     ### client_portfolio_balance is the difference between the portfolio after sale and the target portfolio for the product, bond
-    client_portfolio_balance = float(sec_tgt_ports[1]) -float(sec_port_aft_sale[2])  #[1] & [2] for bn
+    client_portfolio_balance = float(sec_tgt_ports[1]) - float(sec_port_aft_sale[2])  #[1] & [2] for bn
     #print(f"1578- client_portfolio_balance: {client_portfolio_balance:,.2f}")
 
     ### Decision point: We need to buy bonds if bn_after_sale < bn_tgt_port
@@ -1758,7 +1758,7 @@ def jdadev_simulation_confirm_bond_purchase(request):
         SimBondPurchasedModel.objects.create(
             client=request.user,
             bond_name=bond['symbol'],
-            nbr_of_shares=bond['number_of_share'],
+            nbr_of_shares=bond['client_nbr_of_shares'],
             current_value=bond['current_value'],
             yield_to_maturity=bond['yield_to_maturity'],
             total_current_value=bond['total_current_value'],
