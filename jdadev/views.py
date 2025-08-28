@@ -609,8 +609,8 @@ def jdadev_save_transaction_fees(request):
             context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
             return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
-            print("611 - 🚨 Form is invalid:")
-            print(f"612: - { form.errors}")
+            #print("611 - 🚨 Form is invalid:")
+            #print(f"612: - { form.errors}")
             return render(request,"jdadev/partials/jdadev_transaction_fees_form.html", {"form": form})
 
     else:
@@ -868,14 +868,61 @@ def jdadev_simulation_target_portfolio(request):
     context={'client_portfolio': client_portfolio,'client':user,'client_profiles':client_profiles, 'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst, "sec_tgt_ports":sec_tgt_ports, 'sec_port_aft_sale':sec_port_aft_sale, "workflow_bs":workflow_bs, "workflow_next_step":workflow_next_step}
     return render(request, 'jdadev/jdadev_simulation_target_portfolio.html', context)
 
+#////////////////////////////////////////////// simulation_validate_session_data ///////////
+def simulation_validate_session_data(request, session_keys, redirect_url, error_message=None):
+    """
+    Validate if session data exists and is not empty.
+
+    Args:
+        request: Django request object
+        session_keys: List of session keys to check or single key as string
+        redirect_url: URL to redirect to if validation fails
+        error_message: Custom error message (optional)
+
+    Returns:
+        None if validation passes, HttpResponse redirect if validation fails
+    """
+    # Handle single key or list of keys
+    if isinstance(session_keys, str):
+        session_keys = [session_keys]
+
+    empty_keys = []
+
+    # Check each session key
+    for key in session_keys:
+        session_data = request.session.get(key, [])
+        if not session_data:
+            empty_keys.append(key)
+
+    # If any keys are empty, redirect
+    if empty_keys:
+        if error_message:
+            messages.error(request, error_message)
+        else:
+            # Generate default error message
+            if len(empty_keys) == 1:
+                messages.error(request, f"No {empty_keys[0].replace('_', ' ')} data found in session.")
+            else:
+                messages.error(request, f"Missing session data: {', '.join(empty_keys)}")
+
+        return redirect(redirect_url)
+
+    # Validation passed
+    return None
+
 #//////////////////////////////////jdadev_simulation_stock_sale/////////////////////////////////
 import ast
 @login_required
 def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale ):
-    user = request.user
-    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+    user = request.user
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+
 
     ### Get the portfolio_balance
     #print(f"876: sec_tgt_ports {sec_tgt_ports}")
@@ -1062,9 +1109,18 @@ def jdadev_simulation_bond_sale(request):
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+    ### Validate sessions before proceeding
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+
     ### Get the bn_portfolio_balance
-    #print(f"1060: sec_tgt_ports {sec_tgt_ports}")
-    #print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
+    print(f"1060: sec_tgt_ports {sec_tgt_ports}")
+    print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
     bn_portfolio_balance = float(sec_port_aft_sale[2] - sec_tgt_ports[1])
     #print(f"1063 -bn_portfolio_balance: {bn_portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[2]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[1]:,.2f}")
     ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
@@ -1220,6 +1276,12 @@ def jdadev_simulation_mutual_fund_sale(request):
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+
+    user = request.user
 
     ### Get the bn_portfolio_balance
     #print(f"1167: sec_tgt_ports {sec_tgt_ports}")
@@ -1389,6 +1451,12 @@ def jdadev_simulation_mutual_fund_sold(request):
 def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+
     #print(f"1271 - sec_tgt_ports: {sec_tgt_ports}")
     #print(f"1272 - sec_port_aft_sale: {sec_port_aft_sale}")
     # First delete the previous simulation
@@ -1563,10 +1631,16 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
     ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+
     print(f"1550 - sess_sec_tgt_ports: {sec_tgt_ports}")
     print(f"1551 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
 
-    ### First delete the previous simulation
+
+### First delete the previous simulation
     SimBondPurchasedModel.objects.all().delete()
 
     user = request.user
@@ -1794,10 +1868,15 @@ def jdadev_simulation_bond_purchased(request):
 #//////////////////////////////////jdadev_simulation_mutual_fund_buy/////////////////////////////////
 @login_required
 def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
-    #print("1604 -  jdadev_simulation_mutual_fund_buy")
-    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    ### validate sessions
+    validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
+    if validation_result:
+        return validation_result  # This will redirect to target port to reset the sessions.
+    #print("1604 -  jdadev_simulation_mutual_fund_buy")
+    ### Get the sess_sec_tgt_ports and sess_sec_port_aft_sale
+
     #print(f"1608 - sess_sec_tgt_ports: {sec_tgt_ports}")
     #print(f"1609 - sess_sec_port_aft_sale: {sec_port_aft_sale}")
 
@@ -1946,28 +2025,45 @@ def jdadev_simulation_confirm_mutual_fund_purchase(request):
         return redirect('some-page') # XXXX Fix redirection
 
     # bond_data is now a list of dicts, same structure as above
-    for mu in mutual_fund_data:
-        SimMutualFundPurchasedModel.objects.create(
-            client=request.user,
-            opcvm=mu['opcvm'],
-            mu_nbr_of_share=mu['mu_nbr_of_share'],
-            mu_current_value=mu['current_value'],
-            performance=mu['performance'],
-            total_current_value=mu['mu_total_current_value'],
-            percentage_purchase=mu['percentage_purchase'],
-            nbr_shares_to_buy=mu['nbr_shares_to_buy'],
-            net_purchase_price=mu['net_purchase_price'],
-            purchase_amount=mu['purchase_amount'],
-        )
-    messages.success(request, f"Successfully  Purchased Mutual Funss")  # show is current bond and cash balanced: {client_portfolio_balance}. ")
-    # Now update the target_portfolio
+    try:
+        for mu in mutual_fund_data:
+            SimMutualFundPurchasedModel.objects.create(
+                client=request.user,
+                opcvm=mu['opcvm'],
+                mu_nbr_of_share=mu['mu_nbr_of_share'],
+                mu_current_value=mu['current_value'],
+                performance=mu['performance'],
+                total_current_value=mu['mu_total_current_value'],
+                percentage_purchase=mu['percentage_purchase'],
+                nbr_shares_to_buy=mu['nbr_shares_to_buy'],
+                net_purchase_price=mu['net_purchase_price'],
+                purchase_amount=mu['purchase_amount'],
+            )
+        messages.success(request, f"Successfully  Purchased Mutual Funss")  # show is current bond and cash balanced: {client_portfolio_balance}. ")
+        # Now update the target_portfolio
+        # Clear session after saving
+        del request.session['pending_mutual_funds']
 
-    # Optionally clear session after saving
-    del request.session['pending_mutual_funds']
-    # HTMX redirect header
-    response = HttpResponse()
-    response['HX-Redirect'] = '/jdadev/jdadev_simulation_mutual_fund_purchased'  # URL mapped to purchased bond page
-    return response
+        # HTMX redirect header
+        response = HttpResponse()
+        response['HX-Redirect'] = '/jdadev/jdadev_simulation_mutual_fund_purchased'
+        return response
+
+    except Exception as e:
+        ### Log the error and show user-friendly message
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error creating mutual fund purchases: {e}")
+
+        messages.error(request, f"An error occurred while processing your purchase. Please try again. {e}")
+        return redirect('some-error-page')
+
+    ## Optionally clear session after saving
+    #del request.session['pending_mutual_funds']
+    ## HTMX redirect header
+    #response = HttpResponse()
+    #response['HX-Redirect'] = '/jdadev/jdadev_simulation_mutual_fund_purchased'  # URL mapped to purchased bond page
+    #return response
 
 #//////////////////////////////////jdadev_simulation_bond_purchased/////////////////////////////////
 @login_required
