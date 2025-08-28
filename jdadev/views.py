@@ -1589,9 +1589,11 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
         curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase bondss
-            messages.success(request, f"Your have enough liquidity ßto purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
+            messages.success(request, f"Your have enough liquidity to purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
             workflow_bs ='Confirm Bond Purchase' #
         else:
+            messages.warning(request, f"Your don't have enough liquidity to purchase more bonds: Your current liquid balance is {curr_lq_balance:,.2f} given you want to spend: {client_portfolio_balance:,.2f}. ")
+
             # You don't have enough lq
             #print(f"1240 - You don't have enough lq curr bal is {curr_lq_balance}")
             #print(f"1557 - {workflow_bs}")
@@ -1610,6 +1612,7 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
 
 #//////////////////////////////////////////////////////jdadev_simulation_get_number_of_bonds/////////////////
 from django.db.models.functions import Cast
+from django.db.models import CharField, OuterRef, Subquery, IntegerField, Value, ExpressionWrapper, F, DecimalField
 
 def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
     bond_count = int(request.GET.get('bond_count', 0))
