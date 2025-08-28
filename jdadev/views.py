@@ -1847,25 +1847,26 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
 #////////////////////////////////////jdadev_simulation_get_number_of_mutual_funds/////////////////
 def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balance):
     mutual_fund_count = int(request.GET.get('mutual_fund_count', 0))
-    #print(f"1655 - mutual_fund_count: {mutual_fund_count}")
-    #print(f"1656 - client_portfolio_balance: {client_portfolio_balance}")
     client_id = request.user.id
 
-    total_portfolio_balance= float(client_portfolio_balance)
+    total_portfolio_balance = float(client_portfolio_balance)
     percentage_per_mutual_fund = round(100.0 / mutual_fund_count, 2)
 
-    # Subquery to get number_of_share from ClientEquityAndRightsModel
-    number_of_share_subquery = ClientMutualFundsModel.objects.filter(opcvm=OuterRef('opcvm'),client=request.user).values('mu_nbr_of_share')[:1]
+    # Subquery to get number_of_share from ClientMutualFundsModel
+    number_of_share_subquery = ClientMutualFundsModel.objects.filter(
+        opcvm=OuterRef('opcvm'),
+        client=request.user
+    ).values('mu_nbr_of_share')[:1]
 
-    ###  START UPDATES FROM HERE ###
-    mututal_funds_with_perf=MutualFundModel.objects.filter(current_value__gt=0).annotate(
+    ### FIXED ANNOTATIONS ###
+    mutual_funds_with_perf = MutualFundModel.objects.filter(current_value__gt=0).annotate(
         mu_nbr_of_share=Coalesce(
             Subquery(number_of_share_subquery, output_field=IntegerField()),
             Value(0),
             output_field=IntegerField()
         ),
         mu_total_current_value=ExpressionWrapper(
-            F('current_value') * F('nbr_of_share'),
+            F('current_value') * F('mu_nbr_of_share'),  # ✅ fixed
             output_field=DecimalField(max_digits=18, decimal_places=2)
         ),
         percentage_purchase=ExpressionWrapper(
@@ -1884,25 +1885,22 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
             F('nbr_shares_to_buy') * F('current_value'),
             output_field=DecimalField(max_digits=18, decimal_places=2)
         )
-
-
     ).order_by('-performance')[:mutual_fund_count]
 
     ### Convert queryset into list of dicts for session storage
     mutual_funds_list = list(
-        mututal_funds_with_perf.values(
+        mutual_funds_with_perf.values(
             "opcvm",
-            "nbr_of_share",
+            "mu_nbr_of_share",      # ✅ fixed
             "current_value",
             "performance",
-            "mu_total_current_value",
+            "mu_total_current_value",  # ✅ fixed
             "percentage_purchase",
             "nbr_shares_to_buy",
             "net_purchase_price",
             "purchase_amount"
         )
     )
-    #print(f"1312 - bonds_list: {mutual_funds_list}")
 
     ### Optionally convert Decimals to floats for JSON serialization
     for mu in mutual_funds_list:
@@ -1910,11 +1908,10 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
             if isinstance(value, Decimal):
                 mu[key] = float(value)
 
-    #print(f"1328 - bond_list: {mutual_funds_list}")
     ### Save to session
     request.session['pending_mutual_funds'] = mutual_funds_list
 
-    context = {'mutual_funds': mututal_funds_with_perf}
+    context = {'mutual_funds': mutual_funds_with_perf}
     return render(request, 'jdadev/partials/jdadev_simulation_number_of_mutual_funds.html', context)
 
 #///////////////////////////////jdadev_simulation_confirm_mutual_fund_purchase////////////////////////////
@@ -1935,7 +1932,7 @@ def jdadev_simulation_confirm_mutual_fund_purchase(request):
         SimMutualFundPurchasedModel.objects.create(
             client=request.user,
             opcvm=mu['opcvm'],
-            mu_nbr_of_share=mu['nbr_of_share'],
+            mu_nbr_of_share=mu['mu_nbr_of_share'],
             mu_current_value=mu['current_value'],
             performance=mu['performance'],
             total_current_value=mu['mu_total_current_value'],
