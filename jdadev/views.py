@@ -1609,22 +1609,21 @@ def jdadev_simulation_bond_buy(request): #, workflow_bs, sec_tgt_ports, sec_port
     return render(request, 'jdadev/jdadev_simulation_bond_buy.html', context)
 
 #//////////////////////////////////////////////////////jdadev_simulation_get_number_of_bonds/////////////////
+from django.db.models.functions import Cast
+
 def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
     bond_count = int(request.GET.get('bond_count', 0))
-    #print(f"1254 - bond_count: {bond_count}")
-    #print(f"1255 - client_portfolio_balance: {client_portfolio_balance}")
     client_id = request.user.id
 
-    #lool
-
-    total_portfolio_balance= float(client_portfolio_balance)
+    total_portfolio_balance = float(client_portfolio_balance)
     percentage_per_bond = round(100.0 / bond_count, 2)
-    #///
+
     # Subquery: fetch client's number of shares for each BondModel
+    # FIX: Cast the OuterRef('pk') to a CharField to match the 'symbol' field type
     client_shares_sq = Subquery(
         ClientBondsModel.objects.filter(
             client=request.user,
-            symbol=OuterRef('pk')  # BondModel.pk <-> ClientBondsModel.symbol (FK)
+            symbol=Cast(OuterRef('pk'), CharField())
         ).values('nbr_of_shares')[:1],
         output_field=IntegerField(),
     )
@@ -1663,8 +1662,8 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
     # Return as list of dictionaries
     bonds_list = list(
         bonds_with_ytm.values(
-            "symbol",                # Bond symbol
-            "client_nbr_of_shares",  # <-- from ClientBondsModel (NOT BondModel)
+            "symbol",
+            "client_nbr_of_shares",
             "current_value",
             "yield_to_maturity",
             "total_current_value",
@@ -1675,71 +1674,17 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
         )
     )
 
-    #///
-
-    # # Subquery to get number_of_share from ClientEquityAndRightsModel
-    # number_of_share_subquery = ClientBondsModel.objects.filter(bond_name=OuterRef('bond_names'),client=request.user).values('nbr_of_shares')[:1]
-    # #print(f"1264 - number_of_share_subquery: {number_of_share_subquery}")
-    # #tmp
-    # bonds_with_ytm=BondModel.objects.filter(current_value__gt=0).annotate(
-    #     number_of_share=Coalesce(
-    #              Subquery(number_of_share_subquery, output_field=IntegerField()),
-    #              Value(0),
-    #              output_field=IntegerField()
-    #          ),
-    #         total_current_value=ExpressionWrapper(
-    #                      F('current_value') * F('nbr_of_shares'),
-    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
-    #                  ),
-    #         percentage_purchase=ExpressionWrapper(
-    #                      Value(percentage_per_bond),
-    #                      output_field=FloatField()
-    #                  ),
-    #         purchase_amount=ExpressionWrapper(
-    #                  Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
-    #                  output_field=DecimalField(max_digits=18, decimal_places=2)
-    #              ),
-    #         nbr_shares_to_buy=ExpressionWrapper(
-    #                  (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
-    #                  output_field=IntegerField()
-    #              ),
-    #         net_purchase_price=ExpressionWrapper(
-    #                      F('nbr_shares_to_buy') * F('current_value'),
-    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
-    #                  )
-    #
-    #
-    # ).order_by('-yield_to_maturity')[:bond_count]
-    #
-    # ### Convert queryset into list of dicts for session storage
-    # bonds_list = list(
-    #     bonds_with_ytm.values(
-    #         "symbol",
-    #         "number_of_share",
-    #         "current_value",
-    #         "yield_to_maturity",
-    #         "total_current_value",
-    #         "percentage_purchase",
-    #         "nbr_shares_to_buy",
-    #         "net_purchase_price",
-    #         "purchase_amount"
-    #     )
-    # )
-    # #print(f"1312 - bonds_list: {bonds_list}")
-
     ### Optionally convert Decimals to floats for JSON serialization
     for bond in bonds_list:
-         for key, value in bond.items():
-             if isinstance(value, Decimal):
-                 bond[key] = float(value)
+        for key, value in bond.items():
+            if isinstance(value, Decimal):
+                bond[key] = float(value)
 
-    #print(f"1328 - bond_list: {bonds_list}")
     ### Save to session
     request.session['pending_bonds'] = bonds_list
 
     context = {'bonds': bonds_with_ytm}
     return render(request, 'jdadev/partials/jdadev_simulation_number_of_bonds.html', context)
-
 #////////////////////////////////////jdadev_simulation_confirm_stock_purchase/////////
 from django.views.decorators.http import require_POST
 @require_POST
