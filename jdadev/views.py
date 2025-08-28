@@ -1845,16 +1845,28 @@ def jdadev_simulation_mutual_fund_buy(request): #, workflow_bs, sec_tgt_ports, s
     return render(request, 'jdadev/jdadev_simulation_mutual_fund_buy.html', context)
 
 #////////////////////////////////////jdadev_simulation_get_number_of_mutual_funds/////////////////
+from django.db.models import Case, When, Value, F, OuterRef, Subquery, IntegerField, DecimalField, FloatField
+from django.db.models.functions import Coalesce
+from django.db.models import ExpressionWrapper
+from decimal import Decimal
+
 def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balance):
     mutual_fund_count = int(request.GET.get('mutual_fund_count', 0))
-    client_id = request.user.id
 
+    # Add validation
+    if mutual_fund_count <= 0:
+        messages.error(request, "Invalid mutual fund count")
+        return redirect('some-error-page')
+
+    client_id = request.user.id
     total_portfolio_balance = float(client_portfolio_balance)
     percentage_per_mutual_fund = round(100.0 / mutual_fund_count, 2)
 
     # Subquery to get number_of_share from ClientMutualFundsModel
+    # FIXED: Since opcvm is a ForeignKey in ClientMutualFundsModel pointing to MutualFundModel,
+    # we need to use the primary key of the outer query (MutualFundModel.pk)
     number_of_share_subquery = ClientMutualFundsModel.objects.filter(
-        opcvm=OuterRef('opcvm'),
+        opcvm=OuterRef('pk'),  # Use pk since opcvm is a ForeignKey to MutualFundModel
         client=request.user
     ).values('mu_nbr_of_share')[:1]
 
@@ -1866,7 +1878,7 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
             output_field=IntegerField()
         ),
         mu_total_current_value=ExpressionWrapper(
-            F('current_value') * F('mu_nbr_of_share'),  # ✅ fixed
+            F('current_value') * F('mu_nbr_of_share'),
             output_field=DecimalField(max_digits=18, decimal_places=2)
         ),
         percentage_purchase=ExpressionWrapper(
@@ -1877,42 +1889,48 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
             Value(total_portfolio_balance) * Value(percentage_per_mutual_fund) / Value(100),
             output_field=DecimalField(max_digits=18, decimal_places=2)
         ),
-        nbr_shares_to_buy=ExpressionWrapper(
-            (Value(total_portfolio_balance) * Value(percentage_per_mutual_fund) / Value(100)) / F('current_value'),
-            output_field=IntegerField()
+        # FIXED: Use DecimalField for division, then cast to int in Python if needed
+        nbr_shares_to_buy_decimal=ExpressionWrapper(
+            Case(
+                When(current_value__gt=0,
+                     then=(Value(total_portfolio_balance) * Value(percentage_per_mutual_fund) / Value(100)) / F('current_value')
+                     ),
+                default=Value(0),
+                output_field=DecimalField(max_digits=18, decimal_places=6)
+            ),
+            output_field=DecimalField(max_digits=18, decimal_places=6)
         ),
         net_purchase_price=ExpressionWrapper(
-            F('nbr_shares_to_buy') * F('current_value'),
+            F('nbr_shares_to_buy_decimal') * F('current_value'),
             output_field=DecimalField(max_digits=18, decimal_places=2)
         )
     ).order_by('-performance')[:mutual_fund_count]
 
     ### Convert queryset into list of dicts for session storage
-    mutual_funds_list = list(
-        mutual_funds_with_perf.values(
-            "opcvm",
-            "mu_nbr_of_share",      # ✅ fixed
-            "current_value",
-            "performance",
-            "mu_total_current_value",  # ✅ fixed
-            "percentage_purchase",
-            "nbr_shares_to_buy",
-            "net_purchase_price",
-            "purchase_amount"
-        )
-    )
+    mutual_funds_list = []
+    for mf in mutual_funds_with_perf:
+        # Calculate nbr_shares_to_buy as integer in Python
+        nbr_shares_to_buy = int(mf.nbr_shares_to_buy_decimal) if mf.nbr_shares_to_buy_decimal else 0
 
-    ### Optionally convert Decimals to floats for JSON serialization
-    for mu in mutual_funds_list:
-        for key, value in mu.items():
-            if isinstance(value, Decimal):
-                mu[key] = float(value)
+        mutual_fund_dict = {
+            "opcvm": mf.opcvm,
+            "mu_nbr_of_share": mf.mu_nbr_of_share,
+            "current_value": float(mf.current_value) if mf.current_value else 0.0,
+            "performance": float(mf.performance) if mf.performance else 0.0,
+            "mu_total_current_value": float(mf.mu_total_current_value) if mf.mu_total_current_value else 0.0,
+            "percentage_purchase": float(mf.percentage_purchase) if mf.percentage_purchase else 0.0,
+            "nbr_shares_to_buy": nbr_shares_to_buy,
+            "net_purchase_price": float(mf.net_purchase_price) if mf.net_purchase_price else 0.0,
+            "purchase_amount": float(mf.purchase_amount) if mf.purchase_amount else 0.0,
+        }
+        mutual_funds_list.append(mutual_fund_dict)
 
     ### Save to session
     request.session['pending_mutual_funds'] = mutual_funds_list
 
     context = {'mutual_funds': mutual_funds_with_perf}
     return render(request, 'jdadev/partials/jdadev_simulation_number_of_mutual_funds.html', context)
+
 
 #///////////////////////////////jdadev_simulation_confirm_mutual_fund_purchase////////////////////////////
 @require_POST
