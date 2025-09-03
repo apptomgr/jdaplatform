@@ -916,7 +916,8 @@ import ast
 def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale ):
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
-    ### validate sessions
+    ### validate sessions    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
     validation_result = simulation_validate_session_data(request, ['sec_tgt_ports', 'sec_port_aft_sale'], 'jdadev_simulation_target_portfolio', 'Please complete your target portfolio setup first.')
     if validation_result:
         return validation_result  # This will redirect to target port to reset the sessions.
@@ -1353,7 +1354,7 @@ def generate_mutual_fund_sold_report(request, portfolio_balance, client_mu_portf
 
         # max proceeds if we sold 50%
         max_proceeds = Decimal(max_to_sell) * market_price
-        print(f"max_proceeds: {max_proceeds}")
+        #print(f"max_proceeds: {max_proceeds}")
 
         # check against portfolio balance left
         if max_proceeds <= balance_left:
@@ -1449,6 +1450,7 @@ def jdadev_simulation_mutual_fund_sold(request):
 #//////////////////////////////////jdadev_simulation_stock_buy/////////////////////////////////
 @login_required
 def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port_aft_sale):
+    #print("1453 - stock buy")
     sec_tgt_ports = request.session.get('sec_tgt_ports', [])
     sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
 
@@ -1459,7 +1461,7 @@ def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port
 
     #print(f"1271 - sec_tgt_ports: {sec_tgt_ports}")
     #print(f"1272 - sec_port_aft_sale: {sec_port_aft_sale}")
-    # First delete the previous simulation
+    ### First delete the previous simulation
     SimStockPurchasedModel.objects.all().delete()
 
     user = request.user
@@ -1478,12 +1480,17 @@ def jdadev_simulation_stock_buy(request):#, workflow_bs, sec_tgt_ports, sec_port
         ### check if you bought stocks to adjust your lq balance since it's the previous sequence
         total_stock_purchase_amt = SimStockPurchasedModel.objects.aggregate(total=Sum('purchase_amount'))['total'] or 0
         curr_lq_balance = float(lq_5) - float(total_stock_purchase_amt)
+        ### Check if you have enough cash to purchase stocks
         if client_portfolio_balance <=curr_lq_balance:
             ### you have enough cash to purchase stocks
-            messages.success(request, f"Your have enough liquidity to purchase more stocks: Your current liquid balance is <b>{curr_lq_balance:,.2f}</b> given you want to spend: {client_portfolio_balance}. ")
-            workflow_bs ='Buy Stock' #
+            #messages.success(request, f"Your have enough liquidity to purchase more stocks: Your current liquid balance is <b>{curr_lq_balance:,.2f}</b> given you want to spend: {client_portfolio_balance}. ")
+            workflow_bs ='Buy Stock'
+            ### Next check if you exceed the 20% rule
+            print("check next")
+            # 1. Overall portfolio value
+            #total_portfolio_value = sum(float(x) for x in sec_tgt_ports)
         else:
-            # You don't have enough lq
+            ### You don't have enough lq
             #print(f"1297 - You don't have enough lq curr bal is {curr_lq_balance}")
             messages.warning(request, f"Your DON'T have enough liquidity to purchase more stocks: Your current liquid balance is <b>{curr_lq_balance:,.2f}</b> given you want to spend: <b>{client_portfolio_balance:,.2f}</b>. ")
             workflow_bs ='Buy Bond'
@@ -1586,35 +1593,61 @@ from django.views.decorators.http import require_POST
 @login_required
 def jdadev_simulation_confirm_stock_purchase(request):
     stock_data = request.session.get('pending_stocks', [])
+    #print(f"1595 confirming atock purchase")
+    sec_tgt_ports = request.session.get('sec_tgt_ports', [])
+    sec_port_aft_sale = request.session.get('sec_port_aft_sale', [])
+    print(f"1599: sec_tgt_ports {sec_tgt_ports}")
+    print(f"1600: sec_port_aft_sale {sec_port_aft_sale}")
 
     if not stock_data:
         # Handle empty session (user didn't select stocks yet)
-        messages.error(request, "No stock data found in session.")
-        return redirect('some-page')
+        messages.error(request, "No stock data found in session.  Please re-start the simulation")
 
-    # stock_data is now a list of dicts, same structure as above
-    for stock in stock_data:
-        SimStockPurchasedModel.objects.create(
-            client=request.user,
-            ticker=stock['ticker'],
-            number_of_share=stock['number_of_share'],
-            daily_value=stock['daily_value'],
-            target_value=stock['target_value'],
-            gp=stock['gp'],
-            total_current_value=stock['total_current_value'],
-            percentage_purchase=stock['percentage_purchase'],
-            nbr_shares_to_buy=stock['nbr_shares_to_buy'],
-            net_purchase_price=stock['net_purchase_price'],
-            purchase_amount=stock['purchase_amount'],
-        )
-    #messages.success(request, f"Successfully  Purchased stocks")  # show is current stock and cash balanced: {client_portfolio_balance}. ")
-    # Now update the target_portfolio
+        response = HttpResponse()
+        response['HX-Redirect'] = '/jdadev/jdadev_simulation_portfolio_after_sale'  # URL mapped to portfolio after sale to re-initiate the session
 
-    # Optionally clear session after saving
-    del request.session['pending_stocks']
-    # HTMX redirect header
-    response = HttpResponse()
-    response['HX-Redirect'] = '/jdadev/jdadev_simulation_stock_purchased'  # URL mapped to purchased stock page
+    ### Before we save the stock purchase, let's apply the 20% rule. For stock purchase, the final overall final value of the stock position should not be more than 20%.
+    # 1. Overall portfolio value
+    total_portfolio_value = sum(float(x) for x in sec_port_aft_sale)
+    #print(f"1612 - total_portfolio_value: {total_portfolio_value:,.2f}")
+    # 2. Max allowed stock allocation (20%)
+    max_allowed_stock_value = total_portfolio_value # * 0.20 Change later to apply the rule
+    #print(f"1615 - max_allowed_stock_value: {max_allowed_stock_value:,.2f}")
+    # 3. Planned stock purchases (from session)
+    new_stock_purchases = sum(float(stock.get("purchase_amount", 0)) for stock in stock_data)
+    #print(f"1618 - new_stock_purchases: {new_stock_purchases:,.2f}")
+
+    if new_stock_purchases > max_allowed_stock_value:
+        print("1621 exceeds")
+        messages.warning(request, f"Your stock allocation ({new_stock_purchases:,.2f}) would exceed the 20% cap of your total portfolio ({max_allowed_stock_value:,.2f}). Please reduce your stock purchases.")
+        response = HttpResponse()
+        response['HX-Redirect'] = '/jdadev/jdadev_simulation_stock_buy'
+    else:
+        #print("1625 - else")
+
+        # stock_data is now a list of dicts, same structure as above
+        for stock in stock_data:
+            SimStockPurchasedModel.objects.create(
+                client=request.user,
+                ticker=stock['ticker'],
+                number_of_share=stock['number_of_share'],
+                daily_value=stock['daily_value'],
+                target_value=stock['target_value'],
+                gp=stock['gp'],
+                total_current_value=stock['total_current_value'],
+                percentage_purchase=stock['percentage_purchase'],
+                nbr_shares_to_buy=stock['nbr_shares_to_buy'],
+                net_purchase_price=stock['net_purchase_price'],
+                purchase_amount=stock['purchase_amount'],
+            )
+        messages.success(request, f"Successfully  Purchased stocks")  # show is current stock and cash balanced: {client_portfolio_balance}. ")
+        # Now update the target_portfolio
+
+        # Optionally clear session after saving
+        del request.session['pending_stocks']
+        # HTMX redirect header
+        response = HttpResponse()
+        response['HX-Redirect'] = '/jdadev/jdadev_simulation_stock_purchased'  # URL mapped to purchased stock page
     return response
 
 #//////////////////////////////////jdadev_purchased_stock/////////////////////////////////
@@ -1750,58 +1783,6 @@ def jdadev_simulation_get_number_of_bonds(request, client_portfolio_balance):
             "purchase_amount",
         )
     )
-
-    #///
-
-    # # Subquery to get number_of_share from ClientEquityAndRightsModel
-    # number_of_share_subquery = ClientBondsModel.objects.filter(bond_name=OuterRef('bond_names'),client=request.user).values('nbr_of_shares')[:1]
-    # #print(f"1264 - number_of_share_subquery: {number_of_share_subquery}")
-    # #tmp
-    # bonds_with_ytm=BondModel.objects.filter(current_value__gt=0).annotate(
-    #     number_of_share=Coalesce(
-    #              Subquery(number_of_share_subquery, output_field=IntegerField()),
-    #              Value(0),
-    #              output_field=IntegerField()
-    #          ),
-    #         total_current_value=ExpressionWrapper(
-    #                      F('current_value') * F('nbr_of_shares'),
-    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
-    #                  ),
-    #         percentage_purchase=ExpressionWrapper(
-    #                      Value(percentage_per_bond),
-    #                      output_field=FloatField()
-    #                  ),
-    #         purchase_amount=ExpressionWrapper(
-    #                  Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100),
-    #                  output_field=DecimalField(max_digits=18, decimal_places=2)
-    #              ),
-    #         nbr_shares_to_buy=ExpressionWrapper(
-    #                  (Value(total_portfolio_balance) * Value(percentage_per_bond) / Value(100)) / F('current_value'),
-    #                  output_field=IntegerField()
-    #              ),
-    #         net_purchase_price=ExpressionWrapper(
-    #                      F('nbr_shares_to_buy') * F('current_value'),
-    #                      output_field=DecimalField(max_digits=18, decimal_places=2)
-    #                  )
-    #
-    #
-    # ).order_by('-yield_to_maturity')[:bond_count]
-    #
-    # ### Convert queryset into list of dicts for session storage
-    # bonds_list = list(
-    #     bonds_with_ytm.values(
-    #         "symbol",
-    #         "number_of_share",
-    #         "current_value",
-    #         "yield_to_maturity",
-    #         "total_current_value",
-    #         "percentage_purchase",
-    #         "nbr_shares_to_buy",
-    #         "net_purchase_price",
-    #         "purchase_amount"
-    #     )
-    # )
-    # #print(f"1312 - bonds_list: {bonds_list}")
 
     ### Optionally convert Decimals to floats for JSON serialization
     for bond in bonds_list:
@@ -1990,6 +1971,7 @@ def jdadev_simulation_get_number_of_mutual_funds(request, client_portfolio_balan
     for mf in mutual_funds_with_perf:
         # Calculate nbr_shares_to_buy as integer in Python
         nbr_shares_to_buy = int(mf.nbr_shares_to_buy_decimal) if mf.nbr_shares_to_buy_decimal else 0
+        #print(f"1974: {nbr_shares_to_buy}")
 
         mutual_fund_dict = {
             "opcvm": mf.opcvm,
