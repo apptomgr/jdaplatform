@@ -521,6 +521,7 @@ def jdadev_overall_portfolio(request, portfolio_type):
 @login_required
 def jdadev_set_custom_profile(request):
     user = request.user
+    print("524: Set custom profile")
 
     try:
         existing_profile = ClientProfileModel.objects.get(client=user, profile_type="custom")
@@ -531,6 +532,7 @@ def jdadev_set_custom_profile(request):
         custom_form = ClientProfileForm(request.POST)
 
         if custom_form.is_valid():
+            print("535: cp is valid")
             la = custom_form.cleaned_data['liquid_assets']
             eq = custom_form.cleaned_data['equity_and_rights']
             bn = custom_form.cleaned_data['bonds']
@@ -548,7 +550,7 @@ def jdadev_set_custom_profile(request):
                 mutual_funds=mu,
                 profile_type="custom"
             )
-
+            print(f"551: new cp: {new_profile}")
             try:
                 new_profile.full_clean()  # Will trigger your `clean()` logic
                 new_profile.save()
@@ -560,6 +562,7 @@ def jdadev_set_custom_profile(request):
                         custom_form.add_error(None if field == '__all__' else field, error)
 
     else:
+        print("565 cp form")
         custom_form = ClientProfileForm(instance=existing_profile)
 
     return render(request, 'jdadev/jdadev_overall_portfolio.html', {'custom_form': custom_form})
@@ -757,7 +760,11 @@ def jdadev_simulation_target_portfolio(request):
     if ClientProfileModel.objects.count() >0:
         lcp = ClientProfileModel.objects.latest('id')
 
-    #print(f"759 - lcp: {lcp.profile_type}")
+    #print(f"766 - lcpv: {lcp.liquid_assets}")
+    #print(f"767 - lcpv: {lcp.equity_and_rights}")
+    #print(f"769 - lcpv: {lcp.bonds}")
+    #print(f"778 - lcpv: {lcp.mutual_funds}")
+
 
     if ovp:
         la  = ovp.liquid_assets
@@ -827,6 +834,25 @@ def jdadev_simulation_target_portfolio(request):
             sec_tgt_ports.append(float(eqr_tgt_port))
             sec_tgt_ports.append(float(bn_tgt_port))
             sec_tgt_ports.append(float(mu_tgt_port))
+        elif lcp.profile_type == 'custom':
+            val_lst.append(tot)
+            val_lst.append(tot*Decimal(lcp.liquid_assets/100))
+            val_lst.append(tot*Decimal(lcp.equity_and_rights/100))
+            val_lst.append(tot*Decimal(lcp.bonds/100))
+            val_lst.append(tot*Decimal(lcp.mutual_funds/100))
+            per_lst.append((tot/tot)*100)
+            per_lst.append(lcp.liquid_assets/100*100)
+            per_lst.append(lcp.equity_and_rights/100*100)
+            per_lst.append(lcp.bonds/100*100)
+            per_lst.append(lcp.mutual_funds/100*100)
+
+            eqr_tgt_port = val_lst[2]
+            bn_tgt_port = val_lst[3]
+            mu_tgt_port = val_lst[4]
+            sec_tgt_ports.append(float(eqr_tgt_port))
+            sec_tgt_ports.append(float(bn_tgt_port))
+            sec_tgt_ports.append(float(mu_tgt_port))
+
 
     #Check decision point
     ### 1. Determine if stock B or S
@@ -982,74 +1008,149 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
 
 
 #////////////////////////////////////////generate_stock_sold_report ////////////////////////////////////
+# def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio):
+#     """
+#     Generate a prorata sale report for a client's portfolio,
+#     capped at 50% per stock and limited by portfolio_balance.
+#     """
+#     #sort by gp
+#     #client_eqr_portfolio = client_eqr_portfolio.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('gp_calc')
+#
+#     stocks = client_eqr_portfolio
+#
+#    # Sort by growth potential descending
+#     #stocks = sorted(stocks, key=lambda s: s.gp or Decimal("-999"), reverse=True)
+#
+#     balance_left = Decimal(portfolio_balance)
+#
+#     report = []
+#
+#     for stock in stocks:
+#         if balance_left <= 0:
+#             break
+#
+#         # basic stock info
+#         total_shares = stock.nbr_of_stocks or 0
+#         market_price = stock.daily_value or Decimal("0")
+#
+#         if total_shares == 0 or market_price == 0:
+#             continue
+#
+#         # max shares we can sell (50% cap)
+#         max_to_sell = total_shares // 2
+#
+#         # max proceeds if we sold 50%
+#         max_proceeds = Decimal(max_to_sell) * market_price
+#
+#         # check against portfolio balance left
+#         if max_proceeds <= balance_left:
+#             # sell full 50% of this stock
+#             shares_to_sell = max_to_sell
+#             proceeds = max_proceeds
+#         else:
+#             # sell only as much as balance allows
+#             shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+#             proceeds = shares_to_sell * market_price
+#
+#         # Deduct from balance
+#         balance_left -= proceeds
+#
+#         # Add to report
+#         report.append({
+#             "ticker": stock.stocks.symbol if hasattr(stock.stocks, "symbol") else str(stock.stocks),
+#             "number_of_share": total_shares,
+#             "daily_value": float(market_price),
+#             "target_value": float(stock.stocks.target_value),
+#             "gp": float(stock.gp),
+#             "total_current_value": float(stock.total_current_value),
+#             "nbr_of_sell_share": int(shares_to_sell),
+#             "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
+#             "nbr_shares_sold": int(shares_to_sell),
+#             "net_sell_price": float(market_price),
+#             "sold_amount": float(proceeds),
+#         })
+#
+#     ### store report in session
+#     request.session['stock_sold'] = report
+#     ### delete model data
+#     SimStockSoldModel.objects.all().delete()
+#from decimal import Decimal, ROUND_DOWN
 def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio):
-    """
-    Generate a prorata sale report for a client's portfolio,
-    capped at 50% per stock and limited by portfolio_balance.
-    """
-    #sort by gp
-    #client_eqr_portfolio = client_eqr_portfolio.annotate(gp_calc=ExpressionWrapper((F('stocks__target_value') / F('daily_value')) - 1, output_field=FloatField())).order_by('gp_calc')
-
-    stocks = client_eqr_portfolio
-
-   # Sort by growth potential descending
-    #stocks = sorted(stocks, key=lambda s: s.gp or Decimal("-999"), reverse=True)
-
     balance_left = Decimal(portfolio_balance)
-
     report = []
 
-    for stock in stocks:
+    # Sort by growth potential (lowest gp first)
+    stocks = list(client_eqr_portfolio)
+    stocks.sort(key=lambda s: s.gp or Decimal("999"))
+
+    # Sale stages: 50% -> 25% -> 10%
+    sale_stages = [Decimal("0.50"), Decimal("0.25"), Decimal("0.10")]
+
+    # Track how much of each stock has been sold
+    sold_tracker = {s.stocks.ticker: Decimal("0") for s in stocks}
+
+    for stage_pct in sale_stages:
+        for stock in stocks:
+            if balance_left <= 0:
+                break
+
+            total_shares = stock.nbr_of_stocks or 0
+            market_price = stock.daily_value or Decimal("0")
+            if total_shares == 0 or market_price == 0:
+                continue
+
+            ticker = stock.stocks.ticker
+
+            already_sold_pct = sold_tracker[ticker]
+            allowed_extra_pct = min(stage_pct, Decimal("1.0") - already_sold_pct)
+            if allowed_extra_pct <= 0:
+                continue
+
+            max_to_sell = int((total_shares * allowed_extra_pct).to_integral_value(rounding=ROUND_DOWN))
+            if max_to_sell <= 0:
+                continue
+
+            max_proceeds = Decimal(max_to_sell) * market_price
+
+            if max_proceeds <= balance_left:
+                shares_to_sell = max_to_sell
+                proceeds = max_proceeds
+            else:
+                shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+                proceeds = shares_to_sell * market_price
+
+            if shares_to_sell > 0:
+                balance_left -= proceeds
+                sold_tracker[ticker] += Decimal(shares_to_sell) / Decimal(total_shares)
+
+                existing = next((r for r in report if r["ticker"] == ticker), None)
+                if existing:
+                    existing["nbr_shares_sold"] += int(shares_to_sell)
+                    existing["sold_amount"] += float(proceeds)
+                    existing["percentage_sold"] = f"{(existing['nbr_shares_sold'] / total_shares * 100):.2f}%"
+                else:
+                    report.append({
+                        "ticker": ticker,
+                        "number_of_share": total_shares,
+                        "daily_value": float(market_price),
+                        "target_value": float(stock.stocks.target_value),
+                        "gp": float(stock.gp or 0),
+                        "total_current_value": float(stock.total_current_value or 0),
+                        "nbr_of_sell_share": int(shares_to_sell),
+                        "percentage_sold": f"{(shares_to_sell / total_shares * 100):.2f}%",
+                        "nbr_shares_sold": int(shares_to_sell),
+                        "net_sell_price": float(market_price),
+                        "sold_amount": float(proceeds),
+                    })
+
         if balance_left <= 0:
             break
 
-        # basic stock info
-        total_shares = stock.nbr_of_stocks or 0
-        market_price = stock.daily_value or Decimal("0")
-
-        if total_shares == 0 or market_price == 0:
-            continue
-
-        # max shares we can sell (50% cap)
-        max_to_sell = total_shares // 2
-
-        # max proceeds if we sold 50%
-        max_proceeds = Decimal(max_to_sell) * market_price
-
-        # check against portfolio balance left
-        if max_proceeds <= balance_left:
-            # sell full 50% of this stock
-            shares_to_sell = max_to_sell
-            proceeds = max_proceeds
-        else:
-            # sell only as much as balance allows
-            shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
-            proceeds = shares_to_sell * market_price
-
-        # Deduct from balance
-        balance_left -= proceeds
-
-        # Add to report
-        report.append({
-            "ticker": stock.stocks.symbol if hasattr(stock.stocks, "symbol") else str(stock.stocks),
-            "number_of_share": total_shares,
-            "daily_value": float(market_price),
-            "target_value": float(stock.stocks.target_value),
-            "gp": float(stock.gp),
-            "total_current_value": float(stock.total_current_value),
-            "nbr_of_sell_share": int(shares_to_sell),
-            "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
-            "nbr_shares_sold": int(shares_to_sell),
-            "net_sell_price": float(market_price),
-            "sold_amount": float(proceeds),
-        })
-
-    ### store report in session
     request.session['stock_sold'] = report
-    ### delete model data
     SimStockSoldModel.objects.all().delete()
 
     return report
+
 
 #////////////////////////////////////jdadev_simulation_confirm_stock_sold/////////
 from django.views.decorators.http import require_POST
