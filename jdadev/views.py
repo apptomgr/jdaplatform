@@ -1083,8 +1083,8 @@ def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio)
     stocks = list(client_eqr_portfolio)
     stocks.sort(key=lambda s: s.gp or Decimal("999"))
 
-    # Sale stages: 50% -> 25% -> 10%
-    sale_stages = [Decimal("0.50"), Decimal("0.25"), Decimal("0.10")]
+    # Sale stages: 50% -> 25% -> 10% ->10%
+    sale_stages = [Decimal("0.50"), Decimal("0.25"), Decimal("0.10"), Decimal("0.10")]
 
     # Track how much of each stock has been sold
     sold_tracker = {s.stocks.ticker: Decimal("0") for s in stocks}
