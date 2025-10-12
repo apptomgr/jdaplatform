@@ -205,13 +205,21 @@ def jdadev_bonds(request):
             del_pk=[]
             for idx, form in enumerate(bonds_formset):
                 if request.POST.get(f'form-{idx}-DELETE') == 'on':
-                    #print("127 - Delete flag on")
-                    #print(f"128 - idx:{idx}")
+                    #print("208 - Delete flag on")
+                    #print(f"209 - idx:{idx}")
                     bn_item=ClientBondsModel.objects.filter(client=user)
-                    #print(f"130 -{eq_item}")
-                    #print(eq_item[idx].pk)
-                    del_pk.append(bn_item[idx].pk)
-                    #print(f"134 - del_pk: {del_pk}")
+                    ## Check if bn_item len == idx.  If true del_pk =bn_item[idx].pk
+                    ## if false del_pk=bn_item[idx-1].pk
+
+                    #print(f"211 -{bn_item}")
+                    #print(f"212 -len  {len(bn_item)}")
+                    if len(bn_item) != idx:
+                        #print(f"213 bn_item[idx].pk - {bn_item[idx].pk}")
+                        del_pk.append(bn_item[idx].pk)
+                    else:
+                        #print(f"220 bn_item[idx+1].pk - {bn_item[idx+1].pk}")
+                        del_pk.append(bn_item[idx+1].pk)
+                    #print(f"215 - del_pk: {del_pk}")
                     del_bn_item = ClientBondsModel.objects.filter(client=user).filter(pk__in=del_pk)
                     #print(f"136 - del_bn_item: {del_bn_item} - {del_bn_item[0].bond_name}")
                     msg_bn_item = str(del_bn_item[0].bond_name) # copy of the item to be deleted to pass to message
@@ -584,11 +592,11 @@ def jdadev_recommendation(request):
 @login_required
 def jdadev_save_transaction_fees(request):
     user = request.user
-    print(f"584: user - {user} user.id - {user.id}")
+    #print(f"584: user - {user} user.id - {user.id}")
     #client_eq_portfolio=ClientEquityAndRightsModel.objects.filter(client=user)
     portfolio = ClientEquityAndRightsModel.objects.filter(client=request.user)
     latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
-    print(f"588 - latest_fees: {latest_fees}")
+    #print(f"588 - latest_fees: {latest_fees}")
 
     if request.method == 'POST':
         instance = TransactionFeesModel.objects.filter(client=user).last()
@@ -985,7 +993,7 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
     ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
     # Now check if the client's bn_tot_curr_val is > or < than the sec_tgt_ports_values[2] (2 for bn) value
     if float(sec_port_aft_sale[1] > sec_tgt_ports[0]):
-        print(f"true: {sec_port_aft_sale[1]:,.2f} is less than {sec_tgt_ports[0]:,.2f} proceed with stock sale")
+        #print(f"true: {sec_port_aft_sale[1]:,.2f} is less than {sec_tgt_ports[0]:,.2f} proceed with stock sale")
         workflow_bs = "Stock Sale"
 
         ### get sim stocks to exclude from ClientEquityAndRightsModel since it was initially sold
@@ -1002,6 +1010,7 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
         workflow_bs = "Bond Sale"
         #print("928 FALSE")
 
+    #print(stock_sold_rpt)
 
     context ={'client_eqr_portfolio':client_eqr_portfolio, 'portfolio_balance': portfolio_balance, 'stock_sold_rpt':stock_sold_rpt,'workflow_bs':workflow_bs}#, "sec_tgt_ports":sec_tgt_ports, "sec_port_aft_sale":sec_port_aft_sale}
     return render(request, 'jdadev/jdadev_simulation_stock_sale.html', context)
@@ -1075,7 +1084,14 @@ def jdadev_simulation_stock_sale(request):#, workflow_bs, sec_tgt_ports, sec_por
 #     ### delete model data
 #     SimStockSoldModel.objects.all().delete()
 #from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal, ROUND_DOWN
+from django.core.exceptions import ObjectDoesNotExist
+
 def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio):
+    """
+    Staged sale report (50% -> 25% -> 10% -> 10%).
+    Produces cumulative nbr_shares_sold and cumulative net_sale_proceeds per ticker.
+    """
     balance_left = Decimal(portfolio_balance)
     report = []
 
@@ -1083,10 +1099,17 @@ def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio)
     stocks = list(client_eqr_portfolio)
     stocks.sort(key=lambda s: s.gp or Decimal("999"))
 
-    # Sale stages: 50% -> 25% -> 10% ->10%
+    # Sale stages
     sale_stages = [Decimal("0.50"), Decimal("0.25"), Decimal("0.10"), Decimal("0.10")]
 
-    # Track how much of each stock has been sold
+    # Get commission once (assumed commission is per-share; see note below)
+    try:
+        tfm = TransactionFeesModel.objects.filter(client=request.user).latest("id")
+        commission_per_share = Decimal(tfm.total_commission or 0)
+    except (TransactionFeesModel.DoesNotExist, ObjectDoesNotExist):
+        commission_per_share = Decimal("0")
+
+    # Track fraction already sold for each ticker (0..1)
     sold_tracker = {s.stocks.ticker: Decimal("0") for s in stocks}
 
     for stage_pct in sale_stages:
@@ -1094,58 +1117,94 @@ def generate_stock_sold_report(request, portfolio_balance, client_eqr_portfolio)
             if balance_left <= 0:
                 break
 
-            total_shares = stock.nbr_of_stocks or 0
-            market_price = stock.daily_value or Decimal("0")
-            if total_shares == 0 or market_price == 0:
+            total_shares_int = stock.nbr_of_stocks or 0
+            # protect against zero / None
+            if not total_shares_int:
+                continue
+            total_shares = Decimal(total_shares_int)
+
+            market_price = Decimal(stock.daily_value or 0)
+            if market_price == 0:
                 continue
 
             ticker = stock.stocks.ticker
 
-            already_sold_pct = sold_tracker[ticker]
-            allowed_extra_pct = min(stage_pct, Decimal("1.0") - already_sold_pct)
+            # how much of this stock has already been sold (fraction)
+            already_sold_frac = sold_tracker[ticker]
+            # allowed percent this stage (do not exceed 100% total)
+            allowed_extra_pct = min(stage_pct, Decimal("1.0") - already_sold_frac)
             if allowed_extra_pct <= 0:
                 continue
 
-            max_to_sell = int((total_shares * allowed_extra_pct).to_integral_value(rounding=ROUND_DOWN))
+            # max shares allowed to sell in this stage (floor)
+            max_to_sell = (total_shares * allowed_extra_pct).to_integral_value(rounding=ROUND_DOWN)
             if max_to_sell <= 0:
                 continue
 
-            max_proceeds = Decimal(max_to_sell) * market_price
+            max_proceeds = max_to_sell * market_price
 
+            # decide how many shares to sell this iteration
             if max_proceeds <= balance_left:
-                shares_to_sell = max_to_sell
+                shares_to_sell = int(max_to_sell)
                 proceeds = max_proceeds
             else:
-                shares_to_sell = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
-                proceeds = shares_to_sell * market_price
-
-            if shares_to_sell > 0:
-                balance_left -= proceeds
-                sold_tracker[ticker] += Decimal(shares_to_sell) / Decimal(total_shares)
-
-                existing = next((r for r in report if r["ticker"] == ticker), None)
-                if existing:
-                    existing["nbr_shares_sold"] += int(shares_to_sell)
-                    existing["sold_amount"] += float(proceeds)
-                    existing["percentage_sold"] = f"{(existing['nbr_shares_sold'] / total_shares * 100):.2f}%"
+                # sell the minimal whole shares that do not exceed remaining balance
+                shares_needed = (balance_left / market_price).to_integral_value(rounding=ROUND_DOWN)
+                # cap to stage allowance
+                if shares_needed > max_to_sell:
+                    shares_to_sell = int(max_to_sell)
+                    proceeds = Decimal(shares_to_sell) * market_price
                 else:
-                    report.append({
-                        "ticker": ticker,
-                        "number_of_share": total_shares,
-                        "daily_value": float(market_price),
-                        "target_value": float(stock.stocks.target_value),
-                        "gp": float(stock.gp or 0),
-                        "total_current_value": float(stock.total_current_value or 0),
-                        "nbr_of_sell_share": int(shares_to_sell),
-                        "percentage_sold": f"{(shares_to_sell / total_shares * 100):.2f}%",
-                        "nbr_shares_sold": int(shares_to_sell),
-                        "net_sell_price": float(market_price),
-                        "sold_amount": float(proceeds),
-                    })
+                    shares_to_sell = int(shares_needed)
+                    proceeds = Decimal(shares_to_sell) * market_price
+
+            if shares_to_sell <= 0:
+                continue
+
+            # apply sale
+            balance_left -= proceeds
+            sold_tracker[ticker] += (Decimal(shares_to_sell) / total_shares)
+
+            # net proceeds for this chunk (per-share net = market_price - commission_per_share)
+            per_share_net = (market_price - commission_per_share)
+            chunk_net_proceeds = per_share_net * Decimal(shares_to_sell)
+
+            # update / append report entry for this ticker
+            existing = next((r for r in report if r["ticker"] == ticker), None)
+            if existing:
+                # increment cumulative fields
+                existing["nbr_shares_sold"] += shares_to_sell
+                existing["sold_amount"] = float(Decimal(existing["sold_amount"]) + proceeds)
+                existing["net_sale_proceeds"] = float(Decimal(existing["net_sale_proceeds"]) + chunk_net_proceeds)
+                # recompute weighted average net sell price (net_sale_proceeds / total_shares_sold)
+                if existing["nbr_shares_sold"] > 0:
+                    existing["net_sell_price"] = float(
+                        Decimal(existing["net_sale_proceeds"]) / Decimal(existing["nbr_shares_sold"])
+                    )
+                existing["percentage_sold"] = f"{(Decimal(existing['nbr_shares_sold']) / total_shares * 100):.2f}%"
+                # keep nbr_of_sell_share as cumulative for clarity (update it too)
+                existing["nbr_of_sell_share"] = existing["nbr_shares_sold"]
+            else:
+                report.append({
+                    "ticker": ticker,
+                    "number_of_share": total_shares_int,
+                    "daily_value": float(market_price),
+                    "target_value": float(stock.stocks.target_value or 0),
+                    "gp": float(stock.gp or 0),
+                    "total_current_value": float(stock.total_current_value or 0),
+                    # we initialised cumulative values with the first chunk
+                    "nbr_of_sell_share": shares_to_sell,
+                    "percentage_sold": f"{(Decimal(shares_to_sell) / total_shares * 100):.2f}%",
+                    "nbr_shares_sold": shares_to_sell,
+                    "sold_amount": float(proceeds),
+                    "net_sell_price": float(per_share_net),
+                    "net_sale_proceeds": float(chunk_net_proceeds),
+                })
 
         if balance_left <= 0:
             break
 
+    # Save report in session & clear temp model (as in original)
     request.session['stock_sold'] = report
     SimStockSoldModel.objects.all().delete()
 
@@ -1190,8 +1249,7 @@ def jdadev_simulation_confirm_stock_sold(request):
 
     ### Clear session after saving
     del request.session['stock_sold']
-    ### delete model data
-    #SimStockSoldModel.objects.all().delete()
+
     ### HTMX redirect header
     response = HttpResponse()
     response['HX-Redirect'] = reverse('jdadev_simulation_stock_sold')
@@ -1221,8 +1279,8 @@ def jdadev_simulation_bond_sale(request):
         return validation_result  # This will redirect to target port to reset the sessions.
 
     ### Get the bn_portfolio_balance
-    print(f"1060: sec_tgt_ports {sec_tgt_ports}")
-    print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
+    #print(f"1060: sec_tgt_ports {sec_tgt_ports}")
+    #print(f"1061: sec_port_aft_sale {sec_port_aft_sale}")
     bn_portfolio_balance = float(sec_port_aft_sale[2] - sec_tgt_ports[1])
     #print(f"1063 -bn_portfolio_balance: {bn_portfolio_balance:,.2f} -sec_port_aft_sale_values[2]: {sec_port_aft_sale[2]:,.2f} minus sec_tgt_ports[1]: {sec_tgt_ports[1]:,.2f}")
     ### Determine if you can sell stocks. If float(sec_port_aft_sale_values[1] > sec_tgt_ports_values[0])
@@ -1231,7 +1289,7 @@ def jdadev_simulation_bond_sale(request):
     bond_sold_rpt = None
     workflow_bs= None
     if float(sec_port_aft_sale[2] > sec_tgt_ports[1]):
-        print(f"true: {sec_port_aft_sale[2]:,.2f} is less than {sec_tgt_ports[1]:,.2f} proceed with stock sale")
+        #print(f"true: {sec_port_aft_sale[2]:,.2f} is less than {sec_tgt_ports[1]:,.2f} proceed with stock sale")
 
         client_bn_portfolio = ClientBondsModel.objects.filter(client=request.user)
         ### Generate the bond sold report
@@ -1297,6 +1355,8 @@ def generate_bond_sold_report(request, portfolio_balance, client_bn_portfolio):
         # Deduct from balance
         balance_left -= proceeds
 
+
+
         # Add to report
         report.append({
             "symbol": bond.bond_name.symbol if hasattr(bond.bond_name.symbol, "symbol") else str(bond.bond_name),
@@ -1318,6 +1378,88 @@ def generate_bond_sold_report(request, portfolio_balance, client_bn_portfolio):
     SimBondSoldModel.objects.all().delete()
 
     return report
+# #///////
+# from decimal import Decimal, ROUND_DOWN
+# from django.db.models import F, FloatField, ExpressionWrapper
+#
+# from decimal import Decimal, ROUND_DOWN
+# from django.core.exceptions import ObjectDoesNotExist
+#
+# def generate_bond_sold_report(request, portfolio_balance, client_bn_portfolio):
+#     """
+#     Generate a prorata sale report for a client's bond portfolio,
+#     capped at 50% per bond and limited by portfolio_balance.
+#     Takes commissions into account by reducing per-share sell price.
+#     """
+#     bonds = client_bn_portfolio
+#     balance_left = Decimal(portfolio_balance)
+#
+#     report = []
+#
+#     # Get commission once (applied per share as discount to market price)
+#     try:
+#         tfm = TransactionFeesModel.objects.filter(client=request.user).latest("id")
+#         commission_rate = Decimal(tfm.total_commission or 0)
+#     except (TransactionFeesModel.DoesNotExist, ObjectDoesNotExist):
+#         commission_rate = Decimal("0")
+#
+#     for bond in bonds:
+#         if balance_left <= 0:
+#             break
+#
+#         # basic bond info
+#         total_shares = bond.nbr_of_shares or 0
+#         market_price = bond.current_value or Decimal("0")
+#
+#         if total_shares == 0 or market_price == 0:
+#             continue
+#
+#         # max shares we can sell (50% cap)
+#         max_to_sell = total_shares // 2
+#
+#         # effective net per-share price (after commission)
+#         net_sell_price = market_price - (market_price * commission_rate)
+#
+#         # max net proceeds if we sold 50%
+#         max_net_proceeds = Decimal(max_to_sell) * net_sell_price
+#
+#         # check against portfolio balance left
+#         if max_net_proceeds <= balance_left:
+#             shares_to_sell = max_to_sell
+#             gross_proceeds = max_to_sell * market_price
+#             net_proceeds = max_net_proceeds
+#         else:
+#             shares_to_sell = (balance_left / net_sell_price).to_integral_value(rounding=ROUND_DOWN)
+#             gross_proceeds = shares_to_sell * market_price
+#             net_proceeds = shares_to_sell * net_sell_price
+#
+#         # Deduct from balance (based on net proceeds)
+#         balance_left -= net_proceeds
+#
+#         # Add to report
+#         report.append({
+#             "symbol": getattr(bond.bond_name, "symbol", str(bond.bond_name)),
+#             "bond_name": getattr(bond.bond_name, "bond_name", str(bond.bond_name)),
+#             "number_of_share": total_shares,
+#             "daily_value": float(market_price),
+#             "ytm": float(getattr(bond.bond_name, "yield_to_maturity", 0)),
+#             "total_current_value": float(bond.total_current_value),
+#             "nbr_of_sell_share": int(shares_to_sell),
+#             "percentage_sold": "50%" if shares_to_sell == max_to_sell else f"{(shares_to_sell / total_shares * 100):.2f}%",
+#             "net_sell_price": float(net_sell_price),   # now per share after commission
+#             "gross_sell_amount": float(gross_proceeds),
+#             "commission": float(gross_proceeds - net_proceeds),  # total commission paid
+#             "sold_amount": float(net_proceeds),
+#         })
+#
+#     # store report in session
+#     request.session['bond_sold'] = report
+#     SimBondSoldModel.objects.all().delete()
+#
+#     return report
+#
+#
+# #///////
 #////////////////////////////////////jdadev_simulation_confirm_bond_sold/////////
 from django.views.decorators.http import require_POST
 @require_POST

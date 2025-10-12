@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-27 13:55-0400\n"
+"POT-Creation-Date: 2025-09-15 11:11-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,7 +152,7 @@ msgstr "Enregistrer les informations utilisateur"
 #: accounts/templates/registration/admin_tasks_edit.html:70
 #: jdadev/templates/jdadev/index.html:39
 #: jdadev/templates/jdadev/jdadev_bonds.html:37
-#: jdadev/templates/jdadev/jdadev_equity_and_rights.html:49
+#: jdadev/templates/jdadev/jdadev_equity_and_rights.html:71
 #: jdadev/templates/jdadev/jdadev_liquid_assets.html:19
 #: jdadev/templates/jdadev/jdadev_mutual_funds.html:40
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home_bk.html:86
@@ -356,7 +356,7 @@ msgid "Traded Value"
 msgstr "Valeur Transige"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:131
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:125
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:126
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:96
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:95
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:124
@@ -504,6 +504,10 @@ msgstr "Valeur du portefeuille"
 #: jdadev/templates/jdadev/jdadev_overall_portfolio.html:84
 #: jdadev/templates/jdadev/jdadev_overall_portfolio_by_client.html:57
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home.html:26
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_bonds.html:26
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html:26
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html:26
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html:26
 #: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html:26
 msgid "Liquid Assets"
 msgstr "Actifs liquides"
@@ -511,6 +515,10 @@ msgstr "Actifs liquides"
 #: jdadev/templates/jdadev/jdadev_overall_portfolio.html:85
 #: jdadev/templates/jdadev/jdadev_overall_portfolio_by_client.html:58
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home.html:27
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_bonds.html:27
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html:27
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html:27
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html:27
 #: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html:27
 msgid "Equity & Rights"
 msgstr "Actions et droits"
@@ -518,10 +526,14 @@ msgstr "Actions et droits"
 #: jdadev/templates/jdadev/jdadev_overall_portfolio.html:86
 #: jdadev/templates/jdadev/jdadev_overall_portfolio_by_client.html:59
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home.html:28
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:73
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:74
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:49
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:48
 #: jdadev/templates/jdadev/partials/jdadev_bonds_partial.html:7
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_bonds.html:28
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html:28
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html:28
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html:28
 #: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html:28
 msgid "Bonds"
 msgstr "Obligations"
@@ -530,6 +542,10 @@ msgstr "Obligations"
 #: jdadev/templates/jdadev/jdadev_overall_portfolio_by_client.html:60
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home.html:29
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:73
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_bonds.html:29
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html:29
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html:29
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html:29
 #: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html:29
 msgid "Mutual Funds"
 msgstr "OPCVM"
@@ -562,6 +578,10 @@ msgid "Portfolio"
 msgstr "Portefeuille"
 
 #: jdadev/templates/jdadev/jdadev_portfolio_management_home.html:30
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_bonds.html:30
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_equity_and_rights.html:30
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_liquid_assets.html:30
+#: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_mutual_funds.html:30
 #: jdadev/templates/jdadev/reloads/jdadev_portfolio_management_home_overall_portfolio.html:30
 msgid "Overall Portfolio"
 msgstr "Portefeuille Global"
@@ -580,22 +600,23 @@ msgstr "Capitaux Propres et Droits"
 msgid "Sell Recommendation"
 msgstr "Recommandation de vente"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:39
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:40
 msgid "Bond Purchase Simulation"
 msgstr "Simulation d'achat d'obligations"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:47
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:48
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:47
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:48
-
-msgid "Portfolio Balance"
+#, fuzzy
+#| msgid "Portfolio Balance"
+msgid "Portfolio Balance:"
 msgstr "Solde du portefeuille"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:57
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:58
 msgid "# of bonds to buy"
 msgstr "nombre d'obligations à acheter"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:74
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:75
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:50
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:49
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:74
@@ -604,11 +625,10 @@ msgstr "nombre d'obligations à acheter"
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:80
 #: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:50
 #: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:49
-
 msgid "Number of Shares"
 msgstr "Nombre d'actions"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:75
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:76
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:51
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:50
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:75
@@ -618,16 +638,18 @@ msgstr "Nombre d'actions"
 #: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:51
 #: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:50
 #, fuzzy
-#| msgid "Average Price"
+#| msgid "Target Price"
 msgid "Market Price"
-msgstr "Cours Moyen"
+msgstr "Prix cible"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:76
+# msgid "Average Price"
+# msgstr "Cours Moyen"
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:77
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:52
 msgid "Yield to Maturity"
 msgstr "Rendement à l'échéance"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:77
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:78
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:53
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:52
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:77
@@ -639,7 +661,7 @@ msgstr "Rendement à l'échéance"
 msgid "Total Current Value"
 msgstr "Valeur actuelle totale"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:78
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:79
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:54
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:53
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:78
@@ -653,7 +675,7 @@ msgstr "Valeur actuelle totale"
 msgid "%% To Be Purchased"
 msgstr "% à acheter"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:79
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:80
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:55
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:54
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:79
@@ -665,7 +687,7 @@ msgstr "% à acheter"
 msgid "# of Shares to Buy"
 msgstr "Nombre d'actions à acheter"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:80
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:81
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:56
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:55
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:80
@@ -679,7 +701,7 @@ msgstr "Nombre d'actions à acheter"
 msgid "Net Purchase Price"
 msgstr "Cours Moyen"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:81
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:82
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:57
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:56
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:81
@@ -691,17 +713,18 @@ msgstr "Cours Moyen"
 msgid "Purchase Amount"
 msgstr "Montant de l'achat"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:106
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:107
 msgid "Are you sure you want to purchase these bonds?"
 msgstr "Êtes-vous sûr de vouloir acheter ces obligations ?"
 
-#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:107
+#: jdadev/templates/jdadev/jdadev_simulation_bond_buy.html:108
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:106
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:113
 msgid "Confirm Purchase"
 msgstr "Confirmer l'achat"
 
 #: jdadev/templates/jdadev/jdadev_simulation_bond_purchased.html:39
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:55
 msgid "Simulated Bond Purchased"
 msgstr "Obligation simulée achetée"
 
@@ -710,6 +733,7 @@ msgid "Bond Sale"
 msgstr "Vente d'obligations"
 
 #: jdadev/templates/jdadev/jdadev_simulation_bond_sold.html:39
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:39
 msgid "Simulated Bond Sold"
 msgstr "Obligation simulée vendue"
 
@@ -718,6 +742,41 @@ msgstr "Obligation simulée vendue"
 #| msgid "Yield To Maturity"
 msgid "Yiled To Maturity"
 msgstr "Rendement à l'échéance"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:19
+#, fuzzy
+#| msgid "View Securities"
+msgid "Held Securities"
+msgstr "Titres détenus"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:24
+#: jdadev/templates/jdadev/jdadev_simulation_home.html:40
+#, fuzzy
+#| msgid "Portfolio after Sale"
+msgid "Portfolio After Sale"
+msgstr "Portefeuille après vente"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:29
+#, fuzzy
+#| msgid "Target portfolio"
+msgid "Target Portfolio"
+msgstr "Portefeuille cible"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:34
+#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:39
+msgid "Simulated Stock Sold"
+msgstr "Stock simulé vendu"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:50
+#: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:39
+msgid "Simulated Stock Purchased"
+msgstr "Actions simulées achetées"
+
+#: jdadev/templates/jdadev/jdadev_simulation_breadcrumbs.html:60
+#, fuzzy
+#| msgid "Simulated Mutual Funds Purchased"
+msgid "Simulated Mutual Fund Purchased"
+msgstr "Fonds communs de placement simulés achetés"
 
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_buy.html:39
 msgid "Mutual Fund Purchase Simulation"
@@ -798,19 +857,11 @@ msgstr "Potentiel de croissance"
 msgid "Are you sure you want to purchase these stocks?"
 msgstr "Etes-vous sûr que vous voulez supprimer"
 
-#: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:39
-msgid "Simulated Stock Purchased"
-msgstr "Actions simulées achetées"
-
 #: jdadev/templates/jdadev/jdadev_simulation_stock_sale.html:40
 #, fuzzy
 #| msgid "Stock Type"
 msgid "Stock Sale"
 msgstr "Type Action"
-
-#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:39
-msgid "Simulated Stock Sold"
-msgstr "Stock simulé vendu"
 
 #: jdadev/templates/jdadev/jdadev_simulation_target_portfolio.html:40
 msgid "Target portfolio"

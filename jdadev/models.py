@@ -93,14 +93,14 @@ class ClientProfileModel(models.Model):
 #///////////////////////////////TransactionFeesModel/////////////////////////////////
 class TransactionFeesModel(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    commission_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    tps = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    country_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    commission_brvm = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    commission_dc_br = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    total_commission = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    actual_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
-    potential_loss =models.DecimalField(default=0.00, max_digits=18, decimal_places=2)
+    commission_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    tps = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    country_sgi = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    commission_brvm = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    commission_dc_br = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    total_commission = models.DecimalField(max_digits=12, decimal_places=3, null=True, blank=True)
+    actual_loss = models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
+    potential_loss =models.DecimalField(default=0.00, max_digits=18, decimal_places=3)
     entry_date = models.DateField(auto_now_add=True)
 
 

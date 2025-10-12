@@ -63,6 +63,13 @@
                 <th>% To Be Sold</th>
                 <th># of Sell Share</th>
                 <th>Sale Proceeds</th>
+                <th>Net Selling Price</th>
+                <th>Net Sale Proceeds</th>
+
+
+                <!--th>% To Be Sold</th>
+                <th># of Sell Share</th>
+                <th>Sale Proceeds</th-->
             </tr>
             </thead>
             <tbody>
@@ -73,10 +80,19 @@
                 <td>{{i.number_of_share}}</td>
                 <td>{{i.daily_value}}</td>
                 <td>{{i.ytm}}</td>
+
                 <td>{{i.total_current_value}}</td>
                 <td>{{i.percentage_sold}}</td>
-                <td>{{i.nbr_shares_sold}}</td>
+                <td>{{i.nbr_of_sell_share}}</td>
                 <td>{{i.sold_amount}}</td>
+                <td>{{i.net_sell_price}}</td>
+                <td>{{i.sold_amount}}</td>
+                {% comment %}
+                <!--td>{{i.total_current_value}}</td>
+                <td>{{i.percentage_sold}}</td>
+                <td>{{i.nbr_shares_sold}}</td>
+                <td>{{i.sold_amount}}</td-->
+                {% endcomment%}
 
             </tr>
             {% endfor %}
@@ -91,7 +107,7 @@
                             hx-redirect="{% url 'jdadev_simulation_bond_sold' %}"
                             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                             class="btn btn-success btn-sm text-white">
-                        Confirm Stock Sale
+                        Confirm Bond Sale
                     </a>
                 </td>
             </tr>

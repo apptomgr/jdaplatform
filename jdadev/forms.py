@@ -9,6 +9,9 @@ from django.utils.html import format_html
 from decimal import Decimal
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
+from decimal import Decimal, InvalidOperation
+
+
 
 
 def validate_excel(value):
@@ -92,17 +95,55 @@ class ClientBondsForm(forms.ModelForm):
                                             widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_institution_type_id show-tick','onchange':'return triggerHtmxGet(id);',}))
     symbol = forms.ModelChoiceField(queryset=BondModel.objects.all(), empty_label='Symbol', label='', widget=forms.Select(attrs={'class': 'form-control form-control-sm bonds_symbol_id show-tick','onchange':'return triggerHtmxGet(id), triggerHtmxGet_original_value(id);',}))
     bond_name = BondNameModelChoiceField(queryset=bond_name_queryset, empty_label=('Bond Names'),label='',widget=forms.Select(attrs={'class': 'form-control form-control-sm Xbonds_institution_type_id show-tick'}))
-    nbr_of_shares = forms.IntegerField(required=False, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares'}))
-    coupon = forms.DecimalField(required=False, max_digits=12, decimal_places=4, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_bond_coupon(id);', 'placeholder': 'Coupon', 'readonly': 'readonly'}, ))
-    original_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly'}, ))
-    current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_current_value(id);', 'placeholder': 'Current Value', 'readonly': 'readonly'}, ))
-    total_current_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_curr_val(id);',  'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
-    total_purchase_value = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_purchase_val(id);', 'placeholder': 'Total Purchase Value', 'readonly': 'readonly'}, ))
-    total_gain_or_loss = forms.DecimalField(required=False, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_bond_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly'},))
+    nbr_of_shares = forms.IntegerField(required=True, label='', widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder':'Number of Shares'}))
+    coupon = forms.CharField(
+        required=True,
+        label='',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control-sm',
+            'onblur': 'return triggerHtmxGet_bond_coupon(id);',
+            'placeholder': 'Coupon',
+            'readonly': 'readonly'  # keep readonly if you don't want manual edits
+        })
+    )
+    #coupon = forms.DecimalField(required=True, max_digits=12, decimal_places=4, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_bond_coupon(id);', 'placeholder': 'Coupon', 'readonly': 'readonly'}, ))
+    original_value = forms.DecimalField(required=True, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Original Value', 'readonly': 'readonly'}, ))
+    current_value = forms.DecimalField(required=True, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return triggerHtmxGet_current_value(id);', 'placeholder': 'Current Value', 'readonly': 'readonly'}, ))
+    total_current_value = forms.DecimalField(required=True, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_curr_val(id);',  'placeholder': 'Total Current Value', 'readonly': 'readonly'}, ))
+    total_purchase_value = forms.DecimalField(required=True, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onblur':'return get_bond_tot_purchase_val(id);', 'placeholder': 'Total Purchase Value', 'readonly': 'readonly'}, ))
+    total_gain_or_loss = forms.DecimalField(required=True, max_digits=12, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm','onclick':'return get_bond_tot_gain_or_loss_val(id);', 'placeholder': 'Total Gain or Loss', 'readonly': 'readonly'},))
     class Meta:
         model = ClientBondsModel
         fields = ['institution_type', 'symbol','bond_name', 'nbr_of_shares','coupon',  'original_value', 'current_value', 'total_current_value', 'total_purchase_value', 'total_gain_or_loss']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # ✅ Show coupon as a percentage (e.g., 4.50%) when editing existing records
+        if self.instance and self.instance.pk and self.instance.coupon is not None:
+            try:
+                self.initial['coupon'] = f"{float(self.instance.coupon) * 100:.2f}%"
+            except (ValueError, TypeError):
+                pass
+    def clean_coupon(self):
+        """
+        Accepts variants like: "4.5", "4.50%", " 4,50 % " and returns a Decimal fraction
+        suitable for storage (e.g. Decimal('0.045')).
+        """
+        raw = self.cleaned_data.get('coupon')
+        if raw is None or raw == "":
+            raise ValidationError("Coupon is required.")
+
+        # normalize: remove spaces, replace commas with dot, strip percent sign
+        s = str(raw).strip().replace(',', '.').replace('%', '').strip()
+
+        try:
+            number = Decimal(s)
+        except (InvalidOperation, ValueError):
+            raise ValidationError("Enter a valid percentage (e.g. 4.5 or 4.50%).")
+
+        # If the user entered a percentage (e.g. 4.5), convert to fraction for DB (0.045)
+        fraction = (number / Decimal('100')).quantize(Decimal('0.0001'))  # match decimal_places=4
+        return fraction
 #///////////////////////////// ClientBondsFormset /////////////////////////////
 ClientBondsFormset = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=1, can_delete=True)
 ClientBondsFormset_edit = modelformset_factory(ClientBondsModel, form=ClientBondsForm, extra=0, can_delete=True)
@@ -205,14 +246,14 @@ class ClientProfileForm(forms.ModelForm):
 
 # #/////////////////////////////////////// TransactionFeesForm /////////////////////////////
 class TransactionFeesForm(forms.ModelForm):
-    commission_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission SGI'}))
-    tps = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_country_sgi()', 'placeholder': 'TPS'}))
-    country_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Country SGI', 'readonly': 'readonly'}))
-    commission_brvm = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission BRVM'}))
-    commission_dc_br = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_total_commussion()', 'placeholder': 'Commission DC/BR'}))
-    total_commission = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Total Commission', 'readonly': 'readonly'}))
-    actual_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Actual Loss'}))
-    potential_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Potential Loss'}))
+    commission_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission SGI'}))
+    tps = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_country_sgi()', 'placeholder': 'TPS'}))
+    country_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Country SGI', 'readonly': 'readonly'}))
+    commission_brvm = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission BRVM'}))
+    commission_dc_br = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_total_commussion()', 'placeholder': 'Commission DC/BR'}))
+    total_commission = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Total Commission', 'readonly': 'readonly'}))
+    actual_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Actual Loss'}))
+    potential_loss = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Potential Loss'}))
 
     class Meta:
         model = TransactionFeesModel
