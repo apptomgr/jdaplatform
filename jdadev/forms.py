@@ -243,10 +243,44 @@ class ClientProfileForm(forms.ModelForm):
         model = ClientProfileModel
         fields = ['liquid_assets', 'equity_and_rights', 'bonds', 'mutual_funds']
 
+from decimal import Decimal
+from django import forms
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+class PercentageField(forms.DecimalField):
+    """
+    A form field that converts between a user-entered percentage (0-100)
+    and a decimal fraction (0.0-1.0) for internal use.
+    """
+    def __init__(self, *args, **kwargs):
+        # Set default validators for a 0-100 range
+        kwargs.setdefault('validators', [MinValueValidator(0), MaxValueValidator(100)])
+        # Use NumberInput for better mobile support
+        kwargs.setdefault('widget', forms.NumberInput(attrs={'step': 'any'}))
+        super().__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        """Converts the input value to a Python decimal."""
+        if value in self.empty_values:
+            return None
+        # Inherit the DecimalField's to_python() method
+        decimal_value = super().to_python(value)
+        # Convert the percentage (e.g., 75.0) to a fraction (e.g., 0.75)
+        return decimal_value / Decimal('100')
+
+    def prepare_value(self, value):
+        """Converts the internal decimal to a percentage for display in the form."""
+        if value is None:
+            return None
+        # Convert the fraction (e.g., 0.75) to a percentage (e.g., 75.0)
+        return value * Decimal('100')
 
 # #/////////////////////////////////////// TransactionFeesForm /////////////////////////////
 class TransactionFeesForm(forms.ModelForm):
-    commission_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission SGI'}))
+    #discount = PercentageField(required=True, max_digits=5, decimal_places=2,label="Commission AGI", )
+
+    #commission_sgi = PercentageField(required=True, max_digits=5, decimal_places=2, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission AGI'}))
+    commission_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission AGI'}))
     tps = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'onblur':'get_country_sgi()', 'placeholder': 'TPS'}))
     country_sgi = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm',  'placeholder': 'Country SGI', 'readonly': 'readonly'}))
     commission_brvm = forms.DecimalField(required=True, max_digits=8, decimal_places=3, label='', widget=forms.TextInput(attrs={'class': 'form-control-sm', 'placeholder': 'Commission BRVM'}))
@@ -258,8 +292,23 @@ class TransactionFeesForm(forms.ModelForm):
     class Meta:
         model = TransactionFeesModel
         fields = ['commission_sgi', 'tps', 'country_sgi', 'commission_brvm', 'commission_dc_br','total_commission','actual_loss','potential_loss']
-
-
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Convert stored decimals (like 0.05) to percentages (like 5)
+    #     if self.instance and self.instance.pk:
+    #         for field_name in self.fields:
+    #             val = getattr(self.instance, field_name, None)
+    #             if val is not None:
+    #                 self.fields[field_name].initial = val * 100
+    #
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     # Convert back from percentage to decimal before saving
+    #     for field_name, value in cleaned_data.items():
+    #         if value is not None:
+    #             cleaned_data[field_name] = value / 100
+    #     return cleaned_data
 
 # #///////////////////////////// SimulationStockPurchaseForm /////////////////////////////
 class SimulationStockPurchaseForm(forms.Form):

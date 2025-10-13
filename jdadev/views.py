@@ -609,6 +609,24 @@ def jdadev_save_transaction_fees(request):
             #print("SAVED")
             #gain_or_loss =client_eq_portfolio.daily_value -
             #report_rows = [EquityReportRow(obj) for obj in client_eq_portfolio]
+
+            # ✅ Multiply values by 100 for percentage representation
+            transaction_fees_percent = {
+                field: getattr(transaction_fees, field) * 100
+                for field in [
+                    "commission_sgi",
+                    "tps",
+                    "country_sgi",
+                    "commission_brvm",
+                    "commission_dc_br",
+                    "total_commission",
+                    "actual_loss",
+                    "potential_loss",
+                ]
+                if getattr(transaction_fees, field) is not None
+            }
+
+
             if not latest_fees:
                 latest_fees = TransactionFeesModel.objects.filter(client=request.user).order_by('-entry_date').first()
                 #return render(request, "jdadev/error.html", {"message": "No transaction fees available for this client."})
@@ -616,8 +634,10 @@ def jdadev_save_transaction_fees(request):
             report_rows = [EquityReportRow(eq, latest_fees) for eq in portfolio]
             #print(f"600 - report_rows: {report_rows}")
             save_sim_held_securities(request, report_rows)
+
             spinner = False;
-            context= {'instance': transaction_fees, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
+            context= {'instance': transaction_fees_percent, 'report_rows':report_rows, 'spinner':spinner, 'selected_nav':'text-info'}
+
             return render(request,"jdadev/partials/jdadev_transaction_fees_form_readonly.html", context)
         else:
             #print("611 - 🚨 Form is invalid:")
@@ -2728,7 +2748,9 @@ def reload_mu_nbr_of_share(request, id_int, soc_text):
 
     else:
         ns = MutualFundModel.objects.get(id=soc_text)
+        #print(f"ns: {ns}")
         mu_nbr_of_share= str(ns.nbr_of_share).replace(',', '.').replace('0000', '00')
+        #print(f"mu_nbr_of_share: {mu_nbr_of_share}")
 
     context ={'id_int':id_int,'mu_nbr_of_share':mu_nbr_of_share}
     return render(request, 'jdadev/partials/jdadev_mu_nbr_of_share.html', context)

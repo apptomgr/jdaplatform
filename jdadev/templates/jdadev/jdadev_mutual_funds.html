@@ -145,7 +145,7 @@ let id_opcvm = "";
       //alert("id_form_nbr_soc_nbr_shr_val: "+id_form_nbr_soc_nbr_shr_val);
 
       var url ='{% url "reload_mu_nbr_of_share" 'id_int' 'soc_text' %}'.replace('id_int', id_int).replace('soc_text', soc_text);
-      //alert("url: "+url);
+      alert("url: "+url);
       htmx.ajax('GET', url, {target: '#'+id_form_nbr_soc_nbr_shr_val, swap:'outerHTML'});
      }
      else
