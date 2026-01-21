@@ -7,6 +7,10 @@ urlpatterns = [
     path('', views.jdapublicationsapp_home, name='jdapublicationsapp_home'),
     path('jdapublicationsapp_dept/', views.jdapublicationsapp_dept, name='jdapublicationsapp_dept'),
     path('jdapublicationsapp_pubs/', views.jdapublicationsapp_pubs, name='jdapublicationsapp_pubs'),
+    #path('subscribe/', views.subscription_plans, name='subscription-plans'),
+    path('pubs/view/<int:pk>/', views.protected_publication_by_pk, name='protected_publication'),
+
+
     # path('jdapublicationsapp_pubs/<str:pub_lang>', views.jdapublicationsapp_pubs_lang, name='jdapublicationsapp_pubs_lang'),
 
     path('jdapublicationsapp_filter/', views.jdapublicationsapp_filter, name='jdapublicationsapp_filter'),

@@ -1,0 +1,25 @@
+{% extends "jdamainapp/base.html" %}
+{% block content %}
+
+<div class="container py-5 text-center">
+    <h3 class="mb-3">Confirm Your Subscription</h3>
+
+    <p class="text-muted">
+        You are about to activate the
+        <strong>{{ subscription.plan.name }}</strong>
+        ({{ subscription.plan.billing_period }})
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-info btn-lg">
+            Confirm Subscription
+        </button>
+        <a href="{% url 'jdasubscriptions:subscription_plan_list' %}"
+           class="btn btn-outline-secondary btn-lg ml-2">
+            Go Back
+        </a>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+<div class="col-md-4 mb-4" id="akwaba_plus_period">
+    <div class="card shadow-sm h-100">
+        <div class="card-body">
+
+            <h5 class="card-title font-weight-bold">Akwaba+</h5>
+            <p class="text-muted">Extended premium access</p>
+
+            <div class="btn-group mb-3">
+                <button class="btn btn-info btn-sm">Monthly</button>
+                <button class="btn btn-outline-secondary btn-sm"
+                        hx-get="{% url 'jdasubscriptions:subscription_type_toggle' %}"
+                        hx-vals='{"subscription_type": "akwaba_plus_yearly"}'
+                        hx-target="#akwaba_plus_period"
+                        hx-swap="outerHTML">
+                    Yearly
+                </button>
+            </div>
+
+            <h4 class="font-weight-bold">
+                5,000 FCFA HT <span class="small">/month</span>
+            </h4>
+
+            <ul class="list-unstyled mt-3 mb-4">
+                <li>✔ Newsletters</li>
+                <li>✔ IPO Review</li>
+                <li>✔ Recommendations</li>
+                <li>✔ Top 10 Buy</li>
+                <li>✔ Top 10 Sell</li>
+                <li>✔ Stock Pitch</li>
+                <li class="text-muted">✖ Research Notes</li>
+            </ul>
+
+            <a href="{% url 'jdasubscriptions:select_subscription_plan' plan_id=3 %}"
+               class="btn btn-outline-info btn-block">
+                Select Plan
+            </a>
+
+        </div>
+    </div>
+</div>

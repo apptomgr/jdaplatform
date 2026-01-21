@@ -1,0 +1,142 @@
+{% extends 'jdamainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5" id="plan_type">
+
+    <!-- Title -->
+    <div class="text-center mb-5">
+        <h2 class="font-weight-bold">Choose Your Subscription Plan -CUST</h2>
+        <p class="text-muted">Select the offer that fits your needs to access the platform's services.</p>
+    </div>
+
+    <!-- Customer / Institution Toggle -->
+    <div class="text-center mb-4">
+        <div class="btn-group">
+            <button class="btn btn-info" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "customer"}' hx-target="#plan_type" hx-swap="outerHTML">Customer</button>
+            <button class="btn btn-outline-secondary"  hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "institutions"}' hx-target="#plan_type" hx-swap="outerHTML">Institutions</button>
+        </div>
+    </div>
+
+    <div class="row" >
+
+        <!-- AKWABA BASIC -->
+        <div class="col-md-4 mb-4" id="akwaba_period">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-1">&nbsp;</div>
+                    <h5 class="card-title font-weight-bold">Akwaba</h5>
+                    <p class="text-muted">Basic access for individual investors</p>
+
+                    <!-- Monthly/Yearly Selector -->
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-info btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_monthly"}' hx-target="#akwaba_period" hx-swap="outerHTML">Monthly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_yearly"}' hx-target="#akwaba_period" hx-swap="outerHTML">Yearly</button>
+                    </div>
+
+                    <h4 class="font-weight-bold" id="akwaba_plan_period">2.500 FCFA HT<span class="small">/month</span></h4>
+
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>✔ Newsletters</li>
+                        <li>✔ IPO Review</li>
+                        <li>✔ Recommendations</li>
+                        <li>✔ Top 10 Buy</li>
+                        <li>✔ Top 10 Sell</li>
+                        <li>✔ Quarterly Results Commentary</li>
+                        <li>✔ Semi-annual Results Commentary</li>
+                        <li>✔ Annual Results Commentary</li>
+                        <li>✔ General Meetings Commentary</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Research Notes</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Economic Notes</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Stock Pitch</li>
+                    </ul>
+
+                    <a href="{% url 'register' %}?plan=akwaba" class="btn btn-outline-info btn-block">
+                        Select Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AKWABA+ -->
+        <div class="col-md-4 mb-4" id="akwaba_plus_period">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="mb-1">&nbsp;</div>
+                    <h5 class="card-title font-weight-bold">Akwaba+</h5>
+                    <p class="text-muted">Extended premium access</p>
+
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-info btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_plus_monthly"}' hx-target="#akwaba_plus_period" hx-swap="outerHTML">Monthly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_plus_yearly"}' hx-target="#akwaba_plus_period" hx-swap="outerHTML">Yearly</button>
+                    </div>
+
+                    <h4 class="font-weight-bold">5.000 FCFA HT<span class="small">/month</span></h4>
+
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>✔ Newsletters</li>
+                        <li>✔ IPO Review</li>
+                        <li>✔ Recommendations</li>
+                        <li>✔ Top 10 Buy</li>
+                        <li>✔ Top 10 Sell</li>
+                        <li>✔ Stock Pitch</li>
+                        <li>✔ Quarterly Results Commentary</li>
+                        <li>✔ Semi-annual Results Commentary</li>
+                        <li>✔ Annual Results Commentary</li>
+                        <li>✔ General Meetings Commentary</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Research Notes</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Economic Notes</li>
+                    </ul>
+
+                    <a href="{% url 'register' %}?plan=akwabaplus" class="btn btn-outline-info btn-block">
+                        Select Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AKWABA GOLD -->
+        <div class="col-md-4 mb-4" id="akwaba_gold_period">
+            <div class="card shadow-sm h-100 border-info">
+                <div class="card-body">
+
+                    <div class="badge badge-info mb-1">Most Popular</div>
+                    <h5 class="card-title font-weight-bold">Akwaba Gold</h5>
+                    <p class="text-muted">Full access to all services</p>
+
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-info btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_gold_monthly"}' hx-target="#akwaba_gold_period" hx-swap="outerHTML">Monthly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "akwaba_gold_yearly"}' hx-target="#akwaba_gold_period" hx-swap="outerHTML">Yearly</button>
+                    </div>
+
+                    <h4 class="font-weight-bold">25.000 FCFA HT<span class="small">/month</span></h4>
+
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>✔ Newsletters</li>
+                        <li>✔ Research Notes</li>
+                        <li>✔ Economic Notes</li>
+                        <li>✔ IPO Review</li>
+                        <li>✔ Quarterly Results Commentary</li>
+                        <li>✔ Semi-annual Results Commentary</li>
+                        <li>✔ Annual Results Commentary</li>
+                        <li>✔ General Meetings Commentary</li>
+                        <li>✔ Analyst Access</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+
+                    </ul>
+
+                    <a href="{% url 'register' %}?plan=gold" class="btn btn-info btn-block">
+                        Select Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

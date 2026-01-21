@@ -1,0 +1,19 @@
+<div class="text-center mb-4">
+  <div class="btn-group">
+    <button class="btn btn-info btn-sm"
+            hx-get="{% url 'jdasubscriptions:customer_plan_toggle' %}"
+            hx-vals='{"billing_period":"monthly"}'
+            hx-target="#customer-plan-grid"
+            hx-swap="innerHTML">
+      Monthly
+    </button>
+
+    <button class="btn btn-outline-secondary btn-sm"
+            hx-get="{% url 'jdasubscriptions:customer_plan_toggle' %}"
+            hx-vals='{"billing_period":"yearly"}'
+            hx-target="#customer-plan-grid"
+            hx-swap="innerHTML">
+      Yearly
+    </button>
+  </div>
+</div>

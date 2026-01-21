@@ -1,0 +1,57 @@
+{# jdasubscriptions/subscription_plan_customer.html #}
+
+<div class="row">
+
+    {% for plan in plans %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 {% if plan.code == 'akwaba_gold_yearly' or plan.code == 'akwaba_gold_monthly' %}border-info{% endif %}">
+            <div class="card-body">
+
+                {% if plan.code|slice:":12" == "akwaba_gold" %}
+                <span class="badge badge-info mb-2">Most Popular</span>
+                {% else %}
+                <div class="mb-2">&nbsp;</div>
+                {% endif %}
+
+                <h5 class="card-title font-weight-bold">
+                    {{ plan.name }}
+                </h5>
+
+                <p class="text-muted">
+                    {{ plan.description }}
+                </p>
+
+                <!-- Billing period -->
+                <h4 class="font-weight-bold">
+                    {{ plan.price_fcfa|floatformat:0 }} FCFA HT
+                    <span class="small">/{{ plan.billing_period }}</span>
+                </h4>
+
+                <!-- Features (static for now) -->
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>✔ Publications access</li>
+                    <li>✔ Newsletters</li>
+                    <li>✔ Research commentary</li>
+
+                    {% if "gold" in plan.code %}
+                    <li>✔ Research Notes</li>
+                    <li>✔ Analyst Access</li>
+                    {% endif %}
+                </ul>
+
+                <!-- Select plan -->
+                <a href="{% url 'jdasubscriptions:select_subscription_plan' plan.id %}"
+                   class="btn {% if 'gold' in plan.code %}btn-info{% else %}btn-outline-info{% endif %} btn-block">
+                    Select Plan
+                </a>
+
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center text-muted">
+        No subscription plans available.
+    </div>
+    {% endfor %}
+
+</div>

@@ -18,5 +18,12 @@ urlpatterns = [
     path('admin_tasks_add',views.admin_tasks_add, name='admin_tasks_add'),
     path('admin_tasks_stats/<str:stats_type>',views.admin_tasks_stats, name='admin_tasks_stats'),
 
+    #path('subscribe/', views.subscription_plans, name='subscription-plans'),
+    #path("subscription/toggle/", views.subscription_type_toggle, name="subscription_type_toggle"),
+
+    #path('checkout/summary/', views.subscription_checkout_summary, name='subscription_checkout_summary'),
+    #path('checkout/auth-panel/', views.subscription_auth_panel, name='subscription_auth_panel'),
+
+
 
 ]

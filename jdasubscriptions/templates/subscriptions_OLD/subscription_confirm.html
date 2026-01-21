@@ -1,0 +1,7 @@
+{% if plan %}
+<h2>You selected: {{ plan.name }}</h2>
+<p>Monthly: ${{ plan.monthly_price }}</p>
+<p>Yearly: ${{ plan.yearly_price }}</p>
+{% else %}
+<p>No plan selected.</p>
+{% endif %}

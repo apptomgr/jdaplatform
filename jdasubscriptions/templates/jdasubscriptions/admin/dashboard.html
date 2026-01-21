@@ -1,0 +1,238 @@
+{% extends "jdamainapp/base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h3 class="font-weight-bold">Subscription Dashboard</h3>
+        <p class="text-muted mb-0">
+            Overview of customer and institution subscriptions
+        </p>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Subscriptions</h6>
+                    <h3 class="font-weight-bold">{{ total_subscriptions }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Active</h6>
+                    <h3 class="font-weight-bold text-success">{{ active_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Expired</h6>
+                    <h3 class="font-weight-bold text-danger">{{ expired_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BREAKDOWNS -->
+    <div class="row mb-5">
+
+        <!-- Subscriber Type -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">By Subscriber Type</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for key, value in by_subscriber_type.items %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            {{ key|title }}
+                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No data</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Type -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">By Plan Type</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for key, value in by_plan_type.items %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            {{ key|title }}
+                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No data</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing Period -->
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">By Billing Period</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for key, value in by_billing_period.items %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            {{ key|title }}
+                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">No data</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- EXPIRING SOON -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <h5 class="font-weight-bold mb-3">Subscriptions Expiring Soon (Next 30 Days)</h5>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Plan</th>
+                        <th>Ends At</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in expiring_soon %}
+                    <tr>
+                        <td>{{ s.user }}</td>
+                        <td>{{ s.subscriber_type|title }}</td>
+                        <td>{{ s.plan.name }}</td>
+                        <td>{{ s.ends_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No subscriptions expiring soon
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVATIONS -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="font-weight-bold mb-3">Recent Activations</h5>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Plan</th>
+                        <th>Started At</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in recent_activations %}
+                    <tr>
+                        <td>{{ s.user }}</td>
+                        <td>{{ s.subscriber_type|title }}</td>
+                        <td>{{ s.plan.name }}</td>
+                        <td>{{ s.starts_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No recent activations
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MMR & ARR -->
+    {% comment %}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="font-weight-bold mb-3">MRR & ARR</h5>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Plan</th>
+                        <th>Started At</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in recent_activations %}
+                    <tr>
+                        <td>{{ s.user }}</td>
+                        <td>{{ s.subscriber_type|title }}</td>
+                        <td>{{ s.plan.name }}</td>
+                        <td>{{ s.starts_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No recent activations
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div>
+        <h6>Customer MRR</h6>
+        <h4>{{ customer_mrr|floatformat:0 }} FCFA</h4>
+
+        <h6>Institution MRR</h6>
+        <h4>{{ institution_mrr|floatformat:0 }} FCFA</h4>
+
+        <hr>
+
+        <h5>Total MRR</h5>
+        <h3>{{ total_mrr|floatformat:0 }} FCFA</h3>
+
+        <h5>Total ARR</h5>
+        <h3>{{ total_arr|floatformat:0 }} FCFA</h3>
+
+    </div>
+    {% endcomment %}
+
+</div>
+
+{% endblock %}

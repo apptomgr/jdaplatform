@@ -25,6 +25,7 @@ from decimal import Decimal, ROUND_DOWN
 
 #/////////////////////////////////jdadev_home////////////////////
 @login_required
+@allowed_users(allowed_roles=['admins','managers','staffs'])
 def jdadev_home(request):
     user = request.user
     #print(f"User={user.username} - request.user={request.user}")
@@ -2642,9 +2643,12 @@ def reload_bond_coupon(request, id_int, sym_val):
         #for i in symbols:
         #    print(f"symb:{symbols} - OV: {symbols[i].original_value}")
     #print(f"220:id_int: {id_int} symbols{symbols} - OV: {symbols[0].original_value}")
+    print(f"symbols[0].coupon: {symbols[0].coupon}")
     cv= str(symbols[0].coupon).replace(',', '.')
     print(f"cv: {cv}")
-    context ={'id_int':id_int,'cpn_val':cv}
+    f_cv=f"{(Decimal(cv)*100).to_integral_value(rounding=ROUND_DOWN)}%"
+    print(f"f_cv: {f_cv}")
+    context ={'id_int':id_int,'cpn_val':f_cv}
     return render(request, 'jdadev/partials/jdadev_bond_coupon_value.html', context)
 #//////////////////////////////reload_depositaire////////////////////////////////
 from decimal import Decimal

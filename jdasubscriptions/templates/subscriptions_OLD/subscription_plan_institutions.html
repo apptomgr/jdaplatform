@@ -1,0 +1,97 @@
+<div class="container py-5" id="plan_type">
+
+    <!-- Title -->
+    <div class="text-center mb-5">
+        <h2 class="font-weight-bold">Choose Your Subscription Plan</h2>
+        <p class="text-muted">Select the offer that fits your needs to access the platform's services.</p>
+    </div>
+
+    <!-- Customer / Institution Toggle -->
+    <div class="text-center mb-4">
+        <div class="btn-group">
+            <button class="btn btn-outline-secondary" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "customer"}' hx-target="#plan_type" hx-swap="outerHTML">Customer</button>
+            <button class="btn btn-info"  hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "institutions"}' hx-target="#plan_type" hx-swap="outerHTML">Institutions</button>
+        </div>
+    </div>
+
+    <div class="row" >
+
+        <!-- SILVER ACCESS -->
+        <div class="col-md-4 mb-4" id="inst_silver_period">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+
+                    <h5 class="card-title font-weight-bold">Silver Access</h5>
+                    <p class="text-muted">Full Platform Access for institutions</p>
+
+                    <!-- Monthly/Quaterly/Yearly Selector -->
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-info btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_silver_monthly"}' hx-target="#inst_silver_period" hx-swap="outerHTML">Monthly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_silver_quarterly"}' hx-target="#inst_silver_period" hx-swap="outerHTML">Quaterly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_silver_yearly"}' hx-target="#inst_silver_period" hx-swap="outerHTML">Yearly</button>
+                    </div>
+
+                    <h4 class="font-weight-bold" id="inst_silver_plan_period">225.000 FCFA HT<span class="small">/month</span></h4>
+
+                    <ul class="list-unstyled mt-3 mb-4" id="akwaba_period">
+                        <li>✔ Access to all publications on the platform</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Analyst Access</li>
+                        <li class="text-muted"><span class="text-danger">✖</span> Corporate Access</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                    </ul>
+
+                    <a href="{% url 'register' %}?plan=akwaba" class="btn btn-outline-info btn-block">
+                        Select Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gold Access -->
+        <div class="col-md-4 mb-4" id="inst_gold_period">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+
+                    <h5 class="card-title font-weight-bold">Gold Access</h5>
+                    <p class="text-muted">Complete institutional package</p>
+
+                    <div class="btn-group mb-3">
+                        <button class="btn btn-info btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_gold_monthly"}' hx-target="#inst_gold_period" hx-swap="outerHTML">Monthly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_gold_quarterly"}' hx-target="#inst_gold_period" hx-swap="outerHTML">Quaterly</button>
+                        <button class="btn btn-outline-secondary btn-sm" hx-get="{% url 'subscription_type_toggle' %}" hx-trigger="click" hx-vals='{"subscription_type": "inst_gold_yearly"}' hx-target="#inst_gold_period" hx-swap="outerHTML">Yearly</button>
+                    </div>
+
+                    <h4 class="font-weight-bold" id="inst_gold_plan_period">450.000 FCFA HT<span class="small">/month</span></h4>
+
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>✔ Newsletters</li>
+                        <li>✔ Research Notes</li>
+                        <li>✔ IPO Review</li>
+                        <li>✔ Economic Notes</li>
+                        <li>✔ Top 10 Sell</li>
+                        <li>✔ Quarterly Results Commentary</li>
+                        <li>✔ Semi-annual Results Commentary</li>
+                        <li>✔ Annual Results Commentary</li>
+                        <li>✔ General Meetings Commentary</li>
+                        <li>✔ Analyst Access</li>
+                        <li>✔ Corporate Access</li>
+                    </ul>
+
+                    <a href="{% url 'register' %}?plan=akwabaplus" class="btn btn-outline-info btn-block">
+                        Select Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

@@ -1,0 +1,15 @@
+{% extends "paystack_test/base.html" %}
+{% block content %}
+<h3>Paystack Test Payment</h3>
+
+<form method="post" action="{% url 'paystack_test:start_payment' %}">
+  {% csrf_token %}
+  <div class="form-group">
+    <input type="email" name="email" required class="form-control"
+           placeholder="Email">
+  </div>
+  <button class="btn btn-primary">
+    Pay 5,000 FCFA
+  </button>
+</form>
+{% endblock %}

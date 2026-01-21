@@ -50,7 +50,7 @@ def jdapublicationsapp_dept(request):
 
 #/////////////////////// jdapublicationsapp_pubs /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
+#@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
 
     form = PublicationAdminsForm()
@@ -73,77 +73,7 @@ def jdapublicationsapp_pubs(request):
         grp = request.user.groups.all()[0].name
         #print(f"48 - grp: {grp}")
 
-    # if grp == 'brokers':
-    #     # Get current user profile info (username and logo)
-    #     curr_user = User.objects.get(username=request.user)
-    #     #print(f"54 - curr_user: {curr_user}")
-    #     user_profile = Profile.objects.get(user=curr_user)
-    #     #print(f"56 - user_profile.logo: {user_profile.logo}")
-    #     #
-    #     # # Check the curr user logo has been already converted
-    #     # if os.path.exists(f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf"):
-    #     #     pass  # Delete prev watermark assoc w/ user # do nothing since the logo pdf version already exist
-    #     #     #print(f"60: Current user logo already exists for {settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf")
-    #     # else:
-    #     #     #print("62: File not exist convert curr user logo")
-    #     #     #  Convert current user logo from img to pdf and save it user_watermark
-    #     #     img2pdf(f"{settings.MEDIA_ROOT}/{user_profile.logo}", curr_user.username)  # (f"media/profile_logo/{curr_user}_watermark.pdf")
-    #
-    #     # get candidate publication_listing filenames to prep for watermarking
-    #     candidate_files=[]
-    #     #print(f"68 pubs count {publication_listing.count()}")
-    #
-    #     # Get all candidate files including full path
-    #     for i in publication_listing:
-    #         #print(f"i: 70 {settings.MEDIA_ROOT}/{i.file_name}")
-    #         if not settings.DEVELOPMENT_MODE:
-    #             candidate_files.append(i.file_name.url)
-    #         else:
-    #             candidate_files.append(i.file_name)
-    #
-    #
-    #     for j in candidate_files:
-    #         # if candidate files' extention is .pdf
-    #         if str(j).endswith('.pdf'):
-    #             if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
-    #                 print(f"97: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
-    #                 pass  # do nothing since watermarked pdf files already exist
-    #             else:
-    #                 print(f"100 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
-    #                 # Apply watermark on all candidate files if they were not previously watermarked
-    #                 fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
-    #                 #fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
-    #
-    #             # if not settings.DEVELOPMENT_MODE:
-    #             #     # Prod
-    #             #     print("98 - PROD MODE")
-    #             #     if os.path.exists(f"{j}_{curr_user}_watermark.pdf"):
-    #             #         print(f"91: candidate file {j}_watermark.pdf exists")
-    #             #         pass  # do nothing since watermarked pdf files already exist
-    #             #     else:
-    #             #         print(f"94 {j}_watermark.pdf does not exist - Applying watermarks")
-    #             #         # Apply watermark on all candidate files if they were not previously watermarked
-    #             #         fitz_pdf(f"{j}", f"{user_profile.logo.url}", f"{j}_{curr_user}_watermark.pdf")
-    #             # else:
-    #             #     # Dev mode
-    #             #     print("107 - DEV MODE")
-    #             #     if os.path.exists(f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf"):
-    #             #         print(f"108: candidate file {settings.MEDIA_ROOT}/{j}_watermark.pdf exists")
-    #             #         pass  # do nothing since watermarked pdf files already exist
-    #             #     else:
-    #             #         print(f"111 {settings.MEDIA_ROOT}/{j}_watermark.pdf does not exist - Applying watermarks")
-    #             #         # Apply watermark on all candidate files if they were not previously watermarked
-    #             #         fitz_pdf(f"{settings.MEDIA_ROOT}/{j}", f"{settings.MEDIA_ROOT}/{user_profile.logo}", f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf")
-    #
-    #                 # put_watermark(
-    #                 #     input_pdf=f"{settings.MEDIA_ROOT}/{j}",  # the original pdf
-    #                 #     output_pdf=f"{settings.MEDIA_ROOT}/{j}_{curr_user}_watermark.pdf",  # the modified pdf with watermark
-    #                 #     watermark=f"{settings.MEDIA_ROOT}/profile_logo/{curr_user}_watermark.pdf" # the watermark to be provided
-    #                 #     #logo_img=f"{settings.MEDIA_ROOT}/{user_profile.logo}"
-    #                 # )
 
-
-    #models_cnt=publication_listing.filter(research_category='Models').count()
     newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
     commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
     reports_cnt=publication_listing.filter(research_category='Reports').count()
@@ -197,6 +127,82 @@ def jdapublicationsapp_pubs(request):
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+
+
+# publications/views.py
+from django.http import FileResponse, JsonResponse, HttpResponseForbidden
+from django.conf import settings
+from django.shortcuts import get_object_or_404
+import os
+
+from .models import PublicationModel  # adjust import to your model
+
+ALLOWED_GROUPS = ['admins', 'managers', 'staffs', 'brokers']
+
+def user_in_allowed_groups(user):
+    if not user.is_authenticated:
+        return False
+    return user.groups.filter(name__in=ALLOWED_GROUPS).exists()
+
+
+#///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
+# publications/views.py
+
+#from django.shortcuts import redirect, get_object_or_404
+from django.http import FileResponse, HttpResponseForbidden
+from jdasubscriptions.services import user_has_active_subscription
+#from .models import PublicationModel
+#import os
+
+def protected_publication_by_pk(request, pk):
+
+    if not user_has_active_subscription(request.user):
+        #print(f"160 - publications view: {user_has_active_subscription(request.user)} ")
+        return redirect("jdasubscriptions:subscription_plan_list")
+
+    publication = get_object_or_404(PublicationModel, pk=pk)
+
+    file_path = publication.file_name.path
+
+    if not os.path.exists(file_path):
+        return HttpResponseForbidden("File not found")
+
+    return FileResponse(open(file_path, "rb"), content_type="application/pdf")
+
+
+
+# def protected_publication_by_pk(request, pk):
+#
+#     if not user_has_active_subscription(request.user):
+#         return redirect("jdasubscriptions:subscription_plan_list")
+#
+#     publication = get_object_or_404(PublicationModel, pk=pk)
+#
+#     file_path = publication.file_name.path
+#     if not os.path.exists(file_path):
+#         return HttpResponseForbidden("File not found")
+#
+#     return FileResponse(open(file_path, "rb"), content_type="application/pdf")
+
+
+
+
+# def protected_publication_by_pk(request, pk):
+#     # Access control
+#     if not user_in_allowed_groups(request.user):
+#         #return JsonResponse({"authorized": False}, status=403)
+#         return redirect('subscription-plans')
+#
+#     publication = get_object_or_404(PublicationModel, pk=pk)
+#
+#     file_path = publication.file_name.path  # full filesystem path
+#
+#     if not os.path.exists(file_path):
+#         return HttpResponseForbidden("File not found")
+#
+#     return FileResponse(open(file_path, "rb"), content_type='application/pdf')
+
+
 
 
 # #/////////////////////// jdapublicationsapp_pubs_lang /////////////////////

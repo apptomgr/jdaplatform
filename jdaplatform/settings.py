@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     'languages_plus',
     'bootstrap_datepicker_plus',
     'jdadev',
+    'jdasubscriptions',
+    "paystack_test",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -249,3 +251,11 @@ MESSAGE_TAGS = {
 }
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+
+PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
+PAYSTACK_BASE_URL = "https://api.paystack.co"
+#from django.conf import settings
+#print("PAYSTACK_SECRET_KEY:", settings.PAYSTACK_SECRET_KEY)
+

@@ -1,0 +1,35 @@
+{# templates/subscriptions/htmx/auth_register.html #}
+<div class="card border-0">
+    <div class="card-body p-2">
+        <h6>Create an account</h6>
+
+        <form id="htmx-register-form" method="post" action="#" onsubmit="return false;">
+            <!-- We are only displaying the form here. Submission will be implemented later in Step 2 -->
+            <div class="form-group mb-2">
+                <input type="text" name="first_name" class="form-control form-control-sm" placeholder="First name">
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="last_name" class="form-control form-control-sm" placeholder="Last name">
+            </div>
+            <div class="form-group mb-2">
+                <input type="email" name="email" class="form-control form-control-sm" placeholder="Email">
+            </div>
+            <div class="form-group mb-2">
+                <input type="password" name="password" class="form-control form-control-sm" placeholder="Password">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-sm btn-success" type="button" disabled>Register (not wired)</button>
+
+                <!-- allow user to switch to login fragment -->
+                <a href="#"
+                   hx-get="{% url 'subscription_auth_panel' %}?action=login"
+                   hx-target="#auth-panel"
+                   hx-swap="innerHTML"
+                   class="small">
+                    Already have an account? Login
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

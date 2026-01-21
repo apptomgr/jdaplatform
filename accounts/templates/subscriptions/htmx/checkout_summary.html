@@ -1,0 +1,48 @@
+{# templates/subscriptions/htmx/checkout_summary.html #}
+<div class="card mb-4" id="checkout-summary-card">
+    <div class="card-body">
+        <h5 class="card-title">Checkout summary</h5>
+
+        <p>
+            <strong>Plan:</strong>
+            {% if plan %} {{ plan.name }} {% else %} {{ plan_slug|escape }} {% endif %}
+        </p>
+        <p><strong>Billing:</strong> {{ billing|capfirst }}</p>
+        <p><strong>Price:</strong> {% if price %} {{ price }} FCFA HT {% else %} — {% endif %}</p>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Auth panel target (HTMX will swap content inside this div) -->
+                <div id="auth-panel">
+                    {# Default: load register form via HTMX immediately #}
+                    <div hx-get="{% url 'subscription_auth_panel' %}?action=register"
+                         hx-trigger="load"
+                         hx-swap="innerHTML"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <strong>Summary</strong>
+                </div>
+                <ul class="list-unstyled">
+                    <li>Plan: <strong>{% if plan %}{{ plan.name }}{% else %}{{ plan_slug|escape }}{% endif %}</strong></li>
+                    <li>Billing cycle: <strong>{{ billing }}</strong></li>
+                    <li>Price: <strong>{% if price %}{{ price }} FCFA HT{% else %}—{% endif %}</strong></li>
+                </ul>
+
+                <div class="mt-3">
+                    <!-- Next step (payment) will be implemented later -->
+                    <button class="btn btn-primary btn-block" disabled title="Payment step not implemented yet">Proceed to payment (disabled)</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 text-muted small">
+            Note: account creation and login are available inline. Payment will be implemented next.
+        </div>
+
+    </div>
+</div>

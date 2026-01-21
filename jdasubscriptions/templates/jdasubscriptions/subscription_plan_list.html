@@ -1,0 +1,181 @@
+{% extends "jdamainapp/base.html" %}
+{% block content %}
+
+<div class="container py-5" id="plan-root">
+
+    <!-- Title -->
+    <div class="text-center mb-4">
+        <h3 class="font-weight-bold">Choose Your Subscription Plan</h3>
+        <p class="text-muted">
+            You need an active subscription to access publications.
+        </p>
+    </div>
+
+    <!-- Subscription Type Toggle -->
+    <div class="text-center mb-3">
+        <div class="btn-group">
+            <a href="?plan_type=customer&billing_period={{ billing_period }}"
+               class="btn {% if plan_type == 'customer' %}btn-info{% else %}btn-outline-secondary{% endif %}">
+                Customer
+            </a>
+
+            <a href="?plan_type=institution&billing_period={{ billing_period }}"
+               class="btn {% if plan_type == 'institution' %}btn-info{% else %}btn-outline-secondary{% endif %}">
+                Institution
+            </a>
+        </div>
+    </div>
+
+    <!-- Billing Period Toggle -->
+    <div class="text-center mb-5">
+        <div class="btn-group">
+            <a href="?plan_type={{ plan_type }}&billing_period=monthly"
+               class="btn btn-sm {% if billing_period == 'monthly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
+                Monthly
+            </a>
+            {% if plan_type == 'institution' %}
+            <a href="?plan_type={{ plan_type }}&billing_period=quarterly"
+               class="btn btn-sm {% if billing_period == 'quarterly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
+                Quarterly
+            </a>
+            {% endif %}
+            <a href="?plan_type={{ plan_type }}&billing_period=yearly"
+               class="btn btn-sm {% if billing_period == 'yearly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
+                Yearly
+            </a>
+        </div>
+    </div>
+
+    <!-- Plans Grid -->
+    <div class="row">
+
+        {% for plan in plans %}
+        <div class="col-md-4 mb-4 d-flex">
+            <div class="card shadow-sm h-100 w-100">
+
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Badge spacer for alignment -->
+                    {% if plan.code == "akwaba_gold_monthly" or  plan.code == "akwaba_gold_yearly" %}
+                    <span class="badge rounded-pill badge-info mb-2">Most Popular</span>
+                    {% else %}
+                    <div style="height: 18px;"></div>
+                    {% endif %}
+
+                    <h5 class="font-weight-bold">{{ plan.name }}</h5>
+                    <p class="text-muted">{{ plan.description }}</p>
+
+                    <h5 class="font-weight-bold mt-1">
+                        {{ plan.price_fcfa|floatformat:0 }} FCFA HT<span class="small">/{{ plan.billing_period }}</span>
+                    </h5>
+
+                    <ul class="list-unstyled mt-1 flex-grow-1 mb-2">
+                        {% for feature in plan.features %}
+                        {% if feature.visible %}
+                        <li class="text-dark">
+                            <span class="text-success">✔</span>{{ feature.name }}
+                        </li>
+                        {% else %}
+                        <li class="text-muted text-decoration-line-through">
+                            <span class="text-danger">✖</span> {{ feature.name }}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                    <!--a href="{ url 'jdasubscriptions:select_subscription_plan' plan.id }"
+                       class="btn btn-outline-info btn-block mt-auto">
+                        Select Plan
+                    </a-->
+                    <button type="button"
+                            class="btn btn-outline-info btn-block mt-auto"
+                            data-toggle="modal"
+                            data-target="#confirmPlanModal"
+                            data-plan-id="{{ plan.id }}"
+                            data-plan-name="{{ plan.name }}"
+                            data-plan-price="{{ plan.price_fcfa|floatformat:0 }}"
+                            data-plan-period="{{ plan.billing_period }}">
+                        Select Plan
+                    </button>
+
+
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted">
+            No plans available.
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+<!-- Confirm Plan Modal -->
+<div class="modal fade" id="confirmPlanModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Subscription</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to subscribe to:</p>
+                <p class="font-weight-bold mb-1" id="modalPlanName"></p>
+                <p class="text-muted" id="modalPlanPrice"></p>
+
+                <p class="mt-3 text-danger">
+                    Are you sure you want to proceed?
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Cancel
+                </button>
+
+                <a href="#"
+                   id="confirmPlanBtn"
+                   class="btn btn-info">
+                    Yes, confirm
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block extra_js_subscription_plan_list %}
+<script>
+  $('#confirmPlanModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget);
+
+    const planId = button.data('plan-id');
+    const name = button.data('plan-name');
+    const price = button.data('plan-price');
+    const period = button.data('plan-period');
+
+    $('#modalPlanName').text(name);
+    $('#modalPlanPrice').text(price + ' FCFA / ' + period);
+
+    $('#confirmPlanBtn').attr(
+      'href',
+      "{% url 'jdasubscriptions:select_subscription_plan' 0 %}".replace('/0/', '/' + planId + '/')
+    );
+  });
+</script>
+{% endblock %}

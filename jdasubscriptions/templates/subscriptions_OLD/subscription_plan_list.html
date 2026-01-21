@@ -1,0 +1,22 @@
+<h2 class="mb-4">Choose Your Subscription Plan</h2>
+
+<div class="row">
+    {% for plan in plans %}
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>{{ plan.name }}</h4>
+                <p>{{ plan.description }}</p>
+
+                <p><strong>Monthly:</strong> ${{ plan.monthly_price }}</p>
+                <p><strong>Yearly:</strong> ${{ plan.yearly_price }}</p>
+
+                <a class="btn btn-primary w-100"
+                   href="{% url 'subscriptions:select_subscription_plan' plan.id %}">
+                    Select
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>

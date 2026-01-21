@@ -128,7 +128,18 @@
                         {#% if user_grp == "brokers" %#}
                         <!--td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
                         {#% else %#}
-                        <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+
+                        <!--td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
+                        <td><a href="{% url 'protected_publication' i.pk %}"
+                           class="protected-pdf-link"
+                           data-pk="{{ i.pk }}">
+                            <i class="far fa-eye fa-fw fa-2x text-info"></i>
+                        </a></td>
+
+
+
+
+
                         {#% endif %#}
 
                         <!--td>
@@ -289,5 +300,49 @@
 }
 
 </style>
+<script>
+$(document).on("click", ".protected-pdf-link", function (e) {
+    e.preventDefault();
+    const url = $(this).attr("href");
+
+    fetch(url)
+      .then(response => {
+          if (response.status === 403) {
+              $("#authModal").modal("show");
+          } else {
+              window.open(url, "_blank");
+          }
+      })
+      .catch(err => console.error(err));
+});
+</script>
+
+<!-- Login Warning Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Access Restricted</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                You must sign up or log in with the proper authorization to view this document.
+                <br><br>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary btn-sm">Sign Up</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showLoginPopup() {
+        $('#loginWarningModal').modal('show');
+    }
+</script>
+
 {% endblock %}
 

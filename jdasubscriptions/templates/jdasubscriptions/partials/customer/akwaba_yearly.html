@@ -1,0 +1,41 @@
+<div class="col-md-4 mb-4" id="akwaba_period">
+  <div class="card shadow-sm h-100">
+    <div class="card-body">
+
+      <h5 class="card-title font-weight-bold">Akwaba</h5>
+      <p class="text-muted">Basic access for individual investors</p>
+
+      <div class="btn-group mb-3">
+        <button class="btn btn-outline-secondary btn-sm"
+                hx-get="{% url 'subscription_type_toggle' %}"
+                hx-vals='{"subscription_type": "akwaba_monthly"}'
+                hx-target="#akwaba_period"
+                hx-swap="outerHTML">
+          Monthly
+        </button>
+        <button class="btn btn-info btn-sm">Yearly</button>
+      </div>
+
+      <h4 class="font-weight-bold">
+        27,000 FCFA HT <span class="small">/year</span>
+      </h4>
+
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>✔ Newsletters</li>
+        <li>✔ IPO Review</li>
+        <li>✔ Recommendations</li>
+        <li>✔ Top 10 Buy</li>
+        <li>✔ Top 10 Sell</li>
+        <li>✔ Commentary Reports</li>
+        <li class="text-muted">✖ Research Notes</li>
+        <li class="text-muted">✖ Economic Notes</li>
+      </ul>
+
+      <a href="{% url 'subscriptions:select_subscription_plan' plan_id=2 %}"
+         class="btn btn-outline-info btn-block">
+        Select Plan
+      </a>
+
+    </div>
+  </div>
+</div>

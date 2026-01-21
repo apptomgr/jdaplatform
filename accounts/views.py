@@ -10,6 +10,8 @@ from django.contrib.auth.models import Group
 from accounts .decorators import allowed_users
 from datetime import datetime
 from django.db.models import Count
+from django.http import HttpResponseBadRequest
+#from .models import SubscriptionPlan
 
 
 
@@ -321,6 +323,157 @@ def admin_tasks_stats(request, stats_type):
         jda_profile_chart = User.objects.exclude(last_login=None).exclude(groups__name='admins').annotate(month=TruncMonth('last_login')).values('month').annotate(gcount=Count('id')).values('month', 'gcount')
     context = {'stats_type': stats_type, 'jda_profile_chart':jda_profile_chart, 'rpt_date':now, 'user_grp': curr_grp}
     return render(request, 'registration/admin_tasks_stats.html', context)
+
+
+
+#//////////////////////////////////////////subscription_plans/////////////////////////////////////////////////
+#def subscription_plans(request):
+#    return render(request, 'jdasubscriptions/subscription_plan.html')
+#    #return render(request, 'registration/register.html')
+
+
+#//////////////////////////////////////////subscription_type_toggle/////////////////////////////////////////////////
+
+from django.shortcuts import render
+from django.http import HttpResponseBadRequest
+
+TEMPLATE_MAP = {
+    # MAIN SUBSCRIPTION TYPES
+    "customer": "jdasubscriptions/subscription_plan_customer.html",
+    "institutions": "jdasubscriptions/subscription_plan_institutions.html",
+
+    # CUSTOMER – AKWABA
+    "akwaba_monthly": "jdasubscriptions/subscription_partial_cust_akwaba_monthly.html",
+    "akwaba_yearly": "jdasubscriptions/subscription_partial_cust_akwaba_yearly.html",
+
+    # CUSTOMER – AKWABA PLUS
+    "akwaba_plus_monthly": "jdasubscriptions/subscription_partial_cust_akwaba_plus_monthly.html",
+    "akwaba_plus_yearly": "jdasubscriptions/subscription_partial_cust_akwaba_plus_yearly.html",
+
+    # CUSTOMER – AKWABA GOLD
+    "akwaba_gold_monthly": "jdasubscriptions/subscription_partial_cust_akwaba_gold_monthly.html",
+    "akwaba_gold_yearly": "jdasubscriptions/subscription_partial_cust_akwaba_gold_yearly.html",
+
+    # INSTITUTIONS – SILVER
+    "inst_silver_monthly": "jdasubscriptions/subscription_partial_inst_silver_monthly.html",
+    "inst_silver_quarterly": "jdasubscriptions/subscription_partial_inst_silver_quarterly.html",
+    "inst_silver_yearly": "jdasubscriptions/subscription_partial_inst_silver_yearly.html",
+
+    # INSTITUTIONS – GOLD
+    "inst_gold_monthly": "jdasubscriptions/subscription_partial_inst_gold_monthly.html",
+    "inst_gold_quarterly": "jdasubscriptions/subscription_partial_inst_gold_quarterly.html",
+    "inst_gold_yearly": "jdasubscriptions/subscription_partial_inst_gold_yearly.html",
+}
+
+
+def subscription_type_toggle(request):
+    sub_type = request.GET.get("subscription_type")
+
+    if not sub_type:
+        return HttpResponseBadRequest("Missing subscription_type")
+
+    plan_template = TEMPLATE_MAP.get(sub_type)
+
+    if not plan_template:
+        return HttpResponseBadRequest("Invalid subscription_type")
+
+    context = {"sub_type": sub_type}
+
+    return render(request, plan_template, context)
+
+
+# #//////////////////////////////////////////subscription_checkout_summary/////////////////////////////////////////////////
+# def subscription_checkout_summary(request):
+#     """
+#     HTMX endpoint: render a small checkout summary showing plan + billing,
+#     with an auth-panel target that can load login/register forms via HTMX.
+#     Expects GET or POST with `plan` and `billing`.
+#     """
+#     plan_slug = request.GET.get('plan') or request.POST.get('plan')
+#     billing = request.GET.get('billing') or request.POST.get('billing') or 'monthly'
+#
+#     if not plan_slug:
+#         return HttpResponseBadRequest("Missing plan parameter")
+#
+#     # Load plan from DB, fallback to basic context if plan not found (so UI still works)
+#     try:
+#         plan = SubscriptionPlan.objects.get(slug=plan_slug)
+#         price = plan.price_for_cycle(billing)
+#     except Exception:
+#         # fallback values (avoid exception during early testing)
+#         plan = None
+#         price = '—'
+#
+#     context = {
+#         'plan_slug': plan_slug,
+#         'plan': plan,
+#         'billing': billing,
+#         'price': price,
+#     }
+#
+#     return render(request, 'jdasubscriptions/htmx/checkout_summary.html', context)
+#
+#
+# #//////////////////////////////////////////subscription_auth_panel/////////////////////////////////////////////////
+# def subscription_auth_panel(request):
+#     """
+#     HTMX endpoint: returns either the register form or login form fragment,
+#     based on the `action` param: 'register' or 'login'.
+#     """
+#     action = request.GET.get('action') or request.POST.get('action') or 'register'
+#     action = action.lower()
+#
+#     if action == 'register':
+#         return render(request, 'jdasubscriptions/htmx/auth_register.html', {})
+#     elif action == 'login':
+#         return render(request, 'jdasubscriptions/htmx/auth_login.html', {})
+#     else:
+#         return HttpResponseBadRequest("Invalid action")
+
+
+
+# #//////////////////////////////////////////subscription_type_toggle/////////////////////////////////////////////////
+# def subscription_type_toggle(request):
+#     #print("334")
+#     sub_type = request.GET.get("subscription_type")
+#     #print(sub_type)
+#
+#     if sub_type == 'customer':
+#         plan_template ="jdasubscriptions/subscription_plan_customer.html"
+#     elif sub_type == 'institutions':
+#         plan_template ="jdasubscriptions/subscription_plan_institutions.html"
+#     elif sub_type == 'akwaba_monthly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_monthly.html"
+#     elif sub_type == 'akwaba_yearly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_yearly.html"
+#     elif sub_type == 'akwaba_plus_monthly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_plus_monthly.html"
+#     elif sub_type == 'akwaba_plus_yearly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_plus_yearly.html"
+#     elif sub_type == 'akwaba_gold_monthly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_gold_monthly.html"
+#     elif sub_type == 'akwaba_gold_yearly':
+#         plan_template ="jdasubscriptions/subscription_partial_cust_akwaba_gold_yearly.html"
+#     elif sub_type == 'inst_silver_monthly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_silver_monthly.html"
+#     elif sub_type == 'inst_silver_quarterly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_silver_quarterly.html"
+#     elif sub_type == 'inst_silver_yearly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_silver_yearly.html"
+#     elif sub_type == 'inst_gold_monthly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_gold_monthly.html"
+#     elif sub_type == 'inst_gold_quarterly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_gold_quarterly.html"
+#     elif sub_type == 'inst_gold_yearly':
+#         plan_template ="jdasubscriptions/subscription_partial_inst_gold_yearly.html"
+#     else:
+#         pass  # complete with an exception page
+#
+#     context={"sub_type":sub_type}
+#     return render(request, f"{plan_template}", context)
+
+
+
 
 # def signup(request):
 #     if request.method == 'POST':
