@@ -129,12 +129,13 @@
                         <!--td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
                         {#% else %#}
 
-                        <!--td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
-                        <td><a href="{% url 'protected_publication' i.pk %}"
+                        <td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td>
+
+                        <!--td><a href="{% url 'protected_publication' i.pk %}"
                            class="protected-pdf-link"
                            data-pk="{{ i.pk }}">
                             <i class="far fa-eye fa-fw fa-2x text-info"></i>
-                        </a></td>
+                        </a></td-->
 
 
 

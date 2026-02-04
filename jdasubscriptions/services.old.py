@@ -1,4 +1,4 @@
-# jdasubscriptions/services.py
+# jdasubscriptions/services.old.py
 from django.utils import timezone
 from .models import UserSubscription, CustomerSubscription, InstitutionSubscription
 from django.utils import timezone

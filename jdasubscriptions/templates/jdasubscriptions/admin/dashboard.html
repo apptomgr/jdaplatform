@@ -1,11 +1,11 @@
 {% extends "jdamainapp/base.html" %}
 {% block content %}
 
-<div class="container py-5">
+<div class="container py-2">
 
     <!-- Page Header -->
-    <div class="mb-4">
-        <h3 class="font-weight-bold">Subscription Dashboard</h3>
+    <div class="mb-4 text-center">
+        <h4 class="font-weight-bold">Subscription Dashboard</h4>
         <p class="text-muted mb-0">
             Overview of customer and institution subscriptions
         </p>
@@ -53,7 +53,7 @@
                         {% for key, value in by_subscriber_type.items %}
                         <li class="list-group-item d-flex justify-content-between">
                             {{ key|title }}
-                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                            <span class="badge badge-info badge-pill big-pill">{{ value }}</span>
                         </li>
                         {% empty %}
                         <li class="list-group-item text-muted">No data</li>
@@ -72,7 +72,7 @@
                         {% for key, value in by_plan_type.items %}
                         <li class="list-group-item d-flex justify-content-between">
                             {{ key|title }}
-                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                            <span class="badge badge-info badge-pill big-pill">{{ value }}</span>
                         </li>
                         {% empty %}
                         <li class="list-group-item text-muted">No data</li>
@@ -91,7 +91,7 @@
                         {% for key, value in by_billing_period.items %}
                         <li class="list-group-item d-flex justify-content-between">
                             {{ key|title }}
-                            <span class="badge badge-info badge-pill">{{ value }}</span>
+                            <span class="badge badge-info badge-pill big-pill">{{ value }}</span>
                         </li>
                         {% empty %}
                         <li class="list-group-item text-muted">No data</li>
@@ -102,6 +102,40 @@
         </div>
 
     </div>
+
+
+    <!-- end KPI card -->
+
+    <!-- Chart card --->
+    <div class="row mb-5">
+
+        <!-- Active vs Expired -->
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">
+                        Active vs Expired Subscriptions
+                    </h6>
+                    <div id="activeExpiredChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MRR -->
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="font-weight-bold mb-3">
+                        Monthly Recurring Revenue (MRR)
+                    </h6>
+                    <div id="mrrChart"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- end chart card -->
 
     <!-- EXPIRING SOON -->
     <div class="card shadow-sm mb-5">
@@ -152,15 +186,18 @@
                         <th>Type</th>
                         <th>Plan</th>
                         <th>Started At</th>
+                        <!--th>Ends At</th-->
                     </tr>
                     </thead>
                     <tbody>
+
                     {% for s in recent_activations %}
                     <tr>
                         <td>{{ s.user }}</td>
                         <td>{{ s.subscriber_type|title }}</td>
                         <td>{{ s.plan.name }}</td>
                         <td>{{ s.starts_at|date:"Y-m-d" }}</td>
+                        <!--td>{{ s.ends_at|date:"Y-m-d" }}</td-->
                     </tr>
                     {% empty %}
                     <tr>
@@ -177,8 +214,7 @@
     </div>
 
     <!-- MMR & ARR -->
-    {% comment %}
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mt-5">
         <div class="card-body">
             <h5 class="font-weight-bold mb-3">MRR & ARR</h5>
 
@@ -186,27 +222,27 @@
                 <table class="table table-sm table-hover mb-0">
                     <thead class="thead-light">
                     <tr>
-                        <th>User</th>
-                        <th>Type</th>
-                        <th>Plan</th>
-                        <th>Started At</th>
+                        <th>Customer MRR</th>
+                        <th>Institution MRR</th>
+                        <th>Total MRR</th>
+                        <th>Total ARR</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for s in recent_activations %}
+
                     <tr>
-                        <td>{{ s.user }}</td>
-                        <td>{{ s.subscriber_type|title }}</td>
-                        <td>{{ s.plan.name }}</td>
-                        <td>{{ s.starts_at|date:"Y-m-d" }}</td>
+                        <td>{{ customer_mrr|floatformat:0 }} FCFA</td>
+                        <td>{{ institution_mrr|floatformat:0 }} FCFA</td>
+                        <td>{{ total_mrr|floatformat:0 }} FCFA</td>
+                        <td>{{ total_arr|floatformat:0 }} FCFA</td>
                     </tr>
-                    {% empty %}
-                    <tr>
+
+                    <!--tr>
                         <td colspan="4" class="text-center text-muted">
                             No recent activations
                         </td>
-                    </tr>
-                    {% endfor %}
+                    </tr-->
+
                     </tbody>
                 </table>
             </div>
@@ -214,25 +250,58 @@
         </div>
     </div>
 
-
-    <div>
-        <h6>Customer MRR</h6>
-        <h4>{{ customer_mrr|floatformat:0 }} FCFA</h4>
-
-        <h6>Institution MRR</h6>
-        <h4>{{ institution_mrr|floatformat:0 }} FCFA</h4>
-
-        <hr>
-
-        <h5>Total MRR</h5>
-        <h3>{{ total_mrr|floatformat:0 }} FCFA</h3>
-
-        <h5>Total ARR</h5>
-        <h3>{{ total_arr|floatformat:0 }} FCFA</h3>
-
-    </div>
-    {% endcomment %}
-
 </div>
+
+{% endblock %}
+
+{% block extra_subscription_dashboard_chart %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    const activeExpiredOptions = {
+        chart: {
+            type: 'donut',
+        },
+        labels: ['Active', 'Expired'],
+        series: [
+            {{ active_vs_expired.active }},
+            {{ active_vs_expired.expired }}
+        ],
+        colors: ['#28a745', '#dc3545'],
+        legend: {
+            position: 'bottom'
+        }
+    };
+
+    new ApexCharts(
+        document.querySelector("#activeExpiredChart"),
+        activeExpiredOptions
+    ).render();
+</script>
+
+
+<script>
+    const mrrOptions = {
+        chart: {
+            type: 'bar',
+            toolbar: { show: false }
+        },
+        series: [{
+            name: 'MRR (FCFA)',
+            data: {{ mrr_chart_json|safe }}
+        }],
+        xaxis: {
+            categories: ['Customers', 'Institutions']
+        },
+        dataLabels: {
+            enabled: true
+        }
+    };
+
+    new ApexCharts(
+        document.querySelector("#mrrChart"),
+        mrrOptions
+    ).render();
+</script>
+
 
 {% endblock %}

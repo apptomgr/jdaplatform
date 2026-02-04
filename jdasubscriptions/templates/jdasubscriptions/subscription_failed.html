@@ -1,0 +1,15 @@
+{% extends "jdamainapp/base.html" %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h3 class="text-danger">Payment Failed</h3>
+    <p class="text-muted mt-3">
+        We couldn’t verify your payment.
+    </p>
+
+    <a href="{% url 'jdasubscriptions:subscription_plan_list' %}"
+       class="btn btn-outline-info mt-4">
+        Try Again
+    </a>
+</div>
+{% endblock %}

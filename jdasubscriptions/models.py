@@ -28,6 +28,9 @@ class SubscriptionPlan(models.Model):
     display_order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    paystack_reference = models.CharField(max_length=100, blank=True)
+    paystack_status = models.CharField(max_length=50, blank=True)
+
 
     class Meta:
         ordering = ["display_order", "price_fcfa"]
@@ -35,59 +38,6 @@ class SubscriptionPlan(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.billing_period})"
-
-# class SubscriptionPlan(models.Model):
-#     """
-#     Defines a purchasable subscription plan
-#     """
-#
-#     PLAN_TYPE_CHOICES = (
-#         ("customer", "Customer"),
-#         ("institution", "Institution"),
-#     )
-#
-#     BILLING_PERIOD_CHOICES = (
-#         ("monthly", "Monthly"),
-#         ("yearly", "Yearly"),
-#     )
-#
-#     code = models.SlugField(max_length=50, unique=True, help_text="Internal identifier (e.g. akwaba_monthly)")
-#     name = models.CharField(max_length=100)
-#     description = models.TextField(blank=True)
-#     plan_type = models.CharField(max_length=20, choices=PLAN_TYPE_CHOICES, default="customer")
-#     billing_period = models.CharField(max_length=20, choices=BILLING_PERIOD_CHOICES)
-#     price_fcfa = models.DecimalField(max_digits=12, decimal_places=2)
-#     features = models.ManyToManyField("PlanFeature",blank=True,related_name="plans")
-#     is_active = models.BooleanField(default=True)
-#     display_order = models.PositiveIntegerField(default=0)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     class Meta:
-#         ordering = ["display_order", "price_fcfa"]
-#         verbose_name_plural = "SubscriptionPlan"
-#
-#     def __str__(self):
-#         return f"{self.name} ({self.billing_period})"
-
-
-# #////////////////////////////////////////////////PlanFeature//////////////////////////////////////////
-# from django.db import models
-#
-# class PlanFeature(models.Model):
-#     """
-#     A single feature that can be attached to subscription plans
-#     """
-#     code = models.SlugField(max_length=50, unique=True, help_text="Internal identifier (e.g. research_notes)")
-#     name = models.CharField(max_length=100)
-#     description = models.TextField(blank=True)
-#     display_order = models.PositiveIntegerField(default=0)
-#
-#     class Meta:
-#         ordering = ["display_order", "name"]
-#         verbose_name_plural = "PlanFeature"
-#
-#     def __str__(self):
-#         return self.name
 
 
 # #///////////////////////////////////////////////CustomerSubscription//////////////////////////////////////////////
@@ -108,6 +58,16 @@ class CustomerSubscription(models.Model):
     starts_at = models.DateTimeField(null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    paystack_reference = models.CharField(
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True
+    )
+    paystack_status = models.CharField(max_length=50, blank=True)
+
+
+
 
     class Meta:
         #unique_together = ("user", "status")
@@ -166,6 +126,15 @@ class InstitutionSubscription(models.Model):
     starts_at = models.DateTimeField(null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    paystack_reference = models.CharField(
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    paystack_status = models.CharField(max_length=50, blank=True)
 
     class Meta:
         verbose_name_plural = "Institution Subscriptions"
@@ -320,3 +289,4 @@ class UserSubscription(models.Model):
 #
 #     def __str__(self):
 #         return f"{self.name} ({self.plan_type})"
+#CustomerSubscription.objects.filter(paystack_reference="").update(paystack_reference=None)

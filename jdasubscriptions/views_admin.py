@@ -6,7 +6,9 @@ from .models import CustomerSubscription, InstitutionSubscription
 from decimal import Decimal
 from django.utils import timezone
 from datetime import timedelta
-
+from jdasubscriptions.services.access_services import active_subscription_q
+import json
+from decimal import Decimal, ROUND_HALF_UP
 
 
 @staff_member_required
@@ -21,10 +23,15 @@ def subscription_dashboard(request):
             + normalize_subscriptions(institution_qs, "institution")
     )
 
+    #print(all_subscriptions[1])
+
     # KPIs
     total_subscriptions = len(all_subscriptions)
     active_subscriptions = [s for s in all_subscriptions if s["status"] == "active"]
     expired_subscriptions = [s for s in all_subscriptions if s["status"] == "expired"]
+
+    #for i in active_subscriptions:
+    #    print(i)
 
     # Breakdown helpers
     def count_by(field):
@@ -37,17 +44,12 @@ def subscription_dashboard(request):
     ############
     now = timezone.now()
 
-    customer_subs = CustomerSubscription.objects.filter(
-        status="active",
-        starts_at__lte=now,
-        ends_at__gte=now,
-    ).select_related("plan")
+    #customer_subs = CustomerSubscription.objects.filter(status="active", starts_at__lte=now, ends_at__gte=now,).select_related("plan")
+    #institution_subs = InstitutionSubscription.objects.filter(status="active", starts_at__lte=now, ends_at__gte=now, ).select_related("plan")
 
-    institution_subs = InstitutionSubscription.objects.filter(
-        status="active",
-        starts_at__lte=now,
-        ends_at__gte=now,
-    ).select_related("plan")
+    customer_subs = CustomerSubscription.objects.filter(active_subscription_q())
+    institution_subs = InstitutionSubscription.objects.filter(active_subscription_q())
+
 
     customer_mrr = subscription_mrr(customer_subs)
     institution_mrr = subscription_mrr(institution_subs)
@@ -55,9 +57,7 @@ def subscription_dashboard(request):
     total_mrr = customer_mrr + institution_mrr
     total_arr = total_mrr * Decimal("12")
 
-
     ##############
-
 
 
     context = {
@@ -77,7 +77,7 @@ def subscription_dashboard(request):
             reverse=True
         )[:10],
     }
-
+    #mmr & ARR info
     context.update({
         "customer_mrr": customer_mrr,
         "institution_mrr": institution_mrr,
@@ -85,14 +85,37 @@ def subscription_dashboard(request):
         "total_arr": total_arr,
     })
 
+    #chart info
+    context.update({
+        # Chart: Active vs Expired
+        "active_vs_expired": {
+            "active": len(active_subscriptions),
+            "expired": len(expired_subscriptions),
+        },
 
-    return render(
-        request,
-        "jdasubscriptions/admin/dashboard.html",
-        context
+        # Chart: MRR breakdown
+        "mrr_chart": {
+            "customer": float(customer_mrr),
+            "institution": float(institution_mrr),
+        },
+    })
+
+    context.update({
+        "mrr_chart_json": json.dumps([
+            quantize_2(customer_mrr),
+            quantize_2(institution_mrr),
+        ]),
+    })
+
+    return render(request, "jdasubscriptions/admin/dashboard.html", context)
+
+
+
+#//////////////////////////////////////
+def quantize_2(value):
+    return float(
+        Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
     )
-
-
 #////////////////////////////////////////////////normalize_subscriptions////////////////////////////////////////////
 def normalize_subscriptions(qs, subscriber_type):
     """

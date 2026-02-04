@@ -148,26 +148,40 @@ def user_in_allowed_groups(user):
 #///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
 # publications/views.py
 
-#from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import FileResponse, HttpResponseForbidden
-from jdasubscriptions.services import user_has_active_subscription
-#from .models import PublicationModel
-#import os
+import os
+
+from jdasubscriptions.services.access_services import (user_has_active_subscription, user_can_access_publication,)
+
 
 def protected_publication_by_pk(request, pk):
 
+    # ---------------------------------------
+    # 1️⃣ Must be subscribed at all
+    # ---------------------------------------
     if not user_has_active_subscription(request.user):
-        #print(f"160 - publications view: {user_has_active_subscription(request.user)} ")
         return redirect("jdasubscriptions:subscription_plan_list")
 
     publication = get_object_or_404(PublicationModel, pk=pk)
 
+    # ---------------------------------------
+    # 2️⃣ Must be allowed by plan
+    # ---------------------------------------
+    if not user_can_access_publication(request.user, publication):
+        return redirect("jdasubscriptions:subscription_upgrade")
+        #return redirect("jdasubscriptions:subscription_plan_list")
+
+    # ---------------------------------------
+    # 3️⃣ Serve file
+    # ---------------------------------------
     file_path = publication.file_name.path
 
     if not os.path.exists(file_path):
         return HttpResponseForbidden("File not found")
 
     return FileResponse(open(file_path, "rb"), content_type="application/pdf")
+
 
 
 

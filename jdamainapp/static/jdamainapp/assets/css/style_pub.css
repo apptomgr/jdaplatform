@@ -145,3 +145,10 @@
 
 
 
+  .big-pill {
+    font-size: .8rem; /* Adjust size here */
+    padding: 0.5em 1em; /* Proportional padding for the pill shape */
+    font-weight: 500; /* Optional: makes it more readable */
+  }
+
+

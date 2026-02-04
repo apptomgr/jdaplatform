@@ -1,0 +1,13 @@
+{% extends "jdamainapp/base.html" %}
+{% block content %}
+
+<h3>Upgrade Required</h3>
+<p>
+    Your current plan does not include access to this publication.
+    Please upgrade to continue.
+</p>
+<a href="{% url 'jdasubscriptions:subscription_plan_list' %}">
+    View Plans
+</a>
+
+{% endblock %}
