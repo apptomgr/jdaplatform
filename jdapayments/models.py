@@ -11,6 +11,7 @@ class Payment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()  # kobo
     reference = models.CharField(max_length=100, unique=True)
+    #paystack_reference = models.CharField(max_length=100, unique=True, null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     raw_response = models.JSONField()
 

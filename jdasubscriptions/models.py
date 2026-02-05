@@ -2,6 +2,9 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.db import models
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -87,15 +90,6 @@ class CustomerSubscription(models.Model):
 
 
 # #///////////////////////////////////////////////InstitutionSubscription//////////////////////////////////////////////
-from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
-
-from django.contrib.auth.models import User
-from django.db import models
-from django.utils import timezone
-
-
 class InstitutionSubscription(models.Model):
     """
     Subscription for institution users (no Institution model required)
@@ -126,14 +120,7 @@ class InstitutionSubscription(models.Model):
     starts_at = models.DateTimeField(null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    paystack_reference = models.CharField(
-        max_length=100,
-        unique=True,
-        null=True,
-        blank=True
-    )
-
+    paystack_reference = models.CharField(max_length=100, unique=True, null=True, blank=True)
     paystack_status = models.CharField(max_length=50, blank=True)
 
     class Meta:
@@ -210,83 +197,3 @@ class UserSubscription(models.Model):
                 and self.end_date >= timezone.now()
         )
 
-# class UserSubscription(models.Model):
-#     STATUS_CHOICES = (
-#         ("pending", "Pending"),
-#         ("active", "Active"),
-#         ("expired", "Expired"),
-#         ("cancelled", "Cancelled"),
-#     )
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="subscriptions_OLD")
-#     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT, related_name="user_subscriptions")
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
-#     start_date = models.DateTimeField(null=True, blank=True)
-#     end_date = models.DateTimeField(null=True, blank=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def activate(self):
-#         self.status = "active"
-#         self.start_date = timezone.now()
-#         self.save()
-#
-#     class Meta:
-#         #ordering = ["display_order", "price_fcfa"]
-#         verbose_name_plural = 'UserSubscription'
-#
-#     def __str__(self):
-#         return f"{self.user} → {self.plan} ({self.status})"
-#
-#
-# #//////////////////////////////////////////////CustomerSubscription/////////////////////////////////////////////////////
-# class CustomerSubscription(models.Model):
-#     """
-#     Links a user to a selected subscription plan
-#     """
-#     STATUS_CHOICES = (
-#         ("pending", "Pending"),
-#         ("active", "Active"),
-#         ("expired", "Expired"),
-#         ("cancelled", "Cancelled"),
-#     )
-#
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="subscription")
-#     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT, related_name="subscriptions_OLD")
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
-#     start_date = models.DateField(null=True, blank=True)
-#     end_date = models.DateField(null=True, blank=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-#
-#     class Meta:
-#         #ordering = ["display_order", "price_fcfa"]
-#         verbose_name_plural = 'CustomerSubscription'
-#
-#     def __str__(self):
-#         return f"{self.user} → {self.plan}"
-#
-
-# from django.db import models
-#
-# class SubscriptionType(models.TextChoices):
-#     CUSTOMER = 'customer', 'Customer'
-#     INSTITUTION = 'institution', 'Institution'
-#
-# class SubscriptionPlan(models.Model):
-#     name = models.CharField(max_length=100)
-#     plan_type = models.CharField(
-#         max_length=20,
-#         choices=SubscriptionType.choices,
-#         default=SubscriptionType.CUSTOMER
-#     )
-#     monthly_price = models.DecimalField(max_digits=10, decimal_places=2)
-#     yearly_price = models.DecimalField(max_digits=10, decimal_places=2)
-#     description = models.TextField(blank=True)
-#     is_active = models.BooleanField(default=True)
-#     sort_order = models.PositiveIntegerField(default=0)
-#
-#     class Meta:
-#         ordering = ["sort_order", "name"]
-#
-#     def __str__(self):
-#         return f"{self.name} ({self.plan_type})"
-#CustomerSubscription.objects.filter(paystack_reference="").update(paystack_reference=None)

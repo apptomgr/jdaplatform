@@ -40,7 +40,7 @@ class PublicationModel(models.Model):
         ('Sector Reports', 'Sector Reports'),
         ('Strategic Reports', 'Strategic Reports'),
         ('Economic Notes', 'Economic Notes'),
-        ('Recommendations', 'Recommendations')
+        ('Recommendation', 'Recommendation')
         #('Investment Case', 'Investment Case')
     )
 
