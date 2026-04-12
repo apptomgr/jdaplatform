@@ -15,7 +15,13 @@ class Profile(models.Model):
         return f'{self.user} profile'
 
     def save(self, *args, **kwargs):
-        image_resize(self.logo, 120, 120)
+        try:
+            old = Profile.objects.get(pk=self.pk)
+            logo_changed = old.logo != self.logo
+        except Profile.DoesNotExist:
+            logo_changed = True
+        if logo_changed:
+            image_resize(self.logo, 120, 120)
         super().save(*args, **kwargs)
 
     # # Override the save method of the model
