@@ -17,7 +17,20 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Step 1: make nullable first (no unique yet)
+        migrations.AlterField(
+            model_name='customersubscription',
+            name='paystack_reference',
+            field=models.CharField(blank=True, max_length=100, null=True),
+        ),
+        migrations.AlterField(
+            model_name='institutionsubscription',
+            name='paystack_reference',
+            field=models.CharField(blank=True, max_length=100, null=True),
+        ),
+        # Step 2: convert empty strings to NULL
         migrations.RunPython(empty_string_to_null, migrations.RunPython.noop),
+        # Step 3: now safe to add unique constraint
         migrations.AlterField(
             model_name='customersubscription',
             name='paystack_reference',
