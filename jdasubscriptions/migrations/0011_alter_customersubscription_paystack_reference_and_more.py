@@ -3,6 +3,13 @@
 from django.db import migrations, models
 
 
+def empty_string_to_null(apps, schema_editor):
+    CustomerSubscription = apps.get_model('jdasubscriptions', 'CustomerSubscription')
+    InstitutionSubscription = apps.get_model('jdasubscriptions', 'InstitutionSubscription')
+    CustomerSubscription.objects.filter(paystack_reference='').update(paystack_reference=None)
+    InstitutionSubscription.objects.filter(paystack_reference='').update(paystack_reference=None)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,6 +17,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(empty_string_to_null, migrations.RunPython.noop),
         migrations.AlterField(
             model_name='customersubscription',
             name='paystack_reference',
