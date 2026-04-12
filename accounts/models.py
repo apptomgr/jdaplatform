@@ -4,6 +4,7 @@ from PIL import Image
 from accounts.utils import image_resize
 from django.contrib.auth.models import Group
 from django.utils.text import slugify
+from django.conf import settings
 #from .models import SubscriptionPlan
 
 class Profile(models.Model):
@@ -15,13 +16,14 @@ class Profile(models.Model):
         return f'{self.user} profile'
 
     def save(self, *args, **kwargs):
-        try:
-            old = Profile.objects.get(pk=self.pk)
-            logo_changed = old.logo != self.logo
-        except Profile.DoesNotExist:
-            logo_changed = True
-        if logo_changed:
-            image_resize(self.logo, 120, 120)
+        if getattr(settings, 'DEVELOPMENT_MODE', False):
+            try:
+                old = Profile.objects.get(pk=self.pk)
+                logo_changed = old.logo.name != self.logo.name
+            except Profile.DoesNotExist:
+                logo_changed = True
+            if logo_changed:
+                image_resize(self.logo, 120, 120)
         super().save(*args, **kwargs)
 
     # # Override the save method of the model
