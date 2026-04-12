@@ -313,28 +313,27 @@ def protected_publication_by_pk(request, pk):
 def protected_publication_content(request, pk):
 
     publication = get_object_or_404(PublicationModel, pk=pk)
-    file_path = publication.file_name.path
 
-    if not os.path.exists(file_path):
+    if not publication.file_name:
         return HttpResponseForbidden("File not found")
 
     # ---------------------------------------
-    # 🔐 Staff/Admin full access
+    # Staff/Admin full access
     # ---------------------------------------
     if request.user.is_staff or request.user.is_superuser:
 
         # If explicitly requesting download
         if request.GET.get("download") == "1":
             return FileResponse(
-                open(file_path, "rb"),
+                publication.file_name.open('rb'),
                 as_attachment=True,
-                filename=os.path.basename(file_path),
+                filename=os.path.basename(publication.file_name.name),
                 content_type="application/pdf"
             )
 
         # Otherwise inline view
         return FileResponse(
-            open(file_path, "rb"),
+            publication.file_name.open('rb'),
             content_type="application/pdf"
         )
 
@@ -348,7 +347,7 @@ def protected_publication_content(request, pk):
         return HttpResponseForbidden("Plan does not allow access")
 
     response = FileResponse(
-        open(file_path, "rb"),
+        publication.file_name.open('rb'),
         content_type="application/pdf"
     )
 
