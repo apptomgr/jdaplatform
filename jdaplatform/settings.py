@@ -22,10 +22,10 @@ from dotenv import load_dotenv
 from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(Path(__file__).resolve().parent / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -234,7 +234,14 @@ else:
     AWS_LOCATION = 'django_test_space'
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    DEFAULT_FILE_STORAGE = 'jdaplatform.storage_backends.MediaStorage'
+    STORAGES = {
+        "default": {
+            "BACKEND": "jdaplatform.storage_backends.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/media/"
 
 
