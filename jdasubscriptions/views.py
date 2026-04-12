@@ -183,6 +183,29 @@ def subscription_plan_list(request):
     }
     return render(request, "jdasubscriptions/subscription_plan_list.html", context)
 
+# def subscription_plan_list(request):
+#
+#     plan_type = request.GET.get("type")  # 'individual' or 'institution'
+#
+#     plans = SubscriptionPlan.objects.filter(is_active=True)
+#
+#     # 🔥 mapping layer (important)
+#     type_mapping = {
+#         "individual": "customer",
+#         "institution": "institution",
+#     }
+#
+#     if plan_type in type_mapping:
+#         plans = plans.filter(plan_type=type_mapping[plan_type])
+#
+#     context = {
+#         "plans": plans,
+#         "selected_type": plan_type,
+#     }
+#
+#     return render(request, "jdasubscriptions/subscription_plan_list.html", context)
+
+
 
 
 #//////////////////////////////////////select_subscription_plan/////////////////////////////////////////////////

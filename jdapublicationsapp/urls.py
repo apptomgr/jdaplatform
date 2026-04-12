@@ -9,6 +9,10 @@ urlpatterns = [
     path('jdapublicationsapp_pubs/', views.jdapublicationsapp_pubs, name='jdapublicationsapp_pubs'),
     #path('subscribe/', views.subscription_plans, name='subscription-plans'),
     path('pubs/view/<int:pk>/', views.protected_publication_by_pk, name='protected_publication'),
+    # PDF content endpoint (for PDF.js)
+    path('publication/<int:pk>/content/',
+         views.protected_publication_content,
+         name='protected_publication_content'),
 
 
     # path('jdapublicationsapp_pubs/<str:pub_lang>', views.jdapublicationsapp_pubs_lang, name='jdapublicationsapp_pubs_lang'),
@@ -27,8 +31,19 @@ urlpatterns = [
     # path('jdapublicationsapp_view_watermarked_pub/<str:file_name>', views.jdapublicationsapp_view_watermarked_pub, name='jdapublicationsapp_view_watermarked_pub'),
     # Securities
     # path('jdafinancialsapp_add_security', views.jdafinancialsapp_add_security, name='jdafinancialsapp_add_security'),
+    # publications/urls.py
+
+    # urls.py
+    path(
+        "publications/stream/<int:pk>/",
+        views.stream_publication_pdf,
+        name="stream_publication_pdf",
+    ),
+
+
 
     # misc
     path('tes/', views.tes, name='tes'),
+    path('zez/', views.zez, name='zez'),
     path('jda_simple_form_tester/', views.jda_simple_form_tester, name='jda_simple_form_tester'),
 ]

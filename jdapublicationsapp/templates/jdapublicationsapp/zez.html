@@ -1,0 +1,45 @@
+{% extends 'jdamainapp/base.html' %}
+{% block content %}
+
+<!-- jQuery (required) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- jQuery Knob plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+
+<!-- Initialize the knob -->
+<script>
+$(document).ready(function() {
+    $(".knob").knob();
+});
+</script>
+<div class="col-md-4 col-sm-12 col-xs-12 vl">
+    <!-- end col-md-4 -->
+    <div class=" about-move">
+        <div class="services-details">
+            <div class="single-services">
+                <a class="services-icon" href="#">
+                    <i class="fas fa-layer-group fa-2x my_info_txt"></i>
+                </a>
+                <h4> 'Publication Types'</h4>
+                <p>
+                    <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
+                    <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
+                    <i class="far fa-check-circle my_info_txt"></i> Annual Reports
+
+                </p>
+            </div>
+        </div>
+        <!-- end about-details -->
+    </div>
+
+
+    <div class="single-skill">
+        <div class="progress-circular">
+            <input type="text" class="knob" value="40" data-rel="40" data-linecap="round" data-width="125" data-bgcolor="#fff" data-fgcolor="#3EC1D5" data-thickness=".20" data-readonly="true" disabled=""><h5 class="progress-h4">Newsletters</h5>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}}

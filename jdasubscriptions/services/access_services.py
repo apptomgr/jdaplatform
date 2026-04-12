@@ -1,17 +1,63 @@
 from django.utils import timezone
-from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription
-#from jdasubscriptions.services.access_services import (
-#    user_has_active_subscription,
-#    user_can_access_publication,
-#)
+from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
+from django.db.models import Q
 
+#/////////////////////////////////////////////_get_active_subscription///////////////////////////////
+def _get_active_subscription(user):
+    """
+    Returns active subscription (Institution first, then Customer)
+    """
 
-def user_has_active_subscription(user):
+    if not user or not user.is_authenticated:
+        return None
+
     now = timezone.now()
-    return (
-            CustomerSubscription.objects.filter(user=user, status="active", starts_at__lte=now,).filter(ends_at__isnull=True).exists() or
-            InstitutionSubscription.objects.filter(user=user, status="active", starts_at__lte=now,).filter(ends_at__isnull=True).exists()
+
+    # 1️⃣ Institution subscription FIRST (priority)
+    institution_sub = (
+        InstitutionSubscription.objects
+            .select_related("plan")
+            .filter(
+            user=user,
+            status="active",
+            starts_at__lte=now
+        )
+            .filter(
+            Q(ends_at__isnull=True) | Q(ends_at__gte=now)
+        )
+            .order_by("-created_at")
+            .first()
     )
+
+    if institution_sub:
+        return institution_sub
+
+    # 2️⃣ Customer subscription SECOND
+    customer_sub = (
+        CustomerSubscription.objects
+            .select_related("plan")
+            .filter(
+            user=user,
+            status="active",
+            starts_at__lte=now
+        )
+            .filter(
+            Q(ends_at__isnull=True) | Q(ends_at__gte=now)
+        )
+            .order_by("-created_at")
+            .first()
+    )
+
+    if customer_sub:
+        return customer_sub
+
+    return None
+
+
+#///////////////////////////////////////////user_has_active_subscription/////////////////////////////
+def user_has_active_subscription(user):
+    return _get_active_subscription(user) is not None
+
 
 
 
@@ -31,21 +77,23 @@ def user_can_access_publication(user, publication) -> bool:
     # --------------------------------------------------
     # Get active CUSTOMER subscription
     # --------------------------------------------------
-    subscription = (
-        CustomerSubscription.objects
-            .select_related("plan")
-            .filter(
-            user=user,
-            status="active",
-            starts_at__lte=now,
-        )
-            .filter(
-            ends_at__isnull=True
-        )
-            .first()
-    )
 
-    #print(f"48 - plan: {subscription}")
+    # subscription = (
+    #     CustomerSubscription.objects
+    #         .select_related("plan")
+    #         .filter(
+    #         user=user,
+    #         status="active",
+    #         starts_at__lte=now,
+    #     )
+    #         .filter(
+    #         Q(ends_at__isnull=True) | Q(ends_at__gte=now)
+    #     )
+    #         .first()
+    # )
+
+    subscription = _get_active_subscription(user)
+
 
     if not subscription:
         return False
@@ -67,7 +115,7 @@ def user_can_access_publication(user, publication) -> bool:
 
     for feature in plan.features or []:
         #print(f"66: feature - {plan.features or []}")
-        print(f"67: feature name - {feature.get('name')}")
+        #print(f"67: feature name - {feature.get('name')}")
         if (
                 feature.get("name") == publication_type
                 and feature.get("visible") is True
@@ -77,19 +125,7 @@ def user_can_access_publication(user, publication) -> bool:
     return False
 
 
-# def user_has_active_subscription(user):
-#     if not user.is_authenticated:
-#
-#         return False
-#
-#     return (
-#             CustomerSubscription.objects.filter(user=user, status="active").exists()
-#             or InstitutionSubscription.objects.filter(user=user, status="active").exists()
-#     )
-
 #///////////////////////////////////////////active_subscription_q///////////////////////////////////////////////////////
-from django.db.models import Q
-from django.utils import timezone
 
 ACTIVE_STATUS = "active"  # do NOT move this yet
 
@@ -106,3 +142,81 @@ def active_subscription_q():
                    Q(ends_at__gte=now)
            )
 
+
+#////////////////////////////////////////////////////get_upgrade_recommendation/////////////////////////////
+def get_upgrade_recommendation(user, publication):
+    """
+    Returns:
+    {
+        "current_plan": SubscriptionPlan | None,
+        "required_plan": SubscriptionPlan | None
+    }
+    """
+
+    if not user or not user.is_authenticated:
+        return {"current_plan": None, "required_plan": None}
+
+    now = timezone.now()
+
+    # ---------------------------------------
+    # 1️⃣ Get active subscription
+    # ---------------------------------------
+    subscription = _get_active_subscription(user)
+
+
+    # subscription = (
+    #     CustomerSubscription.objects
+    #         .select_related("plan")
+    #         .filter(
+    #         user=user,
+    #         status="active",
+    #         starts_at__lte=now,
+    #     )
+    #         .filter(
+    #         Q(ends_at__isnull=True) | Q(ends_at__gte=now)
+    #     )
+    #         .first()
+    # )
+
+    if not subscription:
+        return {"current_plan": None, "required_plan": None}
+
+    current_plan = subscription.plan
+    publication_type = publication.research_type
+
+    # ---------------------------------------
+    # 2️⃣ Find lowest plan that contains feature
+    # ---------------------------------------
+    eligible_plans = (
+        SubscriptionPlan.objects
+            .filter(
+            plan_type=current_plan.plan_type,
+            is_active=True,
+        )
+            .order_by("display_order", "price_fcfa")
+    )
+
+    required_plan = None
+
+    for plan in eligible_plans:
+        for feature in plan.features or []:
+            if (
+                    feature.get("name") == publication_type
+                    and feature.get("visible") is True
+            ):
+                required_plan = plan
+                break
+
+        if required_plan:
+            break
+
+    # ---------------------------------------
+    # 3️⃣ Only suggest upgrade if it’s higher
+    # ---------------------------------------
+    if required_plan and required_plan.display_order <= current_plan.display_order:
+        required_plan = None
+
+    return {
+        "current_plan": current_plan,
+        "required_plan": required_plan,
+    }

@@ -116,22 +116,17 @@ class SecurityModel(models.Model):
         ('DC/BR','DC/BR'),
     )
 
-    country_list = []
-    country_list_name = []
+    @staticmethod
+    def get_issue_list_choices():
+        country_list_name = []
+        for code, name in list(countries):
+            country_list_name.append(name)
+        country_list = tuple(merge_two_lists(country_list_name, country_list_name))
 
-    for code, name in list(countries):
-        country_list_name.append(name)
+        company = CompanyModel.objects.values_list('company', flat=True).order_by('company')
+        company_list = merge_company_lists(list(company), list(company))
 
-    country_list = merge_two_lists(country_list_name, country_list_name)
-    country_list =  tuple(country_list)
-
-    company = CompanyModel.objects.values_list('company', flat=True).order_by('company')
-    company_list = list(company)
-    company_list = merge_company_lists(company_list, company_list)
-
-    country_company = tuple(country_list) + tuple(company_list)
-
-    CHOICES_ISSUE_LIST= country_company #CountryField(blank_label='Country') #company # country.union(company).order_by('cntry_name')
+        return tuple(country_list) + tuple(company_list)
 
     ticker = models.CharField(max_length=12, blank=True, null=True)
     isin = models.CharField(max_length=20, blank=True, null=True)
@@ -148,7 +143,7 @@ class SecurityModel(models.Model):
     shr_class = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_SHR_CLASS)
     isur_type = models.CharField(max_length=20, blank=True, null=True, choices=CHOICES_ISUR_TYPE)
     sector = models.ForeignKey(SectorModel, on_delete=models.CASCADE, null=True, blank=True)
-    issuer = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_ISSUE_LIST) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
+    issuer = models.CharField(max_length=200, blank=True, null=True, choices=get_issue_list_choices) #models.ForeignKey(CompanyModel, on_delete=models.CASCADE, null=True, blank=True)
     cntry = CountryField(blank=True, null=True, unique=False)
     rgstrr = models.CharField(max_length=200, blank=True, null=True, choices=CHOICES_RGSTRR)
     exchg = models.ManyToManyField(ExchangeModel, related_name='exchanges')

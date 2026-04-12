@@ -52,7 +52,7 @@ def jdapublicationsapp_dept(request):
 @login_required
 #@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
-
+    #print(f"55 - Eye's clicked 1st")
     form = PublicationAdminsForm()
     #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
@@ -126,6 +126,7 @@ def jdapublicationsapp_pubs(request):
                'stats_sess':stats_sess
                }
     #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
+    #print("129 res")
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
 
@@ -146,41 +147,291 @@ def user_in_allowed_groups(user):
 
 
 #///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
-# publications/views.py
-
-from django.shortcuts import get_object_or_404, redirect
-from django.http import FileResponse, HttpResponseForbidden
-import os
-
+#from django.http import FileResponse
+#from django.conf import settings
 from jdasubscriptions.services.access_services import (user_has_active_subscription, user_can_access_publication,)
 
+# publications/views.py
+
+import os
+
+from django.contrib.auth.decorators import login_required
+from django.http import FileResponse, HttpResponseForbidden, Http404
+#from django.shortcuts import get_object_or_404, redirect, render
+
+#from jdapublicationsapp.models import PublicationModel
+#from jdasubscriptions.services.subscription_services import user_has_active_subscription
+#from jdasubscriptions.services.access_services import user_can_access_publication
+# from django.http import HttpResponse
+# def protected_publication_by_pk(request, pk):
+#     return HttpResponse('res')
+
+# @login_required
+# def protected_publication_by_pk(request, pk):
+#     print(f"167 - Eye was clicked")
+#
+#     publication = get_object_or_404(PublicationModel, pk=pk)
+#
+#     # ---------------------------------------
+#     # 🔐 Staff/Admin bypass
+#     # ---------------------------------------
+#     if request.user.is_staff or request.user.is_superuser:
+#         return redirect(
+#             'protected_publication_content',
+#             pk=pk
+#         )
+#
+#     # ---------------------------------------
+#     # 1️⃣ Must be subscribed
+#     # ---------------------------------------
+#     if not user_has_active_subscription(request.user):
+#         return redirect("jdasubscriptions:subscription_plan_list")
+#
+#     # ---------------------------------------
+#     # 2️⃣ Must be allowed by plan
+#     # ---------------------------------------
+#     if not user_can_access_publication(request.user, publication):
+#         upgrade_data = get_upgrade_recommendation(request.user, publication)
+#
+#         return render(
+#             request,
+#             "jdasubscriptions/subscription_upgrade.html",
+#             {
+#                 "publication": publication,
+#                 "current_plan": upgrade_data["current_plan"],
+#                 "required_plan": upgrade_data["required_plan"],
+#             }
+#         )
+#
+#     pdf_url = reverse('protected_publication_content', kwargs={'pk': pk})
+#     #print("285: Rendering the pdf")
+#
+#     return render(
+#         request,
+#         'jdapublicationsapp/jdapublicationsapp_pdf_viewer.html',
+#         {
+#             'pdf_url': pdf_url,
+#             'publication': publication,
+#         }
+#     )
+
+
+#////////////////////////////////////////////stream_publication_pdf/////////////////////////////
+from django.views.decorators.clickjacking import xframe_options_exempt
+
+#from django.http import FileResponse
+#from django.shortcuts import get_object_or_404
+#from django.views.decorators.clickjacking import xframe_options_exempt
+
+#from django.http import FileResponse, Http404
+#from django.shortcuts import get_object_or_404
+#from django.views.decorators.clickjacking import xframe_options_exempt
+import os
+from django.core.exceptions import PermissionDenied
+
+
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+
+@login_required
+def stream_publication_pdf(request, pk):
+    publication = get_object_or_404(PublicationModel, pk=pk)
+
+    if not request.user.has_perm("publications.view_publication"):
+        raise PermissionDenied
+
+    pdf_file = publication.pdf.path  # <-- IMPORTANT
+
+    return FileResponse(
+        open(pdf_file, "rb"),
+        content_type="application/pdf",
+        as_attachment=False,
+    )
+
+
+#///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
+from jdasubscriptions.services.access_services import (
+    user_has_active_subscription,
+    user_can_access_publication,
+    get_upgrade_recommendation
+)
+
+from django.http import FileResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
+import os
 
 def protected_publication_by_pk(request, pk):
-
-    # ---------------------------------------
-    # 1️⃣ Must be subscribed at all
-    # ---------------------------------------
-    if not user_has_active_subscription(request.user):
-        return redirect("jdasubscriptions:subscription_plan_list")
 
     publication = get_object_or_404(PublicationModel, pk=pk)
 
     # ---------------------------------------
-    # 2️⃣ Must be allowed by plan
+    # 🔐 Staff/Admin bypass subscription checks
     # ---------------------------------------
-    if not user_can_access_publication(request.user, publication):
-        return redirect("jdasubscriptions:subscription_upgrade")
-        #return redirect("jdasubscriptions:subscription_plan_list")
+    if not (request.user.is_staff or request.user.is_superuser):
+
+        # 1️⃣ Must be subscribed
+        if not user_has_active_subscription(request.user):
+            return redirect("jdasubscriptions:subscription_plan_list")
+
+        # 2️⃣ Must be allowed by plan
+        if not user_can_access_publication(request.user, publication):
+
+            upgrade_data = get_upgrade_recommendation(request.user, publication)
+
+            return render(
+                request,
+                "jdasubscriptions/subscription_upgrade.html",
+                {
+                    "publication": publication,
+                    "current_plan": upgrade_data["current_plan"],
+                    "required_plan": upgrade_data["required_plan"],
+                }
+            )
 
     # ---------------------------------------
-    # 3️⃣ Serve file
+    # Everyone reaches viewer (staff + customers)
     # ---------------------------------------
+    pdf_url = reverse(
+        'protected_publication_content',
+        kwargs={'pk': pk}
+    )
+
+    return render(
+        request,
+        'jdapublicationsapp/jdapublicationsapp_pdf_viewer.html',
+        {
+            'pdf_url': pdf_url,
+            'publication': publication,
+        }
+    )
+
+
+
+def protected_publication_content(request, pk):
+
+    publication = get_object_or_404(PublicationModel, pk=pk)
     file_path = publication.file_name.path
 
     if not os.path.exists(file_path):
         return HttpResponseForbidden("File not found")
 
-    return FileResponse(open(file_path, "rb"), content_type="application/pdf")
+    # ---------------------------------------
+    # 🔐 Staff/Admin full access
+    # ---------------------------------------
+    if request.user.is_staff or request.user.is_superuser:
+
+        # If explicitly requesting download
+        if request.GET.get("download") == "1":
+            return FileResponse(
+                open(file_path, "rb"),
+                as_attachment=True,
+                filename=os.path.basename(file_path),
+                content_type="application/pdf"
+            )
+
+        # Otherwise inline view
+        return FileResponse(
+            open(file_path, "rb"),
+            content_type="application/pdf"
+        )
+
+    # ---------------------------------------
+    # Normal subscription checks
+    # ---------------------------------------
+    if not user_has_active_subscription(request.user):
+        return HttpResponseForbidden("No active subscription")
+
+    if not user_can_access_publication(request.user, publication):
+        return HttpResponseForbidden("Plan does not allow access")
+
+    response = FileResponse(
+        open(file_path, "rb"),
+        content_type="application/pdf"
+    )
+
+    response["Content-Disposition"] = 'inline'
+    response["X-Content-Type-Options"] = "nosniff"
+    response["Cache-Control"] = "no-store, must-revalidate"
+    response["X-Frame-Options"] = "SAMEORIGIN"
+
+    return response
+
+# # publications/views.py
+#
+# from django.shortcuts import get_object_or_404, redirect
+# from django.http import FileResponse, HttpResponseForbidden
+# import os
+#
+# from jdasubscriptions.services.access_services import (user_has_active_subscription, user_can_access_publication,)
+#
+# from django.http import FileResponse, HttpResponseForbidden
+# from django.shortcuts import get_object_or_404
+# import os
+#
+# def protected_publication_by_pk(request, pk):
+#
+#     # ---------------------------------------
+#     # 1️⃣ Must be subscribed at all
+#     # ---------------------------------------
+#     if not user_has_active_subscription(request.user):
+#         return redirect("jdasubscriptions:subscription_plan_list")
+#
+#     publication = get_object_or_404(PublicationModel, pk=pk)
+#
+#     # ---------------------------------------
+#     # 2️⃣ Must be allowed by plan
+#     # ---------------------------------------
+#     if not user_can_access_publication(request.user, publication):
+#         return redirect("jdasubscriptions:subscription_upgrade")
+#
+#     # ---------------------------------------
+#     # 3️⃣ Serve file INLINE (not download)
+#     # ---------------------------------------
+#     file_path = publication.file_name.path
+#
+#     if not os.path.exists(file_path):
+#         return HttpResponseForbidden("File not found")
+#
+#     response = FileResponse(
+#         open(file_path, "rb"),
+#         content_type="application/pdf"
+#     )
+#
+#     response["Content-Disposition"] = (
+#         f'inline; filename="{os.path.basename(file_path)}"'
+#     )
+#
+#     return response
+
+# def protected_publication_by_pk(request, pk):
+#
+#     # ---------------------------------------
+#     # 1️⃣ Must be subscribed at all
+#     # ---------------------------------------
+#     if not user_has_active_subscription(request.user):
+#         return redirect("jdasubscriptions:subscription_plan_list")
+#
+#     publication = get_object_or_404(PublicationModel, pk=pk)
+#
+#     # ---------------------------------------
+#     # 2️⃣ Must be allowed by plan
+#     # ---------------------------------------
+#     if not user_can_access_publication(request.user, publication):
+#         return redirect("jdasubscriptions:subscription_upgrade")
+#         #return redirect("jdasubscriptions:subscription_plan_list")
+#
+#     # ---------------------------------------
+#     # 3️⃣ Serve file
+#     # ---------------------------------------
+#     file_path = publication.file_name.path
+#
+#     if not os.path.exists(file_path):
+#         return HttpResponseForbidden("File not found")
+#
+#     return FileResponse(open(file_path, "rb"), content_type="application/pdf")
 
 
 
@@ -1312,5 +1563,10 @@ def jdapublicationsapp_fullSearch(request):
 def tes(request):
     context ={}
     return render(request, 'jdapublicationsapp/tes.html', context)
+
+
+def zez(request):
+    context ={}
+    return render(request, 'jdapublicationsapp/zez.html', context)
 
 

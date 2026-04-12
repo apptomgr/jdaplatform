@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ publication.title|default:"Document Viewer" }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #2c2c2c;
+        }
+
+        #viewer-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #controls {
+            background: #1a1a1a;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: white;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover { background: #555; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        #page-info {
+            margin-left: auto;
+            font-size: 14px;
+        }
+
+        #canvas-container {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        canvas {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            background: white;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            #controls {
+                padding: 8px;
+                gap: 5px;
+            }
+
+            button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            #page-info {
+                font-size: 12px;
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            #canvas-container {
+                padding: 10px;
+            }
+        }
+
+        /* Prevent printing */
+        @media print {
+            body { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+<div id="viewer-container">
+    <div id="controls">
+        <button id="prev-page">← Previous</button>
+        <button id="next-page">Next →</button>
+        <button id="zoom-out">−</button>
+        <button id="zoom-in">+</button>
+        <button id="fit-width">Fit Width</button>
+
+        {% if request.user.is_staff or request.user.is_superuser %}
+        <a href="{{ pdf_url }}?download=1">
+            <button type="button" class="btn btn-info btn-sm">
+                ⬇ Download
+            </button>
+        </a>
+        {% endif %}
+
+        <span id="page-info">
+        Page <span id="current-page">1</span> of <span id="total-pages">-</span>
+    </span>
+    </div>
+
+
+    <div id="canvas-container">
+        <canvas id="pdf-canvas"></canvas>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+        // Disable right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Disable save, print, copy shortcuts
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && ['s', 'p', 'c'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+                return false;
+            }
+            // Also block F12, Ctrl+Shift+I (dev tools)
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable text selection on canvas
+        const canvas = document.getElementById('pdf-canvas');
+        canvas.style.userSelect = 'none';
+
+        // PDF.js setup
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let pdfDoc = null;
+        let currentPage = 1;
+        let currentScale = null; // Will be calculated
+        let autoFitWidth = true;
+        const ctx = canvas.getContext('2d');
+
+        // Load PDF
+        pdfjsLib.getDocument('{{ pdf_url }}').promise.then(pdf => {
+            pdfDoc = pdf;
+            document.getElementById('total-pages').textContent = pdf.numPages;
+            renderPage(currentPage);
+            updateButtons();
+        }).catch(err => {
+            alert('Error loading PDF. Please refresh the page.');
+            console.error(err);
+        });
+
+        function renderPage(pageNum) {
+            pdfDoc.getPage(pageNum).then(page => {
+                const container = document.getElementById('canvas-container');
+
+                // Calculate scale based on container width
+                let scale;
+                if (autoFitWidth || currentScale === null) {
+                    const containerWidth = container.clientWidth - 40; // Account for padding
+                    const viewport = page.getViewport({scale: 1});
+                    scale = containerWidth / viewport.width;
+                    currentScale = scale;
+                } else {
+                    scale = currentScale;
+                }
+
+                const scaledViewport = page.getViewport({scale: scale});
+                canvas.height = scaledViewport.height;
+                canvas.width = scaledViewport.width;
+
+                page.render({
+                    canvasContext: ctx,
+                    viewport: scaledViewport
+                });
+
+                document.getElementById('current-page').textContent = pageNum;
+            });
+        }
+
+        function updateButtons() {
+            document.getElementById('prev-page').disabled = currentPage <= 1;
+            document.getElementById('next-page').disabled = currentPage >= pdfDoc.numPages;
+        }
+
+        // Page navigation
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage <= 1) return;
+            currentPage--;
+            renderPage(currentPage);
+            updateButtons();
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (currentPage >= pdfDoc.numPages) return;
+            currentPage++;
+            renderPage(currentPage);
+            updateButtons();
+        });
+
+        // Zoom controls
+        document.getElementById('zoom-in').addEventListener('click', () => {
+            autoFitWidth = false;
+            currentScale *= 1.2;
+            if (currentScale > 5) currentScale = 5; // Max zoom
+            renderPage(currentPage);
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', () => {
+            autoFitWidth = false;
+            currentScale *= 0.8;
+            if (currentScale < 0.3) currentScale = 0.3; // Min zoom
+            renderPage(currentPage);
+        });
+
+        document.getElementById('fit-width').addEventListener('click', () => {
+            autoFitWidth = true;
+            renderPage(currentPage);
+        });
+
+        // Re-render on window resize for responsive behavior
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (autoFitWidth) {
+                    renderPage(currentPage);
+                }
+            }, 250);
+        });
+
+        // Touch gestures for mobile (optional - for pinch zoom)
+        let touchStartDistance = 0;
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                touchStartDistance = Math.hypot(
+                    touch2.pageX - touch1.pageX,
+                    touch2.pageY - touch1.pageY
+                );
+            }
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const touchDistance = Math.hypot(
+                    touch2.pageX - touch1.pageX,
+                    touch2.pageY - touch1.pageY
+                );
+
+                if (touchStartDistance > 0) {
+                    const scaleDelta = touchDistance / touchStartDistance;
+                    autoFitWidth = false;
+                    currentScale *= scaleDelta;
+                    if (currentScale > 5) currentScale = 5;
+                    if (currentScale < 0.3) currentScale = 0.3;
+                    renderPage(currentPage);
+                    touchStartDistance = touchDistance;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

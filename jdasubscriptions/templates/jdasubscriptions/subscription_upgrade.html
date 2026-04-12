@@ -1,13 +1,50 @@
 {% extends "jdamainapp/base.html" %}
 {% block content %}
 
-<h3>Upgrade Required</h3>
-<p>
-    Your current plan does not include access to this publication.
-    Please upgrade to continue.
-</p>
-<a href="{% url 'jdasubscriptions:subscription_plan_list' %}">
-    View Plans
-</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-md text-center">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge badge-warning p-2">
+                            Access Restricted
+                        </span>
+                    </div>
+
+
+                    <h4 class="mb-4">Upgrade Required</h4>
+
+                    <p>
+                        You are currently subscribed to
+                        <strong>
+                            {{ current_plan.name }} ({{ current_plan.billing_period }})
+                        </strong>.
+                    </p>
+
+                    {% if required_plan %}
+                    <p>
+                        To access <strong>{{ publication.research_type }}</strong>,
+                        you need the
+                        <strong>
+                            {{ required_plan.name }} ({{ required_plan.billing_period }})
+                        </strong> plan.
+                    </p>
+
+                    <a href="{% url 'jdasubscriptions:subscription_plan_list' %}"
+                       class="btn btn-primary mt-3">
+                        View Upgrade Options
+                    </a>
+                    {% else %}
+                    <p>Please contact support for upgrade assistance.</p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}
