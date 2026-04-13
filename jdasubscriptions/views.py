@@ -285,6 +285,67 @@ def subscription_upgrade(request):
     return render(request, "jdasubscriptions/subscription_upgrade.html")
 
 
+#//////////////////////////////////////public_subscription_plans/////////////////////////////////////////////////
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def public_subscription_plans(request):
+    """
+    Public endpoint — NO login required.
+    Returns active subscription plans grouped by type and billing period.
+    """
+    type_param = request.GET.get('type', 'individual')
+    billing_param = request.GET.get('billing', 'monthly')
+
+    type_map = {'individual': 'customer', 'institution': 'institution'}
+    plan_type = type_map.get(type_param, 'customer')
+
+    billing_map = {'monthly': 'monthly', 'yearly': 'yearly', 'quarterly': 'quarterly'}
+    billing_period = billing_map.get(billing_param, 'monthly')
+
+    plans = SubscriptionPlan.objects.filter(
+        plan_type=plan_type,
+        billing_period=billing_period,
+        is_active=True
+    ).order_by('display_order', 'price_fcfa')
+
+    # Build a lookup of yearly prices by plan name for cross-referencing
+    yearly_lookup = {
+        p.name: float(p.price_fcfa)
+        for p in SubscriptionPlan.objects.filter(
+            plan_type=plan_type, billing_period='yearly', is_active=True
+        )
+    }
+    monthly_lookup = {
+        p.name: float(p.price_fcfa)
+        for p in SubscriptionPlan.objects.filter(
+            plan_type=plan_type, billing_period='monthly', is_active=True
+        )
+    }
+
+    # Mark most expensive plan as popular
+    max_price = max((float(p.price_fcfa) for p in plans), default=0)
+
+    result = []
+    for plan in plans:
+        features = plan.features if isinstance(plan.features, list) else []
+
+        result.append({
+            'id': plan.id,
+            'name': plan.name,
+            'description': plan.description,
+            'price_monthly': monthly_lookup.get(plan.name),
+            'price_yearly': yearly_lookup.get(plan.name),
+            'currency': 'FCFA HT',
+            'is_popular': float(plan.price_fcfa) == max_price,
+            'subscribe_url': f'https://platform.jda-ci.com/jdasubscriptions/select/{plan.id}/',
+            'features': features,
+        })
+
+    return JsonResponse({'plans': result})
+
+
 
 
 

@@ -24,6 +24,7 @@ from .views_admin import subscription_dashboard
 app_name = "jdasubscriptions"
 
 urlpatterns = [
+    path("api/public/subscription-plans/", views.public_subscription_plans, name="public_subscription_plans"),
     path("plans/", views.subscription_plan_list, name="subscription_plan_list"),
     path("select/<int:plan_id>/", views.select_subscription_plan, name="select_subscription_plan"),
     path("paystack/callback/", views.paystack_callback, name="paystack_callback"),

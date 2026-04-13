@@ -44,6 +44,7 @@ DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,6 +79,7 @@ LOGIN_REDIRECT_URL = 'jdamainapp_home'
 LOGOUT_REDIRECT_URL = 'jdamainapp_home'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -261,6 +263,16 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 PAYSTACK_BASE_URL = "https://api.paystack.co"
+
+CORS_ALLOWED_ORIGINS = [
+    "https://jda-ci.com",
+    "https://www.jda-ci.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:9090",
+    "http://127.0.0.1:9090",
+]
+CORS_URLS_REGEX = r'^/jdasubscriptions/api/public/.*$'
 #from django.conf import settings
 #print("PAYSTACK_SECRET_KEY:", settings.PAYSTACK_SECRET_KEY)
 
