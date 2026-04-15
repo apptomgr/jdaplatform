@@ -19,7 +19,7 @@
 
 from django.urls import path
 from . import views
-from .views_admin import subscription_dashboard
+from . import views_admin
 
 app_name = "jdasubscriptions"
 
@@ -30,13 +30,16 @@ urlpatterns = [
     path("paystack/callback/", views.paystack_callback, name="paystack_callback"),
     path("success/", views.subscription_success, name="subscription_success"),
     path("failed/", views.subscription_failed, name="subscription_failed",),
-    # jdasubscriptions/urls.py
+    path("upgrade/", views.subscription_upgrade, name="subscription_upgrade",),
 
-    path("upgrade/",views.subscription_upgrade, name="subscription_upgrade",),
+    # Existing admin dashboard (KPIs / MRR)
+    path("admin/dashboard/", views_admin.subscription_dashboard, name="subscription_dashboard",),
 
-
-    ##views_admin
-    path("admin/dashboard/",subscription_dashboard, name="subscription_dashboard",),
+    # Subscriber reporting dashboard
+    path("sub_dashboard/", views_admin.sub_dashboard, name="sub_dashboard"),
+    path("sub_dashboard/expire/", views_admin.expire_subscription, name="expire_subscription"),
+    path("sub_dashboard/extend/", views_admin.extend_subscription, name="extend_subscription"),
+    path("sub_dashboard/export/csv/", views_admin.export_subscriptions_csv, name="export_subscriptions_csv"),
 ]
 
 

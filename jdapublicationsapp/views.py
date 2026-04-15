@@ -149,7 +149,7 @@ def user_in_allowed_groups(user):
 #///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
 #from django.http import FileResponse
 #from django.conf import settings
-from jdasubscriptions.services.access_services import (user_has_active_subscription, user_can_access_publication,)
+from jdasubscriptions.access import (user_has_active_subscription, user_can_access_publication,)
 
 # publications/views.py
 
@@ -239,23 +239,32 @@ from django.core.exceptions import PermissionDenied
 def stream_publication_pdf(request, pk):
     publication = get_object_or_404(PublicationModel, pk=pk)
 
-    if not request.user.has_perm("publications.view_publication"):
-        raise PermissionDenied
+    if not (request.user.is_staff or request.user.is_superuser):
+        if not user_has_active_subscription(request.user):
+            return redirect("jdasubscriptions:subscription_plan_list")
+        if not user_can_access_publication(request.user, publication):
+            upgrade_data = get_upgrade_recommendation(request.user, publication)
+            return render(request, "jdasubscriptions/subscription_upgrade.html", {
+                "publication": publication,
+                "current_plan": upgrade_data["current_plan"],
+                "required_plan": upgrade_data["required_plan"],
+            })
 
-    pdf_file = publication.pdf.path  # <-- IMPORTANT
+    if not publication.file_name:
+        raise Http404
 
     return FileResponse(
-        open(pdf_file, "rb"),
+        publication.file_name.open('rb'),
         content_type="application/pdf",
         as_attachment=False,
     )
 
 
 #///////////////////////////////////protected_publication_by_pk////////////////////////////////////////
-from jdasubscriptions.services.access_services import (
+from jdasubscriptions.access import (
     user_has_active_subscription,
     user_can_access_publication,
-    get_upgrade_recommendation
+    get_upgrade_recommendation,
 )
 
 from django.http import FileResponse, HttpResponseForbidden
@@ -263,6 +272,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 import os
 
+@login_required
 def protected_publication_by_pk(request, pk):
 
     publication = get_object_or_404(PublicationModel, pk=pk)
@@ -310,6 +320,7 @@ def protected_publication_by_pk(request, pk):
 
 
 
+@login_required
 def protected_publication_content(request, pk):
 
     publication = get_object_or_404(PublicationModel, pk=pk)
@@ -1129,7 +1140,6 @@ def jdapublicationsapp_filter(request):
                     context = {'filterForm': filterForm, 'publication_listing': publication_listing,'max_pub_date': max_pub_date,'stats_sess':stats_sess}
                     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
         else:
-            print(f"////////354 filter form is invalid {filterForm.errors}")
             pass
             #print("////////168 filter form is invalid")
 

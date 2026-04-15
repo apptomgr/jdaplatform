@@ -123,6 +123,10 @@
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Company' %}</a></li>
+                        {% if user.is_staff or user.is_superuser %}
+                        <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'jdasubscriptions:sub_dashboard' %}"><i class="fas fa-users"></i> {% trans 'Subs Dashboard' %}</a></li>
+                        {% endif %}
                         {% endif%}
 
 
@@ -150,6 +154,10 @@
                 <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> {{user.username}}</b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
+                        {% if user.is_staff %}
+                        <li><hr class="my_hr_divider"></li>
+                        <li><a href="{% url 'jdasubscriptions:sub_dashboard' %}"><i class="fas fa-users"></i> {% trans 'Subscription Dashboard' %}</a></li>
+                        {% endif %}
                         {% if user_grp == "admins" or user_grp == "managers" or user_grp == "managers" %}
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'admin_tasks' %}"><i class="fas fa-tasks"></i> {% trans 'Admin Tasks' %}</a></li>
@@ -883,6 +891,9 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block extra_subscription_dashboard_chart %}
+{% endblock %}
+
+{% block extra_js_sub_dashboard %}
 {% endblock %}
 </body>
 </html>

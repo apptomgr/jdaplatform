@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils import timezone
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from django.db.models import Q
@@ -56,6 +57,8 @@ def _get_active_subscription(user):
 
 #///////////////////////////////////////////user_has_active_subscription/////////////////////////////
 def user_has_active_subscription(user):
+    if not getattr(settings, 'SUBSCRIPTION_REQUIRED', True):
+        return True
     return _get_active_subscription(user) is not None
 
 
@@ -68,6 +71,8 @@ def user_can_access_publication(user, publication) -> bool:
     Returns True if the user can access the given publication
     based on visible features in their active subscription plan.
     """
+    if not getattr(settings, 'SUBSCRIPTION_REQUIRED', True):
+        return True
 
     if not user or not user.is_authenticated:
         return False
@@ -102,20 +107,16 @@ def user_can_access_publication(user, publication) -> bool:
     #print(f"52 - plan: {plan}")
 
     # --------------------------------------------------
-    # Gold = unrestricted access
-    # --------------------------------------------------
-    if plan.code.lower() == "akwaba-gold":
-        return True
-
-    # --------------------------------------------------
     # Feature-based access (visible == True only)
     # --------------------------------------------------
-    publication_type = publication.research_type
-    #print(f"63: publication_type - {publication_type}")
+    # Newsletters are a research_category, not a research_type.
+    # All other publications are matched by research_type.
+    if publication.research_category == 'Newsletters':
+        publication_type = 'Newsletters'
+    else:
+        publication_type = publication.research_type
 
     for feature in plan.features or []:
-        #print(f"66: feature - {plan.features or []}")
-        #print(f"67: feature name - {feature.get('name')}")
         if (
                 feature.get("name") == publication_type
                 and feature.get("visible") is True

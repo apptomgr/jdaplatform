@@ -264,6 +264,14 @@ PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY")
 PAYSTACK_BASE_URL = "https://api.paystack.co"
 
+# -------------------------------------------------------------
+# SUBSCRIPTION FEATURE FLAG
+# Set to False to temporarily bypass subscription checks
+# and allow all authenticated users to access publications.
+# Set back to True before enabling live Paystack payments.
+# -------------------------------------------------------------
+SUBSCRIPTION_REQUIRED = False
+
 CORS_ALLOWED_ORIGINS = [
     "https://jda-ci.com",
     "https://www.jda-ci.com",

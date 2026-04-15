@@ -1,13 +1,19 @@
 from django.utils import timezone
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
+from django.db.models import Count
 
-from .models import CustomerSubscription, InstitutionSubscription
+from .models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from decimal import Decimal
 from django.utils import timezone
 from datetime import timedelta
 from jdasubscriptions.services.access_services import active_subscription_q
 import json
+import csv
 from decimal import Decimal, ROUND_HALF_UP
 
 
@@ -153,3 +159,209 @@ def subscription_mrr(subscriptions):
             mrr += price / Decimal("12")
 
     return mrr
+
+
+# ========== Sub Dashboard ==========
+
+def _staff_only(request):
+    """
+    Returns a redirect response if the user is not staff/superuser,
+    otherwise returns None (access granted).
+    """
+    if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
+        messages.warning(request, "You don't have access to the Subscription Dashboard.")
+        return redirect('jdapublicationsapp_pubs')
+    return None
+
+
+def _apply_sub_filters(customer_qs, institution_qs, params):
+    """Apply shared filter params to both subscriber querysets."""
+    subscriber_type = params.get('subscriber_type', '')
+    plan_id = params.get('plan', '')
+    status_filter = params.get('status', '')
+    date_from = params.get('date_from', '')
+    date_to = params.get('date_to', '')
+
+    if subscriber_type == 'customer':
+        institution_qs = institution_qs.none()
+    elif subscriber_type == 'institution':
+        customer_qs = customer_qs.none()
+
+    if plan_id:
+        customer_qs = customer_qs.filter(plan_id=plan_id)
+        institution_qs = institution_qs.filter(plan_id=plan_id)
+    if status_filter:
+        customer_qs = customer_qs.filter(status=status_filter)
+        institution_qs = institution_qs.filter(status=status_filter)
+    if date_from:
+        customer_qs = customer_qs.filter(starts_at__date__gte=date_from)
+        institution_qs = institution_qs.filter(starts_at__date__gte=date_from)
+    if date_to:
+        customer_qs = customer_qs.filter(starts_at__date__lte=date_to)
+        institution_qs = institution_qs.filter(starts_at__date__lte=date_to)
+
+    return customer_qs, institution_qs
+
+
+def sub_dashboard(request):
+    deny = _staff_only(request)
+    if deny:
+        return deny
+    # Base querysets
+    customer_qs = CustomerSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    institution_qs = InstitutionSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+
+    # Apply filters
+    customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
+
+    # Summary stats (always unfiltered, across both models)
+    total_active = (
+        CustomerSubscription.objects.filter(status='active').count() +
+        InstitutionSubscription.objects.filter(status='active').count()
+    )
+    total_expired = (
+        CustomerSubscription.objects.filter(status='expired').count() +
+        InstitutionSubscription.objects.filter(status='expired').count()
+    )
+    total_cancelled = 0  # No cancelled status in current model
+
+    # Active breakdown by plan name (across both)
+    customer_by_plan = (
+        CustomerSubscription.objects.filter(status='active')
+        .values('plan__name')
+        .annotate(count=Count('id'))
+    )
+    institution_by_plan = (
+        InstitutionSubscription.objects.filter(status='active')
+        .values('plan__name')
+        .annotate(count=Count('id'))
+    )
+    plan_breakdown = {}
+    for row in customer_by_plan:
+        plan_breakdown[row['plan__name']] = plan_breakdown.get(row['plan__name'], 0) + row['count']
+    for row in institution_by_plan:
+        plan_breakdown[row['plan__name']] = plan_breakdown.get(row['plan__name'], 0) + row['count']
+
+    # Paginate each table separately
+    customer_paginator = Paginator(customer_qs, 25)
+    customer_page_obj = customer_paginator.get_page(request.GET.get('customer_page', 1))
+
+    institution_paginator = Paginator(institution_qs, 25)
+    institution_page_obj = institution_paginator.get_page(request.GET.get('institution_page', 1))
+
+    # Plans for filter dropdown
+    plans = SubscriptionPlan.objects.filter(is_active=True).order_by('name')
+
+    # Filter query string (without page params) for pagination links
+    filter_params = request.GET.copy()
+    filter_params.pop('customer_page', None)
+    filter_params.pop('institution_page', None)
+    filter_query_string = filter_params.urlencode()
+
+    context = {
+        'total_active': total_active,
+        'total_expired': total_expired,
+        'total_cancelled': total_cancelled,
+        'plan_breakdown': plan_breakdown,
+        'customer_page_obj': customer_page_obj,
+        'institution_page_obj': institution_page_obj,
+        'plans': plans,
+        'filter_subscriber_type': request.GET.get('subscriber_type', ''),
+        'filter_plan': request.GET.get('plan', ''),
+        'filter_status': request.GET.get('status', ''),
+        'filter_date_from': request.GET.get('date_from', ''),
+        'filter_date_to': request.GET.get('date_to', ''),
+        'filter_query_string': filter_query_string,
+    }
+    return render(request, 'jdasubscriptions/sub_dashboard.html', context)
+
+
+@require_POST
+def expire_subscription(request):
+    deny = _staff_only(request)
+    if deny:
+        return deny
+    pk = request.POST.get('subscription_pk')
+    model_type = request.POST.get('model_type')
+    if model_type == 'customer':
+        sub = get_object_or_404(CustomerSubscription, pk=pk)
+    elif model_type == 'institution':
+        sub = get_object_or_404(InstitutionSubscription, pk=pk)
+    else:
+        messages.error(request, 'Invalid subscription type.')
+        return redirect('jdasubscriptions:sub_dashboard')
+    sub.status = 'expired'
+    sub.ends_at = timezone.now()
+    sub.save()
+    messages.success(request, f'Subscription #{pk} has been marked as expired.')
+    return redirect('jdasubscriptions:sub_dashboard')
+
+
+@require_POST
+def extend_subscription(request):
+    deny = _staff_only(request)
+    if deny:
+        return deny
+    pk = request.POST.get('subscription_pk')
+    model_type = request.POST.get('model_type')
+    try:
+        extend_days = int(request.POST.get('extend_days', 30))
+        extend_days = max(1, min(extend_days, 365))
+    except (TypeError, ValueError):
+        extend_days = 30
+    if model_type == 'customer':
+        sub = get_object_or_404(CustomerSubscription, pk=pk)
+    elif model_type == 'institution':
+        sub = get_object_or_404(InstitutionSubscription, pk=pk)
+    else:
+        messages.error(request, 'Invalid subscription type.')
+        return redirect('jdasubscriptions:sub_dashboard')
+    now = timezone.now()
+    if sub.ends_at and sub.ends_at > now:
+        sub.ends_at = sub.ends_at + timedelta(days=extend_days)
+    else:
+        sub.ends_at = now + timedelta(days=extend_days)
+    if sub.status == 'expired':
+        sub.status = 'active'
+        if not sub.starts_at:
+            sub.starts_at = now
+    sub.save()
+    messages.success(request, f'Subscription #{pk} extended by {extend_days} day(s). New end date: {sub.ends_at.strftime("%Y-%m-%d")}')
+    return redirect('jdasubscriptions:sub_dashboard')
+
+
+def export_subscriptions_csv(request):
+    deny = _staff_only(request)
+    if deny:
+        return deny
+    customer_qs = CustomerSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    institution_qs = InstitutionSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="subscriptions.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['#', 'Type', 'Name', 'Username', 'Email', 'Plan', 'Billing', 'Status', 'Start', 'End', 'Payment Ref'])
+
+    row_num = 1
+    for sub in customer_qs:
+        name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        writer.writerow([
+            row_num, 'Customer', name, sub.user.username, sub.user.email,
+            sub.plan.name, sub.plan.billing_period, sub.status,
+            sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
+            sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
+            sub.paystack_reference or '',
+        ])
+        row_num += 1
+    for sub in institution_qs:
+        name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        writer.writerow([
+            row_num, 'Institution', name, sub.user.username, sub.user.email,
+            sub.plan.name, sub.plan.billing_period, sub.status,
+            sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
+            sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
+            sub.paystack_reference or '',
+        ])
+        row_num += 1
+    return response
