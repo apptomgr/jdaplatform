@@ -270,7 +270,7 @@ PAYSTACK_BASE_URL = "https://api.paystack.co"
 # and allow all authenticated users to access publications.
 # Set back to True before enabling live Paystack payments.
 # -------------------------------------------------------------
-SUBSCRIPTION_REQUIRED = True
+SUBSCRIPTION_REQUIRED = False
 
 CORS_ALLOWED_ORIGINS = [
     "https://jda-ci.com",
