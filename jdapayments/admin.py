@@ -35,9 +35,8 @@ class PaymentAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    # 🔒 No deletion
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
     # -----------------------------
     # Admin Action

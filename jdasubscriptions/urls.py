@@ -40,6 +40,7 @@ urlpatterns = [
     path("sub_dashboard/expire/", views_admin.expire_subscription, name="expire_subscription"),
     path("sub_dashboard/extend/", views_admin.extend_subscription, name="extend_subscription"),
     path("sub_dashboard/export/csv/", views_admin.export_subscriptions_csv, name="export_subscriptions_csv"),
+    path("sub_dashboard/add/", views_admin.subscription_add, name="subscription_add"),
 ]
 
 

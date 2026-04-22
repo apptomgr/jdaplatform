@@ -173,6 +173,7 @@ def admin_tasks(request):
         grp = request.user.groups.all()[0].name
 
     context = {'user_grp': grp, 'all_user_info':all_user_info, 'user_profile':user_profile, 'rpt_date':now}
+    print(context)
     return render(request, 'registration/admin_tasks.html', context)
 
 

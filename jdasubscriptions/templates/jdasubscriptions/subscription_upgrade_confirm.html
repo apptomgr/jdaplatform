@@ -1,0 +1,31 @@
+{% extends "jdamainapp/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-md text-center">
+                <div class="card-body">
+                    <h4 class="mb-4">Confirm Plan Change</h4>
+                    <p>You are currently subscribed to
+                        <strong>{{ current_plan.name }} ({{ current_plan.billing_period }})</strong>.
+                    </p>
+                    <p>Would you like to switch to
+                        <strong>{{ selected_plan.name }} ({{ selected_plan.billing_period }})</strong>?
+                    </p>
+                    <form method="POST" action="{{ confirm_url }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="confirmed" value="yes">
+                        <button type="submit" class="btn btn-primary mt-3">
+                            Yes, Switch Plan
+                        </button>
+                        <a href="{% url 'jdapublicationsapp_pubs' %}"
+                           class="btn btn-outline-secondary mt-3 ml-2">
+                            Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

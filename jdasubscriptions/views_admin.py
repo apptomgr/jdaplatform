@@ -10,7 +10,7 @@ from django.db.models import Count
 from .models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from decimal import Decimal
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 from jdasubscriptions.services.access_services import active_subscription_q
 import json
 import csv
@@ -258,6 +258,9 @@ def sub_dashboard(request):
     filter_params.pop('institution_page', None)
     filter_query_string = filter_params.urlencode()
 
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
     context = {
         'total_active': total_active,
         'total_expired': total_expired,
@@ -272,6 +275,9 @@ def sub_dashboard(request):
         'filter_date_from': request.GET.get('date_from', ''),
         'filter_date_to': request.GET.get('date_to', ''),
         'filter_query_string': filter_query_string,
+        'all_users': User.objects.all().order_by('username'),
+        'all_plans': SubscriptionPlan.objects.filter(is_active=True).order_by('name'),
+        'today': timezone.now().date(),
     }
     return render(request, 'jdasubscriptions/sub_dashboard.html', context)
 
@@ -365,3 +371,67 @@ def export_subscriptions_csv(request):
         ])
         row_num += 1
     return response
+
+
+@require_POST
+def subscription_add(request):
+    deny = _staff_only(request)
+    if deny:
+        return deny
+    if not request.user.is_superuser:
+        messages.warning(request, "Only administrators can add subscriptions.")
+        return redirect('jdasubscriptions:sub_dashboard')
+
+    from django.contrib.auth import get_user_model
+    from django.utils.dateparse import parse_date
+    User = get_user_model()
+
+    subscription_type = request.POST.get('subscription_type', 'customer')
+    user_id = request.POST.get('user')
+    plan_id = request.POST.get('plan')
+    start_date_str = request.POST.get('start_date', '')
+    end_date_str = request.POST.get('end_date', '')
+    payment_reference = request.POST.get('payment_reference', '').strip() or None
+    status = request.POST.get('status', 'active')
+
+    try:
+        user = User.objects.get(pk=user_id)
+        plan = SubscriptionPlan.objects.get(pk=plan_id, is_active=True)
+    except (User.DoesNotExist, SubscriptionPlan.DoesNotExist):
+        messages.error(request, "Invalid user or plan selected.")
+        return redirect('jdasubscriptions:sub_dashboard')
+
+    starts_at = None
+    ends_at = None
+    d = parse_date(start_date_str)
+    if d:
+        starts_at = timezone.make_aware(datetime.combine(d, time.min))
+    d = parse_date(end_date_str)
+    if d:
+        ends_at = timezone.make_aware(datetime.combine(d, time(23, 59, 59)))
+
+    try:
+        if subscription_type == 'institution':
+            InstitutionSubscription.objects.create(
+                user=user,
+                plan=plan,
+                status=status,
+                starts_at=starts_at,
+                ends_at=ends_at,
+                paystack_reference=payment_reference,
+            )
+        else:
+            CustomerSubscription.objects.create(
+                user=user,
+                plan=plan,
+                status=status,
+                starts_at=starts_at,
+                ends_at=ends_at,
+                paystack_reference=payment_reference,
+            )
+    except Exception as e:
+        messages.error(request, f"Could not create subscription: {e}")
+        return redirect('jdasubscriptions:sub_dashboard')
+
+    messages.success(request, f"Subscription created for {user.username} ({plan.name}).")
+    return redirect('jdasubscriptions:sub_dashboard')

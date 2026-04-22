@@ -215,6 +215,7 @@ from django.http import HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from .models import SubscriptionPlan, CustomerSubscription, InstitutionSubscription
 from jdapayments.views import (initialize_customer_payment,initialize_institution_payment,)
+from jdasubscriptions.services.access_services import _get_active_subscription
 
 
 @login_required
@@ -227,7 +228,36 @@ def select_subscription_plan(request, plan_id):
     plan = get_object_or_404(SubscriptionPlan, id=plan_id, is_active=True)
     user = request.user
 
-    #print(f"129 user: {user} - plan: {plan}")
+    if request.user.is_staff or request.user.is_superuser:
+        messages.info(
+            request,
+            "Staff and admin accounts have full access — "
+            "no subscription required."
+        )
+        return redirect('jdapublicationsapp_pubs')
+
+    # -------------------------
+    # Existing subscription check
+    # -------------------------
+    existing_subscription = _get_active_subscription(user)
+
+    if existing_subscription:
+        current_plan = existing_subscription.plan
+
+        if current_plan.id == plan.id:
+            messages.info(
+                request,
+                f"You are already subscribed to "
+                f"{current_plan.name} ({current_plan.billing_period})."
+            )
+            return redirect('jdapublicationsapp_pubs')
+
+        if not (request.method == 'POST' and request.POST.get('confirmed') == 'yes'):
+            return render(request, 'jdasubscriptions/subscription_upgrade_confirm.html', {
+                'current_plan': current_plan,
+                'selected_plan': plan,
+                'confirm_url': request.path,
+            })
 
     # -------------------------
     # CUSTOMER PLAN

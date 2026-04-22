@@ -92,10 +92,9 @@ class CustomerSubscriptionAdmin(admin.ModelAdmin):
         return False  # No manual creation
 
     def has_delete_permission(self, request, obj=None):
-        return False  # No deletion ever
+        return request.user.is_superuser
 
     def has_change_permission(self, request, obj=None):
-        # Allow change view (read-only), but not inline edits
         return True
 
 
@@ -139,7 +138,6 @@ class InstitutionSubscriptionAdmin(admin.ModelAdmin):
 
     actions = ["force_expire_subscription"]
 
-
     @admin.action(description="Force expire selected subscriptions")
     def force_expire_subscription(self, request, queryset):
         now = timezone.now()
@@ -165,14 +163,13 @@ class InstitutionSubscriptionAdmin(admin.ModelAdmin):
             level=messages.SUCCESS,
         )
 
+    def has_add_permission(self, request):
+        return False
 
-def has_add_permission(self, request):
-    return False
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
 
-def has_delete_permission(self, request, obj=None):
-    return False
-
-def has_change_permission(self, request, obj=None):
-    return True
+    def has_change_permission(self, request, obj=None):
+        return True
 
 
