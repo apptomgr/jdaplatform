@@ -218,6 +218,15 @@
                                     onclick="openExtendModal('{{ sub.pk }}', 'customer')">
                                 Extend
                             </button>
+                            {% if request.user.is_superuser %}
+                            <form method="post" action="{% url 'jdasubscriptions:delete_subscription' 'customer' sub.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger ml-1"
+                                        onclick="return confirm('Delete this subscription? This cannot be undone.')">
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}
@@ -325,6 +334,15 @@
                                     onclick="openExtendModal('{{ sub.pk }}', 'institution')">
                                 Extend
                             </button>
+                            {% if request.user.is_superuser %}
+                            <form method="post" action="{% url 'jdasubscriptions:delete_subscription' 'institution' sub.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger ml-1"
+                                        onclick="return confirm('Delete this subscription? This cannot be undone.')">
+                                    Delete
+                                </button>
+                            </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}

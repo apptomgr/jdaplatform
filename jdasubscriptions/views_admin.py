@@ -410,6 +410,17 @@ def subscription_add(request):
     if d:
         ends_at = timezone.make_aware(datetime.combine(d, time(23, 59, 59)))
 
+    if status == 'active':
+        existing_customer = CustomerSubscription.objects.filter(user=user, status='active').exists()
+        existing_institution = InstitutionSubscription.objects.filter(user=user, status='active').exists()
+        if existing_customer or existing_institution:
+            messages.warning(
+                request,
+                f"{user.username} already has an active subscription. "
+                f"Please expire or delete it before creating a new one."
+            )
+            return redirect('jdasubscriptions:sub_dashboard')
+
     try:
         if subscription_type == 'institution':
             InstitutionSubscription.objects.create(
@@ -434,4 +445,25 @@ def subscription_add(request):
         return redirect('jdasubscriptions:sub_dashboard')
 
     messages.success(request, f"Subscription created for {user.username} ({plan.name}).")
+    return redirect('jdasubscriptions:sub_dashboard')
+
+
+@require_POST
+def delete_subscription(request, model_type, pk):
+    if not request.user.is_superuser:
+        messages.warning(request, "Only administrators can delete subscriptions.")
+        return redirect('jdasubscriptions:sub_dashboard')
+
+    if model_type == 'customer':
+        obj = get_object_or_404(CustomerSubscription, pk=pk)
+    elif model_type == 'institution':
+        obj = get_object_or_404(InstitutionSubscription, pk=pk)
+    else:
+        messages.error(request, "Invalid subscription type.")
+        return redirect('jdasubscriptions:sub_dashboard')
+
+    username = obj.user.username
+    plan_name = obj.plan.name
+    obj.delete()
+    messages.success(request, f"Subscription deleted: {username} — {plan_name}")
     return redirect('jdasubscriptions:sub_dashboard')

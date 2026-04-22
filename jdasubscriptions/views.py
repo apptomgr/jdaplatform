@@ -237,6 +237,33 @@ def select_subscription_plan(request, plan_id):
         return redirect('jdapublicationsapp_pubs')
 
     # -------------------------
+    # Cross-model active subscription check
+    # -------------------------
+    if plan.plan_type == 'customer':
+        has_institution = InstitutionSubscription.objects.filter(
+            user=user, status='active'
+        ).exists()
+        if has_institution:
+            messages.warning(
+                request,
+                "You already have an active institutional subscription. "
+                "Please contact support to switch plans."
+            )
+            return redirect('jdapublicationsapp_pubs')
+
+    elif plan.plan_type == 'institution':
+        has_customer = CustomerSubscription.objects.filter(
+            user=user, status='active'
+        ).exists()
+        if has_customer:
+            messages.warning(
+                request,
+                "You already have an active customer subscription. "
+                "Please contact support to switch plans."
+            )
+            return redirect('jdapublicationsapp_pubs')
+
+    # -------------------------
     # Existing subscription check
     # -------------------------
     existing_subscription = _get_active_subscription(user)
