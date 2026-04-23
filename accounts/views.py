@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, AccountAdminForm, AccountAdminUpdateForm, GroupUpdateForm, GroupAddForm
@@ -23,10 +23,15 @@ def register(request):
             user = form.save()
             # Add new created user to a default group
             #print(f"35 - Fresh user: {user}")
-            customer_grp = Group.objects.get(name='customers') # get default grp, customers in this case
-            #print(f"37:{customer_grp}")
-            # Add fresh user to customer grp
-            customer_grp.user_set.add(user)
+            try:
+                customer_grp = Group.objects.get(name='customers')
+                customer_grp.user_set.add(user)
+            except Group.DoesNotExist:
+                messages.warning(
+                    request,
+                    'Account created but group assignment failed. '
+                    'Please contact us at info@jda-ci.com'
+                )
             #username = form.cleaned_data.get('username')
             auth_login(request, user)
             messages.success(request, f'Your account has been successfully created. Please contact JDA to activate your account!')
@@ -182,16 +187,29 @@ def admin_tasks(request):
 @allowed_users(allowed_roles=['admins','managers'])
 def admin_tasks_edit(request, req_type, pk):
     now = datetime.now()
-    user = User.objects.get(pk=pk)
+    user = get_object_or_404(User, pk=pk)
     curr_grp = None
     if request.user.groups.all():
         curr_grp = request.user.groups.all()[0].name
 
     if req_type =='del_user':
-        user_id = User.objects.get(username=user).pk
-        curr_grp_id = User.objects.values_list('groups__id', flat='True').get(pk=pk)
-        grp_to_update = Group.objects.get(pk=curr_grp_id)
-        grp_to_add = Group.objects.get(name='deactivated').id
+        curr_grp_id = User.objects.values_list(
+            'groups__id', flat=True
+        ).filter(pk=pk).first()
+
+        if curr_grp_id is None:
+            messages.warning(request, 'User has no group assigned.')
+            return redirect('admin_tasks')
+
+        try:
+            grp_to_update = Group.objects.get(pk=curr_grp_id)
+            grp_to_add = Group.objects.get(name='deactivated')
+        except Group.DoesNotExist:
+            messages.error(
+                request,
+                'Group not found. Please contact info@jda-ci.com'
+            )
+            return redirect('admin_tasks')
 
         user.groups.remove(grp_to_update)
         user.groups.add(grp_to_add)
@@ -199,9 +217,8 @@ def admin_tasks_edit(request, req_type, pk):
         messages.success(request, f'{user} account profile has successfully deactivated')
         return redirect('admin_tasks')  # Redirect back to profile page
     elif req_type =='del_logo':
-        pk_user= User.objects.get(pk=pk)
-        pk_user.profile.logo = 'default.jpg'
-        pk_user.save()
+        user.profile.logo = 'default.jpg'
+        user.save()
 
         messages.success(request, f'{user} account profile logo has been successfully removed')
         return redirect('admin_tasks')  # Redirect back to profile page
@@ -214,16 +231,22 @@ def admin_tasks_edit(request, req_type, pk):
             if selected_grp_name=="":
                  selected_grp_name="deactivated"
 
-            selected_grp_id = Group.objects.get(name=selected_grp_name).id
+            try:
+                selected_grp_id = Group.objects.get(name=selected_grp_name).id
+                grp_to_update = Group.objects.get(pk=curr_grp_id)
+                grp_to_add = Group.objects.get(pk=selected_grp_id)
+            except Group.DoesNotExist:
+                messages.error(
+                    request,
+                    'Group not found. Please contact info@jda-ci.com'
+                )
+                return redirect('admin_tasks')
 
             u_form = UserUpdateForm(request.POST or None, files=request.FILES, instance=user) #adminTaskProfileUpdateForm(request.POST or None, files=request.FILES, instance=user)
             g_form = GroupUpdateForm(request.POST, request.FILES, instance=user)
             p_form = ProfileUpdateForm(request.POST,request.FILES,instance=user.profile)
 
             if u_form.is_valid() and g_form.is_valid() and p_form.is_valid():
-                grp_to_update = Group.objects.get(pk=curr_grp_id)
-                grp_to_add = Group.objects.get(pk=selected_grp_id)
-
                 user.groups.remove(grp_to_update)
                 user.groups.add(grp_to_add)
 
@@ -279,13 +302,21 @@ def admin_tasks_add(request):
             #Save user
             u_form.save()
             #Save grp
-            user_id=User.objects.get(username=user).pk
-            grp_to_add = Group.objects.get(name=group)
-            grp_to_add.user_set.add(user_id)
+            try:
+                user_obj = User.objects.get(username=user)
+                grp_to_add = Group.objects.get(name=group)
+            except (User.DoesNotExist, Group.DoesNotExist):
+                messages.error(
+                    request,
+                    'User or group not found. '
+                    'Please contact info@jda-ci.com'
+                )
+                return redirect('admin_tasks')
+            grp_to_add.user_set.add(user_obj.pk)
             #Save profile
             p_form.save()
-            #Add Passord
-            up = User.objects.get(pk=user_id)
+            #Add Password
+            up = user_obj
             up.set_password(pass1)
             up.save()
 
