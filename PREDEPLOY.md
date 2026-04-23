@@ -15,30 +15,19 @@ Read `settings.py` and report the current values of:
 
 ---
 
-## Step 2 — Production flags check
-Confirm the following are set correctly:
+## Step 2 — SUBSCRIPTION_REQUIRED check
+Read `settings.py` and report the current value of `SUBSCRIPTION_REQUIRED`.
 
-```python
-DEBUG = False              # ❌ NEVER push with DEBUG=True
-DEVELOPMENT_MODE = False   # ❌ NEVER push with DEVELOPMENT_MODE=True
-ALLOWED_HOSTS = ['platform.jda-ci.com']  # not '*'
-SUBSCRIPTION_REQUIRED = False  # confirm intended value before push
-```
+If `SUBSCRIPTION_REQUIRED = False`:
+- Ask user to confirm whether to flip it to `True` before this deployment
+- Wait for explicit confirmation before changing it
+- If confirmed: set `SUBSCRIPTION_REQUIRED = True` in `settings.py`
 
-⚠️ WARNING: Local .env values must ALWAYS be set to
-production-safe values before pushing:
-- DEBUG=False
-- DEVELOPMENT_MODE=False
+If `SUBSCRIPTION_REQUIRED = True`:
+- Report ✅ already set correctly — proceed to Step 3
 
-Reason: If these are True in .env and DO environment
-variables are also set, local .env values may override
-DO settings and cause 500 errors in production.
-
-The .env file is for local development only — always
-reset to production-safe values before every git push.
-
-If any flag is wrong — fix it before proceeding.
-Do NOT proceed until all flags are ✅.
+Do NOT change any other settings.
+Wait for confirmation before proceeding to Step 3.
 
 ---
 
@@ -64,17 +53,7 @@ python manage.py showmigrations | grep '\[ \]'
 
 ---
 
-## Step 4 — No localhost URLs
-```bash
-grep -r "127.0.0.1" --include="*.py" --include="*.html" --include="*.js" .
-grep -r "localhost" --include="*.py" --include="*.html" --include="*.js" .
-```
-- ✅ No results — safe to proceed
-- ❌ Found — report exact file and line, fix before proceeding
-
----
-
-## Step 5 — No debug artifacts
+## Step 4 — No debug artifacts
 ```bash
 grep -r "print(" --include="*.py" .
 grep -r "console.log" --include="*.html" --include="*.js" .
@@ -82,6 +61,16 @@ grep -r "debugger" --include="*.html" --include="*.js" .
 ```
 - ✅ No results — safe to proceed
 - ❌ Found — report and remove before proceeding
+
+---
+
+## Step 5 — No localhost URLs
+```bash
+grep -r "127.0.0.1" --include="*.py" --include="*.html" --include="*.js" .
+grep -r "localhost" --include="*.py" --include="*.html" --include="*.js" .
+```
+- ✅ No results — safe to proceed
+- ❌ Found — report exact file and line, fix before proceeding
 
 ---
 
@@ -123,5 +112,36 @@ Confirm ONLY intended files are staged — no accidental changes.
 
 ---
 
-## Step 9 — Checklist sign-off
+## Step 9 — Update .env for production
+Confirm the following are set correctly in `.env`:
+
+```python
+DEBUG=False              # ❌ NEVER push with DEBUG=True
+DEVELOPMENT_MODE=False   # ❌ NEVER push with DEVELOPMENT_MODE=True
+```
+
+⚠️ WARNING: Local .env values must ALWAYS be set to
+production-safe values before pushing:
+- DEBUG=False
+- DEVELOPMENT_MODE=False
+
+Reason: If these are True in .env and DO environment
+variables are also set, local .env values may override
+DO settings and cause 500 errors in production.
+
+The .env file is for local development only — always
+reset to production-safe values before every git push.
+
+Also confirm in `settings.py`:
+```python
+ALLOWED_HOSTS = ['platform.jda-ci.com']  # not '*'
+SUBSCRIPTION_REQUIRED = False  # confirm intended value before push
+```
+
+If any flag is wrong — fix it before proceeding.
+Do NOT proceed until all flags are ✅.
+
+---
+
+## Step 10 — Checklist sign-off
 Report ✅ or ❌ for every step before proceeding.

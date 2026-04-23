@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from .models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from decimal import Decimal
@@ -214,6 +214,17 @@ def sub_dashboard(request):
     # Apply filters
     customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
 
+    keyword = request.GET.get('keyword', '').strip()
+    if keyword:
+        kq = (
+            Q(user__username__icontains=keyword) |
+            Q(user__first_name__icontains=keyword) |
+            Q(user__last_name__icontains=keyword) |
+            Q(user__email__icontains=keyword)
+        )
+        customer_qs = customer_qs.filter(kq)
+        institution_qs = institution_qs.filter(kq)
+
     # Summary stats (always unfiltered, across both models)
     total_active = (
         CustomerSubscription.objects.filter(status='active').count() +
@@ -274,6 +285,7 @@ def sub_dashboard(request):
         'filter_status': request.GET.get('status', ''),
         'filter_date_from': request.GET.get('date_from', ''),
         'filter_date_to': request.GET.get('date_to', ''),
+        'filter_keyword': keyword,
         'filter_query_string': filter_query_string,
         'all_users': User.objects.all().order_by('username'),
         'all_plans': SubscriptionPlan.objects.filter(is_active=True).order_by('name'),
