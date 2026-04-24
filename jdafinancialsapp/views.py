@@ -1,5 +1,5 @@
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from datetime import datetime
 # from django.utils.timezone import timedelta
@@ -106,7 +106,7 @@ def jdafinancialsapp_stmts(request):
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entry_date):
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=1).order_by('financialstatementlinesequencemodel__sequence')
@@ -119,7 +119,7 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
     if request.method == "POST":
         #print(f"84 POST ")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementBalLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementBalLinkModel, pk=link_data.first().id)
             form = BalanceSheetForm(request.POST, instance=item)
         else: # new balance sheet
             form = BalanceSheetForm(request.POST)
@@ -157,7 +157,7 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
         link_data = FinancialStatementBalLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
         if link_data.count() > 0:
-            item = FinancialStatementBalLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementBalLinkModel, pk=link_data[0].id)
             form = BalanceSheetForm(instance=item)
             #show bal rpt
             return redirect('jdafinancialsapp_bal_rpt', sector, company.id, statement, entry_date)
@@ -178,7 +178,7 @@ def jdafinancialsapp_bal_entry_form(request, sector, company_id, statement, entr
 @login_required
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entry_date):
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=2).order_by('financialstatementlinesequencemodel__sequence')
@@ -191,7 +191,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
     if request.method == "POST":
         #print(f"152 POST ")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementIncLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementIncLinkModel, pk=link_data.first().id)
             form = IncomeStatementForm(request.POST, instance=item)
         else: # new balance sheet
             form = IncomeStatementForm(request.POST)
@@ -229,7 +229,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
         link_data = FinancialStatementIncLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
         if link_data.count() > 0:
-            item = FinancialStatementIncLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementIncLinkModel, pk=link_data[0].id)
             form = IncomeStatementForm(instance=item)
             #show bal rpt
             #print("196: redirecting to inc_rpt")
@@ -252,7 +252,7 @@ def jdafinancialsapp_inc_entry_form(request, sector, company_id, statement, entr
 @login_required
 @allowed_users(allowed_roles=['admins', 'managers','staffs'])
 def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement, entry_date):
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=3).order_by('financialstatementlinesequencemodel__sequence')
@@ -265,7 +265,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
     if request.method == "POST":
         #print(f"152 POST ")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementInvAcctLinkModel, pk=link_data.first().id)
             form = InvestmentAccountForm(request.POST, instance=item)
         else: # new balance sheet
             form = InvestmentAccountForm(request.POST)
@@ -303,7 +303,7 @@ def jdafinancialsapp_inv_acct_entry_form(request, sector, company_id, statement,
         link_data = FinancialStatementInvAcctLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
         if link_data.count() > 0:
-            item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementInvAcctLinkModel, pk=link_data[0].id)
             form = InvestmentAccountForm(instance=item)
             #show bal rpt
             #print("196: redirecting to inv_acct")
@@ -388,7 +388,7 @@ def jdafinancialsapp_inv_acct_rpt(request, sector, company_id, statement, entry_
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"236: bal edit company_id: {company_id}")
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=1).order_by('financialstatementlinesequencemodel__sequence')
@@ -399,7 +399,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
     if request.method == "POST":
         #print(f"161 POST")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementBalLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementBalLinkModel, pk=link_data.first().id)
             form = BalanceSheetForm(request.POST, instance=item)
         else: # new balance sheet
             form = BalanceSheetForm(request.POST)
@@ -437,7 +437,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
         link_data = FinancialStatementBalLinkModel.objects.filter(company_id=company.id, entry_date=entry_date)
 
         if link_data.count() > 0:
-            item = FinancialStatementBalLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementBalLinkModel, pk=link_data[0].id)
             form = BalanceSheetForm(instance=item)
         else:
             form = BalanceSheetForm()
@@ -456,7 +456,7 @@ def jdafinancialsapp_bal_edit_form(request, sector, company_id, statement, entry
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"300: bal edit company_id: {company_id}")
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=2).order_by('financialstatementlinesequencemodel__sequence')
@@ -467,7 +467,7 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
     if request.method == "POST":
         #print(f"310 POST")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementIncLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementIncLinkModel, pk=link_data.first().id)
             form = IncomeStatementForm(request.POST, instance=item)
         else: # new balance sheet
             form = IncomeStatementForm(request.POST)
@@ -508,7 +508,7 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
         #print("351")
         if link_data.count() > 0:
             #print("353")
-            item = FinancialStatementIncLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementIncLinkModel, pk=link_data[0].id)
             #print(f"355 itme: {item}")
             form = IncomeStatementForm(instance=item)
         else:
@@ -531,7 +531,7 @@ def jdafinancialsapp_inc_edit_form(request, sector, company_id, statement, entry
 @allowed_users(allowed_roles=['admins','managers', 'staffs'])
 def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, entry_date):
     #print(f"458: bal edit company_id: {company_id}")
-    company=CompanyModel.objects.get(pk=company_id)
+    company=get_object_or_404(CompanyModel, pk=company_id)
     entry_date = publication_date_obj = datetime.strptime(entry_date, '%Y-%m-%d').date()
 
     lines = FinancialStatementLineModel.objects.filter(financialstatementlinesequencemodel__financial_statement=3).order_by('financialstatementlinesequencemodel__sequence')
@@ -542,7 +542,7 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
     if request.method == "POST":
         #print(f"468 POST")
         if link_data.count() > 0: # existing balance sheet
-            item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data.first().id)
+            item = get_object_or_404(FinancialStatementInvAcctLinkModel, pk=link_data.first().id)
             form = InvestmentAccountForm(request.POST, instance=item)
         else: # new balance sheet
             form = InvestmentAccountForm(request.POST)
@@ -583,7 +583,7 @@ def jdafinancialsapp_inv_acct_edit_form(request, sector, company_id, statement, 
         #print("508")
         if link_data.count() > 0:
             #print("509")
-            item = FinancialStatementInvAcctLinkModel.objects.get(pk=link_data[0].id)
+            item = get_object_or_404(FinancialStatementInvAcctLinkModel, pk=link_data[0].id)
             #print(f"512 itme: {item}")
             form = InvestmentAccountForm(instance=item)
         else:

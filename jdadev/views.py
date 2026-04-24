@@ -2559,7 +2559,7 @@ def jdadev_overall_portfolio_by_client(request, portfolio_type, client):
         #print("Invalid portfolio type")
         return redirect('jdadev_home')
     # get username based on user param id
-    user = User.objects.get(id=user)
+    user = get_object_or_404(User, id=user)
     username = user.username
 
     context={'client_portfolio': client_portfolio,'client':username,'tot':tot, 'ovp':ovp, 'val_lst': val_lst, 'per_lst':per_lst}
@@ -2723,21 +2723,10 @@ def reload_mu_current_value(request, id_int, soc_text):
     #print(f"323: soc_val:{soc_text}")
 
 
-    if soc_text == "" or soc_text == 'OPCVM':
-        pass
-
-        #current_value = MutualFundModel.objects.all()
-        #print(f"depositaire all:{depositaire}")
-
-    else:
-        cv = MutualFundModel.objects.get(id=soc_text)
-        #orv=[]
-        #for i in current_value:
-        #    orv.append(i.current_value)
-        mu_curr_val= str(cv.current_value).replace(',', '.').replace('0000', '00')
-        #unique_orv = list(set(orv))
-        #print(mu_curr_val)
-        #print(f"340 - reload_mu_current_value: {mu_curr_val}")
+    mu_curr_val = '0.00'  # safe default
+    if soc_text and soc_text != 'OPCVM':
+        cv = get_object_or_404(MutualFundModel, id=soc_text)
+        mu_curr_val = str(cv.current_value).replace(',', '.').replace('0000', '00')
 
     context ={'id_int':id_int,'mu_curr_val':mu_curr_val}
     return render(request, 'jdadev/partials/jdadev_mu_current_value.html', context)
@@ -2746,15 +2735,10 @@ def reload_mu_current_value(request, id_int, soc_text):
 @login_required
 def reload_mu_nbr_of_share(request, id_int, soc_text):
     #print(f"347: soc_val:{soc_text}")
-    if soc_text == "":
-        pass
-        #mu_nbr_of_share = MutualFundModel.objects.all()
-
-    else:
-        ns = MutualFundModel.objects.get(id=soc_text)
-        #print(f"ns: {ns}")
-        mu_nbr_of_share= str(ns.nbr_of_share).replace(',', '.').replace('0000', '00')
-        #print(f"mu_nbr_of_share: {mu_nbr_of_share}")
+    mu_nbr_of_share = '0.00'  # safe default
+    if soc_text:
+        ns = get_object_or_404(MutualFundModel, id=soc_text)
+        mu_nbr_of_share = str(ns.nbr_of_share).replace(',', '.').replace('0000', '00')
 
     context ={'id_int':id_int,'mu_nbr_of_share':mu_nbr_of_share}
     return render(request, 'jdadev/partials/jdadev_mu_nbr_of_share.html', context)

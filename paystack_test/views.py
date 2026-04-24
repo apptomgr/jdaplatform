@@ -8,14 +8,18 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from .models import Payment
 
 
+@login_required
 def payment_page(request):
     return render(request, "paystack_test/payment.html")
 
 
+@login_required
 def start_payment(request):
     email = request.POST.get("email")
     amount_fcfa = 5000
@@ -29,26 +33,29 @@ def start_payment(request):
         "amount": payment.amount,
         "reference": reference,
         "callback_url": request.build_absolute_uri(
-            "/paystack/callback/"
+            reverse('paystack_test:payment_callback')
         ),
         "currency": "XOF"
     }
-
-    print(payload)
 
     headers = {
         "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
         "Content-Type": "application/json",
     }
 
-    response = requests.post(
-        f"{settings.PAYSTACK_BASE_URL}/transaction/initialize",
-        json=payload,
-        headers=headers,
-        timeout=10
-    )
-
-    res = response.json()
+    try:
+        response = requests.post(
+            f"{settings.PAYSTACK_BASE_URL}/transaction/initialize",
+            json=payload,
+            headers=headers,
+            timeout=10
+        )
+        res = response.json()
+    except (requests.exceptions.RequestException, ValueError) as e:
+        payment.status = "failed"
+        payment.save()
+        return render(request, "paystack_test/error.html",
+            {"error": str(e)})
 
     if res.get("status"):
         return redirect(res["data"]["authorization_url"])
@@ -59,6 +66,7 @@ def start_payment(request):
     return render(request, "paystack_test/error.html", {"error": res})
 
 
+@login_required
 def payment_callback(request):
     return render(request, "paystack_test/success.html")
 

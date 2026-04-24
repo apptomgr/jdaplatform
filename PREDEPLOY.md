@@ -15,6 +15,35 @@ Read `settings.py` and report the current values of:
 
 ---
 
+## Step 1a — Verify Digital Ocean environment variables
+Check that these variables are correctly set in the
+DO App Platform dashboard (not just in .env):
+
+Go to: DO App Platform → your app → Settings → Environment Variables
+
+Confirm:
+- DEBUG = False (not True) ✅
+- DEVELOPMENT_MODE = False (not True) ✅
+- DJANGO_ALLOWED_HOSTS = platform.jda-ci.com ✅
+- SECRET_KEY = set ✅
+- DATABASE_URL = set ✅
+
+⚠️ DO App Platform environment variables take priority
+over .env file values. If DEBUG=True is set in DO dashboard,
+it will override DEBUG=False in .env and cause:
+- Django debug pages showing in production
+- Custom error pages (404, 500, 403) not working
+- Sensitive debug info exposed to users
+
+If any variable is wrong — fix it in the DO dashboard
+BEFORE proceeding with deployment.
+
+DO NOT proceed to Step 1b until DO env vars are confirmed.
+
+Wait for my confirmation after checking.
+
+---
+
 ## Step 2 — SUBSCRIPTION_REQUIRED check
 Read `settings.py` and report the current value of `SUBSCRIPTION_REQUIRED`.
 
