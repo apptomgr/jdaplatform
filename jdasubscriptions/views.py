@@ -117,11 +117,19 @@ def paystack_callback(request):
     # 5️⃣ Activate the correct subscription
     # --------------------------------------------------
     if subscription_type == "customer":
-        subscription = CustomerSubscription.objects.get(
-            id=subscription_id,
-            user=request.user,
-            status="draft",
-        )
+        try:
+            subscription = CustomerSubscription.objects.get(
+                id=subscription_id,
+                user=request.user,
+                status="draft",
+            )
+        except CustomerSubscription.DoesNotExist:
+            messages.error(
+                request,
+                "Subscription not found or already activated. "
+                "Please contact us at info@jda-ci.com"
+            )
+            return redirect("jdasubscriptions:subscription_failed")
 
         # Expire previous active subscriptions
         CustomerSubscription.objects.filter(
@@ -130,11 +138,19 @@ def paystack_callback(request):
         ).update(status="expired", ends_at=now)
 
     elif subscription_type == "institution":
-        subscription = InstitutionSubscription.objects.get(
-            id=subscription_id,
-            user=request.user,
-            status="draft",
-        )
+        try:
+            subscription = InstitutionSubscription.objects.get(
+                id=subscription_id,
+                user=request.user,
+                status="draft",
+            )
+        except InstitutionSubscription.DoesNotExist:
+            messages.error(
+                request,
+                "Subscription not found or already activated. "
+                "Please contact us at info@jda-ci.com"
+            )
+            return redirect("jdasubscriptions:subscription_failed")
 
         InstitutionSubscription.objects.filter(
             user=request.user,
@@ -338,6 +354,7 @@ def subscription_failed(request):
 
 #///////////////////////////////////////subscription_upgrade////////////////////////////////////////////////////
 
+@login_required
 def subscription_upgrade(request):
     return render(request, "jdasubscriptions/subscription_upgrade.html")
 

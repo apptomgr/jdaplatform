@@ -1,0 +1,26 @@
+{% extends "jdamainapp/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="card border-0 shadow-sm text-center" style="max-width: 540px; width: 100%;">
+        <div class="card-body py-5 px-4">
+            <img src="{% static 'jdamainapp/assets/img/jda_logo3.png' %}" alt="JDA Logo" style="height: 60px;" class="mb-4">
+            <h1 class="display-1 font-weight-bold text-danger mb-2">403</h1>
+            <h4 class="font-weight-bold mb-3">Access Denied</h4>
+            <p class="text-muted mb-4">
+                You don't have permission to access this page.
+                If you believe this is an error, please contact us at
+                <a href="mailto:info@jda-ci.com">info@jda-ci.com</a>
+            </p>
+            <a href="{% url 'jdamainapp_home' %}" class="btn btn-info mr-2">
+                <i class="fas fa-home mr-1"></i> Go to Homepage
+            </a>
+            <a href="mailto:info@jda-ci.com" class="btn btn-outline-secondary">
+                <i class="fas fa-envelope mr-1"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

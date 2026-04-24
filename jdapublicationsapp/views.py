@@ -1199,7 +1199,7 @@ def jdapublicationsapp_edit(request, pk):
     current_url = resolve(request.path_info).url_name
     #print(f"{current_url}")
     if request.method == 'POST':
-        item = PublicationModel.objects.get(pk=pk)
+        item = get_object_or_404(PublicationModel, pk=pk)
         form = PublicationAdminsForm(request.POST or None, files=request.FILES, instance=item)
         #customer_edit = update_customer_prof(request.POST, request.FILES, instance=request.user.customer_profile)
         #print(f"183:////item: {item.file_name}")
@@ -1226,7 +1226,7 @@ def jdapublicationsapp_edit(request, pk):
         #form = AttachmentForm(instance=attachment)
 
 
-        item = PublicationModel.objects.get(pk=pk)
+        item = get_object_or_404(PublicationModel, pk=pk)
         form = PublicationAdminsForm(instance=item)
         #print('Files : {}'.format(request.FILES))
         #form = PublicationAdminsForm(request.FILES, instance=item)
@@ -1297,7 +1297,7 @@ def jdapublicationsapp_listing(request):
 def jdapublicationsapp_delete(request, pk):
 
     if request.method == 'POST':
-        pub = PublicationModel.objects.get(pk=pk)
+        pub = get_object_or_404(PublicationModel, pk=pk)
         pub.delete()
         messages.success(request, f"Successfully deleted publication ID {pk}")
         return redirect('jdapublicationsapp_listing')
@@ -1423,7 +1423,7 @@ def jdapublicationsapp_new_company(request):
 def jdapublicationsapp_delete_company_confirm(request, pk):
     #print(f"387://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
-    comp = PublicationCompanyModel.objects.get(pk=pk)
+    comp = get_object_or_404(PublicationCompanyModel, pk=pk)
     messages.warning(request, f"Deletion of company '{comp}' is permanent'?")
 
     grp = get_user_grp(request)
@@ -1437,7 +1437,7 @@ def jdapublicationsapp_delete_company_confirm(request, pk):
 def jdapublicationsapp_delete_company_yes(request, pk):
     #print(f"398://////{pk}")
     #company_listing = PublicationCompanyModel.objects.get(pk=pk)
-    comp = PublicationCompanyModel.objects.get(pk=pk)
+    comp = get_object_or_404(PublicationCompanyModel, pk=pk)
     comp.delete()
     messages.success(request, f"Successfully deleted company: '{comp}' ID #{pk}")
     context = {'comp': comp, 'confirmation': f"Are you sure you want to permanently delete company '{comp}'?"}

@@ -73,10 +73,14 @@ def initialize_customer_payment(request, subscription_id):
     url = f"{settings.PAYSTACK_BASE_URL}/transaction/initialize"
 
     try:
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
         result = response.json()
-    except Exception as e:
-        messages.error(request, f"Payment initialization error: {str(e)}")
+    except (Exception, requests.exceptions.Timeout) as e:
+        messages.error(
+            request,
+            "Payment service timed out. Please try again or "
+            "contact us at info@jda-ci.com"
+        )
         return redirect("jdasubscriptions:subscription_plan_list")
 
     if not result.get("status") or not result.get("data"):
@@ -158,10 +162,14 @@ def initialize_institution_payment(request, subscription_id):
     url = f"{settings.PAYSTACK_BASE_URL}/transaction/initialize"
 
     try:
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
         result = response.json()
-    except Exception as e:
-        messages.error(request, f"Payment initialization error: {str(e)}")
+    except (Exception, requests.exceptions.Timeout) as e:
+        messages.error(
+            request,
+            "Payment service timed out. Please try again or "
+            "contact us at info@jda-ci.com"
+        )
         return redirect("jdasubscriptions:subscription_plan_list")
 
     if not result.get("status") or not result.get("data"):
