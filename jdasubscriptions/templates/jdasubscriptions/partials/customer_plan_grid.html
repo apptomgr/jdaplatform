@@ -1,3 +1,4 @@
+{% load subscription_filters %}
 <div class="row">
     {% for plan in plans %}
     <div class="col-md-4 mb-4 d-flex">
@@ -20,11 +21,23 @@
                 </h4>
 
                 <ul class="list-unstyled mt-3 flex-grow-1">
-                    {% for feature in plan.features.visible %}
-                    <li>✔ {{ feature }}</li>
-                    {% endfor %}
-                    {% for feature in plan.features.hidden %}
-                    <li class="text-muted">✖ {{ feature }}</li>
+                    {% for feature in plan.features %}
+                    {% if feature.visible %}
+                    <li class="text-dark">
+                        <span class="text-success">✔</span> {{ feature.name|translate_feature }}
+                        {% if feature.sub_items %}
+                        <ul class="list-unstyled mb-0 mt-1" style="padding-left: 1.25rem;">
+                            {% for sub in feature.sub_items %}
+                            <li class="text-dark small"><span style="color: #17a2b8;">●</span> {{ sub|translate_feature }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    <li class="text-muted text-decoration-line-through">
+                        <span class="text-danger">✖</span> {{ feature.name|translate_feature }}
+                    </li>
+                    {% endif %}
                     {% endfor %}
                 </ul>
 

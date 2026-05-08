@@ -398,9 +398,6 @@ def public_subscription_plans(request):
         )
     }
 
-    # Mark most expensive plan as popular
-    max_price = max((float(p.price_fcfa) for p in plans), default=0)
-
     result = []
     for plan in plans:
         features = plan.features if isinstance(plan.features, list) else []
@@ -412,8 +409,8 @@ def public_subscription_plans(request):
             'price_monthly': monthly_lookup.get(plan.name),
             'price_yearly': yearly_lookup.get(plan.name),
             'currency': 'FCFA HT',
-            'is_popular': float(plan.price_fcfa) == max_price,
-            'subscribe_url': f'https://platform.jda-ci.com/jdasubscriptions/select/{plan.id}/',
+            'is_popular': plan.name == 'Akwaba Gold',
+            'subscribe_url': request.build_absolute_uri(f'/jdasubscriptions/select/{plan.id}/'),
             'features': features,
         })
 

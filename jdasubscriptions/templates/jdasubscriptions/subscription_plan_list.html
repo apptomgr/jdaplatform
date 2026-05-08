@@ -1,4 +1,5 @@
 {% extends "jdamainapp/base.html" %}
+{% load subscription_filters %}
 {% block content %}
 
 <div class="container py-5" id="plan-root">
@@ -79,11 +80,18 @@
                         {% for feature in plan.features %}
                         {% if feature.visible %}
                         <li class="text-dark">
-                            <span class="text-success">✔</span> {{ feature.name }}
+                            <span class="text-success">✔</span> {{ feature.name|translate_feature }}
+                            {% if feature.sub_items %}
+                            <ul class="list-unstyled mb-0 mt-1" style="padding-left: 1.25rem;">
+                                {% for sub in feature.sub_items %}
+                                <li class="text-dark small"><span style="color: #17a2b8;">●</span> {{ sub|translate_feature }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                         </li>
                         {% else %}
                         <li class="text-muted text-decoration-line-through">
-                            <span class="text-danger">✖</span> {{ feature.name }}
+                            <span class="text-danger">✖</span> {{ feature.name|translate_feature }}
                         </li>
                         {% endif %}
                         {% endfor %}

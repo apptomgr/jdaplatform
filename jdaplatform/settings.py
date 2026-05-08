@@ -228,12 +228,12 @@ if DEVELOPMENT_MODE is True:
 else:
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = 'djangotestspace'
-    AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "djangotestspace")
+    AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "https://nyc3.digitaloceanspaces.com")
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
     }
-    AWS_LOCATION = 'django_test_space'
+    AWS_LOCATION = os.getenv("AWS_LOCATION", "django_test_space")
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
     STORAGES = {
