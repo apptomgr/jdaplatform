@@ -3,6 +3,20 @@ from django.utils import timezone
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from django.db.models import Q
 
+# Maps research_type values (stored on PublicationModel) to the display-friendly
+# feature names used in SubscriptionPlan.features JSON. Only entries that differ
+# need an explicit mapping; identical names resolve via the .get() fallback.
+RESEARCH_TYPE_TO_FEATURE = {
+    "Recommendation":             "Recommendations",
+    "IPO Analysis":               "IPO Review",
+    "Quarterly Results":          "Quarterly Results Commentary",
+    "Half Year Results":          "Semi-annual Results Commentary",
+    "Annual Results":             "Annual Results Commentary",
+    "Shareholder Meeting Feedback": "General Meetings Commentary",
+    "Research Notes":             "Research Notes",
+    "Economic Notes":             "Economic Notes",
+}
+
 #/////////////////////////////////////////////_get_active_subscription///////////////////////////////
 def _get_active_subscription(user):
     """
@@ -110,11 +124,14 @@ def user_can_access_publication(user, publication) -> bool:
     # Feature-based access (visible == True only)
     # --------------------------------------------------
     # Newsletters are a research_category, not a research_type.
-    # All other publications are matched by research_type.
+    # All other publications are matched via RESEARCH_TYPE_TO_FEATURE so that
+    # display-friendly feature names in plan JSON resolve to research_type values.
     if publication.research_category == 'Newsletters':
         publication_type = 'Newsletters'
     else:
-        publication_type = publication.research_type
+        publication_type = RESEARCH_TYPE_TO_FEATURE.get(
+            publication.research_type, publication.research_type
+        )
 
     for feature in plan.features or []:
         if (
@@ -183,7 +200,9 @@ def get_upgrade_recommendation(user, publication):
         return {"current_plan": None, "required_plan": None}
 
     current_plan = subscription.plan
-    publication_type = publication.research_type
+    publication_type = RESEARCH_TYPE_TO_FEATURE.get(
+        publication.research_type, publication.research_type
+    )
 
     # ---------------------------------------
     # 2️⃣ Find lowest plan that contains feature
