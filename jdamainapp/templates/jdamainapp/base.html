@@ -152,7 +152,7 @@
                 </li-->
                 {% if user.is_authenticated %}
                 <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> {{user.username}}</b></a>
-                    <ul class="dropdown-menu">
+                    <ul>
                         <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
                         {% if user.is_staff %}
                         <li><hr class="my_hr_divider"></li>
