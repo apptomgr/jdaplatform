@@ -30,7 +30,8 @@ class PublicationAdminsForm(forms.ModelForm):
         ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Recommendation', 'Recommendation')
+        ('Recommendation', 'Recommendation'),
+        ('Stock Pitch', 'Stock Pitch'),
         #('Investment Case', 'Investment Case')
     )
 
@@ -88,7 +89,8 @@ class PublicationFilterForm(forms.ModelForm):
         ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         #('Valuation Models', 'Valuation Models'),
         #('Weekly comments', ugettext_lazy('Weekly comments')),
-        ('Recommendation', 'Recommendation')
+        ('Recommendation', 'Recommendation'),
+        ('Stock Pitch', 'Stock Pitch'),
         #('Investment Case', 'Investment Case')
     )
 
