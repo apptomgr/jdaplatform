@@ -7,7 +7,7 @@ FEATURE_TRANSLATIONS = {
         "Newsletters": "Newsletters",
         "IPO Review": "Analyse des introductions en bourse",
         "IPO Reviews": "Analyse des introductions en bourse",
-        "IPO Analysis": "Analyse des introductions en bourse",
+        "IPO Analysis": "Analyse des OPV",
         "Recommendations": "Recommandations",
         "Top 10 Buy": "Top 10 Achats",
         "Top 10 Sell": "Top 10 Ventes",
