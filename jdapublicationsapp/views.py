@@ -539,7 +539,7 @@ def protected_publication_content(request, pk):
 
 #/////////////////////// jdapublicationsapp_filter /////////////////////
 @login_required
-@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
+#@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_filter(request):
     stats_sess = request.session.get('pub_stats_session') # stats_sess was set in jdapublicationsapp_pubs function
     #print(f"180: Filter - Request.method: {request.method}")

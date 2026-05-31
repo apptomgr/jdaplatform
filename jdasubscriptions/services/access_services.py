@@ -11,10 +11,12 @@ RESEARCH_TYPE_TO_FEATURE = {
     "IPO Analysis":               "IPO Analysis",
     "Quarterly Results":          "Quarterly Results Commentary",
     "Half Year Results":          "Semi-annual Results",
+    "Semi-annual Results":        "Semi-annual Results",
     "Annual Results":             "Annual Results",
     "Shareholder Meeting Feedback": "General Meetings Commentary",
     "Research Notes":             "Research Notes",
     "Economic Notes":             "Economic Notes",
+    "Stock Pitch":                "Stock Pitch",
 }
 
 #/////////////////////////////////////////////_get_active_subscription///////////////////////////////

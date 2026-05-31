@@ -34,7 +34,7 @@ def register(request):
                 )
             #username = form.cleaned_data.get('username')
             auth_login(request, user)
-            messages.success(request, f'Your account has been successfully created. Please contact JDA to activate your account!')
+            messages.success(request, 'Your account has been successfully created.')
             return redirect('jdamainapp_home')
             #messages.success(request, f'Your account has been created! You are now able to log in')
             #return redirect('login')

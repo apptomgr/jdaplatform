@@ -32,7 +32,7 @@ class PublicationModel(models.Model):
         ('Daily Briefing', 'Daily Briefing'),
         #('Weekly comments', 'Weekly comments'),
         ('Quarterly Results', 'Quarterly Results'),
-        ('Half Year Results', 'Half Year Results'),
+        ('Semi-annual Results', 'Semi-annual Results'),
         ('Annual Results', 'Annual Results'),
         ('Shareholder Meeting Feedback', 'Shareholder Meeting Feedback'),
         ('IPO Analysis', 'IPO Analysis'),
