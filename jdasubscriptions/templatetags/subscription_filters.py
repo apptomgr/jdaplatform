@@ -23,7 +23,7 @@ FEATURE_TRANSLATIONS = {
         "Research Notes": "Notes de recherche",
         "Economic Notes": "Notes économiques",
         "Opinion on all stocks": "Opinion sur toutes les valeurs",
-        "Avis sur valeur*": "Avis sur valeur*",
+        "Avis sur valeur*": "Avis sur toutes les valeurs",
         "Access to all publications available on the platform": "Accès à toutes les publications disponibles sur la plateforme",
         "Corporate Access": "Accès corporate",
     }
