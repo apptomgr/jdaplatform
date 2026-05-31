@@ -408,7 +408,7 @@ def public_subscription_plans(request):
             'description': plan.description,
             'price_monthly': monthly_lookup.get(plan.name),
             'price_yearly': yearly_lookup.get(plan.name),
-            'currency': 'FCFA HT',
+            'currency': 'FCFA TTC',
             'is_popular': plan.name == 'Akwaba Gold',
             'subscribe_url': request.build_absolute_uri(f'/jdasubscriptions/select/{plan.id}/'),
             'features': features,

@@ -8,10 +8,10 @@ from django.db.models import Q
 # need an explicit mapping; identical names resolve via the .get() fallback.
 RESEARCH_TYPE_TO_FEATURE = {
     "Recommendation":             "Recommendations",
-    "IPO Analysis":               "IPO Review",
+    "IPO Analysis":               "IPO Analysis",
     "Quarterly Results":          "Quarterly Results Commentary",
-    "Half Year Results":          "Semi-annual Results Commentary",
-    "Annual Results":             "Annual Results Commentary",
+    "Half Year Results":          "Semi-annual Results",
+    "Annual Results":             "Annual Results",
     "Shareholder Meeting Feedback": "General Meetings Commentary",
     "Research Notes":             "Research Notes",
     "Economic Notes":             "Economic Notes",

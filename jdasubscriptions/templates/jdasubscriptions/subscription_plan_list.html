@@ -73,7 +73,7 @@
                     <p class="text-muted">{{ plan.description }}</p>
 
                     <h5 class="font-weight-bold mt-1">
-                        {{ plan.price_fcfa|floatformat:0 }} FCFA HT<span class="small">/{{ plan.billing_period }}</span>
+                        {{ plan.price_fcfa|floatformat:0 }} FCFA TTC<span class="small">/{{ plan.billing_period }}</span>
                     </h5>
 
                     <ul class="list-unstyled mt-1 flex-grow-1 mb-2">
@@ -82,9 +82,19 @@
                         <li class="text-dark">
                             <span class="text-success">✔</span> {{ feature.name|translate_feature }}
                             {% if feature.sub_items %}
-                            <ul class="list-unstyled mb-0 mt-1" style="padding-left: 1.25rem;">
+                            <ul class="list-unstyled mb-0 mt-1">
                                 {% for sub in feature.sub_items %}
-                                <li class="text-dark small"><span style="color: #17a2b8;">●</span> {{ sub|translate_feature }}</li>
+                                {% if sub in feature.sub_items_excluded %}
+                                <li style="padding-left:1.2rem; list-style:none;">
+                                    <span style="color:#dc3545;">&#9679;</span>
+                                    <span style="color:#6c757d; text-decoration:line-through;">{{ sub|translate_feature }}</span>
+                                </li>
+                                {% else %}
+                                <li style="padding-left:1.2rem; list-style:none;">
+                                    <span style="color:#0d6e6e;">&#9679;</span>
+                                    <span>{{ sub|translate_feature }}</span>
+                                </li>
+                                {% endif %}
                                 {% endfor %}
                             </ul>
                             {% endif %}
