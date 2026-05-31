@@ -18,7 +18,7 @@ FEATURE_TRANSLATIONS = {
         "Annual Results Commentary": "Commentaires des résultats annuels",
         "Annual Results": "Résultats annuels",
         "General Meetings Commentary": "Commentaires des assemblées générales",
-        "Stock Pitch": "Analyse de valeur",
+        "Stock Pitch": "Stock Pitch",
         "Analyst Access": "Accès analyste",
         "Research Notes": "Notes de recherche",
         "Economic Notes": "Notes économiques",
