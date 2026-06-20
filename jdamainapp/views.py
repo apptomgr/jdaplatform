@@ -31,6 +31,12 @@ def get_user_grp(request):
     return grp
 
 
+def welcome(request):
+    if request.user.is_authenticated:
+        return redirect('jdamainapp_home')
+    return render(request, 'jdamainapp/welcome.html')
+
+
 @login_required
 def jdamainapp_home(request):
     curr_lang_code = translation.get_language()

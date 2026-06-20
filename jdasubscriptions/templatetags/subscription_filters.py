@@ -11,7 +11,7 @@ FEATURE_TRANSLATIONS = {
         "Recommendations": "Recommandations",
         "Top 10 Buy": "Top 10 Achats",
         "Top 10 Sell": "Top 10 Ventes",
-        "Stock Opinion": "Opinion sur valeur",
+        "Stock Opinion": "Avis sur valeur",
         "Quarterly Results Commentary": "Commentaires des résultats trimestriels",
         "Semi-annual Results Commentary": "Commentaires des résultats semestriels",
         "Semi-annual Results": "Résultats semestriels",
@@ -22,8 +22,7 @@ FEATURE_TRANSLATIONS = {
         "Analyst Access": "Accès analyste",
         "Research Notes": "Notes de recherche",
         "Economic Notes": "Notes économiques",
-        "Opinion on all stocks": "Opinion sur toutes les valeurs",
-        "Avis sur valeur*": "Avis sur toutes les valeurs",
+        "Opinion on all stocks": "Avis sur toutes les valeurs",
         "Access to all publications available on the platform": "Accès à toutes les publications disponibles sur la plateforme",
         "Corporate Access": "Accès corporate",
     }
@@ -31,6 +30,10 @@ FEATURE_TRANSLATIONS = {
 
 
 @register.filter
-def translate_feature(value, language_code="fr"):
-    translations = FEATURE_TRANSLATIONS.get(language_code, {})
-    return translations.get(value, value)
+def translate_feature(value, language_code=None):
+    from django.utils.translation import get_language
+    lang = language_code or get_language() or 'en'
+    if lang.startswith('fr'):
+        translations = FEATURE_TRANSLATIONS.get('fr', {})
+        return translations.get(value, value)
+    return value

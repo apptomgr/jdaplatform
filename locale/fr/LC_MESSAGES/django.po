@@ -190,6 +190,30 @@ msgstr "Nouveau sur le site JDA? Inscrivez vous"
 msgid "Register"
 msgstr "S'inscrire"
 
+msgid "New to JDA?"
+msgstr "Nouveau sur JDA ?"
+
+msgid "or"
+msgstr "ou"
+
+msgid "Your gateway to financial research"
+msgstr "Votre portail vers la recherche financière"
+
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+msgid "Sign in to access your research publications"
+msgstr "Connectez-vous pour accéder à vos publications de recherche"
+
+msgid "Sign In"
+msgstr "Se connecter"
+
+msgid "Explore our research plans and subscribe"
+msgstr "Découvrez nos offres de recherche et abonnez-vous"
+
+msgid "Subscribe"
+msgstr "S'abonner"
+
 #: accounts/templates/registration/login.html:83
 #: accounts/templates/registration/register.html:103
 #: accounts/templates/registration/signup.html:77
@@ -220,6 +244,21 @@ msgstr "Publications"
 #: accounts/templates/registration/signup.html:48
 msgid "Create an account"
 msgstr "Créer mon compte"
+
+msgid "First Name"
+msgstr "Prénom"
+
+msgid "Last Name"
+msgstr "Nom"
+
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+msgid "Registration"
+msgstr "Inscription"
+
+msgid "Already registered?"
+msgstr "Déjà inscrit ?"
 
 #: jdaanalyticsapp/forms.py:12 jdadev/forms.py:16
 #, python-format
@@ -1581,6 +1620,108 @@ msgstr "Société"
 msgid "Expand"
 msgstr "Agrandir"
 
+msgid "Verify Your Email"
+msgstr "Vérifiez votre e-mail"
+
+msgid "A verification email has been sent to"
+msgstr "Un e-mail de vérification a été envoyé à"
+
+msgid "Please check your inbox to activate your account."
+msgstr "Veuillez vérifier votre boîte de réception pour activer votre compte."
+
+msgid "Didn't receive the email? Check your spam folder or click below to resend."
+msgstr "Vous n'avez pas reçu l'e-mail ? Vérifiez votre dossier spam ou cliquez ci-dessous pour renvoyer."
+
+msgid "Resend Verification Email"
+msgstr "Renvoyer l'e-mail de vérification"
+
+msgid "Email Verified!"
+msgstr "E-mail vérifié !"
+
+msgid "Your account has been activated. You can now log in."
+msgstr "Votre compte a été activé. Vous pouvez maintenant vous connecter."
+
+msgid "Verification Failed"
+msgstr "Échec de la vérification"
+
+msgid "This verification link is invalid or has expired."
+msgstr "Ce lien de vérification est invalide ou a expiré."
+
+msgid "This verification link is invalid, has expired, or has already been used."
+msgstr "Ce lien de vérification est invalide, a expiré ou a déjà été utilisé."
+
+msgid "Activate your JDA Platform account"
+msgstr "Activez votre compte JDA Platform"
+
+msgid "Your account is not yet verified. Please check your email for the verification link."
+msgstr "Votre compte n'est pas encore vérifié. Veuillez vérifier votre e-mail pour le lien de vérification."
+
+msgid "Resend verification email"
+msgstr "Renvoyer l'e-mail de vérification"
+
+msgid "If an account exists with that email, a new verification link has been sent."
+msgstr "Si un compte existe avec cet e-mail, un nouveau lien de vérification a été envoyé."
+
+msgid "Please fix the following errors:"
+msgstr "Veuillez corriger les erreurs suivantes :"
+
+msgid "This account is already active."
+msgstr "Ce compte est déjà actif."
+
+msgid "Please login."
+msgstr "Veuillez vous connecter."
+
+msgid "seconds..."
+msgstr "secondes..."
+
+msgid "I've verified my email"
+msgstr "J'ai vérifié mon e-mail"
+
+msgid "Your email has been verified. Please log in."
+msgstr "Votre e-mail a été vérifié. Veuillez vous connecter."
+
+msgid "Your email has not been verified yet. Please check your inbox."
+msgstr "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre boîte de réception."
+
+msgid "Your email has been verified! Please choose a plan to get started."
+msgstr "Votre e-mail a été vérifié ! Veuillez choisir une offre pour commencer."
+
+msgid "Your email has been verified! Please log in to continue."
+msgstr "Votre e-mail a été vérifié ! Veuillez vous connecter pour continuer."
+
+msgid "View Plans & Subscribe"
+msgstr "Voir les offres et s'abonner"
+
+msgid "You will be redirected to our subscription plans in"
+msgstr "Vous serez redirigé vers nos offres d'abonnement dans"
+
+msgid "Quarterly"
+msgstr "Trimestriel"
+
+msgid "Monthly"
+msgstr "Mensuel"
+
+msgid "Yearly"
+msgstr "Annuel"
+
+msgid "Individual Investor"
+msgstr "Investisseur Individuel"
+
+msgid "Institutional Investor"
+msgstr "Investisseur Institutionnel"
+
+msgid "Choose Your Subscription Plan"
+msgstr "Choisissez votre offre d'abonnement"
+
+msgid "You need an active subscription to access publications."
+msgstr "Vous avez besoin d'un abonnement actif pour accéder aux publications."
+
+msgid "Select Plan"
+msgstr "Sélectionner"
+
+msgid "Most Popular"
+msgstr "Le plus populaire"
+
 #, fuzzy
 #~| msgid "Group"
 #~ msgid "Group Name"
@@ -1615,8 +1756,6 @@ msgstr "Agrandir"
 #~ msgid "Address"
 #~ msgstr "Adresse"
 
-#~ msgid "Phone Number"
-#~ msgstr "Téléphone"
 
 #~ msgid "Fax Number"
 #~ msgstr "Télécopie"

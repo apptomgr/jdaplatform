@@ -32,7 +32,7 @@ class PublicationAdminsForm(forms.ModelForm):
         #('Weekly comments', ugettext_lazy('Weekly comments')),
         ('Recommendation', 'Recommendation'),
         ('Stock Pitch', 'Stock Pitch'),
-        ('Avis sur toutes les valeurs', 'Avis sur toutes les valeurs'),
+        ('Opinion on all stocks', 'Opinion on all stocks'),
         #('Investment Case', 'Investment Case')
     )
 
@@ -92,7 +92,7 @@ class PublicationFilterForm(forms.ModelForm):
         #('Weekly comments', ugettext_lazy('Weekly comments')),
         ('Recommendation', 'Recommendation'),
         ('Stock Pitch', 'Stock Pitch'),
-        ('Avis sur toutes les valeurs', 'Avis sur toutes les valeurs'),
+        ('Opinion on all stocks', 'Opinion on all stocks'),
         #('Investment Case', 'Investment Case')
     )
 

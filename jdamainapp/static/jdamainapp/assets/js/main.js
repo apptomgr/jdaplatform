@@ -72,6 +72,10 @@
       class: 'mobile-nav d-lg-none'
     });
     $('body').append($mobile_nav);
+    $('.mobile-nav form[action*="logout"]').replaceWith(
+      '<a href="#" onclick="event.preventDefault(); document.getElementById(\'logout-form\').submit();" style="display:block;padding:10px 20px;font-size:14px;font-weight:500;color:#165a64;text-decoration:none;" onmouseover="this.style.color=\'#3ec1d5\'" onmouseout="this.style.color=\'#165a64\'">' +
+      '<i class="fas fa-sign-out-alt"></i> Logout</a>'
+    );
     $('body').prepend('<button type="button" class="mobile-nav-toggle d-lg-none"><i class="icofont-navigation-menu"></i></button>');
     $('body').append('<div class="mobile-nav-overly"></div>');
 

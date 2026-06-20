@@ -168,7 +168,7 @@
                         {% endif %}
                         <li><hr class="my_hr_divider"></li>
                         <li>
-                            <form method="post" action="{% url 'logout' %}" style="margin:0;padding:0;">
+                            <form id="logout-form" method="post" action="{% url 'logout' %}" style="margin:0;padding:0;">
                                 {% csrf_token %}
                                 <button type="submit"
                                     style="background:none;border:none;margin:0;cursor:pointer;display:block;width:100%;text-align:left;padding:10px 20px;font-size:14px;font-weight:500;color:#165a64;text-transform:none;font-family:inherit;"

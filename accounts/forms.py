@@ -1,17 +1,54 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Profile
-#from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.urls import reverse_lazy
 from django.contrib.auth.models import Group
 
 
+class CustomAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            existing = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = (existing + ' form-control').strip()
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        if username is not None and password:
+            try:
+                candidate = User.objects.get(username=username)
+                if not candidate.is_active and candidate.check_password(password):
+                    resend_url = reverse_lazy('resend_verification')
+                    raise forms.ValidationError(
+                        mark_safe(
+                            str(_('Your account is not yet verified. Please check your email for the verification link.'))
+                            + f' <a href="{resend_url}">' + str(_('Resend verification email')) + '</a>'
+                        ),
+                        code='inactive',
+                    )
+            except User.DoesNotExist:
+                pass
+        return super().clean()
+
+
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder':'Email'}))
+    first_name = forms.CharField(max_length=150, required=True, label=_("First Name"),
+        widget=forms.TextInput(attrs={'placeholder': _('First Name')}))
+    last_name = forms.CharField(max_length=150, required=True, label=_("Last Name"),
+        widget=forms.TextInput(attrs={'placeholder': _('Last Name')}))
+    phone_number = forms.CharField(max_length=20, required=False, label=_("Phone Number"),
+        widget=forms.TextInput(attrs={'placeholder': _('Phone Number')}))
+    email = forms.EmailField(required=True, label=_('Email'),
+        widget=forms.EmailInput(attrs={'placeholder': _('Email')}))
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'phone_number',
+                  'email', 'username', 'password1', 'password2']
 
 
 # Create a UserUpdateForm to update username and email

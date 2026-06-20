@@ -181,7 +181,6 @@ def paystack_callback(request):
 
 
 #//////////////////////////////////////subscription_plan_list/////////////////////////////////////////////////
-@login_required
 def subscription_plan_list(request):
     plan_type = request.GET.get("plan_type", "customer")
     billing_period = request.GET.get("billing_period", "monthly")

@@ -15,9 +15,15 @@ from django.core.management.utils import get_random_secret_key
 
 import os
 import sys
+import ssl
+import certifi
 import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Fix SSL certificate verification on macOS with Python's bundled certs
+os.environ.setdefault('SSL_CERT_FILE', certifi.where())
+ssl._create_default_https_context = ssl.create_default_context
 #from django.utils.translation import gettext_lazy as _
 from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
@@ -37,7 +43,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 #DEBUG = True
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
@@ -258,6 +264,15 @@ MESSAGE_TAGS = {
 }
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Email Configuration (SendGrid)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@platform.jda-ci.com')
 
 
 PAYSTACK_PUBLIC_KEY = os.getenv("PAYSTACK_PUBLIC_KEY")

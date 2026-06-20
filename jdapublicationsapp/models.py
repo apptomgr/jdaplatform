@@ -42,7 +42,7 @@ class PublicationModel(models.Model):
         ('Economic Notes', 'Economic Notes'),
         ('Recommendation', 'Recommendation'),
         ('Stock Pitch', 'Stock Pitch'),
-        ('Avis sur toutes les valeurs', 'Avis sur toutes les valeurs'),
+        ('Opinion on all stocks', 'Opinion on all stocks'),
         #('Investment Case', 'Investment Case')
     )
 

@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
@@ -11,6 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  #, related_name='profile')
     #group = models.ForeignKey(Group, on_delete=models.CASCADE)
     logo = models.ImageField(default='default.jpg', upload_to='profile_logo')
+    phone_number = models.CharField(max_length=20, blank=True, default='')
 
     def __str__(self):
         return f'{self.user} profile'
@@ -37,6 +39,17 @@ class Profile(models.Model):
     #         output_size = (70, 70)
     #         img.thumbnail(output_size)  # Resize image
     #         img.save(self.logo.path)  # Save it again and override the larger image
+
+
+class EmailVerificationToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                related_name='email_verification')
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        from django.utils import timezone
+        return (timezone.now() - self.created_at).total_seconds() > 48 * 3600
 
 
 class UserGroups(models.Model):

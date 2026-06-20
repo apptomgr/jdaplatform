@@ -1,0 +1,46 @@
+{% extends 'jdamainapp/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mt-5">
+    <div class="col-lg-5 col-md-7 col-sm-12">
+        <div class="card shadow-sm p-4 bg-white rounded text-center">
+            <div class="mb-3">
+                <i class="fa fa-check-circle fa-3x my_info_txt"></i>
+            </div>
+            <h4 class="font-weight-bold mb-3">{% trans "Email Verified!" %}</h4>
+            <p class="text-muted">{% trans "Your account has been activated. You can now log in." %}</p>
+            <p class="text-muted" style="font-size:0.85rem;">
+                {% trans 'You will be redirected to our subscription plans in' %}
+                <span id="countdown">5</span>
+                {% trans 'seconds...' %}
+            </p>
+            <div class="text-center mt-3">
+                <a href="{% url 'jdasubscriptions:subscription_plan_list' %}"
+                   class="btn btn-info btn-block mb-2"
+                   style="max-width:300px; margin:0 auto;">
+                    {% trans 'View Plans & Subscribe' %}
+                </a>
+                <a href="{% url 'login' %}"
+                   class="btn btn-outline-secondary btn-block"
+                   style="max-width:300px; margin:0 auto;">
+                    {% trans 'Login' %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var seconds = 5;
+    var countdown = document.getElementById('countdown');
+    var timer = setInterval(function() {
+        seconds--;
+        countdown.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(timer);
+            window.location.href = "{% url 'jdasubscriptions:subscription_plan_list' %}";
+        }
+    }, 1000);
+</script>
+{% endblock %}

@@ -1,5 +1,6 @@
 {% extends "jdamainapp/base.html" %}
 {% load subscription_filters %}
+{% load i18n %}
 {% block content %}
 
 <div class="container py-5" id="plan-root">
@@ -16,9 +17,9 @@
 
     <!-- Title -->
     <div class="text-center mb-4">
-        <h3 class="font-weight-bold">Choose Your Subscription Plan</h3>
+        <h3 class="font-weight-bold">{% trans "Choose Your Subscription Plan" %}</h3>
         <p class="text-muted">
-            You need an active subscription to access publications.
+            {% trans "You need an active subscription to access publications." %}
         </p>
     </div>
 
@@ -27,11 +28,11 @@
         <div class="btn-group">
             <a href="?plan_type=customer&billing_period={{ billing_period }}"
                class="btn {% if plan_type == 'customer' %}btn-info{% else %}btn-outline-secondary{% endif %}">
-                Customer
+                {% trans "Individual Investor" %}
             </a>
             <a href="?plan_type=institution&billing_period={{ billing_period }}"
                class="btn {% if plan_type == 'institution' %}btn-info{% else %}btn-outline-secondary{% endif %}">
-                Institution
+                {% trans "Institutional Investor" %}
             </a>
         </div>
     </div>
@@ -41,17 +42,15 @@
         <div class="btn-group">
             <a href="?plan_type={{ plan_type }}&billing_period=monthly"
                class="btn btn-sm {% if billing_period == 'monthly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
-                Monthly
+                {% trans "Monthly" %}
             </a>
-            {% if plan_type == 'institution' %}
             <a href="?plan_type={{ plan_type }}&billing_period=quarterly"
                class="btn btn-sm {% if billing_period == 'quarterly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
-                Quarterly
+                {% trans "Quarterly" %}
             </a>
-            {% endif %}
             <a href="?plan_type={{ plan_type }}&billing_period=yearly"
                class="btn btn-sm {% if billing_period == 'yearly' %}btn-info{% else %}btn-outline-secondary{% endif %}">
-                Yearly
+                {% trans "Yearly" %}
             </a>
         </div>
     </div>
@@ -63,8 +62,8 @@
             <div class="card shadow-sm h-100 w-100">
                 <div class="card-body d-flex flex-column">
 
-                    {% if plan.code == "akwaba_gold_monthly" or plan.code == "akwaba_gold_yearly" %}
-                    <span class="badge rounded-pill badge-info mb-2">Most Popular</span>
+                    {% if "akwaba_gold" in plan.code %}
+                    <span class="badge rounded-pill badge-info mb-2">{% trans "Most Popular" %}</span>
                     {% else %}
                     <div style="height: 18px;"></div>
                     {% endif %}
@@ -107,6 +106,7 @@
                         {% endfor %}
                     </ul>
 
+                    {% if user.is_authenticated %}
                     <button type="button"
                             class="btn btn-outline-info btn-block mt-auto"
                             onclick="openConfirmModal(
@@ -114,8 +114,14 @@
                                 '{{ plan.name }}',
                                 '{{ plan.price_fcfa|floatformat:0 }} FCFA / {{ plan.billing_period }}'
                             )">
-                        Select Plan
+                        {% trans "Select Plan" %}
                     </button>
+                    {% else %}
+                    <a href="{% url 'register' %}?next={% url 'jdasubscriptions:select_subscription_plan' plan.id %}"
+                       class="btn btn-outline-info btn-block mt-auto">
+                        {% trans "Select Plan" %}
+                    </a>
+                    {% endif %}
 
                 </div>
             </div>

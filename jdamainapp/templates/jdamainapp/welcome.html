@@ -1,0 +1,66 @@
+{% extends 'jdamainapp/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+<style type="text/css">
+    .bg-cover {
+        background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
+    }
+    .welcome-card {
+        height: 100%;
+    }
+</style>
+
+<div class="jumbotron bg-cover">
+    <div class="overlay"></div>
+
+    <div class="text-white text-center py-4">
+        <h2 class="font-bold mb-1">
+            <strong class="my_info_txt">J&D </strong><strong class="text-white">Platform</strong>
+        </h2>
+        <p class="text-white-50 mb-4">{% trans 'Your gateway to financial research' %}</p>
+
+        <div class="row justify-content-center align-items-stretch">
+
+            <!-- Sign In card -->
+            <div class="col-md-4 col-sm-10 col-xs-12 mb-3 px-2">
+                <div class="card shadow-sm bg-white rounded welcome-card">
+                    <div class="card-header text-muted text-center">
+                        {% trans 'Already have an account?' %}
+                    </div>
+                    <div class="card-body text-center d-flex flex-column justify-content-between">
+                        <p class="text-muted mb-3">
+                            {% trans 'Sign in to access your research publications' %}
+                        </p>
+                        <a href="{% url 'login' %}" class="btn btn-info btn-block">
+                            {% trans 'Sign In' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscribe card -->
+            <div class="col-md-4 col-sm-10 col-xs-12 mb-3 px-2">
+                <div class="card shadow-sm bg-white rounded welcome-card">
+                    <div class="card-header text-muted text-center">
+                        {% trans 'New to JDA?' %}
+                    </div>
+                    <div class="card-body text-center d-flex flex-column justify-content-between">
+                        <p class="text-muted mb-3">
+                            {% trans 'Explore our research plans and subscribe' %}
+                        </p>
+                        <a href="{% url 'jdasubscriptions:subscription_plan_list' %}"
+                           class="btn btn-outline-info btn-block">
+                            {% trans 'Subscribe' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,13 +1,19 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .forms import CustomAuthenticationForm
 
 urlpatterns = [
 
     path('register/', views.register, name='register'),
     # path('register/', views.signup, name='register'),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', auth_views.LoginView.as_view(authentication_form=CustomAuthenticationForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('verify/<uuid:token>/', views.verify_email, name='verify_email'),
+    path('verification-sent/', views.verification_sent, name='verification_sent'),
+    path('resend-verification/', views.resend_verification, name='resend_verification'),
+    path('check-verification/', views.check_verification, name='check_verification'),
     path('profile/',views.profile, name='profile'),
     path('profile_edit/',views.profile_edit, name='profile_edit'),
     path('account_admin/',views.account_admin, name='account_admin'),

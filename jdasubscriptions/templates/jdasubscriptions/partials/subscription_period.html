@@ -10,6 +10,14 @@
 
     <button class="btn btn-outline-secondary btn-sm"
             hx-get="{% url 'jdasubscriptions:customer_plan_toggle' %}"
+            hx-vals='{"billing_period":"quarterly"}'
+            hx-target="#customer-plan-grid"
+            hx-swap="innerHTML">
+      Quarterly
+    </button>
+
+    <button class="btn btn-outline-secondary btn-sm"
+            hx-get="{% url 'jdasubscriptions:customer_plan_toggle' %}"
             hx-vals='{"billing_period":"yearly"}'
             hx-target="#customer-plan-grid"
             hx-swap="innerHTML">

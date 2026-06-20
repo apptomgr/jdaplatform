@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=4.0, user-scalable=yes">
     <title>{{ publication.title|default:"Document Viewer" }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            overflow: auto;
             background: #2c2c2c;
         }
 
@@ -50,6 +50,8 @@
         #canvas-container {
             flex: 1;
             overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x pan-y pinch-zoom;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -61,6 +63,7 @@
             background: white;
             max-width: 100%;
             height: auto;
+            touch-action: pinch-zoom;
         }
 
         /* Mobile responsiveness */
@@ -99,8 +102,8 @@
     <div id="controls">
         <button id="prev-page">← Previous</button>
         <button id="next-page">Next →</button>
-        <button id="zoom-out">−</button>
-        <button id="zoom-in">+</button>
+        <button id="zoom-out">－</button>
+        <button id="zoom-in">＋</button>
         <button id="fit-width">Fit Width</button>
 
         {% if request.user.is_staff or request.user.is_superuser %}
@@ -214,17 +217,15 @@
         });
 
         // Zoom controls
-        document.getElementById('zoom-in').addEventListener('click', () => {
+        document.getElementById('zoom-in').addEventListener('click', function() {
             autoFitWidth = false;
-            currentScale *= 1.2;
-            if (currentScale > 5) currentScale = 5; // Max zoom
+            currentScale = Math.min(currentScale + 0.25, 4.0);
             renderPage(currentPage);
         });
 
-        document.getElementById('zoom-out').addEventListener('click', () => {
+        document.getElementById('zoom-out').addEventListener('click', function() {
             autoFitWidth = false;
-            currentScale *= 0.8;
-            if (currentScale < 0.3) currentScale = 0.3; // Min zoom
+            currentScale = Math.max(currentScale - 0.25, 0.5);
             renderPage(currentPage);
         });
 
@@ -244,41 +245,7 @@
             }, 250);
         });
 
-        // Touch gestures for mobile (optional - for pinch zoom)
-        let touchStartDistance = 0;
-        canvas.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                e.preventDefault();
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                touchStartDistance = Math.hypot(
-                    touch2.pageX - touch1.pageX,
-                    touch2.pageY - touch1.pageY
-                );
-            }
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2) {
-                e.preventDefault();
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                const touchDistance = Math.hypot(
-                    touch2.pageX - touch1.pageX,
-                    touch2.pageY - touch1.pageY
-                );
-
-                if (touchStartDistance > 0) {
-                    const scaleDelta = touchDistance / touchStartDistance;
-                    autoFitWidth = false;
-                    currentScale *= scaleDelta;
-                    if (currentScale > 5) currentScale = 5;
-                    if (currentScale < 0.3) currentScale = 0.3;
-                    renderPage(currentPage);
-                    touchStartDistance = touchDistance;
-                }
-            }
-        });
+        // Native browser pinch-to-zoom — no custom touch handlers needed.
     </script>
 </body>
 </html>

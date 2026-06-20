@@ -3,14 +3,20 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, AccountAdminForm, AccountAdminUpdateForm, GroupUpdateForm, GroupAddForm
 from django.contrib.auth.models import User
-# from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from accounts .decorators import allowed_users
+from accounts.decorators import allowed_users
 from datetime import datetime
 from django.db.models import Count
 from django.http import HttpResponseBadRequest
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
+from django.urls import reverse
+from .models import EmailVerificationToken
 #from .models import SubscriptionPlan
 
 
@@ -20,9 +26,11 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # Add new created user to a default group
-            #print(f"35 - Fresh user: {user}")
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            user.profile.phone_number = form.cleaned_data.get('phone_number', '')
+            user.profile.save()
             try:
                 customer_grp = Group.objects.get(name='customers')
                 customer_grp.user_set.add(user)
@@ -32,17 +40,123 @@ def register(request):
                     'Account created but group assignment failed. '
                     'Please contact us at info@jda-ci.com'
                 )
-            #username = form.cleaned_data.get('username')
-            auth_login(request, user)
-            messages.success(request, 'Your account has been successfully created.')
-            return redirect('jdamainapp_home')
-            #messages.success(request, f'Your account has been created! You are now able to log in')
-            #return redirect('login')
+            token = EmailVerificationToken.objects.create(user=user)
+            verification_url = request.build_absolute_uri(
+                reverse('verify_email', args=[token.token])
+            )
+            html_message = render_to_string('registration/verification_email.html', {
+                'user': user,
+                'verification_url': verification_url,
+            })
+            send_mail(
+                subject=_('Activate your JDA Platform account'),
+                message=strip_tags(html_message),
+                from_email=None,
+                recipient_list=[user.email],
+                html_message=html_message,
+                fail_silently=True,
+            )
+            request.session['pending_verification_email'] = user.email
+            request.session['pending_verification_username'] = user.username
+            request.session['next_after_verification'] = request.GET.get('next', '')
+            return redirect('verification_sent')
     else:
         form = UserRegisterForm()
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+
+def verification_sent(request):
+    email = request.session.get('pending_verification_email', '')
+    return render(request, 'registration/verification_sent.html', {'email': email})
+
+
+def verify_email(request, token):
+    try:
+        verification = EmailVerificationToken.objects.select_related('user').get(token=token)
+    except EmailVerificationToken.DoesNotExist:
+        return render(request, 'registration/verification_failed.html')
+
+    if verification.is_expired():
+        verification.delete()
+        return render(request, 'registration/verification_failed.html')
+
+    user = verification.user
+    user.is_active = True
+    user.save()
+    verification.delete()
+    next_url = request.session.pop('next_after_verification', None)
+    if next_url:
+        messages.success(request, _('Your email has been verified! Please log in to continue.'))
+        return redirect(f"{reverse('login')}?next={next_url}")
+    messages.success(request, _('Your email has been verified! Please choose a plan to get started.'))
+    return redirect('jdasubscriptions:subscription_plan_list')
+
+
+def check_verification(request):
+    username = request.session.get('pending_verification_username')
+    if username:
+        try:
+            user = User.objects.get(username=username)
+            if user.is_active:
+                del request.session['pending_verification_username']
+                next_url = request.session.pop('next_after_verification', None)
+                if next_url:
+                    messages.success(request, _('Your email has been verified! Please log in to continue.'))
+                    return redirect(f"{reverse('login')}?next={next_url}")
+                messages.success(request, _('Your email has been verified! Please choose a plan to get started.'))
+                return redirect('jdasubscriptions:subscription_plan_list')
+            else:
+                messages.warning(request, _('Your email has not been verified yet. Please check your inbox.'))
+                return redirect('verification_sent')
+        except User.DoesNotExist:
+            pass
+    return redirect('login')
+
+
+def resend_verification(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        inactive_user = User.objects.filter(email=email, is_active=False).order_by('-date_joined').first()
+        if inactive_user:
+            EmailVerificationToken.objects.filter(user=inactive_user).delete()
+            token = EmailVerificationToken.objects.create(user=inactive_user)
+            verification_url = request.build_absolute_uri(
+                reverse('verify_email', args=[token.token])
+            )
+            html_message = render_to_string('registration/verification_email.html', {
+                'user': inactive_user,
+                'verification_url': verification_url,
+            })
+            send_mail(
+                subject=_('Activate your JDA Platform account'),
+                message=strip_tags(html_message),
+                from_email=None,
+                recipient_list=[inactive_user.email],
+                html_message=html_message,
+                fail_silently=True,
+            )
+            messages.success(
+                request,
+                _('If an account exists with that email, a new verification link has been sent.')
+            )
+        elif User.objects.filter(email=email, is_active=True).exists():
+            login_url = reverse('login')
+            messages.info(
+                request,
+                mark_safe(
+                    str(_('This account is already active.'))
+                    + f' <a href="{login_url}">' + str(_('Please login.')) + '</a>'
+                )
+            )
+        else:
+            messages.success(
+                request,
+                _('If an account exists with that email, a new verification link has been sent.')
+            )
+        return redirect('resend_verification')
+    return render(request, 'registration/resend_verification.html')
 
 
 # profile

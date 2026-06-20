@@ -46,8 +46,23 @@
     .bg-cover {
         background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
     }
-
-
+    .form-group { margin-bottom: 0.4rem !important; padding-bottom: 0 !important; }
+    .help-block, .form-text, [id^="hint_"] {
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    small.text-muted {
+        font-size: 0.8rem !important;
+        color: #495057 !important;
+        line-height: 1.4 !important;
+    }
+    .card-body { padding: 0.75rem !important; }
+    .input-group-text {
+        min-width: 42px;
+        justify-content: center;
+    }
 </style>
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
@@ -64,22 +79,77 @@
         <div class="row justify-content-center align-items-center">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 p3">
                 <div class="card shadow-sm p-2 mt-0 mb-2 bg-white rounded">
-                    <div class="card-header shadown p3 text-muted text-center mb-0">Registration</div>
-                    <div class="mt-0 ml-2 mr-2 mb-2">
+                    <div class="card-header shadown p3 text-muted text-center mb-0" style="font-size: 1rem;">{% trans 'Registration' %}</div>
+                    <div class="mt-0 ml-2 mr-2 mb-2" style="padding: 0.75rem !important;">
+                        {% if form.errors %}
+                        <div class="alert alert-danger" style="font-size:0.9rem;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <strong>{% trans 'Please fix the following errors:' %}</strong>
+                            <ul style="margin-bottom:0; padding-left:1.2rem;">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
                         <form method="post" novalidate class="text-left">
                             {% csrf_token %}
-                            {{form | crispy}}
+                            {% for field in form %}
+                            <div style="margin-bottom: 0.5rem;">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="background:#f8f9fa; border-right:none;">
+                                            {% if field.name == 'first_name' or field.name == 'last_name' %}
+                                                <i class="fas fa-user text-info"></i>
+                                            {% elif field.name == 'phone_number' %}
+                                                <i class="fas fa-phone text-info"></i>
+                                            {% elif field.name == 'email' %}
+                                                <i class="fas fa-envelope text-info"></i>
+                                            {% elif field.name == 'username' %}
+                                                <i class="fas fa-tag text-info"></i>
+                                            {% elif field.name == 'password1' or field.name == 'password2' %}
+                                                <i class="fas fa-lock text-info"></i>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                <small class="text-muted" style="font-size:0.8rem; color:#495057 !important; line-height:1.4; display:block;">
+                                    {{ field.help_text|safe }}
+                                </small>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                <small class="text-danger" style="font-size:0.75rem;">{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
                             <div class="text-center mt-3">
-                                <button type="submit" class="btn btn-sm btn-info">{% trans 'Create an account' %}
-                                </button>
+                                <button type="submit" class="btn btn-sm btn-info">{% trans 'Create an account' %}</button>
                             </div>
                         </form>
+
+                        <!-- Divider -->
+                        <div class="text-center my-3">
+                            <span style="display:inline-block; width:30%; border-top:1px solid #ccc; vertical-align:middle;"></span>
+                            <span style="color:#6c757d; padding:0 10px; vertical-align:middle;">{% trans 'or' %}</span>
+                            <span style="display:inline-block; width:30%; border-top:1px solid #ccc; vertical-align:middle;"></span>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <p style="color:#6c757d; margin-bottom:10px;">{% trans 'Already registered?' %}</p>
+                            <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}"
+                               class="btn btn-outline-info"
+                               style="max-width:200px; margin:0 auto;">
+                                {% trans 'Login' %}
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer shadown p3 text-muted text-center mb-5">
-                    <span class="text-white">Already registered?</span>
-                    <br>
-                    <a href="{% url 'login' %}"><span class="text-info">Login</span></a>
                 </div>
             </div>
         </div>
