@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.conf import settings
 from .models import EmailVerificationToken
 #from .models import SubscriptionPlan
 
@@ -41,9 +42,7 @@ def register(request):
                     'Please contact us at info@jda-ci.com'
                 )
             token = EmailVerificationToken.objects.create(user=user)
-            verification_url = request.build_absolute_uri(
-                reverse('verify_email', args=[token.token])
-            )
+            verification_url = f"{settings.SITE_URL}{reverse('verify_email', args=[token.token])}"
             html_message = render_to_string('registration/verification_email.html', {
                 'user': user,
                 'verification_url': verification_url,
@@ -122,9 +121,7 @@ def resend_verification(request):
         if inactive_user:
             EmailVerificationToken.objects.filter(user=inactive_user).delete()
             token = EmailVerificationToken.objects.create(user=inactive_user)
-            verification_url = request.build_absolute_uri(
-                reverse('verify_email', args=[token.token])
-            )
+            verification_url = f"{settings.SITE_URL}{reverse('verify_email', args=[token.token])}"
             html_message = render_to_string('registration/verification_email.html', {
                 'user': inactive_user,
                 'verification_url': verification_url,
