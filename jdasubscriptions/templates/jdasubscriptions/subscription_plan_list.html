@@ -85,8 +85,8 @@
                                 {% for sub in feature.sub_items %}
                                 {% if sub in feature.sub_items_excluded %}
                                 <li style="padding-left:1.2rem; list-style:none;">
-                                    <span style="color:#dc3545;">&#9679;</span>
-                                    <span style="color:#6c757d; text-decoration:line-through;">{{ sub|translate_feature }}</span>
+                                    <span class="text-danger">✖</span>
+                                    <span style="color:#6c757d;">{{ sub|translate_feature }}</span>
                                 </li>
                                 {% else %}
                                 <li style="padding-left:1.2rem; list-style:none;">
