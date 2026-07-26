@@ -396,6 +396,12 @@ def public_subscription_plans(request):
             plan_type=plan_type, billing_period='monthly', is_active=True
         )
     }
+    quarterly_lookup = {
+        p.name: float(p.price_fcfa)
+        for p in SubscriptionPlan.objects.filter(
+            plan_type=plan_type, billing_period='quarterly', is_active=True
+        )
+    }
 
     result = []
     for plan in plans:
@@ -406,6 +412,7 @@ def public_subscription_plans(request):
             'name': plan.name,
             'description': plan.description,
             'price_monthly': monthly_lookup.get(plan.name),
+            'price_quarterly': quarterly_lookup.get(plan.name),
             'price_yearly': yearly_lookup.get(plan.name),
             'currency': 'FCFA TTC',
             'is_popular': plan.name == 'Akwaba Gold',
