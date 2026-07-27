@@ -46,6 +46,7 @@ class EmailVerificationToken(models.Model):
                                 related_name='email_verification')
     token = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    next_url = models.CharField(max_length=255, null=True, blank=True)
 
     def is_expired(self):
         from django.utils import timezone

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-15 11:11-0400\n"
+"POT-Creation-Date: 2026-07-27 15:10-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,6 +25,37 @@ msgid ""
 msgstr ""
 "vous n’êtes pas autorisé à accéder à cette page. Souhaitez-vous vous "
 "connecter avec un autre compte utilisateur?"
+
+#: accounts/forms.py:28
+msgid ""
+"Your account is not yet verified. Please check your email for the "
+"verification link."
+msgstr ""
+"Votre compte n'est pas encore vérifié. Veuillez vérifier votre e-mail pour "
+"le lien de vérification."
+
+#: accounts/forms.py:29
+msgid "Resend verification email"
+msgstr "Renvoyer l'e-mail de vérification"
+
+#: accounts/forms.py:39 accounts/forms.py:40
+msgid "First Name"
+msgstr "Prénom"
+
+#: accounts/forms.py:41 accounts/forms.py:42
+msgid "Last Name"
+msgstr "Nom"
+
+#: accounts/forms.py:43 accounts/forms.py:44
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+# msgid "Change Password"
+# msgstr "Modifier mot de passe"
+#: accounts/forms.py:45 accounts/forms.py:46
+#: accounts/templates/registration/admin_tasks.html:39
+msgid "Email"
+msgstr "Email"
 
 #: accounts/templates/registration/account_admin.html:22
 #: accounts/templates/registration/account_admin_update.html:21
@@ -45,8 +76,8 @@ msgid "Home"
 msgstr "Acceuil"
 
 #: accounts/templates/registration/account_admin.html:30
-#: jdamainapp/templates/jdamainapp/base.html:153
-#: jdamainapp/templates/jdamainapp/base.html:155
+#: jdamainapp/templates/jdamainapp/base.html:164
+#: jdamainapp/templates/jdamainapp/base.html:166
 msgid "Account Activation"
 msgstr "Activation de comptes"
 
@@ -72,7 +103,7 @@ msgstr "Modifier le nom d'utilisateur"
 #: accounts/templates/registration/admin_tasks_breadcrum.html:6
 #: accounts/templates/registration/admin_tasks_breadcrum.html:7
 #: accounts/templates/registration/admin_tasks_edit.html:27
-#: jdamainapp/templates/jdamainapp/base.html:152
+#: jdamainapp/templates/jdamainapp/base.html:163
 msgid "Admin Tasks"
 msgstr "Tâches administratives"
 
@@ -90,12 +121,6 @@ msgstr "Nom d'utilisateur"
 #| msgid "Change Password"
 msgid "Password"
 msgstr "Modifier mot de passe"
-
-# msgid "Change Password"
-# msgstr "Modifier mot de passe"
-#: accounts/templates/registration/admin_tasks.html:39
-msgid "Email"
-msgstr "Email"
 
 #: accounts/templates/registration/admin_tasks.html:40
 msgid "Group"
@@ -165,115 +190,212 @@ msgstr "Enregistrer"
 msgid "Admin tasks"
 msgstr "Tâches administratives"
 
-#: accounts/templates/registration/login.html:39
+#: accounts/templates/registration/login.html:42
 #: accounts/templates/registration/profile.html:38
 #: accounts/templates/registration/profile_edit.html:38
-#: accounts/templates/registration/register.html:60
+#: accounts/templates/registration/register.html:75
 #: accounts/templates/registration/signup.html:35
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:36
 msgid "Our Apps"
 msgstr "Nos Applications"
 
-#: accounts/templates/registration/login.html:45
-#: accounts/templates/registration/login.html:51
-#: jdamainapp/templates/jdamainapp/base.html:167
+#: accounts/templates/registration/login.html:48
+#: accounts/templates/registration/login.html:80
+#: accounts/templates/registration/register.html:149
+#: accounts/templates/registration/verification_success.html:27
+#: jdamainapp/templates/jdamainapp/base.html:187
 msgid "Login"
 msgstr "Connexion"
 
-#: accounts/templates/registration/login.html:58
-#, fuzzy
-#| msgid "New to JDA? Register for an account"
-msgid "New to JDA? XRegister for an account"
-msgstr "Nouveau sur le site JDA? Inscrivez vous"
-
-#: accounts/templates/registration/login.html:60
-msgid "Register"
-msgstr "S'inscrire"
-
-msgid "New to JDA?"
-msgstr "Nouveau sur JDA ?"
-
+#: accounts/templates/registration/login.html:87
+#: accounts/templates/registration/register.html:140
 msgid "or"
 msgstr "ou"
 
-msgid "Your gateway to financial research"
-msgstr "Votre portail vers la recherche financière"
+#: accounts/templates/registration/login.html:93
+#: jdamainapp/templates/jdamainapp/welcome.html:48
+msgid "New to JDA?"
+msgstr "Nouveau sur JDA ?"
 
-msgid "Already have an account?"
-msgstr "Vous avez déjà un compte ?"
+#: accounts/templates/registration/login.html:97
+msgid "Register"
+msgstr "S'inscrire"
 
-msgid "Sign in to access your research publications"
-msgstr "Connectez-vous pour accéder à vos publications de recherche"
-
-msgid "Sign In"
-msgstr "Se connecter"
-
-msgid "Explore our research plans and subscribe"
-msgstr "Découvrez nos offres de recherche et abonnez-vous"
-
-msgid "Subscribe"
-msgstr "S'abonner"
-
-#: accounts/templates/registration/login.html:83
-#: accounts/templates/registration/register.html:103
+#: accounts/templates/registration/login.html:123
+#: accounts/templates/registration/register.html:173
 #: accounts/templates/registration/signup.html:77
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_home.html:43
-#: jdamainapp/templates/jdamainapp/base.html:75
+#: jdamainapp/templates/jdamainapp/base.html:78
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:58
 msgid "Financials App"
 msgstr "App Financiére"
 
-#: accounts/templates/registration/login.html:97
-#: accounts/templates/registration/register.html:123
+#: accounts/templates/registration/login.html:137
+#: accounts/templates/registration/register.html:193
 #: accounts/templates/registration/signup.html:97
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:48
-#: jdamainapp/templates/jdamainapp/base.html:97
+#: jdamainapp/templates/jdamainapp/base.html:100
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:78
 msgid "Analytics App"
 msgstr "App Boursiére"
 
-#: accounts/templates/registration/login.html:112
-#: accounts/templates/registration/register.html:142
+#: accounts/templates/registration/login.html:152
+#: accounts/templates/registration/register.html:212
 #: accounts/templates/registration/signup.html:116
-#: jdamainapp/templates/jdamainapp/base.html:112
+#: jdamainapp/templates/jdamainapp/base.html:115
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:97
 msgid "Publications App"
 msgstr "Publications"
 
-#: accounts/templates/registration/register.html:73
+#: accounts/templates/registration/register.html:82
+msgid "Registration"
+msgstr "Inscription"
+
+#: accounts/templates/registration/register.html:87
+msgid "Please fix the following errors:"
+msgstr "Veuillez corriger les erreurs suivantes :"
+
+#: accounts/templates/registration/register.html:133
 #: accounts/templates/registration/signup.html:48
 msgid "Create an account"
 msgstr "Créer mon compte"
 
-msgid "First Name"
-msgstr "Prénom"
-
-msgid "Last Name"
-msgstr "Nom"
-
-msgid "Phone Number"
-msgstr "Numéro de téléphone"
-
-msgid "Registration"
-msgstr "Inscription"
-
+#: accounts/templates/registration/register.html:145
 msgid "Already registered?"
 msgstr "Déjà inscrit ?"
 
-#: jdaanalyticsapp/forms.py:12 jdadev/forms.py:16
+#: accounts/templates/registration/resend_verification.html:20
+#: accounts/templates/registration/verification_failed.html:15
+#: accounts/templates/registration/verification_sent.html:32
+msgid "Resend Verification Email"
+msgstr "Renvoyer l'e-mail de vérification"
+
+#: accounts/templates/registration/resend_verification.html:24
+msgid "Your email address"
+msgstr ""
+
+#: accounts/templates/registration/resend_verification.html:27
+msgid "Send"
+msgstr ""
+
+#: accounts/templates/registration/resend_verification.html:28
+#: accounts/templates/registration/verification_failed.html:18
+#: accounts/templates/registration/verification_sent.html:35
+msgid "Back to Login"
+msgstr "Retour à la connexion"
+
+#: accounts/templates/registration/verification_failed.html:11
+msgid "Verification Failed"
+msgstr "Échec de la vérification"
+
+#: accounts/templates/registration/verification_failed.html:12
+msgid ""
+"This verification link is invalid, has expired, or has already been used."
+msgstr "Ce lien de vérification est invalide, a expiré ou a déjà été utilisé."
+
+#: accounts/templates/registration/verification_sent.html:11
+msgid "Verify Your Email"
+msgstr "Vérifiez votre e-mail"
+
+#: accounts/templates/registration/verification_sent.html:13
+msgid "A verification email has been sent to"
+msgstr "Un e-mail de vérification a été envoyé à"
+
+#: accounts/templates/registration/verification_sent.html:15
+msgid "Please check your inbox to activate your account."
+msgstr "Veuillez vérifier votre boîte de réception pour activer votre compte."
+
+#: accounts/templates/registration/verification_sent.html:18
+msgid ""
+"Didn't receive the email? Check your spam folder or click below to resend."
+msgstr ""
+"Vous n'avez pas reçu l'e-mail ? Vérifiez votre dossier spam ou cliquez ci-"
+"dessous pour renvoyer."
+
+#: accounts/templates/registration/verification_sent.html:23
+msgid "Waiting for you to click the link in your email…"
+msgstr "En attente de votre clic sur le lien dans votre e-mail…"
+
+#: accounts/templates/registration/verification_sent.html:27
+msgid ""
+"Still waiting? You can resend the email below, or click 'I've verified my "
+"email' once you've activated your account."
+msgstr ""
+"Toujours en attente ? Vous pouvez renvoyer l'e-mail ci-dessous, ou cliquer "
+"sur « J'ai vérifié mon e-mail » une fois votre compte activé."
+
+#: accounts/templates/registration/verification_sent.html:40
+msgid "I've verified my email"
+msgstr "J'ai vérifié mon e-mail"
+
+#: accounts/templates/registration/verification_success.html:11
+msgid "Email Verified!"
+msgstr "E-mail vérifié !"
+
+#: accounts/templates/registration/verification_success.html:12
+msgid "Your account has been activated. You can now log in."
+msgstr "Votre compte a été activé. Vous pouvez maintenant vous connecter."
+
+#: accounts/templates/registration/verification_success.html:14
+msgid "You will be redirected to our subscription plans in"
+msgstr "Vous serez redirigé vers nos offres d'abonnement dans"
+
+#: accounts/templates/registration/verification_success.html:16
+msgid "seconds..."
+msgstr "secondes..."
+
+#: accounts/templates/registration/verification_success.html:22
+msgid "View Plans & Subscribe"
+msgstr "Voir les offres et s'abonner"
+
+#: accounts/views.py:52 accounts/views.py:179
+msgid "Activate your JDA Platform account"
+msgstr "Activez votre compte JDA Platform"
+
+#: accounts/views.py:97
+msgid "Your email has been verified! Please log in to continue."
+msgstr "Votre e-mail a été vérifié ! Veuillez vous connecter pour continuer."
+
+#: accounts/views.py:98
+msgid "Your email has been verified! Please choose a plan to get started."
+msgstr ""
+"Votre e-mail a été vérifié ! Veuillez choisir une offre pour commencer."
+
+#: accounts/views.py:159
+msgid "Your email has not been verified yet. Please check your inbox."
+msgstr ""
+"Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre boîte de "
+"réception."
+
+#: accounts/views.py:188 accounts/views.py:202
+msgid ""
+"If an account exists with that email, a new verification link has been sent."
+msgstr ""
+"Si un compte existe avec cet e-mail, un nouveau lien de vérification a été "
+"envoyé."
+
+#: accounts/views.py:195
+msgid "This account is already active."
+msgstr "Ce compte est déjà actif."
+
+#: accounts/views.py:196
+msgid "Please login."
+msgstr "Veuillez vous connecter."
+
+#: jdaanalyticsapp/forms.py:12 jdadev/forms.py:19
 #, python-format
 msgid "Invalid File Type: %(value)s"
 msgstr "Type de fichier invalide: %(value)s"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:6
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:69
-#: jdamainapp/templates/jdamainapp/base.html:102
+#: jdamainapp/templates/jdamainapp/base.html:105
 msgid "Market Data Upload"
 msgstr "Télécharger les données du marché"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_breadcrumbs.html:7
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:108
-#: jdamainapp/templates/jdamainapp/base.html:104
+#: jdamainapp/templates/jdamainapp/base.html:107
 msgid "Market Data Report"
 msgstr "Rapport des données du marché"
 
@@ -287,13 +409,13 @@ msgstr "Nos Donne&eacute;s de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:71
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:91
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:160
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:172
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:164
 msgid "Models"
 msgstr "Mod&eacute;les d'evaluation"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:72
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:169
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:181
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
 msgid "Newsletters"
 msgstr "Newsletters"
@@ -301,13 +423,13 @@ msgstr "Newsletters"
 # msgid "Newsletters"
 # msgstr "Note de Recherche"
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:178
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:190
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:187
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:199
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
 msgstr "Rapports"
@@ -403,7 +525,7 @@ msgstr "Valeur Transige"
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_sold.html:95
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:131
 #: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:104
-#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:97
+#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:100
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:62
 msgid "As of"
 msgstr "Le"
@@ -412,11 +534,11 @@ msgstr "Le"
 msgid "Market data upload"
 msgstr "Télécharger les données du marché"
 
-#: jdadev/forms.py:118
+#: jdadev/forms.py:159
 msgid "Asset Management Company"
 msgstr ""
 
-#: jdadev/forms.py:124
+#: jdadev/forms.py:165
 #, fuzzy
 #| msgid "Depository"
 msgid "Depositary"
@@ -493,7 +615,7 @@ msgstr ""
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:24
-#: jdamainapp/templates/jdamainapp/base.html:90
+#: jdamainapp/templates/jdamainapp/base.html:93
 msgid "Add Bond"
 msgstr "Ajouter une Obligation"
 
@@ -734,7 +856,6 @@ msgstr "Nombre d'actions à acheter"
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_sold.html:55
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:87
 #: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:57
-#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:56
 #, fuzzy
 #| msgid "Average Price"
 msgid "Net Purchase Price"
@@ -748,7 +869,6 @@ msgstr "Cours Moyen"
 #: jdadev/templates/jdadev/jdadev_simulation_mutual_fund_sold.html:56
 #: jdadev/templates/jdadev/jdadev_simulation_stock_buy.html:88
 #: jdadev/templates/jdadev/jdadev_simulation_stock_purchased.html:58
-#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:57
 msgid "Purchase Amount"
 msgstr "Montant de l'achat"
 
@@ -902,6 +1022,22 @@ msgstr "Etes-vous sûr que vous voulez supprimer"
 msgid "Stock Sale"
 msgstr "Type Action"
 
+#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:56
+msgid "Sale Proceeds"
+msgstr ""
+
+#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:57
+#, fuzzy
+#| msgid "Average Price"
+msgid "Net Selling Price"
+msgstr "Cours Moyen"
+
+#: jdadev/templates/jdadev/jdadev_simulation_stock_sold.html:58
+#, fuzzy
+#| msgid "Average Price"
+msgid "Net Sale Proceeds"
+msgstr "Cours Moyen"
+
 #: jdadev/templates/jdadev/jdadev_simulation_target_portfolio.html:40
 msgid "Target portfolio"
 msgstr "Portefeuille cible"
@@ -936,7 +1072,7 @@ msgstr "Liste des titres"
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_stock_security.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_security_listing.html:23
 #: jdafinancialsapp/templates/jdafinancialsapp/res.html:23
-#: jdamainapp/templates/jdamainapp/base.html:88
+#: jdamainapp/templates/jdamainapp/base.html:91
 msgid "Add Stock"
 msgstr "Ajouter une Action"
 
@@ -974,19 +1110,19 @@ msgid "Stock Info"
 msgstr "L'info de l'action"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:5
-#: jdamainapp/templates/jdamainapp/base.html:78
+#: jdamainapp/templates/jdamainapp/base.html:81
 msgid "Our Statements"
 msgstr "Etats Financiers"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:6
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_country.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_country.html:365
-#: jdamainapp/templates/jdamainapp/base.html:84
+#: jdamainapp/templates/jdamainapp/base.html:87
 msgid "Add Country"
 msgstr "Ajouter Pays"
 
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_breadcrumbs.html:7
-#: jdamainapp/templates/jdamainapp/base.html:86
+#: jdamainapp/templates/jdamainapp/base.html:89
 msgid "View Country"
 msgstr "Afficher les Pays"
 
@@ -1069,8 +1205,8 @@ msgstr "Modifier le Title"
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_edit_company.html:24
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:25
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_new_company.html:143
-#: jdamainapp/templates/jdamainapp/base.html:80
-#: jdamainapp/templates/jdamainapp/base.html:122
+#: jdamainapp/templates/jdamainapp/base.html:83
+#: jdamainapp/templates/jdamainapp/base.html:125
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:36
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_new_company.html:57
 msgid "Add Company"
@@ -1371,25 +1507,25 @@ msgstr "Veuillez remplir tous les champs obligatoires avant de soumettre"
 msgid "Bond"
 msgstr "Ajouter une Obligation"
 
-#: jdamainapp/templates/jdamainapp/base.html:73
+#: jdamainapp/templates/jdamainapp/base.html:76
 msgid "JDA Platform"
 msgstr "Plateforme JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:82
-#: jdamainapp/templates/jdamainapp/base.html:121
+#: jdamainapp/templates/jdamainapp/base.html:85
+#: jdamainapp/templates/jdamainapp/base.html:124
 msgid "View Companies"
 msgstr "Consulter Soci&eacute;t&eacute;"
 
-#: jdamainapp/templates/jdamainapp/base.html:92
+#: jdamainapp/templates/jdamainapp/base.html:95
 msgid "View Securities"
 msgstr "Afficher les titres"
 
-#: jdamainapp/templates/jdamainapp/base.html:100
+#: jdamainapp/templates/jdamainapp/base.html:103
 msgid "Portfolio Management"
 msgstr "Gestion de portefeuille"
 
-#: jdamainapp/templates/jdamainapp/base.html:115
-#: jdamainapp/templates/jdamainapp/base.html:117
+#: jdamainapp/templates/jdamainapp/base.html:118
+#: jdamainapp/templates/jdamainapp/base.html:120
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:22
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:25
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:24
@@ -1404,32 +1540,40 @@ msgstr "Gestion de portefeuille"
 msgid "Our Publications"
 msgstr "Nos Publications"
 
-#: jdamainapp/templates/jdamainapp/base.html:118
+#: jdamainapp/templates/jdamainapp/base.html:121
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_entry.html:34
 msgid "Publication Entry"
 msgstr "T&eacute;l&eacute;charger"
 
-#: jdamainapp/templates/jdamainapp/base.html:119
+#: jdamainapp/templates/jdamainapp/base.html:122
 msgid "Publication Edit"
 msgstr "Modifier"
 
-#: jdamainapp/templates/jdamainapp/base.html:149
-msgid "My Account"
-msgstr "Mon Compte"
-
-#: jdamainapp/templates/jdamainapp/base.html:154
-msgid "Ref Data Management"
+#: jdamainapp/templates/jdamainapp/base.html:128
+msgid "Subs Dashboard"
 msgstr ""
 
 #: jdamainapp/templates/jdamainapp/base.html:156
+msgid "My Account"
+msgstr "Mon Compte"
+
+#: jdamainapp/templates/jdamainapp/base.html:159
+msgid "Subscription Dashboard"
+msgstr ""
+
+#: jdamainapp/templates/jdamainapp/base.html:165
+msgid "Ref Data Management"
+msgstr ""
+
+#: jdamainapp/templates/jdamainapp/base.html:167
 msgid "Change Password"
 msgstr "Modifier mot de passe"
 
-#: jdamainapp/templates/jdamainapp/base.html:159
+#: jdamainapp/templates/jdamainapp/base.html:176
 msgid "Logout"
 msgstr "Déconnecter"
 
-#: jdamainapp/templates/jdamainapp/base.html:240
+#: jdamainapp/templates/jdamainapp/base.html:260
 msgid ""
 "The first independent research and investment advisory agency in the UEMOA "
 "financial market, Joseph & Daniel Advisory is located in the Ivorian capital "
@@ -1440,15 +1584,15 @@ msgstr ""
 "dans la capitale ivoirienne Abidjan, plus précisément au rond-point de la "
 "Riviera II dans la commune de Cocody."
 
-#: jdamainapp/templates/jdamainapp/base.html:271
+#: jdamainapp/templates/jdamainapp/base.html:291
 msgid "Working Hours"
 msgstr "Horaires"
 
-#: jdamainapp/templates/jdamainapp/base.html:280
+#: jdamainapp/templates/jdamainapp/base.html:300
 msgid "JDA Web Platform"
 msgstr "Service WEB de JDA"
 
-#: jdamainapp/templates/jdamainapp/base.html:282
+#: jdamainapp/templates/jdamainapp/base.html:302
 msgid ""
 "JDA Platform and web services is designed to help facilite the distribution "
 "of its domain specific content or select third-party data."
@@ -1456,19 +1600,43 @@ msgstr ""
 "JDA Service Web est concue pour faciliter la diffusion et le partage de son "
 "contenu ou d'autres information tierces."
 
-#: jdamainapp/views.py:39 jdamainapp/views.py:47
+#: jdamainapp/templates/jdamainapp/welcome.html:23
+msgid "Your gateway to financial research"
+msgstr "Votre portail vers la recherche financière"
+
+#: jdamainapp/templates/jdamainapp/welcome.html:31
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+#: jdamainapp/templates/jdamainapp/welcome.html:35
+msgid "Sign in to access your research publications"
+msgstr "Connectez-vous pour accéder à vos publications de recherche"
+
+#: jdamainapp/templates/jdamainapp/welcome.html:38
+msgid "Sign In"
+msgstr "Se connecter"
+
+#: jdamainapp/templates/jdamainapp/welcome.html:52
+msgid "Explore our research plans and subscribe"
+msgstr "Découvrez nos offres de recherche et abonnez-vous"
+
+#: jdamainapp/templates/jdamainapp/welcome.html:56
+msgid "Subscribe"
+msgstr "S'abonner"
+
+#: jdamainapp/views.py:45 jdamainapp/views.py:53
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:170
+#: jdaplatform/settings.py:181
 msgid "English"
 msgstr "Anglais"
 
-#: jdaplatform/settings.py:171
+#: jdaplatform/settings.py:182
 msgid "French"
 msgstr "Francais"
 
-#: jdaplatform/settings.py:172
+#: jdaplatform/settings.py:183
 msgid "Spanish"
 msgstr ""
 
@@ -1620,107 +1788,53 @@ msgstr "Société"
 msgid "Expand"
 msgstr "Agrandir"
 
-msgid "Verify Your Email"
-msgstr "Vérifiez votre e-mail"
-
-msgid "A verification email has been sent to"
-msgstr "Un e-mail de vérification a été envoyé à"
-
-msgid "Please check your inbox to activate your account."
-msgstr "Veuillez vérifier votre boîte de réception pour activer votre compte."
-
-msgid "Didn't receive the email? Check your spam folder or click below to resend."
-msgstr "Vous n'avez pas reçu l'e-mail ? Vérifiez votre dossier spam ou cliquez ci-dessous pour renvoyer."
-
-msgid "Resend Verification Email"
-msgstr "Renvoyer l'e-mail de vérification"
-
-msgid "Email Verified!"
-msgstr "E-mail vérifié !"
-
-msgid "Your account has been activated. You can now log in."
-msgstr "Votre compte a été activé. Vous pouvez maintenant vous connecter."
-
-msgid "Verification Failed"
-msgstr "Échec de la vérification"
-
-msgid "This verification link is invalid or has expired."
-msgstr "Ce lien de vérification est invalide ou a expiré."
-
-msgid "This verification link is invalid, has expired, or has already been used."
-msgstr "Ce lien de vérification est invalide, a expiré ou a déjà été utilisé."
-
-msgid "Activate your JDA Platform account"
-msgstr "Activez votre compte JDA Platform"
-
-msgid "Your account is not yet verified. Please check your email for the verification link."
-msgstr "Votre compte n'est pas encore vérifié. Veuillez vérifier votre e-mail pour le lien de vérification."
-
-msgid "Resend verification email"
-msgstr "Renvoyer l'e-mail de vérification"
-
-msgid "If an account exists with that email, a new verification link has been sent."
-msgstr "Si un compte existe avec cet e-mail, un nouveau lien de vérification a été envoyé."
-
-msgid "Please fix the following errors:"
-msgstr "Veuillez corriger les erreurs suivantes :"
-
-msgid "This account is already active."
-msgstr "Ce compte est déjà actif."
-
-msgid "Please login."
-msgstr "Veuillez vous connecter."
-
-msgid "seconds..."
-msgstr "secondes..."
-
-msgid "I've verified my email"
-msgstr "J'ai vérifié mon e-mail"
-
-msgid "Your email has been verified. Please log in."
-msgstr "Votre e-mail a été vérifié. Veuillez vous connecter."
-
-msgid "Your email has not been verified yet. Please check your inbox."
-msgstr "Votre e-mail n'a pas encore été vérifié. Veuillez vérifier votre boîte de réception."
-
-msgid "Your email has been verified! Please choose a plan to get started."
-msgstr "Votre e-mail a été vérifié ! Veuillez choisir une offre pour commencer."
-
-msgid "Your email has been verified! Please log in to continue."
-msgstr "Votre e-mail a été vérifié ! Veuillez vous connecter pour continuer."
-
-msgid "View Plans & Subscribe"
-msgstr "Voir les offres et s'abonner"
-
-msgid "You will be redirected to our subscription plans in"
-msgstr "Vous serez redirigé vers nos offres d'abonnement dans"
-
-msgid "Quarterly"
-msgstr "Trimestriel"
-
-msgid "Monthly"
-msgstr "Mensuel"
-
-msgid "Yearly"
-msgstr "Annuel"
-
-msgid "Individual Investor"
-msgstr "Investisseur Individuel"
-
-msgid "Institutional Investor"
-msgstr "Investisseur Institutionnel"
-
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:20
 msgid "Choose Your Subscription Plan"
 msgstr "Choisissez votre offre d'abonnement"
 
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:22
 msgid "You need an active subscription to access publications."
 msgstr "Vous avez besoin d'un abonnement actif pour accéder aux publications."
 
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:31
+msgid "Individual Investor"
+msgstr "Investisseur Individuel"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:35
+msgid "Institutional Investor"
+msgstr "Investisseur Institutionnel"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:45
+msgid "Monthly"
+msgstr "Mensuel"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:49
+msgid "Quarterly"
+msgstr "Trimestriel"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:53
+msgid "Yearly"
+msgstr "Annuel"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:66
+msgid "Most Popular"
+msgstr "Le plus populaire"
+
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:117
+#: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:122
 msgid "Select Plan"
 msgstr "Sélectionner"
 
-msgid "Most Popular"
-msgstr "Le plus populaire"
+#, fuzzy
+#~| msgid "New to JDA? Register for an account"
+#~ msgid "New to JDA? XRegister for an account"
+#~ msgstr "Nouveau sur le site JDA? Inscrivez vous"
+
+#~ msgid "This verification link is invalid or has expired."
+#~ msgstr "Ce lien de vérification est invalide ou a expiré."
+
+#~ msgid "Your email has been verified. Please log in."
+#~ msgstr "Votre e-mail a été vérifié. Veuillez vous connecter."
 
 #, fuzzy
 #~| msgid "Group"
@@ -1755,7 +1869,6 @@ msgstr "Le plus populaire"
 
 #~ msgid "Address"
 #~ msgstr "Adresse"
-
 
 #~ msgid "Fax Number"
 #~ msgstr "Télécopie"

@@ -91,7 +91,7 @@
                         <!-- Register section -->
                         <div class="text-center mb-3">
                             <p style="color:#6c757d; margin-bottom:10px;">{% trans 'New to JDA?' %}</p>
-                            <a href="{% url 'register' %}"
+                            <a href="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}"
                                class="btn btn-outline-info btn-block"
                                style="max-width:200px; margin:0 auto;">
                                 {% trans 'Register' %}

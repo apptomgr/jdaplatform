@@ -14,6 +14,7 @@ urlpatterns = [
     path('verification-sent/', views.verification_sent, name='verification_sent'),
     path('resend-verification/', views.resend_verification, name='resend_verification'),
     path('check-verification/', views.check_verification, name='check_verification'),
+    path('verification-status/', views.verification_status, name='verification_status'),
     path('profile/',views.profile, name='profile'),
     path('profile_edit/',views.profile_edit, name='profile_edit'),
     path('account_admin/',views.account_admin, name='account_admin'),

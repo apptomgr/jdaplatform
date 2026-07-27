@@ -10,7 +10,7 @@ from django.contrib.auth.models import Group
 from accounts.decorators import allowed_users
 from datetime import datetime
 from django.db.models import Count
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -41,7 +41,8 @@ def register(request):
                     'Account created but group assignment failed. '
                     'Please contact us at info@jda-ci.com'
                 )
-            token = EmailVerificationToken.objects.create(user=user)
+            next_value = request.GET.get('next', '')
+            token = EmailVerificationToken.objects.create(user=user, next_url=next_value or None)
             verification_url = f"{settings.SITE_URL}{reverse('verify_email', args=[token.token])}"
             html_message = render_to_string('registration/verification_email.html', {
                 'user': user,
@@ -57,7 +58,7 @@ def register(request):
             )
             request.session['pending_verification_email'] = user.email
             request.session['pending_verification_username'] = user.username
-            request.session['next_after_verification'] = request.GET.get('next', '')
+            request.session['next_after_verification'] = next_value
             return redirect('verification_sent')
     else:
         form = UserRegisterForm()
@@ -69,6 +70,32 @@ def register(request):
 def verification_sent(request):
     email = request.session.get('pending_verification_email', '')
     return render(request, 'registration/verification_sent.html', {'email': email})
+
+
+def _resolve_verified_redirect(user, session):
+    """
+    Shared by verify_email, verification_status, and check_verification so
+    all three agree on where a just-verified user should land.
+
+    Prefers the EmailVerificationToken.next_url captured at registration
+    time — this is what makes the redirect correct even when verification
+    happens in a different browser/session than registration (the mail-
+    client-opens-elsewhere case). Falls back to the session value for
+    in-flight tokens created before next_url existed.
+
+    Returns (redirect_url, has_plan) so callers can pick the right message.
+    """
+    token = EmailVerificationToken.objects.filter(user=user).first()
+    next_url = (token.next_url if token else None) or session.pop('next_after_verification', None)
+    if next_url:
+        return f"{reverse('login')}?next={next_url}", True
+    return reverse('jdasubscriptions:subscription_plan_list'), False
+
+
+def _verified_success_message(has_plan):
+    if has_plan:
+        return _('Your email has been verified! Please log in to continue.')
+    return _('Your email has been verified! Please choose a plan to get started.')
 
 
 def verify_email(request, token):
@@ -84,13 +111,38 @@ def verify_email(request, token):
     user = verification.user
     user.is_active = True
     user.save()
-    verification.delete()
-    next_url = request.session.pop('next_after_verification', None)
-    if next_url:
-        messages.success(request, _('Your email has been verified! Please log in to continue.'))
-        return redirect(f"{reverse('login')}?next={next_url}")
-    messages.success(request, _('Your email has been verified! Please choose a plan to get started.'))
-    return redirect('jdasubscriptions:subscription_plan_list')
+    # Not deleting the token here (on purpose): the original registration
+    # tab may still be polling verification_status and needs to read
+    # next_url after this request completes, possibly in a different
+    # session. resend_verification already deletes stale tokens before
+    # issuing a new one, so this doesn't collide with the OneToOneField.
+    redirect_url, has_plan = _resolve_verified_redirect(user, request.session)
+    messages.success(request, _verified_success_message(has_plan))
+    return redirect(redirect_url)
+
+
+def verification_status(request):
+    """
+    Polled by verification_sent.html from the original registration tab.
+    Session-only lookup (no username/email parameter) so this can't be used
+    to probe whether arbitrary accounts exist.
+    """
+    username = request.session.get('pending_verification_username')
+    if not username:
+        return JsonResponse({'verified': False})
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({'verified': False})
+
+    if not user.is_active:
+        return JsonResponse({'verified': False})
+
+    request.session.pop('pending_verification_username', None)
+    redirect_url, has_plan = _resolve_verified_redirect(user, request.session)
+    messages.success(request, _verified_success_message(has_plan))
+    return JsonResponse({'verified': True, 'redirect': redirect_url})
 
 
 def check_verification(request):
@@ -100,12 +152,9 @@ def check_verification(request):
             user = User.objects.get(username=username)
             if user.is_active:
                 del request.session['pending_verification_username']
-                next_url = request.session.pop('next_after_verification', None)
-                if next_url:
-                    messages.success(request, _('Your email has been verified! Please log in to continue.'))
-                    return redirect(f"{reverse('login')}?next={next_url}")
-                messages.success(request, _('Your email has been verified! Please choose a plan to get started.'))
-                return redirect('jdasubscriptions:subscription_plan_list')
+                redirect_url, has_plan = _resolve_verified_redirect(user, request.session)
+                messages.success(request, _verified_success_message(has_plan))
+                return redirect(redirect_url)
             else:
                 messages.warning(request, _('Your email has not been verified yet. Please check your inbox.'))
                 return redirect('verification_sent')
