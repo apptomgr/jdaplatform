@@ -1,3 +1,6 @@
+import re
+import unicodedata
+
 from django.conf import settings
 from django.utils import timezone
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
@@ -18,6 +21,54 @@ RESEARCH_TYPE_TO_FEATURE = {
     "Economic Notes":             "Economic Notes",
     "Stock Pitch":                "Stock Pitch",
 }
+
+_WHITESPACE_RE = re.compile(r'\s+')
+
+
+def _normalize_for_match(text):
+    """Case-insensitive, accent-insensitive, whitespace-collapsed comparison key."""
+    text = unicodedata.normalize('NFKD', text or '')
+    text = ''.join(ch for ch in text if not unicodedata.combining(ch))
+    text = _WHITESPACE_RE.sub(' ', text.strip())
+    return text.lower()
+
+
+def _is_stock_opinion_subject(subject) -> bool:
+    """
+    A publication is treated as a Stock Opinion piece if its subject starts
+    with "AVIS SUR" — any case, accents, or repeated/leading whitespace —
+    regardless of what follows or what research_type it's filed under.
+    """
+    return _normalize_for_match(subject).startswith('avis sur')
+
+
+def _plan_grants_publication(features, publication_type, publication) -> bool:
+    """
+    Shared by user_can_access_publication and get_upgrade_recommendation so
+    both agree on what a given plan's features actually grant.
+    """
+    # --- Existing feature check, unchanged ---
+    matched_feature = None
+    for feature in features or []:
+        if feature.get("name") == publication_type and feature.get("visible") is True:
+            matched_feature = feature
+            break
+
+    if matched_feature is None:
+        return False
+
+    # --- Subtractive layer, applied only after the existing check above
+    # already granted access. This can only turn a True into a False —
+    # it can never grant access the check above denied. A plan's matched
+    # "Recommendations" feature still denies a Stock Opinion piece if that
+    # plan's own data lists "Stock Opinion" in sub_items_excluded. Read
+    # entirely from the feature dict being evaluated — no plan is
+    # special-cased by name, so this stays correct as plan data changes. ---
+    if matched_feature.get("name") == "Recommendations" and _is_stock_opinion_subject(publication.subject):
+        if "Stock Opinion" in (matched_feature.get("sub_items_excluded") or []):
+            return False
+
+    return True
 
 #/////////////////////////////////////////////_get_active_subscription///////////////////////////////
 def _get_active_subscription(user):
@@ -135,14 +186,7 @@ def user_can_access_publication(user, publication) -> bool:
             publication.research_type, publication.research_type
         )
 
-    for feature in plan.features or []:
-        if (
-                feature.get("name") == publication_type
-                and feature.get("visible") is True
-        ):
-            return True
-
-    return False
+    return _plan_grants_publication(plan.features, publication_type, publication)
 
 
 #///////////////////////////////////////////active_subscription_q///////////////////////////////////////////////////////
@@ -221,15 +265,8 @@ def get_upgrade_recommendation(user, publication):
     required_plan = None
 
     for plan in eligible_plans:
-        for feature in plan.features or []:
-            if (
-                    feature.get("name") == publication_type
-                    and feature.get("visible") is True
-            ):
-                required_plan = plan
-                break
-
-        if required_plan:
+        if _plan_grants_publication(plan.features, publication_type, publication):
+            required_plan = plan
             break
 
     # ---------------------------------------
