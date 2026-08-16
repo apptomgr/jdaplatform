@@ -270,7 +270,21 @@ from jdasubscriptions.access import (
 from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
+import mimetypes
 import os
+
+
+def _publication_content_type(publication):
+    """
+    Guess the real content type from the stored filename rather than
+    assuming PDF. Publications are not restricted to PDF at upload time
+    (no validator on PublicationModel.file_name), so any research_type
+    can end up with a non-PDF file (e.g. an .xlsx "Opinion on all stocks").
+    """
+    content_type, _ = mimetypes.guess_type(publication.file_name.name)
+    content_type = content_type or 'application/octet-stream'
+    return content_type, content_type == 'application/pdf'
+
 
 @login_required
 def protected_publication_by_pk(request, pk):
@@ -309,6 +323,18 @@ def protected_publication_by_pk(request, pk):
         kwargs={'pk': pk}
     )
 
+    _, is_pdf = _publication_content_type(publication)
+
+    if not is_pdf:
+        return render(
+            request,
+            'jdapublicationsapp/jdapublicationsapp_download_only.html',
+            {
+                'download_url': f"{pdf_url}?download=1",
+                'publication': publication,
+            }
+        )
+
     return render(
         request,
         'jdapublicationsapp/jdapublicationsapp_pdf_viewer.html',
@@ -328,24 +354,26 @@ def protected_publication_content(request, pk):
     if not publication.file_name:
         return HttpResponseForbidden("File not found")
 
+    content_type, is_pdf = _publication_content_type(publication)
+
     # ---------------------------------------
     # Staff/Admin full access
     # ---------------------------------------
     if request.user.is_staff or request.user.is_superuser:
 
-        # If explicitly requesting download
-        if request.GET.get("download") == "1":
+        # Non-PDF files always download — there's no inline viewer for them.
+        if not is_pdf or request.GET.get("download") == "1":
             return FileResponse(
                 publication.file_name.open('rb'),
                 as_attachment=True,
                 filename=os.path.basename(publication.file_name.name),
-                content_type="application/pdf"
+                content_type=content_type
             )
 
-        # Otherwise inline view
+        # Otherwise inline view (PDFs only)
         return FileResponse(
             publication.file_name.open('rb'),
-            content_type="application/pdf"
+            content_type=content_type
         )
 
     # ---------------------------------------
@@ -357,9 +385,18 @@ def protected_publication_content(request, pk):
     if not user_can_access_publication(request.user, publication):
         return HttpResponseForbidden("Plan does not allow access")
 
+    # Non-PDF files always download — there's no inline viewer for them.
+    if not is_pdf:
+        return FileResponse(
+            publication.file_name.open('rb'),
+            as_attachment=True,
+            filename=os.path.basename(publication.file_name.name),
+            content_type=content_type
+        )
+
     response = FileResponse(
         publication.file_name.open('rb'),
-        content_type="application/pdf"
+        content_type=content_type
     )
 
     response["Content-Disposition"] = 'inline'
