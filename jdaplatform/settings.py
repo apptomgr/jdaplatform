@@ -265,13 +265,17 @@ MESSAGE_TAGS = {
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Email Configuration (SendGrid)
+# Email Configuration (Namecheap Private Email)
+# Fully env-driven so switching provider (e.g. rolling back to SendGrid) is
+# a pure env-var edit in the DO dashboard, no redeploy needed.
+# SENDGRID_API_KEY is intentionally left unused rather than removed, in case
+# of rollback.
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'mail.privateemail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY', '')
+EMAIL_HOST_USER = os.getenv('NAMECHEAP_SMTP_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('NAMECHEAP_SMTP_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@platform.jda-ci.com')
 SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000')
 
