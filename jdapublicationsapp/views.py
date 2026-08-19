@@ -13,7 +13,7 @@ from accounts .decorators import allowed_users
 # from django.contrib.auth.models import User
 # from jdamainapp.utils import fitz_pdf
 from django.utils import translation
-from django.db.models import Max, Count
+from django.db.models import Max, Count, Q
 
 from django.urls import resolve, reverse
 from django.http import JsonResponse
@@ -181,6 +181,19 @@ def jdapublicationsapp_pubs_data(request):
         filtered_qs, active_filters = apply_publication_filters(base_qs, filterForm.cleaned_data)
     else:
         filtered_qs = base_qs
+
+    # DataTables' built-in search box narrows further within whatever the
+    # sidebar filters already selected -- applied as an additional AND on
+    # top of apply_publication_filters, never in place of it.
+    search_value = request.GET.get('search[value]', '').strip()
+    if search_value:
+        filtered_qs = filtered_qs.filter(
+            Q(subject__icontains=search_value)
+            | Q(author__username__icontains=search_value)
+            | Q(company__company_name__icontains=search_value)
+            | Q(research_category__icontains=search_value)
+            | Q(research_type__icontains=search_value)
+        )
 
     order_col = _int_param('order[0][column]', 0)
     order_dir = request.GET.get('order[0][dir]', 'desc')
