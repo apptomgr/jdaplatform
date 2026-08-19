@@ -248,11 +248,10 @@ $(document).ready(function () {
     $('#publication_listing').DataTable({
         serverSide: true,
         processing: true,
-        // The sidebar already provides granular filtering; a second,
-        // independent free-text search would need its own server-side
-        // implementation, so the built-in DataTables search box is off
-        // rather than left silently non-functional.
-        searching: false,
+        // The built-in search box narrows further within whatever the
+        // sidebar filters already selected -- jdapublicationsapp_pubs_data
+        // applies it as an additional AND on top of the sidebar filters,
+        // not a replacement for them.
         responsive: true,
         order: [[0, 'desc']],
         language: {
