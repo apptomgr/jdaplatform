@@ -49,7 +49,7 @@
         <div class="row ">
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <div class="row mb-4">&nbsp;</div>
-                <form class="hero-form" method="post" action="{% url 'jdapublicationsapp_filter' %}" novalidate>
+                <form id="pub_filter_form" class="hero-form" method="post" action="{% url 'jdapublicationsapp_filter' %}" novalidate>
                     {% csrf_token %}
                     <div class="table-responsive">
                         <table id="pubs_table" class="table table-bordered tbl_border_outline_only table-hover dt-responsive nowrap">
@@ -111,48 +111,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {#% for i,j in my_list_zip %#}
-                    {% for i in publication_listing %}
-                    <tr>
-                        <!--td>{{i.pk}}</td-->
-                        <td>{{ i.publication_date |date:"Y-m-d" }}</td>
-                        <td>{{i.author}}</td>
-                        <td>{% trans i.research_category  %}</td>
-                        <td>{% trans i.research_type %}</td>
-                        <td>{% trans i.subject %}</td>
-                        <td>{{i.company}}</td>
-                        <!--td>{{i.publication_desc}}</td>
-                        <td>{{i.file_name.name}}</td>
-                        <td>{{i.uploaded_at}}</td-->
-                        <!--td><a href="{#% url 'jdapublicationsapp_view_watermarked_pub' j %#}">One pub</a></td-->
-                        {#% if user_grp == "brokers" %#}
-                        <!--td class="text-center"><a href="{{ i.file_name.url}}_{{request.user}}_watermark.pdf" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
-                        {#% else %#}
-
-                        <!--td class="text-center"><a href="{{ i.file_name.url}}" target="_blank"><i class="far fa-eye fa-fw fa-2x text-info"></i></a></td-->
-
-                        <td><a href="{% url 'protected_publication' i.pk %}"
-                           class="protected-pdf-link"
-                           data-pk="{{ i.pk }}">
-                            <i class="far fa-eye fa-fw fa-2x text-info"></i>
-                        </a></td>
-
-
-
-
-
-                        {#% endif %#}
-
-                        <!--td>
-                            <button type="button" class="btn btn-info" aria-label="Left Align" data-toggle="modal" data-target="#pubModal">
-                                <span class="far fa-eye fa-fw fa-lg" aria-hidden="true"></span>
-                            </button>
-                        </td-->
-                        <td class="text-center">
-                            <a href="#" class="my_link" data-val="{{i.subject}}~~{{i.author}}~~{{i.publication_desc}}~~{{i.company}}~~{{i.file_name.name}}~~{{i.uploaded_at}}" data-toggle="modal" data-target="#pub-modal"><i class="fas fa-expand-arrows-alt fa-fw fa-2x text-info"></i></a>
-                        </td>
-                    </tr>
-                    {% endfor%}
+                    {# Rows are populated by DataTables via AJAX (serverSide) -- see script block below. #}
                     </tbody>
                 </table>
 
@@ -279,6 +238,72 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script>
+$(document).ready(function () {
+    function escapeHtml(str) {
+        return $('<div>').text(str == null ? '' : String(str)).html();
+    }
+
+    $('#publication_listing').DataTable({
+        serverSide: true,
+        processing: true,
+        // The sidebar already provides granular filtering; a second,
+        // independent free-text search would need its own server-side
+        // implementation, so the built-in DataTables search box is off
+        // rather than left silently non-functional.
+        searching: false,
+        responsive: true,
+        order: [[0, 'desc']],
+        language: {
+            url: getLanguage()
+        },
+        ajax: {
+            url: "{% url 'jdapublicationsapp_pubs_data' %}",
+            // Re-read the sidebar filter fields on every draw (initial load,
+            // page turns, sort changes) so pagination always composes with
+            // whatever filters are currently selected, instead of the two
+            // fighting each other.
+            data: function (d) {
+                d.from_date = $('#id_from_date').val();
+                d.to_date = $('#id_to_date').val();
+                d.author = $('#id_author').val();
+                d.research_category = $('#id_research_category').val();
+                d.research_type = $('#id_research_type').val();
+                d.company = $('#id_company').val();
+                d.pub_language = $('#id_pub_language').val();
+            }
+        },
+        columns: [
+            { data: 'publication_date', render: $.fn.dataTable.render.text() },
+            { data: 'author', render: $.fn.dataTable.render.text() },
+            { data: 'research_category', render: $.fn.dataTable.render.text() },
+            { data: 'research_type', render: $.fn.dataTable.render.text() },
+            { data: 'subject', render: $.fn.dataTable.render.text() },
+            { data: 'company', render: $.fn.dataTable.render.text() },
+            {
+                data: null, orderable: false, searchable: false, className: 'text-center',
+                render: function (data, type, row) {
+                    if (type !== 'display') { return ''; }
+                    return '<a href="' + row.view_url + '" class="protected-pdf-link" data-pk="' + row.pk + '">' +
+                        '<i class="far fa-eye fa-fw fa-2x text-info"></i></a>';
+                }
+            },
+            {
+                data: null, orderable: false, searchable: false, className: 'text-center',
+                render: function (data, type, row) {
+                    if (type !== 'display') { return ''; }
+                    var val = [row.subject, row.author, row.publication_desc, row.company, row.file_name, row.uploaded_at]
+                        .map(function (v) { return v == null ? '' : String(v); })
+                        .join('~~');
+                    return '<a href="#" class="my_link" data-val="' + escapeHtml(val) + '" data-toggle="modal" data-target="#pub-modal">' +
+                        '<i class="fas fa-expand-arrows-alt fa-fw fa-2x text-info"></i></a>';
+                }
+            }
+        ]
+    });
+});
+</script>
 
 <script>
  $('#pub-modal').on('show.bs.modal', function (event) {

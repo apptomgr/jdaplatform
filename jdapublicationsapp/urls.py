@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.jdapublicationsapp_home, name='jdapublicationsapp_home'),
     path('jdapublicationsapp_dept/', views.jdapublicationsapp_dept, name='jdapublicationsapp_dept'),
     path('jdapublicationsapp_pubs/', views.jdapublicationsapp_pubs, name='jdapublicationsapp_pubs'),
+    path('jdapublicationsapp_pubs_data/', views.jdapublicationsapp_pubs_data, name='jdapublicationsapp_pubs_data'),
     #path('subscribe/', views.subscription_plans, name='subscription-plans'),
     path('pubs/view/<int:pk>/', views.protected_publication_by_pk, name='protected_publication'),
     # PDF content endpoint (for PDF.js)
