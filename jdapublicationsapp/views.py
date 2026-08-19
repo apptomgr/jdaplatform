@@ -13,9 +13,11 @@ from accounts .decorators import allowed_users
 # from django.contrib.auth.models import User
 # from jdamainapp.utils import fitz_pdf
 from django.utils import translation
-from django.db.models import Max
+from django.db.models import Max, Count
 
-from django.urls import resolve
+from django.urls import resolve, reverse
+from django.http import JsonResponse
+from django.utils.translation import gettext
 # import os
 
 
@@ -24,6 +26,54 @@ def get_user_grp(request):
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
     return grp
+
+
+def apply_publication_filters(queryset, cleaned_data):
+    """Incrementally apply PublicationFilterForm's cleaned_data onto queryset.
+    Shared by jdapublicationsapp_filter (full-page POST) and the DataTables
+    AJAX endpoint so both filter identically.
+    """
+    active_filters = []
+
+    from_date = cleaned_data.get('from_date')
+    to_date = cleaned_data.get('to_date')
+    author = cleaned_data.get('author')
+    category = cleaned_data.get('research_category')
+    research_type = cleaned_data.get('research_type')
+    company = cleaned_data.get('company')
+    pub_language = cleaned_data.get('pub_language')
+
+    if from_date and to_date:
+        queryset = queryset.filter(publication_date__range=(from_date, to_date))
+        active_filters.append(f"date range '{from_date}' to '{to_date}'")
+    elif from_date:
+        queryset = queryset.filter(publication_date__gte=from_date)
+        active_filters.append(f"date from '{from_date}'")
+    elif to_date:
+        queryset = queryset.filter(publication_date__lte=to_date)
+        active_filters.append(f"date to '{to_date}'")
+
+    if author:
+        queryset = queryset.filter(author=author)
+        active_filters.append(f"author '{author}'")
+
+    if category:
+        queryset = queryset.filter(research_category=category)
+        active_filters.append(f"category '{category}'")
+
+    if research_type:
+        queryset = queryset.filter(research_type=research_type)
+        active_filters.append(f"type '{research_type}'")
+
+    if company:
+        queryset = queryset.filter(company=company)
+        active_filters.append(f"company '{company}'")
+
+    if pub_language:
+        queryset = queryset.filter(pub_language=pub_language)
+        active_filters.append(f"language '{pub_language}'")
+
+    return queryset, active_filters
 
 # ////////////////////////////////jdapublicationsapp_home///////////////////////////////////////
 @login_required
@@ -52,82 +102,121 @@ def jdapublicationsapp_dept(request):
 @login_required
 #@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_pubs(request):
-    #print(f"55 - Eye's clicked 1st")
     form = PublicationAdminsForm()
-    #full_search_form = FullSearchForm()
     filterForm = PublicationFilterForm()
-    #publication_listing = PublicationModel.objects.filter(visible_flag=True).all()
-    publication_listing = PublicationModel.objects.all().order_by('-publication_date')
 
-    # get publication_listing filenames
-    my_files = []
-    for i in publication_listing:
-        #print(f"54: i.file_name.url: {i.file_name.url}")
-
-        x = i.file_name.name.replace("/", "~~")
-        my_files.append(x)
-
-    grp =None
-
+    grp = None
     if request.user.groups.all():
         grp = request.user.groups.all()[0].name
-        #print(f"48 - grp: {grp}")
 
-
-    newsletters_cnt=publication_listing.filter(research_category='Newsletters').count()
-    commentaries_cnt=publication_listing.filter(research_category='Commentaries').count()
-    reports_cnt=publication_listing.filter(research_category='Reports').count()
-    #print(f"total 150: {reports_cnt}")
-    #pub stats
-    total = publication_listing.count()
-    #print(f"total 152: {total}")
-    if total >0:
-        #per_models=(models_cnt/total) *100
-        per_newsletters = round((newsletters_cnt / total) * 100)
-        per_commentaries = round((commentaries_cnt / total) * 100)
-        per_reports = round((reports_cnt / total) * 100)
-        #print(per_newsletters)
-        #print(per_commentaries)
-        #print(per_reports)
+    # Row data itself is no longer loaded here: the table is populated by the
+    # DataTables server-side AJAX endpoint (jdapublicationsapp_pubs_data), one
+    # page at a time. This view only needs aggregate stats, not the rows.
+    category_counts = dict(
+        PublicationModel.objects.values('research_category')
+        .annotate(cnt=Count('id'))
+        .values_list('research_category', 'cnt')
+    )
+    total = sum(category_counts.values())
+    if total > 0:
+        per_newsletters = round((category_counts.get('Newsletters', 0) / total) * 100)
+        per_commentaries = round((category_counts.get('Commentaries', 0) / total) * 100)
+        per_reports = round((category_counts.get('Reports', 0) / total) * 100)
     else:
-        #per_models=0
-        per_newsletters=0
-        per_commentaries=0
-        per_reports=0
-    #push all stats vals in a list that will be set as a session DRY
-    pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
-    #print(pub_stats_lst)
-    pub_stats_session = request.session.get('pub_stats_session')
-    #if pub_stats_session is None:
-    #    pub_stats_session = pub_stats_lst
-    pub_stats_session = pub_stats_lst
-    request.session['pub_stats_session'] = pub_stats_session
+        per_newsletters = per_commentaries = per_reports = 0
 
-    stats_sess = request.session.get('pub_stats_session')
-    #print(f"171 - session val: {stats_sess}")
+    stats_sess = [per_newsletters, per_commentaries, per_reports]
+    request.session['pub_stats_session'] = stats_sess
 
-    #pub_stats_lst=[per_newsletters, per_commentaries, per_reports]
-    #request.session['pub_stats_session']
-    #pub_stats_session = request.session.get('pub_stats_session')
-    #print(publication_listing.filename())
-    # print(f"//////////17: {publication_listing.count()}/////////")
-    #my_list_zip = zip(publication_listing, my_files)
     curr_lang_code = translation.get_language()
-    max_pub_date = publication_listing.aggregate(Max('publication_date'))
-    context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,
-               #'per_models':per_models,
-               'per_newsletters':per_newsletters,
-               'per_commentaries':per_commentaries,
-               'per_reports':per_reports,
-               #'my_list_zip':my_list_zip,
-               'user_grp':grp,
+    max_pub_date = PublicationModel.objects.aggregate(Max('publication_date'))
+    context = {'form': form, 'filterForm': filterForm,
+               'per_newsletters': per_newsletters,
+               'per_commentaries': per_commentaries,
+               'per_reports': per_reports,
+               'user_grp': grp,
                'curr_lang_code': curr_lang_code,
-               'max_pub_date':max_pub_date,
-               'stats_sess':stats_sess
+               'max_pub_date': max_pub_date,
+               'stats_sess': stats_sess
                }
-    #context = {'form': form, 'filterForm': filterForm, 'publication_listing': publication_listing,'full_search_form': full_search_form, 'search_result': publication_listing}
-    #print("129 res")
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
+
+
+# Columns the DataTables "order" control can target, indexed to match the
+# table's column order in jdapublicationsapp_pubs.html. Columns 6/7 (Pubs,
+# Expand) are action columns marked orderable:false client-side.
+PUBS_ORDERABLE_COLUMNS = [
+    'publication_date',
+    'author__username',
+    'research_category',
+    'research_type',
+    'subject',
+    'company__company_name',
+]
+
+
+@login_required
+def jdapublicationsapp_pubs_data(request):
+    """DataTables server-side data source for the Our Publications table.
+
+    Applies the same sidebar filters as jdapublicationsapp_filter (via the
+    shared apply_publication_filters helper), but only queries and
+    serializes one page of rows per request instead of the whole table.
+    """
+    def _int_param(name, default):
+        try:
+            return int(request.GET.get(name, default))
+        except (TypeError, ValueError):
+            return default
+
+    draw = _int_param('draw', 1)
+    start = _int_param('start', 0)
+    length = _int_param('length', 10)
+    if length < 0 or length > 200:
+        length = 200  # defensive cap; a page is never the whole table
+
+    base_qs = PublicationModel.objects.select_related('author', 'company')
+    filterForm = PublicationFilterForm(request.GET)
+    if filterForm.is_valid():
+        filtered_qs, active_filters = apply_publication_filters(base_qs, filterForm.cleaned_data)
+    else:
+        filtered_qs = base_qs
+
+    order_col = _int_param('order[0][column]', 0)
+    order_dir = request.GET.get('order[0][dir]', 'desc')
+    if 0 <= order_col < len(PUBS_ORDERABLE_COLUMNS):
+        order_field = PUBS_ORDERABLE_COLUMNS[order_col]
+    else:
+        order_field = 'publication_date'
+    if order_dir == 'desc':
+        order_field = f'-{order_field}'
+    filtered_qs = filtered_qs.order_by(order_field)
+
+    records_total = PublicationModel.objects.count()
+    records_filtered = filtered_qs.count()
+
+    page = filtered_qs[start:start + length]
+
+    data = [{
+        'pk': pub.pk,
+        'publication_date': pub.publication_date.strftime('%Y-%m-%d'),
+        'author': str(pub.author),
+        'research_category': gettext(pub.research_category),
+        'research_type': gettext(pub.research_type),
+        'subject': gettext(pub.subject),
+        'company': str(pub.company) if pub.company_id else '',
+        'publication_desc': pub.publication_desc,
+        'file_name': pub.file_name.name,
+        'uploaded_at': pub.uploaded_at.strftime('%Y-%m-%d %H:%M'),
+        'view_url': reverse('protected_publication', args=[pub.pk]),
+    } for pub in page]
+
+    return JsonResponse({
+        'draw': draw,
+        'recordsTotal': records_total,
+        'recordsFiltered': records_filtered,
+        'data': data,
+    })
 
 
 # publications/views.py
@@ -582,46 +671,10 @@ def jdapublicationsapp_filter(request):
     if request.method == 'POST':
         filterForm = PublicationFilterForm(request.POST, request.FILES)
         if filterForm.is_valid():
-            from_date = filterForm.cleaned_data['from_date']
-            to_date = filterForm.cleaned_data['to_date']
-            author = filterForm.cleaned_data['author']
-            category = filterForm.cleaned_data['research_category']
-            research_type = filterForm.cleaned_data['research_type']
-            company = filterForm.cleaned_data['company']
-            pub_language = filterForm.cleaned_data['pub_language']
-
-            publication_listing = PublicationModel.objects.all()
-            active_filters = []
-
-            if from_date and to_date:
-                publication_listing = publication_listing.filter(publication_date__range=(from_date, to_date))
-                active_filters.append(f"date range '{from_date}' to '{to_date}'")
-            elif from_date:
-                publication_listing = publication_listing.filter(publication_date__gte=from_date)
-                active_filters.append(f"date from '{from_date}'")
-            elif to_date:
-                publication_listing = publication_listing.filter(publication_date__lte=to_date)
-                active_filters.append(f"date to '{to_date}'")
-
-            if author:
-                publication_listing = publication_listing.filter(author=author)
-                active_filters.append(f"author '{author}'")
-
-            if category:
-                publication_listing = publication_listing.filter(research_category=category)
-                active_filters.append(f"category '{category}'")
-
-            if research_type:
-                publication_listing = publication_listing.filter(research_type=research_type)
-                active_filters.append(f"type '{research_type}'")
-
-            if company:
-                publication_listing = publication_listing.filter(company=company)
-                active_filters.append(f"company '{company}'")
-
-            if pub_language:
-                publication_listing = publication_listing.filter(pub_language=pub_language)
-                active_filters.append(f"language '{pub_language}'")
+            publication_listing, active_filters = apply_publication_filters(
+                PublicationModel.objects.select_related('author', 'company'),
+                filterForm.cleaned_data,
+            )
 
             filter_desc = ', '.join(active_filters) if active_filters else "all empty filters"
             count = publication_listing.count()
@@ -631,7 +684,7 @@ def jdapublicationsapp_filter(request):
                 messages.warning(request, f"Could not find any items associated with {filter_desc}")
 
             max_pub_date = publication_listing.aggregate(Max('publication_date'))
-            context = {'filterForm': filterForm, 'publication_listing': publication_listing, 'max_pub_date': max_pub_date, 'stats_sess': stats_sess}
+            context = {'filterForm': filterForm, 'max_pub_date': max_pub_date, 'stats_sess': stats_sess}
             return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
         else:

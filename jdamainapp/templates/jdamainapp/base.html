@@ -448,17 +448,9 @@ function getLanguage() {
 }
 
 
-$(document).ready(function() {
-    $('#publication_listing').DataTable( {
-        language : {
-            url: getLanguage()
-
-        },
-        responsive: true,
-        "order": [[ 0, "desc" ]]
-    } );
-
-} );
+{# publication_listing's DataTable is now initialized (serverSide) in
+   jdapublicationsapp_pubs.html itself, since it needs page-specific
+   AJAX/column config rather than the plain client-side init used here. #}
 
 $(document).ready(function() {
     $('#security_listing').DataTable( {

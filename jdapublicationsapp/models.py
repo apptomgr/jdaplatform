@@ -53,7 +53,7 @@ class PublicationModel(models.Model):
     )
     #author = models.CharField(max_length=100, blank=False, null=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE) # new
-    publication_date = models.DateField(blank=False, null=False)
+    publication_date = models.DateField(blank=False, null=False, db_index=True)
     research_category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, null=False, blank=False)
     research_type = models.CharField(max_length=100, choices=TYPE_CHOICES, null=False, blank=False)
     subject = models.CharField(max_length=150)
