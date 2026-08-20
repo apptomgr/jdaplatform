@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-27 15:10-0400\n"
+"POT-Creation-Date: 2026-08-20 10:38-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -204,6 +204,7 @@ msgstr "Nos Applications"
 #: accounts/templates/registration/register.html:149
 #: accounts/templates/registration/verification_success.html:27
 #: jdamainapp/templates/jdamainapp/base.html:187
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:358
 msgid "Login"
 msgstr "Connexion"
 
@@ -409,13 +410,14 @@ msgstr "Nos Donne&eacute;s de Recherche"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:71
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:91
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:172
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:131
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:164
 msgid "Models"
 msgstr "Mod&eacute;les d'evaluation"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:72
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:181
+#: jdapublicationsapp/forms.py:74
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:140
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
 msgid "Newsletters"
 msgstr "Newsletters"
@@ -423,13 +425,15 @@ msgstr "Newsletters"
 # msgid "Newsletters"
 # msgstr "Note de Recherche"
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:190
+#: jdapublicationsapp/forms.py:75
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:149
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:199
+#: jdapublicationsapp/forms.py:76
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:158
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
 msgstr "Rapports"
@@ -489,6 +493,7 @@ msgid "Open"
 msgstr "Ouvert"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:98
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:206
 msgid "Close"
 msgstr "Fermeture"
 
@@ -721,6 +726,7 @@ msgid "Save Custom Profile"
 msgstr "Enregistrer le profil personnalisé"
 
 #: jdadev/templates/jdadev/jdadev_overall_portfolio.html:144
+#: jdapublicationsapp/forms.py:93
 msgid "Recommendation"
 msgstr "Recommandation"
 
@@ -1628,17 +1634,104 @@ msgstr "S'abonner"
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:181
+#: jdaplatform/settings.py:181 jdapublicationsapp/forms.py:101
 msgid "English"
 msgstr "Anglais"
 
-#: jdaplatform/settings.py:182
+#: jdaplatform/settings.py:182 jdapublicationsapp/forms.py:102
 msgid "French"
-msgstr "Francais"
+msgstr "Français"
 
 #: jdaplatform/settings.py:183
 msgid "Spanish"
 msgstr ""
+
+#: jdapublicationsapp/forms.py:72
+msgid "Category"
+msgstr "Categorie"
+
+#: jdapublicationsapp/forms.py:80
+msgid "Type"
+msgstr "Type"
+
+#: jdapublicationsapp/forms.py:81
+msgid "Daily Briefing"
+msgstr "Briefing Quotidien"
+
+# msgid "Research Type"
+# msgstr "Type de Recherche"
+#: jdapublicationsapp/forms.py:82
+msgid "Research Notes"
+msgstr "Note de Recherche"
+
+#: jdapublicationsapp/forms.py:83
+msgid "Quarterly Results"
+msgstr "Résultats Trimestriels"
+
+#: jdapublicationsapp/forms.py:84
+msgid "Semi-annual Results"
+msgstr "Résultats Semestriels"
+
+#: jdapublicationsapp/forms.py:85
+msgid "Annual Results"
+msgstr "Résultats Annuels"
+
+#: jdapublicationsapp/forms.py:86
+msgid "Sector Reports"
+msgstr "Rapports Sectoriels"
+
+#: jdapublicationsapp/forms.py:87
+msgid "Strategic Reports"
+msgstr "Note Stratégique"
+
+#: jdapublicationsapp/forms.py:88
+msgid "IPO Analysis"
+msgstr "Analyse IPO"
+
+#: jdapublicationsapp/forms.py:89
+msgid "Economic Notes"
+msgstr "Notes Economiques"
+
+# msgid "Annual Reports"
+# msgstr "Rapports Annuels"
+#: jdapublicationsapp/forms.py:90
+msgid "Shareholder Meeting Feedback"
+msgstr "Feedback Assemblées Générales"
+
+#: jdapublicationsapp/forms.py:94
+msgid "Stock Pitch"
+msgstr "Argumentaire d'Investissement"
+
+#: jdapublicationsapp/forms.py:95
+msgid "Opinion on all stocks"
+msgstr "Avis sur toutes les valeurs"
+
+#: jdapublicationsapp/forms.py:100
+msgid "Language"
+msgstr "Langue"
+
+#: jdapublicationsapp/forms.py:111
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:42
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:101
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:103
+msgid "Author"
+msgstr "Auteur"
+
+#: jdapublicationsapp/forms.py:113
+msgid "From Date"
+msgstr "Date de début"
+
+#: jdapublicationsapp/forms.py:114
+msgid "To Date"
+msgstr "Date de fin"
+
+# msgid "Corporate Name"
+# msgstr "Nom de la Soci&eacute;t&eacute;"
+#: jdapublicationsapp/forms.py:120
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:105
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:107
+msgid "Company"
+msgstr "Société"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_company_listing.html:23
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_delete_company_confirm.html:26
@@ -1673,6 +1766,18 @@ msgstr "Supprimer"
 msgid "Cancel"
 msgstr "Annuler"
 
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_download_only.html:12
+msgid ""
+"This publication can't be previewed in the browser. Download it to view the "
+"contents."
+msgstr ""
+"Cette publication ne peut pas être prévisualisée dans le navigateur. "
+"Téléchargez-la pour consulter son contenu."
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_download_only.html:16
+msgid "Download"
+msgstr "Télécharger"
+
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:43
 msgid "Publications"
 msgstr "Publications"
@@ -1692,12 +1797,6 @@ msgstr "Type de Publications"
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:32
 msgid "Publication Listing"
 msgstr "Nos Publications"
-
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:42
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:101
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:103
-msgid "Author"
-msgstr "Auteur"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_listing.html:43
 msgid "Publication"
@@ -1771,22 +1870,97 @@ msgstr "Filtres"
 msgid "Filter"
 msgstr "Filtrer"
 
+# msgid "Research Type"
+# msgstr "Type de Recherche"
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:86
+msgid "Reset"
+msgstr "Réinitialiser"
+
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:100
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:102
 msgid "Publication Date"
 msgstr "Date de<br>Publication"
 
-# msgid "Corporate Name"
-# msgstr "Nom de la Soci&eacute;t&eacute;"
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:105
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:107
-msgid "Company"
-msgstr "Société"
-
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:110
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:112
 msgid "Expand"
 msgstr "Agrandir"
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:173
+msgid "Last updated"
+msgstr "Dernière mise à jour"
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:350
+msgid "Access Restricted"
+msgstr "Accès Restreint"
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:356
+msgid ""
+"You must sign up or log in with the proper authorization to view this "
+"document."
+msgstr ""
+"Vous devez vous inscrire ou vous connecter avec l'autorisation appropriée "
+"pour consulter ce document."
+
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:359
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+#: jdapublicationsapp/views.py:48
+#, python-format
+msgid "date range '%(from_date)s' to '%(to_date)s'"
+msgstr "plage de dates '%(from_date)s' à '%(to_date)s'"
+
+#: jdapublicationsapp/views.py:51
+#, python-format
+msgid "date from '%(from_date)s'"
+msgstr "date à partir du '%(from_date)s'"
+
+#: jdapublicationsapp/views.py:54
+#, python-format
+msgid "date to '%(to_date)s'"
+msgstr "date jusqu'au '%(to_date)s'"
+
+#: jdapublicationsapp/views.py:58
+#, python-format
+msgid "author '%(author)s'"
+msgstr "auteur '%(author)s'"
+
+#: jdapublicationsapp/views.py:62
+#, python-format
+msgid "category '%(category)s'"
+msgstr "catégorie '%(category)s'"
+
+#: jdapublicationsapp/views.py:66
+#, python-format
+msgid "type '%(research_type)s'"
+msgstr "type '%(research_type)s'"
+
+#: jdapublicationsapp/views.py:70
+#, python-format
+msgid "company '%(company)s'"
+msgstr "société '%(company)s'"
+
+#: jdapublicationsapp/views.py:74
+#, python-format
+msgid "language '%(pub_language)s'"
+msgstr "langue '%(pub_language)s'"
+
+#: jdapublicationsapp/views.py:693
+msgid "all empty filters"
+msgstr "tous les filtres vides"
+
+#: jdapublicationsapp/views.py:697
+#, python-format
+msgid "Found %(count)d item associated with %(desc)s"
+msgid_plural "Found %(count)d items associated with %(desc)s"
+msgstr[0] "%(count)d élément trouvé associé à %(desc)s"
+msgstr[1] "%(count)d éléments trouvés associés à %(desc)s"
+
+#: jdapublicationsapp/views.py:703
+#, python-format
+msgid "Could not find any items associated with %(desc)s"
+msgstr "Aucun élément trouvé associé à %(desc)s"
 
 #: jdasubscriptions/templates/jdasubscriptions/subscription_plan_list.html:20
 msgid "Choose Your Subscription Plan"
@@ -1972,13 +2146,6 @@ msgstr "Sélectionner"
 #~ msgid "Imports"
 #~ msgstr "Rapports"
 
-# msgid "Research Type"
-# msgstr "Type de Recherche"
-#, fuzzy
-#~| msgid "Research Notes"
-#~ msgid "Reserves"
-#~ msgstr "Note de Recherche"
-
 #~ msgid "Statement"
 #~ msgstr "Etats"
 
@@ -2007,64 +2174,16 @@ msgstr "Sélectionner"
 #~ msgid "Bond Issued Date"
 #~ msgstr "Date d'emission"
 
-#~ msgid "Category"
-#~ msgstr "Categorie"
-
-#~ msgid "Type"
-#~ msgstr "Recherche par Type"
-
-#~ msgid "Daily Briefing"
-#~ msgstr "Briefing Quotidien"
-
-# msgid "Research Type"
-# msgstr "Type de Recherche"
-#~ msgid "Research Notes"
-#~ msgstr "Note de Recherche"
-
-#~ msgid "Quarterly Results"
-#~ msgstr "Résultats Trimestriels"
-
 #~ msgid "Half Year Results"
 #~ msgstr "Résultats Semestriels"
-
-#~ msgid "Annual Results"
-#~ msgstr "Résultats Annuels"
-
-#~ msgid "Sector Reports"
-#~ msgstr "Rapports Sectoriels"
-
-#~ msgid "Strategic Reports"
-#~ msgstr "Note Stratégique"
-
-#~ msgid "IPO Analysis"
-#~ msgstr "Analyse IPO"
-
-#~ msgid "Economic Notes"
-#~ msgstr "Notes Economiques"
-
-# msgid "Annual Reports"
-# msgstr "Rapports Annuels"
-#, fuzzy
-#~| msgid "Stakeholder Meeting Feedback"
-#~ msgid "Shareholder Meeting Feedback"
-#~ msgstr "Feedback Assemblées Générales"
 
 #, fuzzy
 #~| msgid "Investment Account"
 #~ msgid "Investment Case"
 #~ msgstr "Tableaux des Flux de Tr&eacute;sorier"
 
-#~ msgid "Language"
-#~ msgstr "Langue"
-
 #~ msgid "Publication Description"
 #~ msgstr "Description de la publication"
-
-#~ msgid "From Date"
-#~ msgstr "De"
-
-#~ msgid "To Date"
-#~ msgstr "A"
 
 #, fuzzy
 #~| msgid "Issuer"
