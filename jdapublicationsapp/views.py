@@ -17,7 +17,7 @@ from django.db.models import Max, Count, Q
 
 from django.urls import resolve, reverse
 from django.http import JsonResponse
-from django.utils.translation import gettext
+from django.utils.translation import gettext, ngettext
 # import os
 
 
@@ -45,33 +45,33 @@ def apply_publication_filters(queryset, cleaned_data):
 
     if from_date and to_date:
         queryset = queryset.filter(publication_date__range=(from_date, to_date))
-        active_filters.append(f"date range '{from_date}' to '{to_date}'")
+        active_filters.append(gettext("date range '%(from_date)s' to '%(to_date)s'") % {'from_date': from_date, 'to_date': to_date})
     elif from_date:
         queryset = queryset.filter(publication_date__gte=from_date)
-        active_filters.append(f"date from '{from_date}'")
+        active_filters.append(gettext("date from '%(from_date)s'") % {'from_date': from_date})
     elif to_date:
         queryset = queryset.filter(publication_date__lte=to_date)
-        active_filters.append(f"date to '{to_date}'")
+        active_filters.append(gettext("date to '%(to_date)s'") % {'to_date': to_date})
 
     if author:
         queryset = queryset.filter(author=author)
-        active_filters.append(f"author '{author}'")
+        active_filters.append(gettext("author '%(author)s'") % {'author': author})
 
     if category:
         queryset = queryset.filter(research_category=category)
-        active_filters.append(f"category '{category}'")
+        active_filters.append(gettext("category '%(category)s'") % {'category': category})
 
     if research_type:
         queryset = queryset.filter(research_type=research_type)
-        active_filters.append(f"type '{research_type}'")
+        active_filters.append(gettext("type '%(research_type)s'") % {'research_type': research_type})
 
     if company:
         queryset = queryset.filter(company=company)
-        active_filters.append(f"company '{company}'")
+        active_filters.append(gettext("company '%(company)s'") % {'company': company})
 
     if pub_language:
         queryset = queryset.filter(pub_language=pub_language)
-        active_filters.append(f"language '{pub_language}'")
+        active_filters.append(gettext("language '%(pub_language)s'") % {'pub_language': pub_language})
 
     return queryset, active_filters
 
@@ -681,6 +681,7 @@ def protected_publication_content(request, pk):
 #@allowed_users(allowed_roles=['admins','managers','staffs', 'brokers'])
 def jdapublicationsapp_filter(request):
     stats_sess = request.session.get('pub_stats_session') # stats_sess was set in jdapublicationsapp_pubs function
+    curr_lang_code = translation.get_language()
     if request.method == 'POST':
         filterForm = PublicationFilterForm(request.POST, request.FILES)
         if filterForm.is_valid():
@@ -689,15 +690,20 @@ def jdapublicationsapp_filter(request):
                 filterForm.cleaned_data,
             )
 
-            filter_desc = ', '.join(active_filters) if active_filters else "all empty filters"
+            filter_desc = ', '.join(active_filters) if active_filters else gettext("all empty filters")
             count = publication_listing.count()
             if count:
-                messages.success(request, f"Found {count} item(s) associated with {filter_desc}")
+                message = ngettext(
+                    "Found %(count)d item associated with %(desc)s",
+                    "Found %(count)d items associated with %(desc)s",
+                    count,
+                ) % {'count': count, 'desc': filter_desc}
+                messages.success(request, message)
             else:
-                messages.warning(request, f"Could not find any items associated with {filter_desc}")
+                messages.warning(request, gettext("Could not find any items associated with %(desc)s") % {'desc': filter_desc})
 
             max_pub_date = publication_listing.aggregate(Max('publication_date'))
-            context = {'filterForm': filterForm, 'max_pub_date': max_pub_date, 'stats_sess': stats_sess}
+            context = {'filterForm': filterForm, 'max_pub_date': max_pub_date, 'stats_sess': stats_sess, 'curr_lang_code': curr_lang_code}
             return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
         else:
@@ -709,7 +715,7 @@ def jdapublicationsapp_filter(request):
         #print(filterForm)
 
     grp = get_user_grp(request)
-    context = {'user_grp':grp,'filterForm': filterForm}
+    context = {'user_grp':grp,'filterForm': filterForm, 'curr_lang_code': curr_lang_code}
     return render(request, 'jdapublicationsapp/jdapublicationsapp_pubs.html', context)
 
 
