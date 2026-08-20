@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 16:59-0400\n"
+"POT-Creation-Date: 2026-08-20 10:38-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,6 +416,7 @@ msgid "Models"
 msgstr "Mod&eacute;les d'evaluation"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:72
+#: jdapublicationsapp/forms.py:74
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:140
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:177
 msgid "Newsletters"
@@ -424,12 +425,14 @@ msgstr "Newsletters"
 # msgid "Newsletters"
 # msgstr "Note de Recherche"
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:73
+#: jdapublicationsapp/forms.py:75
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:149
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:190
 msgid "Commentaries"
 msgstr "Commentaires"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:74
+#: jdapublicationsapp/forms.py:76
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:158
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs_old.html:203
 msgid "Reports"
@@ -1631,13 +1634,13 @@ msgstr "S'abonner"
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:181
+#: jdaplatform/settings.py:181 jdapublicationsapp/forms.py:101
 msgid "English"
 msgstr "Anglais"
 
-#: jdaplatform/settings.py:182
+#: jdaplatform/settings.py:182 jdapublicationsapp/forms.py:102
 msgid "French"
-msgstr "Francais"
+msgstr "Français"
 
 #: jdaplatform/settings.py:183
 msgid "Spanish"

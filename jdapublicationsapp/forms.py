@@ -71,9 +71,9 @@ class PublicationFilterForm(forms.ModelForm):
     CATEGORY_CHOICES = (
         ('', _('Category')),
         #('Models', ugettext_lazy('Models')),
-        ('Newsletters', 'Newsletters'),
-        ('Commentaries', 'Commentaries'),
-        ('Reports', 'Reports'),
+        ('Newsletters', _('Newsletters')),
+        ('Commentaries', _('Commentaries')),
+        ('Reports', _('Reports')),
     )
 
     RESEARCH_TYPE_CHOICES = (
@@ -98,8 +98,8 @@ class PublicationFilterForm(forms.ModelForm):
 
     LANGUAGE_CHOICES = (
         ('', _('Language')),
-        ('English', 'English'),
-        ('French', 'French'),
+        ('English', _('English')),
+        ('French', _('French')),
     )
 
 
