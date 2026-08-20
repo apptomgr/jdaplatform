@@ -1771,10 +1771,12 @@ msgid ""
 "This publication can't be previewed in the browser. Download it to view the "
 "contents."
 msgstr ""
+"Cette publication ne peut pas être prévisualisée dans le navigateur. "
+"Téléchargez-la pour consulter son contenu."
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_download_only.html:16
 msgid "Download"
-msgstr ""
+msgstr "Télécharger"
 
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_home.html:43
 msgid "Publications"
