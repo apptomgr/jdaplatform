@@ -82,8 +82,8 @@
                                 <td class="my_nopad2"> {{filterForm.pub_language| as_crispy_field}}</td>
                             </tr>
                             <td class="my_nopad2 text-center">
-                                <button type="submit" class="btn btn-sm btn-info mb-2">{% trans 'Filter' %}</button>
-                                <button type="reset" class="btn btn-sm btn-secondary  mb-2" onclick="location.href='{% url 'jdapublicationsapp_pubs' %}'">{% trans 'Reset' %}
+                                <button type="submit" class="btn btn-sm btn-info mb-2 pub-filter-btn">{% trans 'Filter' %}</button>
+                                <button type="reset" class="btn btn-sm btn-secondary  mb-2 pub-filter-btn" onclick="location.href='{% url 'jdapublicationsapp_pubs' %}'">{% trans 'Reset' %}
                                 </button>
                             </td>
                             </tr>
@@ -189,6 +189,16 @@
   word-break: break-all;
 }
 
+/* Touch targets below the ~44px guideline are hard to tap accurately on
+   mobile; the sidebar's Filter/Reset buttons default to Bootstrap's
+   .btn-sm sizing (~30px tall), so bump just these two rather than
+   .btn-sm globally. */
+.pub-filter-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
 
 </style>
 

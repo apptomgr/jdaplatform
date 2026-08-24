@@ -37,6 +37,8 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
+            min-height: 44px;
+            min-width: 44px;
         }
 
         button:hover { background: #555; }
@@ -63,7 +65,14 @@
             background: white;
             max-width: 100%;
             height: auto;
-            touch-action: pinch-zoom;
+            /* Match #canvas-container's touch-action. The effective
+               allowed gesture for a touch is the intersection of the
+               touched element's and its ancestors' touch-action values,
+               so a narrower value here (e.g. pinch-zoom only) silently
+               blocked single-finger panning even though the container
+               allowed it -- that's what forced the two-finger-drag
+               workaround. */
+            touch-action: pan-x pan-y pinch-zoom;
         }
 
         /* Mobile responsiveness */
@@ -155,6 +164,7 @@
         let currentPage = 1;
         let currentScale = null; // Will be calculated
         let autoFitWidth = true;
+        let currentRenderTask = null; // in-flight page.render() RenderTask, if any
         const ctx = canvas.getContext('2d');
 
         // Load PDF
@@ -168,7 +178,32 @@
             console.error(err);
         });
 
+        let pendingPageNum = null; // most recent page requested while a render was in flight
+
         function renderPage(pageNum) {
+            // Reflect the requested page immediately, matching the previous
+            // behavior -- only the canvas draw itself is deferred below.
+            document.getElementById('current-page').textContent = pageNum;
+
+            if (currentRenderTask) {
+                // A render is already in flight. RenderTask.cancel() doesn't
+                // tear down that operation synchronously, so starting a new
+                // render right away would still collide on the same canvas
+                // (PDF.js throws "Cannot use the same canvas during multiple
+                // render() operations", and visually the two renders'
+                // output gets composited together). Cancel it and queue
+                // this page to run once the cancellation actually settles;
+                // rapid repeat taps just collapse to rendering the last one
+                // requested.
+                pendingPageNum = pageNum;
+                currentRenderTask.cancel();
+                return;
+            }
+
+            doRenderPage(pageNum);
+        }
+
+        function doRenderPage(pageNum) {
             pdfDoc.getPage(pageNum).then(page => {
                 const container = document.getElementById('canvas-container');
 
@@ -200,14 +235,32 @@
                     ? [outputScale, 0, 0, outputScale, 0, 0]
                     : null;
 
-                page.render({
+                currentRenderTask = page.render({
                     canvasContext: ctx,
                     transform: transform,
                     viewport: scaledViewport
                 });
 
-                document.getElementById('current-page').textContent = pageNum;
+                currentRenderTask.promise.then(() => {
+                    currentRenderTask = null;
+                    drainPendingRender();
+                }, err => {
+                    currentRenderTask = null;
+                    // Expected whenever a newer render superseded this one.
+                    if (err && err.name === 'RenderingCancelledException') {
+                        drainPendingRender();
+                        return;
+                    }
+                    console.error(err);
+                });
             });
+        }
+
+        function drainPendingRender() {
+            if (pendingPageNum === null) return;
+            const next = pendingPageNum;
+            pendingPageNum = null;
+            doRenderPage(next);
         }
 
         function updateButtons() {
