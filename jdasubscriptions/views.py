@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from .models import SubscriptionPlan, CustomerSubscription, InstitutionSubscription
 from django.utils import timezone
-from dateutil.relativedelta import relativedelta
 from jdapayments.paystack import initialize_payment, verify_payment
 from django.contrib import messages
 
@@ -15,6 +14,8 @@ import requests
 from django.conf import settings
 import logging
 logger = logging.getLogger(__name__)
+
+from .billing import BILLING_PERIOD_DELTA
 
 #import requests
 #import logging
@@ -166,6 +167,7 @@ def paystack_callback(request):
     # --------------------------------------------------
     subscription.status = "active"
     subscription.starts_at = now
+    subscription.ends_at = now + BILLING_PERIOD_DELTA[subscription.plan.billing_period]
     subscription.paystack_reference = reference
     subscription.paystack_status = "success"
     subscription.save()

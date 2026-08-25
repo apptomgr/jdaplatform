@@ -343,6 +343,9 @@ def stream_publication_pdf(request, pk):
 
     if not (request.user.is_staff or request.user.is_superuser):
         if not user_has_active_subscription(request.user):
+            messages.warning(request, gettext(
+                "Your previous subscription plan already expired. Please subscribe to a new plan."
+            ))
             return redirect("jdasubscriptions:subscription_plan_list")
         if not user_can_access_publication(request.user, publication):
             upgrade_data = get_upgrade_recommendation(request.user, publication)
@@ -400,6 +403,9 @@ def protected_publication_by_pk(request, pk):
 
         # 1️⃣ Must be subscribed
         if not user_has_active_subscription(request.user):
+            messages.warning(request, gettext(
+                "Your previous subscription plan already expired. Please subscribe to a new plan."
+            ))
             return redirect("jdasubscriptions:subscription_plan_list")
 
         # 2️⃣ Must be allowed by plan
@@ -482,7 +488,10 @@ def protected_publication_content(request, pk):
     # Normal subscription checks
     # ---------------------------------------
     if not user_has_active_subscription(request.user):
-        return HttpResponseForbidden("No active subscription")
+        messages.warning(request, gettext(
+            "Your previous subscription plan already expired. Please subscribe to a new plan."
+        ))
+        return redirect("jdasubscriptions:subscription_plan_list")
 
     if not user_can_access_publication(request.user, publication):
         return HttpResponseForbidden("Plan does not allow access")
