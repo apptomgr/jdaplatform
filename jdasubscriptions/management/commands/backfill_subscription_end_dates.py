@@ -8,6 +8,9 @@ active subscriptions that are missing it, computed as
 `starts_at + BILLING_PERIOD_DELTA[plan.billing_period]`.
 
 Classification per row:
+  EXCLUDED        — the row's (model, id) is in EXCLUDED_SUBSCRIPTION_IDS
+                    below. NEVER written by --apply, regardless of flags.
+                    Checked before any other classification.
   OK              — ends_at can be computed unambiguously and is in the
                     future (or now). Written on --apply.
   ALREADY_EXPIRED — the computed ends_at is already in the past. NEVER
@@ -29,6 +32,31 @@ from django.utils import timezone
 
 from jdasubscriptions.billing import BILLING_PERIOD_DELTA
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription
+
+# Subscriptions that predate the Paystack/self-serve subscription system —
+# real customers who paid before this system existed, identified during the
+# 2026-08-25 production admin audit (starts_at in 2021-2023, no
+# paystack_reference, all created in one batch on 2026-04-23). These must
+# never be touched by this command, regardless of what their computed
+# ends_at would classify as. Keyed by (model class name, pk) since ids are
+# not unique across CustomerSubscription and InstitutionSubscription.
+EXCLUDED_SUBSCRIPTION_IDS = {
+    "CustomerSubscription": {
+        24,  # Tonny
+        25,  # Stephane
+        26,  # Maggie
+        27,  # Liban
+        29,  # Denis
+    },
+    "InstitutionSubscription": {
+        3,  # SGA2E
+        5,  # SGI_AGI
+        6,  # SGCS
+        7,  # LECOLEDELABOURSE
+        8,  # KEMOLCAPITAL
+        9,  # ABCO
+    },
+}
 
 
 class Command(BaseCommand):
@@ -62,11 +90,13 @@ class Command(BaseCommand):
         ok_rows = [r for r in rows if r["classification"] == "OK"]
         expired_rows = [r for r in rows if r["classification"] == "ALREADY_EXPIRED"]
         ambiguous_rows = [r for r in rows if r["classification"] == "AMBIGUOUS"]
+        excluded_rows = [r for r in rows if r["classification"] == "EXCLUDED"]
 
         self.stdout.write("")
         self.stdout.write(
             f"Summary: {len(ok_rows)} OK, {len(expired_rows)} ALREADY_EXPIRED "
-            f"(never auto-applied), {len(ambiguous_rows)} AMBIGUOUS (needs manual review)."
+            f"(never auto-applied), {len(ambiguous_rows)} AMBIGUOUS (needs manual review), "
+            f"{len(excluded_rows)} EXCLUDED (never auto-applied)."
         )
 
         if not apply_changes:
@@ -89,8 +119,22 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.WARNING(f"Skipped {len(ambiguous_rows)} AMBIGUOUS row(s) — needs manual review.")
             )
+        if excluded_rows:
+            self.stdout.write(
+                self.style.WARNING(f"Skipped {len(excluded_rows)} EXCLUDED row(s) — hard-coded, never touched.")
+            )
 
     def _classify(self, model, sub, now):
+        excluded_ids = EXCLUDED_SUBSCRIPTION_IDS.get(model.__name__, set())
+        if sub.id in excluded_ids:
+            return {
+                "model": model.__name__,
+                "subscription": sub,
+                "classification": "EXCLUDED",
+                "reason": "pre-Paystack legacy customer — hard exclusion, never touch",
+                "computed_ends_at": None,
+            }
+
         plan = sub.plan
         billing_period = getattr(plan, "billing_period", None)
 

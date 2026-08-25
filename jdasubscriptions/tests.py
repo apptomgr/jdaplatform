@@ -265,3 +265,82 @@ class BackfillCommandTests(TestCase):
         self.assertIsNone(sub.ends_at)
         self.assertIn("AMBIGUOUS", out.getvalue())
         self.assertIn("unrecognized billing_period", out.getvalue())
+
+    def test_excluded_id_is_never_applied_even_when_otherwise_ok(self):
+        """
+        An excluded row that would otherwise classify OK (future ends_at)
+        must still never be written by --apply. Confirms EXCLUDED is
+        checked before, and overrides, the normal OK/EXPIRED/AMBIGUOUS logic.
+        """
+        sub = self._sub(starts_at=self.now - timedelta(days=1), code_suffix="_excluded_ok")
+
+        with patch(
+            "jdasubscriptions.management.commands.backfill_subscription_end_dates.EXCLUDED_SUBSCRIPTION_IDS",
+            {"CustomerSubscription": {sub.id}},
+        ):
+            out = StringIO()
+            call_command("backfill_subscription_end_dates", "--apply", stdout=out)
+
+        sub.refresh_from_db()
+        self.assertIsNone(sub.ends_at, "EXCLUDED rows must never be written, even if otherwise OK")
+        self.assertIn("EXCLUDED", out.getvalue())
+        self.assertIn("1 EXCLUDED", out.getvalue())
+
+    def test_exclusion_is_scoped_per_model_not_by_raw_id(self):
+        """
+        CustomerSubscription and InstitutionSubscription have independent
+        primary key sequences, so the same numeric id can legitimately refer
+        to two different rows. Excluding an id for one model must not
+        exclude the other model's row that happens to share that id.
+        """
+        customer_sub = self._sub(starts_at=self.now - timedelta(days=1), code_suffix="_scope_customer")
+
+        institution_plan = SubscriptionPlan.objects.create(
+            code="test_inst_plan_scope",
+            name="Test Institution Plan Scope",
+            plan_type="institution",
+            billing_period="monthly",
+            price_fcfa=5000,
+            features=[],
+            is_active=True,
+        )
+        # Force the same numeric pk as customer_sub to prove exclusion is
+        # keyed by (model, id), not by id alone.
+        institution_sub = InstitutionSubscription.objects.create(
+            id=customer_sub.id,
+            user=self.user,
+            plan=institution_plan,
+            status="active",
+            starts_at=self.now - timedelta(days=1),
+            ends_at=None,
+        )
+
+        with patch(
+            "jdasubscriptions.management.commands.backfill_subscription_end_dates.EXCLUDED_SUBSCRIPTION_IDS",
+            {"CustomerSubscription": {customer_sub.id}},
+        ):
+            call_command("backfill_subscription_end_dates", "--apply", stdout=StringIO())
+
+        customer_sub.refresh_from_db()
+        institution_sub.refresh_from_db()
+
+        self.assertIsNone(customer_sub.ends_at, "excluded CustomerSubscription must not be written")
+        self.assertIsNotNone(
+            institution_sub.ends_at,
+            "InstitutionSubscription with the same numeric id, but not excluded, must still be written",
+        )
+
+    def test_hardcoded_exclusion_list_matches_2026_08_25_production_audit(self):
+        """
+        Pins the actual EXCLUDED_SUBSCRIPTION_IDS content against the 11 ids
+        identified in the production admin audit (Denis, Liban, Maggie,
+        Stephane, Tonny / ABCO, KEMOLCAPITAL, LECOLEDELABOURSE, SGCS,
+        SGI_AGI, SGA2E), so an accidental edit to the list is caught here
+        rather than silently changing which real customers are protected.
+        """
+        from jdasubscriptions.management.commands.backfill_subscription_end_dates import (
+            EXCLUDED_SUBSCRIPTION_IDS,
+        )
+
+        self.assertEqual(EXCLUDED_SUBSCRIPTION_IDS["CustomerSubscription"], {24, 25, 26, 27, 29})
+        self.assertEqual(EXCLUDED_SUBSCRIPTION_IDS["InstitutionSubscription"], {3, 5, 6, 7, 8, 9})
