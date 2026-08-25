@@ -1,0 +1,123 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% comment %}
+  Bilingual Terms and Conditions content, shared by the registration page's
+  scrollable review box. Kept as one partial (rather than duplicated inline
+  per template, or wrapped sentence-by-sentence in trans tags) since this
+  is large static legal text, not short UI strings.
+
+  The English text below is a WORKING TRANSLATION of the client-provided
+  French original, pending professional/legal review before this is
+  presented as a final English version. Do not treat it as authoritative.
+{% endcomment %}
+<div class="tc-scroll-box">
+{% if LANGUAGE_CODE == 'fr' %}
+    <h5 class="tc-title">Conditions d'utilisation</h5>
+
+    <h6 class="tc-heading">1. Éditeur, régulation et responsabilité</h6>
+    <p>Joseph &amp; Daniel Advisory (« JDA ») est une société constituée à Abidjan, en République de Côte d'Ivoire, autorisée et réglementée par l'Autorité des Marchés Financiers de l'Union Monétaire Ouest-Africaine (AMF-UMOA) pour l'exercice de ses activités dans le domaine des services financiers.</p>
+    <p>Dans le cadre de ses activités, JDA publie et met à la disposition de ses clients des rapports d'analyse, des notes de recherche, des lettres d'information (newsletters) ainsi que d'autres publications financières. Ces documents sont élaborés par le département Recherche &amp; Analyse de Joseph &amp; Daniel Advisory.</p>
+
+    <h6 class="tc-heading">2. Objet des informations diffusées</h6>
+    <p>La présente plateforme a exclusivement une vocation informative.</p>
+    <p>Les informations, analyses, commentaires, opinions et publications qui y figurent ne constituent en aucun cas un conseil en investissement, un conseil juridique, fiscal, comptable ou financier, ni une recommandation personnalisée.</p>
+    <p>Les analyses produites par le département Recherche &amp; Analyse sont établies sans tenir compte des objectifs d'investissement, de la situation financière ou des besoins particuliers d'un investisseur.</p>
+    <p>En conséquence, chaque utilisateur demeure seul responsable de l'évaluation des investissements ou stratégies présentés et doit déterminer, de manière indépendante ou avec l'assistance de ses propres conseillers, leur adéquation avec sa situation personnelle, ses objectifs et sa tolérance au risque.</p>
+
+    <h6 class="tc-heading">3. Exactitude des informations</h6>
+    <p>Les informations diffusées sur cette plateforme proviennent de transactions, de données statistiques, d'informations publiques et d'autres sources que Joseph &amp; Daniel Advisory considère comme fiables.</p>
+    <p>Toutefois, JDA ne garantit ni l'exactitude, ni l'exhaustivité, ni l'actualité des informations diffusées et celles-ci ne doivent pas être considérées comme telles.</p>
+    <p>Les rumeurs de marché éventuellement mentionnées proviennent de sources externes et ne constituent ni des faits établis ni l'expression des opinions officielles de Joseph &amp; Daniel Advisory.</p>
+    <p>JDA n'est tenue à aucune obligation de mise à jour, de correction ou de révision des documents publiés lorsque des informations, opinions, estimations ou prévisions deviennent inexactes ou évoluent avec le temps.</p>
+    <p>Conformément à la réglementation applicable, les opinions exprimées reflètent fidèlement les analyses personnelles des analystes concernés au moment de leur publication et peuvent être modifiées sans préavis.</p>
+    <p>La rémunération des analystes n'est liée à aucune recommandation, opinion ou conclusion spécifique figurant dans les rapports publiés.</p>
+    <p>Aucune communication, écrite ou orale, émanant de Joseph &amp; Daniel Advisory ne saurait être interprétée comme une garantie ou une assurance quant aux performances ou aux résultats futurs d'un investissement.</p>
+
+    <h6 class="tc-heading">4. Destinataires et restrictions de diffusion</h6>
+    <p><strong>4.1</strong> Aucune information publiée sur cette plateforme ne constitue une offre, une sollicitation, une invitation à investir, une recommandation d'achat ou de vente d'instruments financiers, ni une prestation de conseil en investissement.</p>
+    <p><strong>4.2</strong> La plateforme est destinée aux clients professionnels et aux clients particuliers, conformément à la réglementation applicable. Les produits et services mentionnés ne sont proposés qu'aux personnes que Joseph &amp; Daniel Advisory considère comme éligibles au regard des exigences réglementaires. Toute personne ne répondant pas à ces critères ne doit pas se fonder sur les informations diffusées.</p>
+    <p><strong>4.3</strong> Les documents disponibles sur cette plateforme ne peuvent être distribués que dans les juridictions où leur diffusion est autorisée par la réglementation applicable. Les personnes qui accèdent à ces documents sont responsables de vérifier qu'elles sont autorisées à les consulter et s'engagent à respecter l'ensemble des restrictions légales ou réglementaires applicables dans leur pays de résidence.</p>
+    <p><strong>4.4</strong> Les clients demeurent entièrement libres de souscrire aux services de recherche proposés par Joseph &amp; Daniel Advisory. Ils reconnaissent prendre leurs décisions d'investissement de manière indépendante et confirment ne considérer aucune communication, écrite ou orale, de JDA comme une recommandation personnalisée d'investissement.</p>
+    <p><strong>4.5</strong> Les clients professionnels s'engagent à ne communiquer tout ou partie des services de recherche qu'à leurs sociétés affiliées ou à leurs propres clients, dans les conditions convenues avec Joseph &amp; Daniel Advisory.</p>
+    <p>Les clients particuliers s'interdisent de reproduire, partager, diffuser ou communiquer, en tout ou partie, le contenu des services de recherche à des tiers, sauf autorisation écrite préalable de Joseph &amp; Daniel Advisory.</p>
+
+    <h6 class="tc-heading">5. Avertissement relatif aux risques</h6>
+    <p><strong>5.1</strong> Les prix, valorisations, objectifs de cours, estimations et prévisions sont fournis à titre indicatif uniquement. Ils reposent sur des hypothèses susceptibles d'être affectées par de nombreux facteurs économiques, financiers, monétaires, réglementaires ou politiques, notamment l'évolution des taux d'intérêt, des taux de change, des défauts de paiement ou des remboursements anticipés.</p>
+    <p><strong>5.2</strong> Tout investissement comporte un risque de perte en capital.</p>
+    <p>La valeur des instruments financiers ainsi que les revenus qui en découlent peuvent évoluer à la hausse comme à la baisse et varier de manière significative en fonction des conditions de marché.</p>
+    <p><strong>5.3</strong> Les performances passées ne préjugent en aucun cas des performances futures.</p>
+    <p>Les opinions, évaluations, projections et objectifs de cours constituent des estimations fondées sur les informations disponibles au moment de leur établissement. Elles ne constituent pas des faits et ne sauraient garantir la réalisation des résultats anticipés.</p>
+    <p>Les performances futures peuvent différer sensiblement des estimations présentées.</p>
+    <p><strong>5.4</strong> Les documents diffusés sur cette plateforme n'ont pas vocation à présenter de manière exhaustive l'ensemble des risques, directs ou indirects, susceptibles d'être associés aux investissements ou stratégies évoqués.</p>
+
+    <h6 class="tc-heading">6. Conflits d'intérêts</h6>
+    <p><strong>6.1</strong> Dans le cadre de ses activités, Joseph &amp; Daniel Advisory peut fournir différents services financiers et d'investissement.</p>
+    <p>Ses dirigeants, salariés ou représentants peuvent détenir ou prendre des positions sur des instruments financiers concernés par les analyses publiées, y compris des positions susceptibles d'être contraires aux opinions exprimées.</p>
+    <p><strong>6.2</strong> Joseph &amp; Daniel Advisory peut entretenir ou rechercher des relations commerciales, de conseil, d'ingénierie financière ou d'autres relations d'affaires avec les émetteurs mentionnés dans ses publications et percevoir une rémunération à ce titre.</p>
+    <p><strong>6.3</strong> Les analyses publiées peuvent ne pas refléter les informations détenues par d'autres départements de Joseph &amp; Daniel Advisory, notamment les équipes chargées des activités d'ingénierie financière ou d'autres activités réglementées.</p>
+
+    <h6 class="tc-heading">7. Exclusion de garantie</h6>
+    <p>Dans toute la mesure permise par la réglementation applicable, Joseph &amp; Daniel Advisory décline toute garantie, expresse ou implicite, concernant les informations diffusées sur cette plateforme.</p>
+    <p>Cela comprend notamment les garanties relatives à l'exactitude, l'exhaustivité, l'actualité, la qualité, la valeur marchande, l'adéquation à un usage particulier ou l'absence de violation des droits de tiers.</p>
+
+    <h6 class="tc-heading">8. Limitation de responsabilité</h6>
+    <p>Dans les limites autorisées par la loi, Joseph &amp; Daniel Advisory ne pourra être tenue responsable de tout dommage direct, indirect, accessoire, spécial, consécutif ou de toute perte financière résultant de l'utilisation ou de l'impossibilité d'utiliser les informations ou documents publiés sur cette plateforme.</p>
+    <p>Cette limitation couvre notamment les pertes de revenus, de bénéfices, d'opportunités, de clientèle, de réputation, les interruptions d'activité, les erreurs, omissions, défaillances techniques, virus informatiques ou tout autre dysfonctionnement informatique, même si Joseph &amp; Daniel Advisory a été informée de la possibilité de tels dommages. Aucune disposition des présentes ne saurait exclure une responsabilité dont l'exclusion est interdite par la réglementation applicable.</p>
+
+    <h6 class="tc-heading">9. Copyright et confidentialité</h6>
+    <p>L'ensemble des contenus diffusés sur cette plateforme, y compris les rapports, analyses, études, graphiques, tableaux, textes, logos et autres éléments, est soumis au droit d'auteur avec tous droits réservés et les informations sont privées et confidentielles pour votre usage personnel uniquement.</p>
+    <p>Sauf autorisation écrite préalable de Joseph &amp; Daniel Advisory, ces contenus ne peuvent être reproduits, copiés, diffusés, publiés, transmis, modifiés ou intégrés, en tout ou partie, dans un autre document ou support, quel qu'en soit le moyen.</p>
+    <p>Les informations communiquées sont confidentielles et sont exclusivement destinées à l'usage personnel ou professionnel du destinataire autorisé.</p>
+{% else %}
+    <h5 class="tc-title">Terms of Use</h5>
+
+    <h6 class="tc-heading">1. Publisher, Regulation, and Responsibility</h6>
+    <p>Joseph &amp; Daniel Advisory ("JDA") is a company incorporated in Abidjan, Republic of Côte d'Ivoire, authorized and regulated by the Financial Markets Authority of the West African Monetary Union (AMF-UMOA) for the conduct of its financial services activities.</p>
+    <p>As part of its activities, JDA publishes and makes available to its clients analytical reports, research notes, newsletters, and other financial publications. These documents are prepared by Joseph &amp; Daniel Advisory's Research &amp; Analysis department.</p>
+
+    <h6 class="tc-heading">2. Purpose of the Information Disseminated</h6>
+    <p>This platform is intended solely for informational purposes.</p>
+    <p>The information, analyses, commentary, opinions, and publications it contains do not constitute investment advice, legal, tax, accounting, or financial advice, nor a personalized recommendation of any kind.</p>
+    <p>Analyses produced by the Research &amp; Analysis department are prepared without regard to any individual investor's investment objectives, financial situation, or particular needs.</p>
+    <p>Accordingly, each user remains solely responsible for evaluating the investments or strategies presented and must determine, independently or with the assistance of their own advisors, their suitability in light of their personal situation, objectives, and risk tolerance.</p>
+
+    <h6 class="tc-heading">3. Accuracy of Information</h6>
+    <p>Information disseminated on this platform is derived from transactions, statistical data, publicly available information, and other sources that Joseph &amp; Daniel Advisory considers reliable.</p>
+    <p>However, JDA does not guarantee the accuracy, completeness, or timeliness of the information disseminated, and it should not be regarded as such.</p>
+    <p>Any market rumors mentioned originate from external sources and do not constitute established facts nor the expression of Joseph &amp; Daniel Advisory's official opinions.</p>
+    <p>JDA is under no obligation to update, correct, or revise published documents when information, opinions, estimates, or forecasts become inaccurate or change over time.</p>
+    <p>In accordance with applicable regulations, the opinions expressed faithfully reflect the personal analyses of the relevant analysts at the time of publication and may be changed without notice.</p>
+    <p>Analyst compensation is not tied to any specific recommendation, opinion, or conclusion contained in published reports.</p>
+    <p>No communication, written or oral, from Joseph &amp; Daniel Advisory shall be construed as a guarantee or assurance regarding the future performance or results of any investment.</p>
+
+    <h6 class="tc-heading">4. Recipients and Distribution Restrictions</h6>
+    <p><strong>4.1</strong> No information published on this platform constitutes an offer, solicitation, invitation to invest, recommendation to buy or sell financial instruments, or the provision of investment advice.</p>
+    <p><strong>4.2</strong> The platform is intended for professional and retail clients, in accordance with applicable regulations. The products and services mentioned are offered only to persons whom Joseph &amp; Daniel Advisory considers eligible under applicable regulatory requirements. Any person who does not meet these criteria should not rely on the information disseminated.</p>
+    <p><strong>4.3</strong> Documents available on this platform may only be distributed in jurisdictions where such distribution is permitted under applicable regulations. Persons accessing these documents are responsible for verifying that they are authorized to consult them and agree to comply with all legal or regulatory restrictions applicable in their country of residence.</p>
+    <p><strong>4.4</strong> Clients remain entirely free to subscribe to the research services offered by Joseph &amp; Daniel Advisory. They acknowledge making their investment decisions independently and confirm that they do not regard any communication, written or oral, from JDA as a personalized investment recommendation.</p>
+    <p><strong>4.5</strong> Professional clients agree to share all or part of the research services only with their affiliated companies or their own clients, under terms agreed with Joseph &amp; Daniel Advisory.</p>
+    <p>Retail clients agree not to reproduce, share, distribute, or communicate, in whole or in part, the content of the research services to third parties, except with the prior written authorization of Joseph &amp; Daniel Advisory.</p>
+
+    <h6 class="tc-heading">5. Risk Warning</h6>
+    <p><strong>5.1</strong> Prices, valuations, price targets, estimates, and forecasts are provided for indicative purposes only. They are based on assumptions that may be affected by numerous economic, financial, monetary, regulatory, or political factors, including changes in interest rates, exchange rates, defaults, or early repayments.</p>
+    <p><strong>5.2</strong> All investment carries a risk of capital loss. The value of financial instruments and the income derived from them may rise or fall and vary significantly depending on market conditions.</p>
+    <p><strong>5.3</strong> Past performance is not indicative of future performance. Opinions, valuations, projections, and price targets are estimates based on information available at the time they were prepared. They do not constitute facts and cannot guarantee that anticipated results will be achieved. Future performance may differ materially from the estimates presented.</p>
+    <p><strong>5.4</strong> Documents disseminated on this platform are not intended to present, in an exhaustive manner, all direct or indirect risks that may be associated with the investments or strategies discussed.</p>
+
+    <h6 class="tc-heading">6. Conflicts of Interest</h6>
+    <p><strong>6.1</strong> As part of its activities, Joseph &amp; Daniel Advisory may provide various financial and investment services. Its executives, employees, or representatives may hold or take positions in financial instruments covered by published analyses, including positions that may be contrary to the opinions expressed.</p>
+    <p><strong>6.2</strong> Joseph &amp; Daniel Advisory may maintain or seek commercial, advisory, financial engineering, or other business relationships with issuers mentioned in its publications and may receive compensation in connection therewith.</p>
+    <p><strong>6.3</strong> Published analyses may not reflect information held by other departments of Joseph &amp; Daniel Advisory, including teams responsible for financial engineering activities or other regulated activities.</p>
+
+    <h6 class="tc-heading">7. Disclaimer of Warranty</h6>
+    <p>To the fullest extent permitted by applicable regulations, Joseph &amp; Daniel Advisory disclaims all warranties, express or implied, regarding the information disseminated on this platform. This includes, without limitation, warranties as to accuracy, completeness, timeliness, quality, merchantability, fitness for a particular purpose, or non-infringement of third-party rights.</p>
+
+    <h6 class="tc-heading">8. Limitation of Liability</h6>
+    <p>To the extent permitted by law, Joseph &amp; Daniel Advisory shall not be liable for any direct, indirect, incidental, special, consequential damages, or financial loss resulting from the use or inability to use the information or documents published on this platform. This limitation covers, in particular, loss of revenue, profits, opportunities, clientele, or reputation, business interruption, errors, omissions, technical failures, computer viruses, or any other IT malfunction, even if Joseph &amp; Daniel Advisory has been advised of the possibility of such damages. Nothing herein shall exclude any liability that cannot be excluded under applicable regulations.</p>
+
+    <h6 class="tc-heading">9. Copyright and Confidentiality</h6>
+    <p>All content disseminated on this platform, including reports, analyses, studies, charts, tables, texts, logos, and other elements, is protected by copyright with all rights reserved, and the information is private and confidential for your personal use only.</p>
+    <p>Except with the prior written authorization of Joseph &amp; Daniel Advisory, this content may not be reproduced, copied, distributed, published, transmitted, modified, or incorporated, in whole or in part, into any other document or medium, by any means whatsoever.</p>
+    <p>The information communicated is confidential and is intended solely for the personal or professional use of the authorized recipient.</p>
+{% endif %}
+</div>

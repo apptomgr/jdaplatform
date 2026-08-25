@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 13:39-0400\n"
+"POT-Creation-Date: 2026-08-25 16:04-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,6 +56,14 @@ msgstr "Numéro de téléphone"
 #: accounts/templates/registration/admin_tasks.html:39
 msgid "Email"
 msgstr "Email"
+
+#: accounts/forms.py:49
+msgid "I have read and accept the Terms and Conditions"
+msgstr "J'ai lu et j'accepte les Conditions d'utilisation"
+
+#: accounts/forms.py:50
+msgid "You must accept the Terms and Conditions to register."
+msgstr "Vous devez accepter les Conditions d'utilisation pour vous inscrire."
 
 #: accounts/templates/registration/account_admin.html:22
 #: accounts/templates/registration/account_admin_update.html:21
@@ -193,7 +201,7 @@ msgstr "Tâches administratives"
 #: accounts/templates/registration/login.html:42
 #: accounts/templates/registration/profile.html:38
 #: accounts/templates/registration/profile_edit.html:38
-#: accounts/templates/registration/register.html:75
+#: accounts/templates/registration/register.html:106
 #: accounts/templates/registration/signup.html:35
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:36
 msgid "Our Apps"
@@ -201,7 +209,7 @@ msgstr "Nos Applications"
 
 #: accounts/templates/registration/login.html:48
 #: accounts/templates/registration/login.html:80
-#: accounts/templates/registration/register.html:149
+#: accounts/templates/registration/register.html:210
 #: accounts/templates/registration/verification_success.html:27
 #: jdamainapp/templates/jdamainapp/base.html:187
 #: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:368
@@ -209,7 +217,7 @@ msgid "Login"
 msgstr "Connexion"
 
 #: accounts/templates/registration/login.html:87
-#: accounts/templates/registration/register.html:140
+#: accounts/templates/registration/register.html:201
 msgid "or"
 msgstr "ou"
 
@@ -223,7 +231,7 @@ msgid "Register"
 msgstr "S'inscrire"
 
 #: accounts/templates/registration/login.html:123
-#: accounts/templates/registration/register.html:173
+#: accounts/templates/registration/register.html:234
 #: accounts/templates/registration/signup.html:77
 #: jdafinancialsapp/templates/jdafinancialsapp/jdafinancialsapp_home.html:43
 #: jdamainapp/templates/jdamainapp/base.html:78
@@ -232,7 +240,7 @@ msgid "Financials App"
 msgstr "App Financiére"
 
 #: accounts/templates/registration/login.html:137
-#: accounts/templates/registration/register.html:193
+#: accounts/templates/registration/register.html:254
 #: accounts/templates/registration/signup.html:97
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_home.html:48
 #: jdamainapp/templates/jdamainapp/base.html:100
@@ -241,27 +249,27 @@ msgid "Analytics App"
 msgstr "App Boursiére"
 
 #: accounts/templates/registration/login.html:152
-#: accounts/templates/registration/register.html:212
+#: accounts/templates/registration/register.html:273
 #: accounts/templates/registration/signup.html:116
 #: jdamainapp/templates/jdamainapp/base.html:115
 #: jdamainapp/templates/jdamainapp/jdamainapp_home.html:97
 msgid "Publications App"
 msgstr "Publications"
 
-#: accounts/templates/registration/register.html:82
+#: accounts/templates/registration/register.html:113
 msgid "Registration"
 msgstr "Inscription"
 
-#: accounts/templates/registration/register.html:87
+#: accounts/templates/registration/register.html:118
 msgid "Please fix the following errors:"
 msgstr "Veuillez corriger les erreurs suivantes :"
 
-#: accounts/templates/registration/register.html:133
+#: accounts/templates/registration/register.html:180
 #: accounts/templates/registration/signup.html:48
 msgid "Create an account"
 msgstr "Créer mon compte"
 
-#: accounts/templates/registration/register.html:145
+#: accounts/templates/registration/register.html:206
 msgid "Already registered?"
 msgstr "Déjà inscrit ?"
 

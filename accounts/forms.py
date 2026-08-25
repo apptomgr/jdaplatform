@@ -44,6 +44,12 @@ class UserRegisterForm(UserCreationForm):
         widget=forms.TextInput(attrs={'placeholder': _('Phone Number')}))
     email = forms.EmailField(required=True, label=_('Email'),
         widget=forms.EmailInput(attrs={'placeholder': _('Email')}))
+    terms_accepted = forms.BooleanField(
+        required=True,
+        label=_('I have read and accept the Terms and Conditions'),
+        error_messages={'required': _('You must accept the Terms and Conditions to register.')},
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+    )
 
     class Meta:
         model = User
