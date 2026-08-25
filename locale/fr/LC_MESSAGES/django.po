@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-20 10:38-0400\n"
+"POT-Creation-Date: 2026-08-25 13:39-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -204,7 +204,7 @@ msgstr "Nos Applications"
 #: accounts/templates/registration/register.html:149
 #: accounts/templates/registration/verification_success.html:27
 #: jdamainapp/templates/jdamainapp/base.html:187
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:358
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:368
 msgid "Login"
 msgstr "Connexion"
 
@@ -493,7 +493,7 @@ msgid "Open"
 msgstr "Ouvert"
 
 #: jdaanalyticsapp/templates/jdaanalyticsapp/jdaanalyticsapp_rpt.html:98
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:206
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:216
 msgid "Close"
 msgstr "Fermeture"
 
@@ -1890,11 +1890,11 @@ msgstr "Agrandir"
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:350
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:360
 msgid "Access Restricted"
 msgstr "Accès Restreint"
 
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:356
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:366
 msgid ""
 "You must sign up or log in with the proper authorization to view this "
 "document."
@@ -1902,7 +1902,7 @@ msgstr ""
 "Vous devez vous inscrire ou vous connecter avec l'autorisation appropriée "
 "pour consulter ce document."
 
-#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:359
+#: jdapublicationsapp/templates/jdapublicationsapp/jdapublicationsapp_pubs.html:369
 msgid "Sign Up"
 msgstr "S'inscrire"
 
@@ -1946,18 +1946,27 @@ msgstr "société '%(company)s'"
 msgid "language '%(pub_language)s'"
 msgstr "langue '%(pub_language)s'"
 
-#: jdapublicationsapp/views.py:693
+#: jdapublicationsapp/views.py:347 jdapublicationsapp/views.py:407
+#: jdapublicationsapp/views.py:492
+msgid ""
+"Your previous subscription plan already expired. Please subscribe to a new "
+"plan."
+msgstr ""
+"Votre précédent abonnement a déjà expiré. Veuillez souscrire à une nouvelle "
+"offre."
+
+#: jdapublicationsapp/views.py:702
 msgid "all empty filters"
 msgstr "tous les filtres vides"
 
-#: jdapublicationsapp/views.py:697
+#: jdapublicationsapp/views.py:706
 #, python-format
 msgid "Found %(count)d item associated with %(desc)s"
 msgid_plural "Found %(count)d items associated with %(desc)s"
 msgstr[0] "%(count)d élément trouvé associé à %(desc)s"
 msgstr[1] "%(count)d éléments trouvés associés à %(desc)s"
 
-#: jdapublicationsapp/views.py:703
+#: jdapublicationsapp/views.py:712
 #, python-format
 msgid "Could not find any items associated with %(desc)s"
 msgstr "Aucun élément trouvé associé à %(desc)s"
