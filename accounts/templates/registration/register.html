@@ -63,6 +63,37 @@
         min-width: 42px;
         justify-content: center;
     }
+    .tc-scroll-box {
+        max-height: 220px;
+        overflow-y: auto;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        padding: 0.75rem 1rem;
+        background: #f8f9fa;
+        text-align: left;
+        font-size: 0.78rem;
+        line-height: 1.4;
+        color: #495057;
+    }
+    .tc-scroll-box .tc-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+    .tc-scroll-box .tc-heading {
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-top: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+    .tc-scroll-box .tc-heading:first-of-type {
+        margin-top: 0;
+    }
+    .tc-scroll-box p {
+        margin-bottom: 0.4rem;
+    }
+    #id_terms_accepted {
+        margin-top: 0.2rem;
+    }
 </style>
 <div class="jumbotron jumbotron bg-cover">
     <div class="overlay"></div>
@@ -100,6 +131,7 @@
                         <form method="post" novalidate class="text-left">
                             {% csrf_token %}
                             {% for field in form %}
+                            {% if field.name != 'terms_accepted' %}
                             <div style="margin-bottom: 0.5rem;">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -128,11 +160,40 @@
                                 <small class="text-danger" style="font-size:0.75rem;">{{ error }}</small>
                                 {% endfor %}
                             </div>
+                            {% endif %}
                             {% endfor %}
+
+                            <div style="margin-bottom: 0.5rem;">
+                                {% include 'registration/_terms_and_conditions.html' %}
+                                <div class="form-check mt-2">
+                                    {{ form.terms_accepted }}
+                                    <label class="form-check-label" for="{{ form.terms_accepted.id_for_label }}" style="font-size:0.8rem; color:#495057 !important;">
+                                        {{ form.terms_accepted.label }}
+                                    </label>
+                                    {% for error in form.terms_accepted.errors %}
+                                    <small class="text-danger d-block">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
                             <div class="text-center mt-3">
-                                <button type="submit" class="btn btn-sm btn-info">{% trans 'Create an account' %}</button>
+                                <button type="submit" id="register-submit-btn" class="btn btn-sm btn-info" disabled>{% trans 'Create an account' %}</button>
                             </div>
                         </form>
+                        <script>
+                            (function () {
+                                var termsCheckbox = document.getElementById('{{ form.terms_accepted.id_for_label }}');
+                                var submitBtn = document.getElementById('register-submit-btn');
+                                if (!termsCheckbox || !submitBtn) {
+                                    return;
+                                }
+                                function syncSubmitState() {
+                                    submitBtn.disabled = !termsCheckbox.checked;
+                                }
+                                termsCheckbox.addEventListener('change', syncSubmitState);
+                                syncSubmitState();
+                            })();
+                        </script>
 
                         <!-- Divider -->
                         <div class="text-center my-3">
