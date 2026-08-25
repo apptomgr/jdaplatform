@@ -221,7 +221,13 @@ class BackfillCommandTests(TestCase):
             sub.refresh_from_db()
             self.assertIsNone(sub.ends_at, "dry run must never write")
 
-    def test_apply_writes_only_ok_rows(self):
+    def test_apply_writes_ok_and_already_expired_but_not_ambiguous(self):
+        """
+        Per Ivan's revised decision (Paystack still in test mode, most of
+        these were never real paid transactions): --apply now auto-expires
+        ALREADY_EXPIRED rows too, with no individual notification. Only
+        AMBIGUOUS (and EXCLUDED, covered separately) stay untouched.
+        """
         ok_sub = self._sub(starts_at=self.now - timedelta(days=1), code_suffix="_ok2")
         expired_sub = self._sub(starts_at=self.now - timedelta(days=400), code_suffix="_expired2")
         ambiguous_sub = self._sub(starts_at=None, code_suffix="_ambiguous2")
@@ -234,7 +240,8 @@ class BackfillCommandTests(TestCase):
         ambiguous_sub.refresh_from_db()
 
         self.assertIsNotNone(ok_sub.ends_at)
-        self.assertIsNone(expired_sub.ends_at, "ALREADY_EXPIRED must never be auto-applied")
+        self.assertIsNotNone(expired_sub.ends_at, "ALREADY_EXPIRED rows are now auto-expired by --apply")
+        self.assertLess(expired_sub.ends_at, self.now, "auto-expired row's ends_at should be the computed past date")
         self.assertIsNone(ambiguous_sub.ends_at, "AMBIGUOUS must never be auto-applied")
 
     def test_unrecognized_billing_period_is_ambiguous_not_guessed(self):
@@ -285,6 +292,29 @@ class BackfillCommandTests(TestCase):
         self.assertIsNone(sub.ends_at, "EXCLUDED rows must never be written, even if otherwise OK")
         self.assertIn("EXCLUDED", out.getvalue())
         self.assertIn("1 EXCLUDED", out.getvalue())
+
+    def test_excluded_id_is_never_applied_even_when_otherwise_already_expired(self):
+        """
+        This is the actual real-world shape of all 11 excluded production
+        rows: starts_at years in the past, which would otherwise classify
+        ALREADY_EXPIRED and now (per the auto-expire decision) get written
+        by --apply. The exclusion must still win.
+        """
+        sub = self._sub(starts_at=self.now - timedelta(days=1500), code_suffix="_excluded_expired")
+
+        with patch(
+            "jdasubscriptions.management.commands.backfill_subscription_end_dates.EXCLUDED_SUBSCRIPTION_IDS",
+            {"CustomerSubscription": {sub.id}},
+        ):
+            out = StringIO()
+            call_command("backfill_subscription_end_dates", "--apply", stdout=out)
+
+        sub.refresh_from_db()
+        self.assertIsNone(
+            sub.ends_at,
+            "EXCLUDED rows must never be auto-expired, even though they'd otherwise classify ALREADY_EXPIRED",
+        )
+        self.assertIn("EXCLUDED", out.getvalue())
 
     def test_exclusion_is_scoped_per_model_not_by_raw_id(self):
         """

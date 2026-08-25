@@ -10,21 +10,24 @@ active subscriptions that are missing it, computed as
 Classification per row:
   EXCLUDED        — the row's (model, id) is in EXCLUDED_SUBSCRIPTION_IDS
                     below. NEVER written by --apply, regardless of flags.
-                    Checked before any other classification.
+                    Checked before any other classification, so it
+                    overrides what the row would otherwise classify as.
   OK              — ends_at can be computed unambiguously and is in the
                     future (or now). Written on --apply.
-  ALREADY_EXPIRED — the computed ends_at is already in the past. NEVER
-                    written by --apply, regardless of flags. Cutting off
-                    a customer who's had access this whole time needs a
-                    prior notification, which is a manual follow-up
-                    outside this command.
+  ALREADY_EXPIRED — the computed ends_at is already in the past. Written
+                    on --apply (auto-expired with no individual customer
+                    notification — Paystack is still in test mode, so
+                    most of these were never real paid transactions).
+                    Rows that are real pre-Paystack customers must go in
+                    EXCLUDED_SUBSCRIPTION_IDS instead, not be left to this
+                    classification.
   AMBIGUOUS       — starts_at is missing, or plan.billing_period isn't in
                     the known table. Never written; needs manual review.
 
 Run:
   python manage.py backfill_subscription_end_dates            # dry run (default)
   python manage.py backfill_subscription_end_dates --dry-run  # same, explicit
-  python manage.py backfill_subscription_end_dates --apply    # writes OK rows only
+  python manage.py backfill_subscription_end_dates --apply    # writes OK and ALREADY_EXPIRED rows
 """
 
 from django.core.management.base import BaseCommand
@@ -66,7 +69,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--apply",
             action="store_true",
-            help="Write ends_at for OK rows. Without this flag, only reports what would change.",
+            help="Write ends_at for OK and ALREADY_EXPIRED rows (skips EXCLUDED/AMBIGUOUS). Without this flag, only reports what would change.",
         )
 
     def handle(self, *args, **options):
@@ -95,26 +98,27 @@ class Command(BaseCommand):
         self.stdout.write("")
         self.stdout.write(
             f"Summary: {len(ok_rows)} OK, {len(expired_rows)} ALREADY_EXPIRED "
-            f"(never auto-applied), {len(ambiguous_rows)} AMBIGUOUS (needs manual review), "
+            f"(auto-expired on --apply, no individual notification), "
+            f"{len(ambiguous_rows)} AMBIGUOUS (needs manual review), "
             f"{len(excluded_rows)} EXCLUDED (never auto-applied)."
         )
 
         if not apply_changes:
-            self.stdout.write(self.style.WARNING("\nDry run only — no rows were written. Re-run with --apply to write OK rows."))
+            self.stdout.write(self.style.WARNING(
+                "\nDry run only — no rows were written. "
+                "Re-run with --apply to write OK and ALREADY_EXPIRED rows."
+            ))
             return
 
-        for row in ok_rows:
+        applied_rows = ok_rows + expired_rows
+        for row in applied_rows:
             row["subscription"].ends_at = row["computed_ends_at"]
             row["subscription"].save(update_fields=["ends_at"])
 
-        self.stdout.write(self.style.SUCCESS(f"\nApplied: wrote ends_at for {len(ok_rows)} row(s)."))
-        if expired_rows:
-            self.stdout.write(
-                self.style.WARNING(
-                    f"Skipped {len(expired_rows)} ALREADY_EXPIRED row(s) — these need customer "
-                    "notification before anyone sets ends_at on them."
-                )
-            )
+        self.stdout.write(self.style.SUCCESS(
+            f"\nApplied: wrote ends_at for {len(applied_rows)} row(s) "
+            f"({len(ok_rows)} OK, {len(expired_rows)} auto-expired)."
+        ))
         if ambiguous_rows:
             self.stdout.write(
                 self.style.WARNING(f"Skipped {len(ambiguous_rows)} AMBIGUOUS row(s) — needs manual review.")
