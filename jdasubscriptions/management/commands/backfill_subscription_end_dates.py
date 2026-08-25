@@ -71,9 +71,14 @@ class Command(BaseCommand):
             action="store_true",
             help="Write ends_at for OK and ALREADY_EXPIRED rows (skips EXCLUDED/AMBIGUOUS). Without this flag, only reports what would change.",
         )
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Explicit no-op — dry-run is already the default whenever --apply is omitted.",
+        )
 
     def handle(self, *args, **options):
-        apply_changes = options["apply"]
+        apply_changes = options["apply"] and not options["dry_run"]
         now = timezone.now()
 
         rows = []

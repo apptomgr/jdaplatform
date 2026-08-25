@@ -221,6 +221,31 @@ class BackfillCommandTests(TestCase):
             sub.refresh_from_db()
             self.assertIsNone(sub.ends_at, "dry run must never write")
 
+    def test_explicit_dry_run_flag_does_not_error_and_does_not_write(self):
+        """
+        The docstring advertises `--dry-run` as an explicit no-op alias for
+        the default (no-flag) behavior. It must actually be a recognized
+        argparse flag, not just documented — this caught a real gap where
+        the flag was described but never implemented.
+        """
+        ok_sub = self._sub(starts_at=self.now - timedelta(days=1), code_suffix="_explicit_dry_run")
+
+        out = StringIO()
+        call_command("backfill_subscription_end_dates", "--dry-run", stdout=out)
+
+        ok_sub.refresh_from_db()
+        self.assertIsNone(ok_sub.ends_at)
+        self.assertIn("Dry run only", out.getvalue())
+
+    def test_dry_run_overrides_apply_when_both_passed(self):
+        """Safety net: --apply --dry-run together must not write anything."""
+        ok_sub = self._sub(starts_at=self.now - timedelta(days=1), code_suffix="_both_flags")
+
+        call_command("backfill_subscription_end_dates", "--apply", "--dry-run", stdout=StringIO())
+
+        ok_sub.refresh_from_db()
+        self.assertIsNone(ok_sub.ends_at, "--dry-run must override --apply when both are passed")
+
     def test_apply_writes_ok_and_already_expired_but_not_ambiguous(self):
         """
         Per Ivan's revised decision (Paystack still in test mode, most of
