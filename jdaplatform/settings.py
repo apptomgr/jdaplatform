@@ -77,7 +77,6 @@ INSTALLED_APPS = [
     'jdadev',
     'jdasubscriptions',
     'jdapayments',
-    "paystack_test",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

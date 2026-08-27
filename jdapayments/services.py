@@ -1,5 +1,6 @@
 from django.utils import timezone
 from jdapayments.models import Payment
+from jdasubscriptions.billing import BILLING_PERIOD_DELTA
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription
 
 def reprocess_payment(reference: str) -> str:
@@ -61,6 +62,7 @@ def reprocess_payment(reference: str) -> str:
 
     subscription.status = "active"
     subscription.starts_at = now
+    subscription.ends_at = now + BILLING_PERIOD_DELTA[subscription.plan.billing_period]
     subscription.paystack_reference = payment.reference
     subscription.paystack_status = "success"
     subscription.save()
