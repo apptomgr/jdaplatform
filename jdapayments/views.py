@@ -85,7 +85,7 @@ def initialize_customer_payment(request, subscription_id):
         defaults={
             "user": subscription.user,
             "amount": subscription.plan.price_fcfa,
-            "status": "pending",
+            "status": "initialized",
             "raw_response": result,
         }
     )
@@ -175,7 +175,7 @@ def initialize_institution_payment(request, subscription_id):
         defaults={
             "user": subscription.user,
             "amount": subscription.plan.price_fcfa,
-            "status": "pending",
+            "status": "initialized",
             "raw_response": result,
         }
     )

@@ -28,6 +28,7 @@ urlpatterns = [
     path("plans/", views.subscription_plan_list, name="subscription_plan_list"),
     path("select/<int:plan_id>/", views.select_subscription_plan, name="select_subscription_plan"),
     path("paystack/callback/", views.paystack_callback, name="paystack_callback"),
+    path("paystack/webhook/", views.paystack_webhook, name="paystack_webhook"),
     path("success/", views.subscription_success, name="subscription_success"),
     path("failed/", views.subscription_failed, name="subscription_failed",),
     path("upgrade/", views.subscription_upgrade, name="subscription_upgrade",),

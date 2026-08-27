@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.core.management import call_command
 from django.utils import timezone
 
+from jdapayments.models import Payment
 from jdasubscriptions.billing import BILLING_PERIOD_DELTA
 from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
 from jdasubscriptions.services.access_services import user_has_active_subscription, _get_active_subscription
@@ -140,7 +141,7 @@ class PaystackCallbackActivationTests(TestCase):
             },
         }
 
-    @patch("jdasubscriptions.views.requests.get")
+    @patch("jdapayments.paystack.requests.get")
     def test_customer_activation_sets_ends_at_from_billing_period(self, mock_get):
         plan = _make_plan("quarterly", "_activation")
         draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
@@ -157,7 +158,7 @@ class PaystackCallbackActivationTests(TestCase):
         self.assertGreaterEqual(draft.ends_at, before + BILLING_PERIOD_DELTA["quarterly"])
         self.assertLessEqual(draft.ends_at, after + BILLING_PERIOD_DELTA["quarterly"])
 
-    @patch("jdasubscriptions.views.requests.get")
+    @patch("jdapayments.paystack.requests.get")
     def test_institution_activation_sets_ends_at_from_billing_period(self, mock_get):
         plan = SubscriptionPlan.objects.create(
             code="test_inst_plan_yearly",
@@ -179,6 +180,270 @@ class PaystackCallbackActivationTests(TestCase):
         self.assertEqual(draft.status, "active")
         self.assertIsNotNone(draft.ends_at)
         self.assertGreaterEqual(draft.ends_at, before + BILLING_PERIOD_DELTA["yearly"] - timedelta(minutes=1))
+
+
+class PaystackWebhookTests(TestCase):
+    """
+    The server-to-server webhook — the reliable primary activation path,
+    independent of the customer's browser completing a redirect back to
+    paystack_callback. Covers signature verification, idempotency against
+    duplicate delivery, ignoring irrelevant event types, and that the
+    webhook and the browser callback can't double-activate the same
+    payment when both fire for it.
+    """
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="webhook_test_user",
+            email="webhook_test@example.com",
+            password="testpass123",
+        )
+
+    def _charge_success_payload(self, subscription, subscription_type, reference="webhook_test_ref"):
+        return {
+            "event": "charge.success",
+            "data": {
+                "status": "success",
+                "amount": 100000,
+                "reference": reference,
+                "metadata": {
+                    "subscription_id": subscription.id,
+                    "subscription_type": subscription_type,
+                    "user_id": self.user.id,
+                },
+            },
+        }
+
+    def _signed_post(self, payload):
+        import hashlib
+        import hmac
+        import json
+
+        from django.conf import settings
+
+        raw_body = json.dumps(payload).encode("utf-8")
+        signature = hmac.new(
+            settings.PAYSTACK_SECRET_KEY.encode("utf-8"), raw_body, hashlib.sha512
+        ).hexdigest()
+        return self.client.post(
+            reverse("jdasubscriptions:paystack_webhook"),
+            data=raw_body,
+            content_type="application/json",
+            HTTP_X_PAYSTACK_SIGNATURE=signature,
+        )
+
+    def _stub_verify_response(self, payload):
+        data = payload["data"]
+        return {"status": True, "data": data}
+
+    @patch("jdapayments.paystack.requests.get")
+    def test_valid_signature_charge_success_activates_subscription(self, mock_get):
+        plan = _make_plan("monthly", "_webhook_ok")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = self._charge_success_payload(draft, "customer", reference="webhook_ref_ok")
+        mock_get.return_value.json.return_value = self._stub_verify_response(payload)
+
+        before = timezone.now()
+        response = self._signed_post(payload)
+        after = timezone.now()
+
+        self.assertEqual(response.status_code, 200)
+        draft.refresh_from_db()
+        self.assertEqual(draft.status, "active")
+        self.assertIsNotNone(draft.ends_at)
+        self.assertGreaterEqual(draft.ends_at, before + BILLING_PERIOD_DELTA["monthly"])
+        self.assertLessEqual(draft.ends_at, after + BILLING_PERIOD_DELTA["monthly"])
+
+        payment = Payment.objects.get(reference="webhook_ref_ok")
+        self.assertEqual(payment.status, "success")
+
+    @patch("jdapayments.paystack.requests.get")
+    def test_refreshes_a_payment_row_pre_created_at_checkout_initiation(self, mock_get):
+        """
+        Found via a real end-to-end pass against real Paystack test-mode
+        API calls, not by the mocked test suite: initialize_customer_payment
+        / initialize_institution_payment already create the Payment row at
+        checkout-initiation time (status "initialized", amount = the raw
+        plan price, raw_response = the /transaction/initialize response —
+        no metadata in it at all). get_or_create's defaults never apply to
+        an existing row, so without refreshing it here, the row keeps those
+        stale values forever: the wrong amount, and a raw_response
+        reprocess_payment can't extract metadata from. This reproduces that
+        exact real-world shape rather than the simplified "Payment doesn't
+        exist yet" case the other tests use.
+        """
+        plan = _make_plan("monthly", "_webhook_preexisting_payment")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        reference = "webhook_ref_preexisting_payment"
+
+        # Mirrors initialize_customer_payment's Payment.objects.update_or_create
+        Payment.objects.create(
+            user=self.user,
+            amount=int(plan.price_fcfa),  # stale: raw price, not the verified subunit amount
+            reference=reference,
+            status="initialized",
+            raw_response={
+                "status": True,
+                "message": "Authorization URL created",
+                "data": {
+                    "authorization_url": "https://checkout.paystack.com/fake",
+                    "access_code": "fake_access_code",
+                    "reference": reference,
+                },
+            },
+        )
+
+        payload = self._charge_success_payload(draft, "customer", reference=reference)
+        payload["data"]["amount"] = 250000  # the real verified subunit amount
+        mock_get.return_value.json.return_value = self._stub_verify_response(payload)
+
+        response = self._signed_post(payload)
+
+        self.assertEqual(response.status_code, 200)
+        draft.refresh_from_db()
+        self.assertEqual(draft.status, "active")
+
+        payment = Payment.objects.get(reference=reference)
+        self.assertEqual(payment.status, "success")
+        self.assertEqual(payment.amount, 250000, "must be refreshed from the verified amount, not left stale")
+        self.assertIn(
+            "metadata", payment.raw_response,
+            "raw_response must be refreshed to the verified data so reprocess_payment can read metadata from it",
+        )
+
+    def test_invalid_signature_is_rejected_without_touching_the_database(self):
+        plan = _make_plan("monthly", "_webhook_badsig")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = self._charge_success_payload(draft, "customer", reference="webhook_ref_badsig")
+
+        response = self.client.post(
+            reverse("jdasubscriptions:paystack_webhook"),
+            data=payload,
+            content_type="application/json",
+            HTTP_X_PAYSTACK_SIGNATURE="not-a-real-signature",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        draft.refresh_from_db()
+        self.assertEqual(draft.status, "draft")
+        self.assertFalse(Payment.objects.filter(reference="webhook_ref_badsig").exists())
+
+    def test_missing_signature_header_is_rejected(self):
+        plan = _make_plan("monthly", "_webhook_nosig")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = self._charge_success_payload(draft, "customer", reference="webhook_ref_nosig")
+
+        response = self.client.post(
+            reverse("jdasubscriptions:paystack_webhook"),
+            data=payload,
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    @patch("jdapayments.paystack.requests.get")
+    def test_duplicate_delivery_only_activates_once(self, mock_get):
+        plan = _make_plan("monthly", "_webhook_dup")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = self._charge_success_payload(draft, "customer", reference="webhook_ref_dup")
+        mock_get.return_value.json.return_value = self._stub_verify_response(payload)
+
+        first = self._signed_post(payload)
+        draft.refresh_from_db()
+        first_ends_at = draft.ends_at
+
+        second = self._signed_post(payload)
+        draft.refresh_from_db()
+
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(draft.ends_at, first_ends_at, "redelivery must not recompute/shift ends_at")
+        self.assertEqual(Payment.objects.filter(reference="webhook_ref_dup").count(), 1)
+
+    def test_non_charge_success_event_is_acknowledged_and_ignored(self):
+        plan = _make_plan("monthly", "_webhook_otherevent")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = {
+            "event": "charge.failed",
+            "data": {
+                "status": "failed",
+                "reference": "webhook_ref_otherevent",
+                "metadata": {
+                    "subscription_id": draft.id,
+                    "subscription_type": "customer",
+                    "user_id": self.user.id,
+                },
+            },
+        }
+
+        response = self._signed_post(payload)
+
+        self.assertEqual(response.status_code, 200)
+        draft.refresh_from_db()
+        self.assertEqual(draft.status, "draft")
+        self.assertFalse(Payment.objects.filter(reference="webhook_ref_otherevent").exists())
+
+    @patch("jdapayments.paystack.requests.get")
+    def test_webhook_then_browser_callback_do_not_double_activate(self, mock_get):
+        """
+        The scenario this whole feature exists for: both paths fire for
+        the same payment (webhook arrives, then the browser also completes
+        its redirect, or vice versa). Only the first to arrive should
+        actually activate anything.
+        """
+        plan = _make_plan("monthly", "_webhook_then_callback")
+        draft = CustomerSubscription.objects.create(user=self.user, plan=plan, status="draft")
+        payload = self._charge_success_payload(draft, "customer", reference="webhook_ref_race")
+        mock_get.return_value.json.return_value = self._stub_verify_response(payload)
+
+        webhook_response = self._signed_post(payload)
+        draft.refresh_from_db()
+        ends_at_after_webhook = draft.ends_at
+
+        self.assertEqual(webhook_response.status_code, 200)
+        self.assertEqual(draft.status, "active")
+        self.assertIsNotNone(ends_at_after_webhook)
+
+        self.client.force_login(self.user)
+        callback_response = self.client.get(
+            reverse("jdasubscriptions:paystack_callback"), {"reference": "webhook_ref_race"}
+        )
+
+        draft.refresh_from_db()
+        self.assertEqual(callback_response.status_code, 302)
+        self.assertEqual(draft.status, "active")
+        self.assertEqual(draft.ends_at, ends_at_after_webhook, "browser callback must not re-activate")
+        self.assertEqual(Payment.objects.filter(reference="webhook_ref_race").count(), 1)
+
+    @patch("jdapayments.paystack.requests.get")
+    def test_subscription_not_found_is_acknowledged_but_left_recoverable(self, mock_get):
+        """
+        A data problem (bad/stale metadata) isn't something Paystack
+        retrying will fix, so this still returns 200 — but the Payment
+        must stay "initialized", not "success", so it surfaces for the
+        admin "Reprocess selected payments" action rather than being
+        silently invisible to it.
+        """
+        payload = {
+            "event": "charge.success",
+            "data": {
+                "status": "success",
+                "amount": 100000,
+                "reference": "webhook_ref_notfound",
+                "metadata": {
+                    "subscription_id": 999999,
+                    "subscription_type": "customer",
+                    "user_id": self.user.id,
+                },
+            },
+        }
+        mock_get.return_value.json.return_value = self._stub_verify_response(payload)
+
+        response = self._signed_post(payload)
+
+        self.assertEqual(response.status_code, 200)
+        payment = Payment.objects.get(reference="webhook_ref_notfound")
+        self.assertEqual(payment.status, "initialized")
 
 
 class BackfillCommandTests(TestCase):
