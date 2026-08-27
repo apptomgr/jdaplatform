@@ -33,8 +33,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls'), name='register'),
     path('jdadev/', include('jdadev.urls')),
     path("jdasubscriptions/", include("jdasubscriptions.urls", namespace="jdasubscriptions")),
-    path("paystack-test/", include("paystack_test.urls")),
-
 
 ]
 
