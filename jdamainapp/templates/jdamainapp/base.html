@@ -59,6 +59,24 @@
 
 <body data-spy="scroll" data-target="#navbar-example">
 
+<style>
+    /* Financials App / Analytics App: greyed out, non-interactive nav link for
+       non-admin/non-staff users while those apps aren't ready yet. The mobile
+       nav (.mobile-nav) is a JS-cloned copy of .nav-menu at runtime, so both
+       selectors are needed to cover desktop and mobile. */
+    .nav-menu .nav-link-disabled,
+    .mobile-nav .nav-link-disabled {
+        color: #6c757d !important;
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.65;
+    }
+    .nav-menu .nav-link-disabled i,
+    .mobile-nav .nav-link-disabled i {
+        color: #6c757d !important;
+    }
+</style>
+
 <!-- ======= Header ======= -->
 <header class="fixed-top" id="header">
     <div class="container-custom d-flex"> <!-- container-fluid -->
@@ -75,6 +93,7 @@
             <ul>
                 <li class="active"><a href="{% url 'jdamainapp_home' %}">{% trans 'JDA Platform' %}</a></li>
 
+                {% if user.is_staff or user.is_superuser %}
                 <li class="drop-down"><a href="{% url 'jdafinancialsapp_home' %}"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a>
                     {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs" %}
                    <ul>
@@ -96,7 +115,11 @@
                     </ul>
                     {% endif%}
                 </li>
+                {% else %}
+                <li class="drop-down"><a class="nav-link-disabled" aria-disabled="true"><i class="far fa-compass"></i> {% trans 'Financials App' %}</a></li>
+                {% endif %}
 
+                {% if user.is_staff or user.is_superuser %}
                 <li class="drop-down"><a href="{% url 'jdaanalyticsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a>
                     {% if user_grp == "admins" or user_grp == "managers" or user_grp == "staffs"  or user_grp == "customers"%}
                     <ul>
@@ -111,6 +134,9 @@
                     </ul>
                     {% endif%}
                 </li>
+                {% else %}
+                <li class="drop-down"><a class="nav-link-disabled" aria-disabled="true"><i class="far fa-newspaper"></i> {% trans 'Analytics App' %}</a></li>
+                {% endif %}
 
                 <li class="drop-down"><a href="{% url 'jdapublicationsapp_home' %}"><i class="far fa-newspaper"></i> {% trans 'Publications App' %}</a>
                     <ul>
