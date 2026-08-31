@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-25 16:04-0400\n"
+"POT-Creation-Date: 2026-08-31 11:01-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,6 +292,44 @@ msgstr ""
 #: accounts/templates/registration/verification_sent.html:35
 msgid "Back to Login"
 msgstr "Retour à la connexion"
+
+#: accounts/templates/registration/verification_email.html:5
+#, python-format
+msgid "Hello %(first_name)s,"
+msgstr "Bonjour %(first_name)s,"
+
+#: accounts/templates/registration/verification_email.html:6
+msgid "Thank you for registering on JDA Platform."
+msgstr "Merci de vous être inscrit sur JDA Platform."
+
+#: accounts/templates/registration/verification_email.html:7
+msgid ""
+"Please click the link below to verify your email and activate your account:"
+msgstr ""
+"Veuillez cliquer sur le lien ci-dessous pour vérifier votre e-mail et "
+"activer votre compte :"
+
+#: accounts/templates/registration/verification_email.html:8
+msgid "Activate My Account"
+msgstr "Activer mon compte"
+
+#: accounts/templates/registration/verification_email.html:9
+msgid "This link will expire in 48 hours."
+msgstr "Ce lien expirera dans 48 heures."
+
+#: accounts/templates/registration/verification_email.html:10
+msgid "If you did not create this account, please ignore this email."
+msgstr ""
+"Si vous n'êtes pas à l'origine de la création de ce compte, veuillez "
+"ignorer cet e-mail."
+
+#: accounts/templates/registration/verification_email.html:11
+msgid "Best regards,"
+msgstr "Cordialement,"
+
+#: accounts/templates/registration/verification_email.html:11
+msgid "JDA Team"
+msgstr "Équipe JDA"
 
 #: accounts/templates/registration/verification_failed.html:11
 msgid "Verification Failed"
@@ -1642,15 +1680,15 @@ msgstr "S'abonner"
 msgid "hello"
 msgstr "Bonjour"
 
-#: jdaplatform/settings.py:181 jdapublicationsapp/forms.py:101
+#: jdaplatform/settings.py:180 jdapublicationsapp/forms.py:101
 msgid "English"
 msgstr "Anglais"
 
-#: jdaplatform/settings.py:182 jdapublicationsapp/forms.py:102
+#: jdaplatform/settings.py:181 jdapublicationsapp/forms.py:102
 msgid "French"
 msgstr "Français"
 
-#: jdaplatform/settings.py:183
+#: jdaplatform/settings.py:182
 msgid "Spanish"
 msgstr ""
 
