@@ -107,61 +107,7 @@
 </div>
 
 
-<div class="card shadow-sm p-2 mb-2 bg-white rounded">
-    <!-- ======= Services Section ======= -->
-    <div id="services" class="services-area my_area-padding">
-        <div class="container-fluid">
-            <div class="row text-center">
-                <!-- Start Left services -->
-                <div class="col-md-4 col-sm-12 col-xs-12">
-                    <div class="about-move">
-                        <div class="services-details">
-                            <div class="single-services">
-                                <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}">
-                                    <i class="far fa-compass fa-2x my_info_txt"></i>
-                                </a>
-                                <h4>{% trans 'Financials App' %}</h4>
-
-                            </div>
-                        </div>
-                        <!-- end about-details -->
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-12 col-xs-12 vl">
-                    <div class="about-move">
-                        <div class="services-details">
-                            <div class="single-services">
-                                <a class="services-icon" href="{% url 'jdaanalyticsapp_home' %}">
-                                    <i class="fas fa-chart-line fa-2x my_info_txt"></i>
-                                </a>
-                                <h4>{% trans 'Analytics App' %}</h4>
-
-                            </div>
-                        </div>
-                        <!-- end about-details -->
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-12 col-xs-12 vl">
-                    <!-- end col-md-4 -->
-                    <div class=" about-move">
-                        <div class="services-details">
-                            <div class="single-services">
-                                <a class="services-icon" href="{% url 'jdapublicationsapp_home' %}">
-                                    <i class="fas fa-newspaper fa-2x my_info_txt"></i>
-                                </a>
-                                <h4>{% trans 'Publications App' %}</h4>
-
-                            </div>
-                        </div>
-                        <!-- end about-details -->
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div><!-- End Services Section -->
-</div>
+{% include 'jdamainapp/_app_tiles.html' %}
 
 
 {% endblock %}
