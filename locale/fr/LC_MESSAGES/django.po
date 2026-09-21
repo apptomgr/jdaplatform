@@ -1746,7 +1746,7 @@ msgstr "Feedback Assemblées Générales"
 
 #: jdapublicationsapp/forms.py:94
 msgid "Stock Pitch"
-msgstr "Argumentaire d'Investissement"
+msgstr "Stock Pitch"
 
 #: jdapublicationsapp/forms.py:95
 msgid "Opinion on all stocks"
