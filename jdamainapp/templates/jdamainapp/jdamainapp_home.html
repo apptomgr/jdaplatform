@@ -23,6 +23,15 @@
         background-image: url({% static 'jdamainapp/assets/img/slider/buildings2.png' %});
     }
 
+    /* Financials App / Analytics App: non-interactive tile for non-admin/non-staff
+       users while those apps aren't ready yet. Icon and label stay full color
+       (unlike the header nav's greyed-out treatment) - only the click/navigation
+       behavior is removed. */
+    .app-tile-disabled {
+        cursor: default;
+        pointer-events: none;
+    }
+
 </style>
 
 <div class="jumbotron jumbotron bg-cover">
@@ -51,16 +60,14 @@
                     <div class="about-move">
                         <div class="services-details">
                             <div class="single-services">
-                                <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}">
-                                    <i class="far fa-compass fa-2x my_info_txt"></i>
+                                <a class="services-icon" href="{% url 'jdapublicationsapp_home' %}">
+                                    <i class="fas fa-newspaper fa-2x my_info_txt"></i>
                                 </a>
-
-                                <h4>{% trans 'Financials App' %}</h4>
+                                <h4> {% trans 'Publications App' %}</h4>
                                 <!--p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Models
-                                    <i class="far fa-check-circle my_info_txt"></i> Newsletters
-                                    <i class="far fa-check-circle my_info_txt"></i> Commentaries
-                                    <i class="far fa-check-circle my_info_txt"></i> Reports
+                                    <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
+                                    <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
+                                    <i class="far fa-check-circle my_info_txt"></i> Annual Reports
 
                                 </p-->
                             </div>
@@ -72,9 +79,15 @@
                     <div class="about-move">
                         <div class="services-details">
                             <div class="single-services">
+                                {% if user.is_staff or user.is_superuser %}
                                 <a class="services-icon" href="{% url 'jdaanalyticsapp_home' %}">
                                     <i class="fas fa-chart-line fa-2x my_info_txt"></i>
                                 </a>
+                                {% else %}
+                                <a class="services-icon app-tile-disabled" aria-disabled="true">
+                                    <i class="fas fa-chart-line fa-2x my_info_txt"></i>
+                                </a>
+                                {% endif %}
                                 <h4> {% trans 'Analytics App' %} </h4>
                                 <!--p>
                                     <i class="far fa-check-circle my_info_txt"></i> Valuation Models
@@ -91,14 +104,22 @@
                     <div class=" about-move">
                         <div class="services-details">
                             <div class="single-services">
-                                <a class="services-icon" href="{% url 'jdapublicationsapp_home' %}">
-                                    <i class="fas fa-newspaper fa-2x my_info_txt"></i>
+                                {% if user.is_staff or user.is_superuser %}
+                                <a class="services-icon" href="{% url 'jdafinancialsapp_home' %}">
+                                    <i class="far fa-compass fa-2x my_info_txt"></i>
                                 </a>
-                                <h4> {% trans 'Publications App' %}</h4>
+                                {% else %}
+                                <a class="services-icon app-tile-disabled" aria-disabled="true">
+                                    <i class="far fa-compass fa-2x my_info_txt"></i>
+                                </a>
+                                {% endif %}
+
+                                <h4>{% trans 'Financials App' %}</h4>
                                 <!--p>
-                                    <i class="far fa-check-circle my_info_txt"></i> Daily Market briefings
-                                    <i class="far fa-check-circle my_info_txt"></i> Weekly Comments
-                                    <i class="far fa-check-circle my_info_txt"></i> Annual Reports
+                                    <i class="far fa-check-circle my_info_txt"></i> Models
+                                    <i class="far fa-check-circle my_info_txt"></i> Newsletters
+                                    <i class="far fa-check-circle my_info_txt"></i> Commentaries
+                                    <i class="far fa-check-circle my_info_txt"></i> Reports
 
                                 </p-->
                             </div>
