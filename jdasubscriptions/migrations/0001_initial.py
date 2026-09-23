@@ -3,6 +3,128 @@
 from django.db import migrations, models
 
 
+def create_initial_subscription_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model("jdasubscriptions", "SubscriptionPlan")
+
+    plans = [
+        {
+            "code": "akwaba_monthly",
+            "name": "Akwaba",
+            "description": "Basic access for individual investors",
+            "plan_type": "customer",
+            "billing_period": "monthly",
+            "price_fcfa": 2500,
+            "display_order": 1,
+        },
+        {
+            "code": "akwaba_plus_monthly",
+            "name": "Akwaba+",
+            "description": "Enhanced premium access",
+            "plan_type": "customer",
+            "billing_period": "monthly",
+            "price_fcfa": 5000,
+            "display_order": 2,
+        },
+        {
+            "code": "akwaba_gold_monthly",
+            "name": "Akwaba Gold",
+            "description": "Full access to all services",
+            "plan_type": "customer",
+            "billing_period": "monthly",
+            "price_fcfa": 25000,
+            "display_order": 3,
+        },
+        {
+            "code": "akwaba_yearly",
+            "name": "Akwaba",
+            "description": "Basic access for individual investors",
+            "plan_type": "customer",
+            "billing_period": "yearly",
+            "price_fcfa": 25000,
+            "display_order": 4,
+        },
+        {
+            "code": "akwaba_plus_yearly",
+            "name": "Akwaba+",
+            "description": "Enhanced premium access",
+            "plan_type": "customer",
+            "billing_period": "yearly",
+            "price_fcfa": 50000,
+            "display_order": 5,
+        },
+        {
+            "code": "akwaba_gold_yearly",
+            "name": "Akwaba Gold",
+            "description": "Full access to all services",
+            "plan_type": "customer",
+            "billing_period": "yearly",
+            "price_fcfa": 250000,
+            "display_order": 6,
+        },
+        {
+            "code": "silver_access_monthly",
+            "name": "Silver Access",
+            "description": "Full platform access for institutions",
+            "plan_type": "institution",
+            "billing_period": "monthly",
+            "price_fcfa": 225000,
+            "display_order": 7,
+        },
+        {
+            "code": "gold_access_monthly",
+            "name": "Gold Access",
+            "description": "Complete institutional package",
+            "plan_type": "institution",
+            "billing_period": "monthly",
+            "price_fcfa": 450000,
+            "display_order": 8,
+        },
+        {
+            "code": "silver_access_yearly",
+            "name": "Silver Access",
+            "description": "Full platform access for institutions",
+            "plan_type": "institution",
+            "billing_period": "yearly",
+            "price_fcfa": 2500000,
+            "display_order": 11,
+        },
+        {
+            "code": "gold_access_yearly",
+            "name": "Gold Access",
+            "description": "Complete institutional package",
+            "plan_type": "institution",
+            "billing_period": "yearly",
+            "price_fcfa": 5000000,
+            "display_order": 12,
+        },
+    ]
+
+    for plan in plans:
+        SubscriptionPlan.objects.create(
+            **plan,
+            is_active=True,
+        )
+
+
+def remove_initial_subscription_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model("jdasubscriptions", "SubscriptionPlan")
+
+    SubscriptionPlan.objects.filter(
+        code__in=[
+            "akwaba_monthly",
+            "akwaba_plus_monthly",
+            "akwaba_gold_monthly",
+            "akwaba_yearly",
+            "akwaba_plus_yearly",
+            "akwaba_gold_yearly",
+            "silver_access_monthly",
+            "gold_access_monthly",
+            "silver_access_yearly",
+            "gold_access_yearly",
+        ]
+    ).delete()
+
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -29,5 +151,9 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'SubscriptionPlan',
                 'ordering': ['display_order', 'price_fcfa'],
             },
+        ),
+        migrations.RunPython(
+            create_initial_subscription_plans,
+            reverse_code=remove_initial_subscription_plans,
         ),
     ]

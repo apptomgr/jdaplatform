@@ -2,6 +2,46 @@
 
 from django.db import migrations, models
 
+def create_institution_quarterly_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model("jdasubscriptions", "SubscriptionPlan")
+
+    plans = [
+        {
+            "code": "silver_access_quarterly",
+            "name": "Silver Access",
+            "description": "Full platform access for institutions",
+            "plan_type": "institution",
+            "billing_period": "quarterly",
+            "price_fcfa": 650000,
+            "display_order": 9,
+        },
+        {
+            "code": "gold_access_quarterly",
+            "name": "Gold Access",
+            "description": "Complete institutional package",
+            "plan_type": "institution",
+            "billing_period": "quarterly",
+            "price_fcfa": 1300000,
+            "display_order": 10,
+        },
+    ]
+
+    for plan in plans:
+        SubscriptionPlan.objects.create(
+            **plan,
+            is_active=True,
+        )
+
+
+def remove_institution_quarterly_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model("jdasubscriptions", "SubscriptionPlan")
+
+    SubscriptionPlan.objects.filter(
+        code__in=[
+            "silver_access_quarterly",
+            "gold_access_quarterly",
+        ]
+    ).delete()
 
 class Migration(migrations.Migration):
 
@@ -23,6 +63,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='subscriptionplan',
             name='billing_period',
-            field=models.CharField(choices=[('monthly', 'Monthly'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')], max_length=20),
+            field=models.CharField(
+                choices=[
+                    ('monthly', 'Monthly'),
+                    ('quarterly', 'Quarterly'),
+                    ('yearly', 'Yearly'),
+                ],
+                max_length=20,
+            ),
+        ),
+        migrations.RunPython(
+            create_institution_quarterly_plans,
+            reverse_code=remove_institution_quarterly_plans,
         ),
     ]
