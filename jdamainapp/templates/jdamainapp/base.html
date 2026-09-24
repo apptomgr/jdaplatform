@@ -149,7 +149,7 @@
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdapublicationsapp_company_listing' %}"><i class="far fa-eye"></i> {% trans 'View Companies' %}</a></li>
                         <li><a href="{% url 'jdapublicationsapp_new_company' %}"><i class="fa fa-plus-circle"></i> {% trans 'Add Company' %}</a></li>
-                        {% if user.is_staff or user.is_superuser %}
+                        {% if user.is_staff or user.is_superuser or user|has_group:"Sales Staff" %}
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdasubscriptions:sub_dashboard' %}"><i class="fas fa-users"></i> {% trans 'Subs Dashboard' %}</a></li>
                         {% endif %}
@@ -180,7 +180,7 @@
                 <li class="drop-down"><a href="#"><i aria-hidden="true" class="fa fa-user text-info"></i><b> {{user.username}}</b></a>
                     <ul>
                         <li><a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> {% trans 'My Account' %}</a></li>
-                        {% if user.is_staff %}
+                        {% if user.is_staff or user.is_superuser or user|has_group:"Sales Staff" %}
                         <li><hr class="my_hr_divider"></li>
                         <li><a href="{% url 'jdasubscriptions:sub_dashboard' %}"><i class="fas fa-users"></i> {% trans 'Subscription Dashboard' %}</a></li>
                         {% endif %}

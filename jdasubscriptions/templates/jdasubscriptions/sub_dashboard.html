@@ -220,6 +220,7 @@
                         <td>{{ sub.ends_at|date:"Y-m-d"|default:"-" }}</td>
                         <td class="text-monospace small">{{ sub.paystack_reference|default:"-" }}</td>
                         <td nowrap>
+                            {% if request.user.is_staff or request.user.is_superuser %}
                             {% if sub.status == 'active' %}
                             <form method="post" action="{% url 'jdasubscriptions:expire_subscription' %}" style="display:inline;">
                                 {% csrf_token %}
@@ -235,6 +236,7 @@
                                     onclick="openExtendModal('{{ sub.pk }}', 'customer')">
                                 Extend
                             </button>
+                            {% endif %}
                             {% if request.user.is_superuser %}
                             <form method="post" action="{% url 'jdasubscriptions:delete_subscription' 'customer' sub.pk %}" style="display:inline;">
                                 {% csrf_token %}
@@ -338,6 +340,7 @@
                         <td>{{ sub.ends_at|date:"Y-m-d"|default:"-" }}</td>
                         <td class="text-monospace small">{{ sub.paystack_reference|default:"-" }}</td>
                         <td nowrap>
+                            {% if request.user.is_staff or request.user.is_superuser %}
                             {% if sub.status == 'active' %}
                             <form method="post" action="{% url 'jdasubscriptions:expire_subscription' %}" style="display:inline;">
                                 {% csrf_token %}
@@ -353,6 +356,7 @@
                                     onclick="openExtendModal('{{ sub.pk }}', 'institution')">
                                 Extend
                             </button>
+                            {% endif %}
                             {% if request.user.is_superuser %}
                             <form method="post" action="{% url 'jdasubscriptions:delete_subscription' 'institution' sub.pk %}" style="display:inline;">
                                 {% csrf_token %}
@@ -488,6 +492,7 @@
 {% endif %}
 
 <!-- Extend Subscription Modal -->
+{% if request.user.is_staff or request.user.is_superuser %}
 <div class="modal fade" id="extendModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -516,6 +521,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}
 
