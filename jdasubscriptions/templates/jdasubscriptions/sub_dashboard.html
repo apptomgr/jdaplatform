@@ -185,6 +185,7 @@
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Phone</th>
                         <th>Plan</th>
                         <th>Billing</th>
                         <th>Status</th>
@@ -201,6 +202,7 @@
                         <td>{{ sub.user.get_full_name|default:sub.user.username }}</td>
                         <td>{{ sub.user.username }}</td>
                         <td>{{ sub.user.email }}</td>
+                        <td>{{ sub.user.profile.phone_number|default:"-" }}</td>
                         <td>{{ sub.plan.name }}</td>
                         <td>{{ sub.plan.billing_period }}</td>
                         <td>
@@ -246,7 +248,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="text-center text-muted py-4">No customer subscriptions found.</td>
+                        <td colspan="12" class="text-center text-muted py-4">No customer subscriptions found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -301,6 +303,7 @@
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
+                        <th>Phone</th>
                         <th>Plan</th>
                         <th>Billing</th>
                         <th>Status</th>
@@ -317,6 +320,7 @@
                         <td>{{ sub.user.get_full_name|default:sub.user.username }}</td>
                         <td>{{ sub.user.username }}</td>
                         <td>{{ sub.user.email }}</td>
+                        <td>{{ sub.user.profile.phone_number|default:"-" }}</td>
                         <td>{{ sub.plan.name }}</td>
                         <td>{{ sub.plan.billing_period }}</td>
                         <td>
@@ -362,7 +366,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="text-center text-muted py-4">No institution subscriptions found.</td>
+                        <td colspan="12" class="text-center text-muted py-4">No institution subscriptions found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>

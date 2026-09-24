@@ -208,8 +208,8 @@ def sub_dashboard(request):
     if deny:
         return deny
     # Base querysets
-    customer_qs = CustomerSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
-    institution_qs = InstitutionSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    customer_qs = CustomerSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
+    institution_qs = InstitutionSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
 
     # Apply filters
     customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
