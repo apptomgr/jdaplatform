@@ -54,7 +54,7 @@ def register(request):
                 from_email=None,
                 recipient_list=[user.email],
                 html_message=html_message,
-                fail_silently=True,
+                fail_silently=False,
             )
             request.session['pending_verification_email'] = user.email
             request.session['pending_verification_username'] = user.username
@@ -181,7 +181,7 @@ def resend_verification(request):
                 from_email=None,
                 recipient_list=[inactive_user.email],
                 html_message=html_message,
-                fail_silently=True,
+                fail_silently=False,
             )
             messages.success(
                 request,
