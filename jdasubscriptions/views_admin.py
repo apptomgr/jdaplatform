@@ -208,8 +208,8 @@ def sub_dashboard(request):
     if deny:
         return deny
     # Base querysets
-    customer_qs = CustomerSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
-    institution_qs = InstitutionSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    customer_qs = CustomerSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
+    institution_qs = InstitutionSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
 
     # Apply filters
     customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
@@ -220,7 +220,8 @@ def sub_dashboard(request):
             Q(user__username__icontains=keyword) |
             Q(user__first_name__icontains=keyword) |
             Q(user__last_name__icontains=keyword) |
-            Q(user__email__icontains=keyword)
+            Q(user__email__icontains=keyword) |
+            Q(user__profile__phone_number__icontains=keyword)
         )
         customer_qs = customer_qs.filter(kq)
         institution_qs = institution_qs.filter(kq)
@@ -352,20 +353,22 @@ def export_subscriptions_csv(request):
     deny = _staff_only(request)
     if deny:
         return deny
-    customer_qs = CustomerSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
-    institution_qs = InstitutionSubscription.objects.select_related('user', 'plan').order_by('-starts_at')
+    customer_qs = CustomerSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
+    institution_qs = InstitutionSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
     customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="subscriptions.csv"'
     writer = csv.writer(response)
-    writer.writerow(['#', 'Type', 'Name', 'Username', 'Email', 'Plan', 'Billing', 'Status', 'Start', 'End', 'Payment Ref'])
+    writer.writerow(['#', 'Type', 'Name', 'Username', 'Email', 'Phone', 'Plan', 'Billing', 'Status', 'Start', 'End', 'Payment Ref'])
 
     row_num = 1
     for sub in customer_qs:
         name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        profile = getattr(sub.user, 'profile', None)
         writer.writerow([
             row_num, 'Customer', name, sub.user.username, sub.user.email,
+            profile.phone_number if profile else '',
             sub.plan.name, sub.plan.billing_period, sub.status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
@@ -374,8 +377,10 @@ def export_subscriptions_csv(request):
         row_num += 1
     for sub in institution_qs:
         name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        profile = getattr(sub.user, 'profile', None)
         writer.writerow([
             row_num, 'Institution', name, sub.user.username, sub.user.email,
+            profile.phone_number if profile else '',
             sub.plan.name, sub.plan.billing_period, sub.status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
