@@ -1,0 +1,152 @@
+name: Refresh TEST database from PROD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  refresh-test-database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify database secrets are configured and different
+        env:
+          PROD_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$PROD_DATABASE_URL" ]; then
+            echo "PROD_DATABASE_URL is not configured."
+            exit 1
+          fi
+
+          if [ -z "$TEST_DATABASE_URL" ]; then
+            echo "TEST_DATABASE_URL is not configured."
+            exit 1
+          fi
+
+          if [ "$PROD_DATABASE_URL" = "$TEST_DATABASE_URL" ]; then
+            echo "SAFETY CHECK FAILED: production and test database URLs are identical."
+            exit 1
+          fi
+
+          echo "Database URL safety check passed."
+
+      - name: Verify production database
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          docker run --rm \
+            -e DATABASE_URL \
+            -e PGCONNECT_TIMEOUT=10 \
+            postgres:17 \
+            psql "$DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT
+                  current_database() AS database,
+                  current_user AS user,
+                  inet_server_addr() AS server_address,
+                  version() AS server_version;
+              "
+
+      - name: Verify TEST database
+        env:
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          docker run --rm \
+            -e DATABASE_URL \
+            -e PGCONNECT_TIMEOUT=10 \
+            postgres:17 \
+            psql "$DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT
+                  current_database() AS database,
+                  current_user AS user,
+                  inet_server_addr() AS server_address,
+                  version() AS server_version;
+              "
+
+      - name: Refresh TEST database from PROD
+        env:
+          PROD_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          echo "Starting production → TEST database refresh..."
+          echo "No database dump will be stored as a GitHub artifact."
+
+          docker run --rm \
+            -e PROD_DATABASE_URL \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            bash -c '
+              set -euo pipefail
+
+              pg_dump \
+                "$PROD_DATABASE_URL" \
+                --format=custom \
+                --no-owner \
+                --no-acl \
+              | pg_restore \
+                  --dbname="$TEST_DATABASE_URL" \
+                  --clean \
+                  --if-exists \
+                  --no-owner \
+                  --no-acl \
+                  --exit-on-error
+
+              echo "Production → TEST restore completed successfully."
+            '
+
+      - name: Verify TEST database after refresh
+        env:
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          echo "Verifying TEST database..."
+
+          docker run --rm \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT
+                  current_database() AS database,
+                  current_user AS user,
+                  inet_server_addr() AS server_address;
+              "
+
+          echo "Subscription plan count:"
+
+          docker run --rm \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT COUNT(*) AS subscription_plan_count
+                FROM jdasubscriptions_subscriptionplan;
+              "
+
+          echo "Migration count:"
+
+          docker run --rm \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT COUNT(*) AS migration_count
+                FROM django_migrations;
+              "
+
+          echo "TEST database verification completed successfully."
