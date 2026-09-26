@@ -211,8 +211,14 @@ def sub_dashboard(request):
     customer_qs = CustomerSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
     institution_qs = InstitutionSubscription.objects.select_related('user', 'user__profile', 'plan').order_by('-starts_at')
 
+    # Status defaults to Active on first load. Choosing "All" submits an
+    # empty status=, so only a missing param falls back to the default.
+    params = request.GET.copy()
+    if 'status' not in params:
+        params['status'] = 'active'
+
     # Apply filters
-    customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, request.GET)
+    customer_qs, institution_qs = _apply_sub_filters(customer_qs, institution_qs, params)
 
     keyword = request.GET.get('keyword', '').strip()
     if keyword:
@@ -265,7 +271,7 @@ def sub_dashboard(request):
     plans = SubscriptionPlan.objects.filter(is_active=True).order_by('name')
 
     # Filter query string (without page params) for pagination links
-    filter_params = request.GET.copy()
+    filter_params = params.copy()
     filter_params.pop('customer_page', None)
     filter_params.pop('institution_page', None)
     filter_query_string = filter_params.urlencode()
@@ -283,7 +289,7 @@ def sub_dashboard(request):
         'plans': plans,
         'filter_subscriber_type': request.GET.get('subscriber_type', ''),
         'filter_plan': request.GET.get('plan', ''),
-        'filter_status': request.GET.get('status', ''),
+        'filter_status': params.get('status', ''),
         'filter_date_from': request.GET.get('date_from', ''),
         'filter_date_to': request.GET.get('date_to', ''),
         'filter_keyword': keyword,
