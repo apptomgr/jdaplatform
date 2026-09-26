@@ -365,8 +365,10 @@ def export_subscriptions_csv(request):
     row_num = 1
     for sub in customer_qs:
         name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        profile = getattr(sub.user, 'profile', None)
         writer.writerow([
-            row_num, 'Customer', name, sub.user.username, sub.user.email, sub.user.profile.phone_number,
+            row_num, 'Customer', name, sub.user.username, sub.user.email,
+            profile.phone_number if profile else '',
             sub.plan.name, sub.plan.billing_period, sub.status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
@@ -375,8 +377,10 @@ def export_subscriptions_csv(request):
         row_num += 1
     for sub in institution_qs:
         name = f"{sub.user.first_name} {sub.user.last_name}".strip() or sub.user.username
+        profile = getattr(sub.user, 'profile', None)
         writer.writerow([
-            row_num, 'Institution', name, sub.user.username, sub.user.email, sub.user.profile.phone_number,
+            row_num, 'Institution', name, sub.user.username, sub.user.email,
+            profile.phone_number if profile else '',
             sub.plan.name, sub.plan.billing_period, sub.status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
