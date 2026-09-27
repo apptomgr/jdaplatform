@@ -262,29 +262,29 @@ jobs:
           docker run --rm \
             -e TEST_DATABASE_URL \
             postgres:17 \
-            bash -c '
-              set -euo pipefail
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                DO \$\$
+                DECLARE
+                  r RECORD;
+                BEGIN
+                  FOR r IN
+                    SELECT schemaname, tablename
+                    FROM pg_tables
+                    WHERE schemaname = 'public'
+                  LOOP
+                    EXECUTE format(
+                      'DROP TABLE IF EXISTS %I.%I CASCADE',
+                      r.schemaname,
+                      r.tablename
+                    );
+                  END LOOP;
+                END
+                \$\$;
+              "
 
-              psql "$TEST_DATABASE_URL" \
-                -v ON_ERROR_STOP=1 \
-                -c "
-                  DO \$\$
-                  DECLARE
-                    r RECORD;
-                  BEGIN
-                    FOR r IN
-                      SELECT quote_ident(schemaname) || ''.'' || quote_ident(tablename) AS table_name
-                      FROM pg_tables
-                      WHERE schemaname = ''public''
-                    LOOP
-                      EXECUTE ''DROP TABLE IF EXISTS '' || r.table_name || '' CASCADE'';
-                    END LOOP;
-                  END
-                  \$\$;
-                "
-
-              echo "Existing TEST tables removed."
-            '
+          echo "Existing TEST tables removed."
 
           echo "Creating temporary production dump..."
 
@@ -307,7 +307,6 @@ jobs:
           echo "Restoring production database into TEST..."
 
           docker run --rm \
-            -e PROD_DATABASE_URL \
             -e TEST_DATABASE_URL \
             -v "$DUMP_FILE:/tmp/prod.dump" \
             postgres:17 \
@@ -319,7 +318,7 @@ jobs:
               /tmp/prod.dump
 
           echo "Production → TEST restore completed successfully."
-
+          
       - name: Verify TEST database after refresh
         env:
           TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
