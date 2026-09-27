@@ -127,7 +127,9 @@ jobs:
                     current_user,
                     current_database(),
                     'CONNECT'
-                  ) AS has_connect_privilege;
+                  ) AS has_connect_privilege
+                FROM pg_roles r
+                WHERE r.rolname = current_user;
               "
 
           echo "TEST database owner:"
