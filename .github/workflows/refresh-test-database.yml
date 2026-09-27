@@ -288,19 +288,19 @@ jobs:
 
           echo "Creating temporary production dump..."
 
-          DUMP_FILE="$(mktemp)"
-          trap 'rm -f "$DUMP_FILE"' EXIT
+          DUMP_DIR="$(mktemp -d)"
+          trap 'rm -rf "$DUMP_DIR"' EXIT
 
           docker run --rm \
             -e PROD_DATABASE_URL \
-            -v "$DUMP_FILE:/tmp/prod.dump" \
+            -v "$DUMP_DIR:/dump" \
             postgres:17 \
             pg_dump \
               "$PROD_DATABASE_URL" \
               --format=custom \
               --no-owner \
               --no-acl \
-              --file=/tmp/prod.dump
+              --file=/dump/prod.dump
 
           echo "Production dump created temporarily."
 
@@ -308,14 +308,14 @@ jobs:
 
           docker run --rm \
             -e TEST_DATABASE_URL \
-            -v "$DUMP_FILE:/tmp/prod.dump" \
+            -v "$DUMP_DIR:/dump" \
             postgres:17 \
             pg_restore \
               --dbname="$TEST_DATABASE_URL" \
               --no-owner \
               --no-acl \
               --exit-on-error \
-              /tmp/prod.dump
+              /dump/prod.dump
 
           echo "Production → TEST restore completed successfully."
           
