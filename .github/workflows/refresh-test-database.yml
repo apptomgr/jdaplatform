@@ -378,3 +378,26 @@ jobs:
               -c "ANALYZE;"
 
           echo "TEST database validation completed successfully."
+
+      - name: Report TEST application table row counts
+        env:
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+
+          echo "Reporting TEST application table row counts..."
+
+          docker run --rm \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "
+                SELECT
+                  schemaname,
+                  tablename,
+                  n_live_tup AS estimated_rows
+                FROM pg_stat_user_tables
+                WHERE schemaname = 'public'
+                ORDER BY n_live_tup DESC, tablename;
+              "          
