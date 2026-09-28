@@ -319,13 +319,13 @@ jobs:
 
           echo "Production → TEST restore completed successfully."
           
-      - name: Verify TEST database after refresh
+      - name: Validate refreshed TEST database
         env:
           TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
         run: |
           set -euo pipefail
 
-          echo "Verifying TEST database..."
+          echo "Validating refreshed TEST database..."
 
           docker run --rm \
             -e TEST_DATABASE_URL \
@@ -336,10 +336,10 @@ jobs:
                 SELECT
                   current_database() AS database,
                   current_user AS user,
-                  inet_server_addr() AS server_address;
+                  version() AS server_version;
               "
 
-          echo "Subscription plan count:"
+          echo "Checking TEST table count..."
 
           docker run --rm \
             -e TEST_DATABASE_URL \
@@ -347,11 +347,12 @@ jobs:
             psql "$TEST_DATABASE_URL" \
               -v ON_ERROR_STOP=1 \
               -c "
-                SELECT COUNT(*) AS subscription_plan_count
-                FROM jdasubscriptions_subscriptionplan;
+                SELECT COUNT(*) AS table_count
+                FROM pg_tables
+                WHERE schemaname = 'public';
               "
 
-          echo "Migration count:"
+          echo "Checking Django migration state..."
 
           docker run --rm \
             -e TEST_DATABASE_URL \
@@ -359,8 +360,21 @@ jobs:
             psql "$TEST_DATABASE_URL" \
               -v ON_ERROR_STOP=1 \
               -c "
-                SELECT COUNT(*) AS migration_count
-                FROM django_migrations;
+                SELECT
+                  app,
+                  COUNT(*) AS migrations_applied
+                FROM django_migrations
+                GROUP BY app
+                ORDER BY app;
               "
 
-          echo "TEST database verification completed successfully."
+          echo "Running ANALYZE on TEST..."
+
+          docker run --rm \
+            -e TEST_DATABASE_URL \
+            postgres:17 \
+            psql "$TEST_DATABASE_URL" \
+              -v ON_ERROR_STOP=1 \
+              -c "ANALYZE;"
+
+          echo "TEST database validation completed successfully."
