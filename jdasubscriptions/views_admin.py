@@ -163,14 +163,44 @@ def subscription_mrr(subscriptions):
 
 # ========== Sub Dashboard ==========
 
+SALES_STAFF_GROUP = "Sales Staff"
+
+
+def _is_sales_staff(user):
+    """
+    Sales Staff is a view-only role for the Subscription Dashboard: it grants
+    no is_staff/is_superuser privileges (so no Django /admin/ access) and must
+    never satisfy _manager_only() - Extend/Expire stay restricted to
+    is_staff/is_superuser exactly as before this role was introduced.
+    """
+    return user.is_authenticated and user.groups.filter(name=SALES_STAFF_GROUP).exists()
+
+
 def _staff_only(request):
     """
-    Returns a redirect response if the user is not staff/superuser,
-    otherwise returns None (access granted).
+    Returns a redirect response if the user can't view the Subscription
+    Dashboard at all (is_staff/is_superuser OR Sales Staff), otherwise
+    returns None (access granted). Use this for read-only actions
+    (viewing the dashboard, exporting CSV); use _manager_only() for
+    actions that change subscription state (expire, extend).
     """
-    if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
+    if not request.user.is_authenticated or not (
+        request.user.is_staff or request.user.is_superuser or _is_sales_staff(request.user)
+    ):
         messages.warning(request, "You don't have access to the Subscription Dashboard.")
         return redirect('jdapublicationsapp_pubs')
+    return None
+
+
+def _manager_only(request):
+    """
+    Returns a redirect response unless the user is staff/superuser.
+    Sales Staff (view-only) does NOT satisfy this check. Use this to
+    gate actions that change subscription state: expire, extend.
+    """
+    if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
+        messages.warning(request, "You don't have permission to perform this action.")
+        return redirect('jdasubscriptions:sub_dashboard')
     return None
 
 
@@ -303,7 +333,7 @@ def sub_dashboard(request):
 
 @require_POST
 def expire_subscription(request):
-    deny = _staff_only(request)
+    deny = _manager_only(request)
     if deny:
         return deny
     pk = request.POST.get('subscription_pk')
@@ -324,7 +354,7 @@ def expire_subscription(request):
 
 @require_POST
 def extend_subscription(request):
-    deny = _staff_only(request)
+    deny = _manager_only(request)
     if deny:
         return deny
     pk = request.POST.get('subscription_pk')
