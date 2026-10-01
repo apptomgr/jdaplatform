@@ -192,13 +192,27 @@ def _staff_only(request):
     return None
 
 
+def _can_manage_subs(user):
+    """
+    True if the user may change subscription state (expire, extend).
+    Superusers always can. Otherwise is_staff is required, and Sales Staff
+    membership overrides it: a Sales Staff member who also has "Staff
+    status" ticked by mistake stays view-only.
+    """
+    if not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+    return user.is_staff and not _is_sales_staff(user)
+
+
 def _manager_only(request):
     """
-    Returns a redirect response unless the user is staff/superuser.
-    Sales Staff (view-only) does NOT satisfy this check. Use this to
-    gate actions that change subscription state: expire, extend.
+    Returns a redirect response unless _can_manage_subs() allows the user.
+    Sales Staff (view-only) does NOT satisfy this check, even with is_staff.
+    Use this to gate actions that change subscription state: expire, extend.
     """
-    if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
+    if not _can_manage_subs(request.user):
         messages.warning(request, "You don't have permission to perform this action.")
         return redirect('jdasubscriptions:sub_dashboard')
     return None
@@ -327,6 +341,7 @@ def sub_dashboard(request):
         'all_users': User.objects.all().order_by('username'),
         'all_plans': SubscriptionPlan.objects.filter(is_active=True).order_by('name'),
         'today': timezone.now().date(),
+        'can_manage_subs': _can_manage_subs(request.user),
     }
     return render(request, 'jdasubscriptions/sub_dashboard.html', context)
 
