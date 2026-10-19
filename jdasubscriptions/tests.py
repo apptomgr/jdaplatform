@@ -1,3 +1,4 @@
+import csv
 from datetime import timedelta
 from io import StringIO
 from unittest.mock import patch
@@ -768,3 +769,117 @@ class ExpireOverdueSubscriptionsCommandTests(TestCase):
         sub = self._sub("both_flags", "active", -timedelta(days=1))
         self._run("--apply", "--dry-run")
         self.assertEqual(CustomerSubscription.objects.get(pk=sub.pk).status, "active")
+
+
+class EffectiveStatusTests(TestCase):
+    """
+    A stored "active" subscription past its ends_at must read as expired
+    everywhere it is displayed or counted, with no scheduled job involved.
+    """
+
+    # state -> (stored status, ends_at offset from now, expected effective status)
+    STATES = {
+        "not_due": ("active", timedelta(days=10), "active"),
+        "just_overdue": ("active", -timedelta(minutes=1), "expired"),
+        "long_overdue": ("active", -timedelta(days=200), "expired"),
+        "no_end_date": ("active", None, "active"),
+        "already_expired": ("expired", -timedelta(days=30), "expired"),
+    }
+
+    def setUp(self):
+        self.now = timezone.now()
+        self.plan = _make_plan("monthly", "_eff")
+        self.institution_plan = SubscriptionPlan.objects.create(
+            code="test_plan_inst_eff", name="Test Inst Plan Eff", plan_type="institution",
+            billing_period="monthly", price_fcfa=1000, features=[], is_active=True,
+        )
+        self.admin = User.objects.create_superuser("eff_admin", "eff_admin@example.com", "pw")
+        self.subs = {}
+        for name, (status, offset, _) in self.STATES.items():
+            user = User.objects.create_user(name, f"{name}@example.com", "pw")
+            self.subs[name] = CustomerSubscription.objects.create(
+                user=user, plan=self.plan, status=status,
+                starts_at=self.now - timedelta(days=300),
+                ends_at=None if offset is None else self.now + offset,
+            )
+
+    def _expected(self, effective):
+        return {n for n, (_, _, e) in self.STATES.items() if e == effective}
+
+    def _names(self, page_obj):
+        return {s.user.username for s in page_obj.object_list}
+
+    def test_effective_status_property(self):
+        for name, (_, _, expected) in self.STATES.items():
+            self.assertEqual(self.subs[name].effective_status, expected, name)
+
+    def test_dashboard_badges_filters_and_counts(self):
+        self.client.force_login(self.admin)
+        url = reverse("jdasubscriptions:sub_dashboard")
+
+        # Default view (no status param) is Active: only in-date subscriptions.
+        resp = self.client.get(url)
+        self.assertEqual(self._names(resp.context["customer_page_obj"]), self._expected("active"))
+
+        resp = self.client.get(url, {"status": "expired"})
+        self.assertEqual(self._names(resp.context["customer_page_obj"]), self._expected("expired"))
+
+        # "All" view: badge per row matches effective status; Expire button only on in-date rows.
+        resp = self.client.get(url, {"status": ""})
+        html = resp.content.decode()
+        self.assertEqual(self._names(resp.context["customer_page_obj"]), set(self.STATES))
+        self.assertEqual(html.count('badge badge-success">Active'), len(self._expected("active")))
+        self.assertEqual(html.count('badge badge-danger">Expired'), len(self._expected("expired")))
+        for name in self.STATES:
+            has_expire_btn = f"Mark subscription #{self.subs[name].pk} as expired" in html
+            self.assertEqual(has_expire_btn, name in self._expected("active"), name)
+
+        self.assertEqual(resp.context["total_active"], len(self._expected("active")))
+        self.assertEqual(resp.context["total_expired"], len(self._expected("expired")))
+        self.assertEqual(resp.context["plan_breakdown"], {self.plan.name: len(self._expected("active"))})
+
+    def test_csv_export_status_and_filter(self):
+        self.client.force_login(self.admin)
+        url = reverse("jdasubscriptions:export_subscriptions_csv")
+        rows = list(csv.reader(StringIO(self.client.get(url).content.decode())))[1:]
+        by_user = {r[3]: r[8] for r in rows}
+        for name, (_, _, expected) in self.STATES.items():
+            self.assertEqual(by_user[name], expected, name)
+
+        rows = list(csv.reader(StringIO(self.client.get(url, {"status": "active"}).content.decode())))[1:]
+        self.assertEqual({r[3] for r in rows}, self._expected("active"))
+
+    def test_kpi_dashboard_counts(self):
+        self.client.force_login(self.admin)
+        resp = self.client.get(reverse("jdasubscriptions:subscription_dashboard"))
+        self.assertEqual(resp.context["active_count"], len(self._expected("active")))
+        self.assertEqual(resp.context["expired_count"], len(self._expected("expired")))
+
+    @patch("jdasubscriptions.views.initialize_institution_payment")
+    def test_plan_switch_only_blocked_for_in_date_subscriptions(self, mock_init):
+        from django.http import HttpResponse
+        mock_init.return_value = HttpResponse("PAYMENT_INIT")
+        url = reverse("jdasubscriptions:select_subscription_plan", args=[self.institution_plan.id])
+        for name in self.STATES:
+            self.client.force_login(self.subs[name].user)
+            resp = self.client.get(url)
+            reached_payment = resp.status_code == 200 and resp.content == b"PAYMENT_INIT"
+            self.assertEqual(reached_payment, name in self._expected("expired"), name)
+
+    def test_admin_add_only_blocked_for_in_date_subscriptions(self):
+        self.client.force_login(self.admin)
+        url = reverse("jdasubscriptions:subscription_add")
+        for name in self.STATES:
+            user = self.subs[name].user
+            before = CustomerSubscription.objects.filter(user=user).count()
+            self.client.post(url, {
+                "subscription_type": "customer", "user": user.pk, "plan": self.plan.pk,
+                "start_date": self.now.date().isoformat(), "status": "active",
+            })
+            created = CustomerSubscription.objects.filter(user=user).count() > before
+            self.assertEqual(created, name in self._expected("expired"), name)
+
+    def test_access_check_agrees_with_effective_status(self):
+        for name, (_, _, expected) in self.STATES.items():
+            has_access = _get_active_subscription(self.subs[name].user) is not None
+            self.assertEqual(has_access, expected == "active", name)

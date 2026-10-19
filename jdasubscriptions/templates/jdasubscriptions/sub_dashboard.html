@@ -206,22 +206,24 @@
                         <td>{{ sub.plan.name }}</td>
                         <td>{{ sub.plan.billing_period }}</td>
                         <td>
-                            {% if sub.status == 'active' %}
+                            {% with status=sub.effective_status %}
+                            {% if status == 'active' %}
                             <span class="badge badge-success">Active</span>
-                            {% elif sub.status == 'expired' %}
+                            {% elif status == 'expired' %}
                             <span class="badge badge-danger">Expired</span>
-                            {% elif sub.status == 'draft' %}
+                            {% elif status == 'draft' %}
                             <span class="badge badge-warning">Draft</span>
                             {% else %}
-                            <span class="badge badge-secondary">{{ sub.status }}</span>
+                            <span class="badge badge-secondary">{{ status }}</span>
                             {% endif %}
+                            {% endwith %}
                         </td>
                         <td>{{ sub.starts_at|date:"Y-m-d"|default:"-" }}</td>
                         <td>{{ sub.ends_at|date:"Y-m-d"|default:"-" }}</td>
                         <td class="text-monospace small">{{ sub.paystack_reference|default:"-" }}</td>
                         <td nowrap>
                             {% if can_manage_subs %}
-                            {% if sub.status == 'active' %}
+                            {% if sub.effective_status == 'active' %}
                             <form method="post" action="{% url 'jdasubscriptions:expire_subscription' %}" style="display:inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="subscription_pk" value="{{ sub.pk }}">
@@ -326,22 +328,24 @@
                         <td>{{ sub.plan.name }}</td>
                         <td>{{ sub.plan.billing_period }}</td>
                         <td>
-                            {% if sub.status == 'active' %}
+                            {% with status=sub.effective_status %}
+                            {% if status == 'active' %}
                             <span class="badge badge-success">Active</span>
-                            {% elif sub.status == 'expired' %}
+                            {% elif status == 'expired' %}
                             <span class="badge badge-danger">Expired</span>
-                            {% elif sub.status == 'draft' %}
+                            {% elif status == 'draft' %}
                             <span class="badge badge-warning">Draft</span>
                             {% else %}
-                            <span class="badge badge-secondary">{{ sub.status }}</span>
+                            <span class="badge badge-secondary">{{ status }}</span>
                             {% endif %}
+                            {% endwith %}
                         </td>
                         <td>{{ sub.starts_at|date:"Y-m-d"|default:"-" }}</td>
                         <td>{{ sub.ends_at|date:"Y-m-d"|default:"-" }}</td>
                         <td class="text-monospace small">{{ sub.paystack_reference|default:"-" }}</td>
                         <td nowrap>
                             {% if can_manage_subs %}
-                            {% if sub.status == 'active' %}
+                            {% if sub.effective_status == 'active' %}
                             <form method="post" action="{% url 'jdasubscriptions:expire_subscription' %}" style="display:inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="subscription_pk" value="{{ sub.pk }}">

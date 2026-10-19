@@ -3,7 +3,8 @@ import unicodedata
 
 from django.conf import settings
 from django.utils import timezone
-from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
+# active_subscription_q is defined next to the models; re-exported here for existing imports.
+from jdasubscriptions.models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan, active_subscription_q  # noqa: F401
 from django.db.models import Q
 
 # Maps research_type values (stored on PublicationModel) to the display-friendly
@@ -187,24 +188,6 @@ def user_can_access_publication(user, publication) -> bool:
         )
 
     return _plan_grants_publication(plan.features, publication_type, publication)
-
-
-#///////////////////////////////////////////active_subscription_q///////////////////////////////////////////////////////
-
-ACTIVE_STATUS = "active"  # do NOT move this yet
-
-def active_subscription_q():
-    """
-    Canonical definition of an active subscription.
-    Scoped to the subscription app only.
-    """
-    now = timezone.now()
-    return Q(
-        status=ACTIVE_STATUS
-    ) & (
-                   Q(ends_at__isnull=True) |
-                   Q(ends_at__gte=now)
-           )
 
 
 #////////////////////////////////////////////////////get_upgrade_recommendation/////////////////////////////
