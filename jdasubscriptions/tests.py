@@ -664,3 +664,107 @@ class BackfillCommandTests(TestCase):
 
         self.assertEqual(EXCLUDED_SUBSCRIPTION_IDS["CustomerSubscription"], {24, 25, 26, 27, 29})
         self.assertEqual(EXCLUDED_SUBSCRIPTION_IDS["InstitutionSubscription"], {3, 5, 6, 7, 8, 9})
+
+
+class ExpireOverdueSubscriptionsCommandTests(TestCase):
+    def setUp(self):
+        self.now = timezone.now()
+        self.plan = _make_plan("monthly")
+        self.institution_plan = SubscriptionPlan.objects.create(
+            code="test_plan_inst_expire", name="Test Inst Plan", plan_type="institution",
+            billing_period="monthly", price_fcfa=1000, features=[], is_active=True,
+        )
+
+    def _sub(self, username, status, ends_at_offset, model=CustomerSubscription, plan=None):
+        user = User.objects.create(username=username)
+        return model.objects.create(
+            user=user, plan=plan or self.plan, status=status,
+            starts_at=self.now - timedelta(days=60),
+            ends_at=None if ends_at_offset is None else self.now + ends_at_offset,
+        )
+
+    def _run(self, *args):
+        out = StringIO()
+        call_command("expire_overdue_subscriptions", *args, stdout=out)
+        return out.getvalue()
+
+    def _make_matrix(self):
+        return {
+            "not_due": self._sub("not_due", "active", timedelta(days=10)),
+            "due_in_a_minute": self._sub("due_soon", "active", timedelta(minutes=1)),
+            "just_overdue": self._sub("just_overdue", "active", -timedelta(minutes=1)),
+            "long_overdue": self._sub("long_overdue", "active", -timedelta(days=200)),
+            "already_expired": self._sub("already_expired", "expired", -timedelta(days=30)),
+            "draft_past": self._sub("draft_past", "draft", -timedelta(days=30)),
+            "no_ends_at": self._sub("no_ends_at", "active", None),
+            "inst_overdue": self._sub("inst_overdue", "active", -timedelta(days=5),
+                                      model=InstitutionSubscription, plan=self.institution_plan),
+            "inst_not_due": self._sub("inst_not_due", "active", timedelta(days=5),
+                                      model=InstitutionSubscription, plan=self.institution_plan),
+        }
+
+    def _statuses(self, subs):
+        return {k: type(s).objects.get(pk=s.pk).status for k, s in subs.items()}
+
+    def test_dry_run_reports_but_writes_nothing(self):
+        subs = self._make_matrix()
+        before = self._statuses(subs)
+        out = self._run()
+        self.assertEqual(self._statuses(subs), before)
+        self.assertIn("3 row(s) would be marked expired", out)
+        for name in ("just_overdue", "long_overdue", "inst_overdue"):
+            self.assertIn(name, out)
+        for name in ("not_due", "due_soon", "no_ends_at", "inst_not_due"):
+            self.assertNotIn(f" {name} ", out)
+
+    def test_apply_flips_only_overdue_active_rows(self):
+        subs = self._make_matrix()
+        out = self._run("--apply")
+        self.assertIn("marked 3 row(s) expired", out)
+        self.assertEqual(self._statuses(subs), {
+            "not_due": "active",
+            "due_in_a_minute": "active",
+            "just_overdue": "expired",
+            "long_overdue": "expired",
+            "already_expired": "expired",
+            "draft_past": "draft",
+            "no_ends_at": "active",
+            "inst_overdue": "expired",
+            "inst_not_due": "active",
+        })
+
+    def test_apply_preserves_ends_at(self):
+        sub = self._sub("keep_date", "active", -timedelta(days=5))
+        self._run("--apply")
+        sub_after = CustomerSubscription.objects.get(pk=sub.pk)
+        self.assertEqual(sub_after.ends_at, sub.ends_at)
+
+    def test_flipped_rows_match_access_check(self):
+        """Every row the command expires is one access already denies; every row it keeps is still granted."""
+        subs = self._make_matrix()
+        access_before = {k: _get_active_subscription(s.user) is not None for k, s in subs.items()}
+        self._run("--apply")
+        for key, sub in subs.items():
+            flipped = type(sub).objects.get(pk=sub.pk).status != sub.status
+            if flipped:
+                self.assertFalse(access_before[key], key)
+            if sub.status == "active" and not flipped:
+                self.assertTrue(access_before[key], key)
+
+    def test_excluded_legacy_ids_never_touched(self):
+        from jdasubscriptions.management.commands.backfill_subscription_end_dates import EXCLUDED_SUBSCRIPTION_IDS
+        sub = self._sub("legacy", "active", -timedelta(days=30))
+        with patch.dict(EXCLUDED_SUBSCRIPTION_IDS, {"CustomerSubscription": {sub.pk}}):
+            self._run("--apply")
+        self.assertEqual(CustomerSubscription.objects.get(pk=sub.pk).status, "active")
+
+    def test_idempotent_second_run_is_noop(self):
+        self._make_matrix()
+        self._run("--apply")
+        out = self._run("--apply")
+        self.assertIn("Nothing to do", out)
+
+    def test_dry_run_flag_overrides_apply(self):
+        sub = self._sub("both_flags", "active", -timedelta(days=1))
+        self._run("--apply", "--dry-run")
+        self.assertEqual(CustomerSubscription.objects.get(pk=sub.pk).status, "active")
