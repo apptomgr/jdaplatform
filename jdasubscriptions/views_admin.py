@@ -7,11 +7,13 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Count, Q
 
-from .models import CustomerSubscription, InstitutionSubscription, SubscriptionPlan
+from .models import (
+    CustomerSubscription, InstitutionSubscription, SubscriptionPlan,
+    active_subscription_q, expired_subscription_q,
+)
 from decimal import Decimal
 from django.utils import timezone
 from datetime import timedelta, datetime, time
-from jdasubscriptions.services.access_services import active_subscription_q
 import json
 import csv
 from decimal import Decimal, ROUND_HALF_UP
@@ -133,7 +135,7 @@ def normalize_subscriptions(qs, subscriber_type):
             "subscriber_type": subscriber_type,
             "user": sub.user,
             "plan": sub.plan,
-            "status": sub.status,
+            "status": sub.effective_status,
             "billing_period": sub.plan.billing_period,
             "plan_type": sub.plan.plan_type,
             "starts_at": sub.starts_at,
@@ -234,7 +236,13 @@ def _apply_sub_filters(customer_qs, institution_qs, params):
     if plan_id:
         customer_qs = customer_qs.filter(plan_id=plan_id)
         institution_qs = institution_qs.filter(plan_id=plan_id)
-    if status_filter:
+    if status_filter == 'active':
+        customer_qs = customer_qs.filter(active_subscription_q())
+        institution_qs = institution_qs.filter(active_subscription_q())
+    elif status_filter == 'expired':
+        customer_qs = customer_qs.filter(expired_subscription_q())
+        institution_qs = institution_qs.filter(expired_subscription_q())
+    elif status_filter:
         customer_qs = customer_qs.filter(status=status_filter)
         institution_qs = institution_qs.filter(status=status_filter)
     if date_from:
@@ -278,23 +286,23 @@ def sub_dashboard(request):
 
     # Summary stats (always unfiltered, across both models)
     total_active = (
-        CustomerSubscription.objects.filter(status='active').count() +
-        InstitutionSubscription.objects.filter(status='active').count()
+        CustomerSubscription.objects.filter(active_subscription_q()).count() +
+        InstitutionSubscription.objects.filter(active_subscription_q()).count()
     )
     total_expired = (
-        CustomerSubscription.objects.filter(status='expired').count() +
-        InstitutionSubscription.objects.filter(status='expired').count()
+        CustomerSubscription.objects.filter(expired_subscription_q()).count() +
+        InstitutionSubscription.objects.filter(expired_subscription_q()).count()
     )
     total_cancelled = 0  # No cancelled status in current model
 
     # Active breakdown by plan name (across both)
     customer_by_plan = (
-        CustomerSubscription.objects.filter(status='active')
+        CustomerSubscription.objects.filter(active_subscription_q())
         .values('plan__name')
         .annotate(count=Count('id'))
     )
     institution_by_plan = (
-        InstitutionSubscription.objects.filter(status='active')
+        InstitutionSubscription.objects.filter(active_subscription_q())
         .values('plan__name')
         .annotate(count=Count('id'))
     )
@@ -420,7 +428,7 @@ def export_subscriptions_csv(request):
         writer.writerow([
             row_num, 'Customer', name, sub.user.username, sub.user.email,
             profile.phone_number if profile else '',
-            sub.plan.name, sub.plan.billing_period, sub.status,
+            sub.plan.name, sub.plan.billing_period, sub.effective_status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
             sub.paystack_reference or '',
@@ -432,7 +440,7 @@ def export_subscriptions_csv(request):
         writer.writerow([
             row_num, 'Institution', name, sub.user.username, sub.user.email,
             profile.phone_number if profile else '',
-            sub.plan.name, sub.plan.billing_period, sub.status,
+            sub.plan.name, sub.plan.billing_period, sub.effective_status,
             sub.starts_at.strftime('%Y-%m-%d') if sub.starts_at else '',
             sub.ends_at.strftime('%Y-%m-%d') if sub.ends_at else '',
             sub.paystack_reference or '',
@@ -479,8 +487,8 @@ def subscription_add(request):
         ends_at = timezone.make_aware(datetime.combine(d, time(23, 59, 59)))
 
     if status == 'active':
-        existing_customer = CustomerSubscription.objects.filter(user=user, status='active').exists()
-        existing_institution = InstitutionSubscription.objects.filter(user=user, status='active').exists()
+        existing_customer = CustomerSubscription.objects.filter(active_subscription_q(), user=user).exists()
+        existing_institution = InstitutionSubscription.objects.filter(active_subscription_q(), user=user).exists()
         if existing_customer or existing_institution:
             messages.warning(
                 request,

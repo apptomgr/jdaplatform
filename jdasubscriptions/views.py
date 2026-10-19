@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from .models import SubscriptionPlan, CustomerSubscription, InstitutionSubscription
+from .models import SubscriptionPlan, CustomerSubscription, InstitutionSubscription, active_subscription_q
 from django.utils import timezone
 from jdapayments.paystack import initialize_payment, verify_payment
 
@@ -268,7 +268,7 @@ def select_subscription_plan(request, plan_id):
     # -------------------------
     if plan.plan_type == 'customer':
         has_institution = InstitutionSubscription.objects.filter(
-            user=user, status='active'
+            active_subscription_q(), user=user
         ).exists()
         if has_institution:
             messages.warning(
@@ -280,7 +280,7 @@ def select_subscription_plan(request, plan_id):
 
     elif plan.plan_type == 'institution':
         has_customer = CustomerSubscription.objects.filter(
-            user=user, status='active'
+            active_subscription_q(), user=user
         ).exists()
         if has_customer:
             messages.warning(

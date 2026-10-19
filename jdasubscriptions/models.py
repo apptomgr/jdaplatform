@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -7,6 +8,33 @@ from django.db import models
 
 
 User = settings.AUTH_USER_MODEL
+
+
+#////////////////////////////////////////////Effective subscription status//////////////////////////////////////////
+# The single definition of whether a subscription currently counts as active or
+# expired. A stored status of "active" stops counting once ends_at has passed,
+# whether or not anything has rewritten the stored field yet
+# (expire_overdue_subscriptions does that, but nothing depends on it running).
+# ends_at=NULL means "no end date" and stays active. Use these instead of
+# filtering or comparing on status="active"/"expired" directly.
+
+def active_subscription_q(now=None):
+    now = now or timezone.now()
+    return Q(status="active") & (Q(ends_at__isnull=True) | Q(ends_at__gte=now))
+
+
+def expired_subscription_q(now=None):
+    now = now or timezone.now()
+    return Q(status="expired") | Q(status="active", ends_at__lt=now)
+
+
+class EffectiveStatusMixin:
+    @property
+    def effective_status(self):
+        """Stored status, except an active row past its ends_at reads as "expired"."""
+        if self.status == "active" and self.ends_at is not None and self.ends_at < timezone.now():
+            return "expired"
+        return self.status
 
 #////////////////////////////////////////////////SubscriptionPlan//////////////////////////////////////////
 class SubscriptionPlan(models.Model):
@@ -44,7 +72,7 @@ class SubscriptionPlan(models.Model):
 
 
 # #///////////////////////////////////////////////CustomerSubscription//////////////////////////////////////////////
-class CustomerSubscription(models.Model):
+class CustomerSubscription(EffectiveStatusMixin, models.Model):
     """
     A draft or active subscription for a customer user
     """
@@ -90,7 +118,7 @@ class CustomerSubscription(models.Model):
 
 
 # #///////////////////////////////////////////////InstitutionSubscription//////////////////////////////////////////////
-class InstitutionSubscription(models.Model):
+class InstitutionSubscription(EffectiveStatusMixin, models.Model):
     """
     Subscription for institution users (no Institution model required)
     """
